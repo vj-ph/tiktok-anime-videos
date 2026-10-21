@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "id": "b1_lerntreff",
+  "presentation": "social",
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "Einen Lerntreff vereinbaren",
+  "label": "B1 Sprechen · Kurzer Übungsdialog",
+  "branding": "DEUTSCHKOMPASS",
+  "disclaimer": "Eigenständiger kurzer Übungsdialog, keine vollständige Prüfung.",
+  "scene": {
+    "template": "exam_room",
+    "base_scene": "../build_v2/studio.blend",
+    "entrance": false,
+    "wall_logo": "../assets/deutschkompass-logo.png"
+  },
+  "header": {
+    "brand": "DEUTSCHKOMPASS · B1 SPRECHEN",
+    "topic": "Einen Lerntreff vereinbaren"
+  },
+  "hook": "Zusammen Deutsch üben?",
+  "book_cover": "../assets/book-cover.jpg",
+  "fps": 24,
+  "intro_seconds": 2.0,
+  "outro_seconds": 10.0,
+  "task_card": [],
+  "takeaway_title": "SO KÖNNT IHR REAGIEREN",
+  "takeaway_seconds": 4.0,
+  "takeaway": ["Einen Termin vorschlagen.", "Ort und Zeit bestätigen."],
+  "cta": ["Mehr Aufgaben und Dialoge", "im DTZ-B1-Sprechbuch", "Amazon-Buchlink im Profil"],
+  "publication": {
+    "intro": "Wie verabredest du dich zum Deutschlernen? Hör zu und antworte selbst.",
+    "disclosure": "Eigenständiger kurzer Übungsdialog, keine offizielle Aufgabe und keine vollständige Prüfung.",
+    "hashtags": ["#B1Deutsch", "#DeutschLernen", "#DeutschSprechen"]
+  },
+  "promo": {
+    "hook": "Wann und wo üben wir?",
+    "intro_seconds": 2.0,
+    "outro_seconds": 4.0,
+    "min_seconds": 10.0,
+    "max_seconds": 30.0
+  },
+  "voices": {
+    "candidate_a": {
+      "audio": "../../../shared-voices/qwen3-tts-german/female_young_adult.wav",
+      "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+    },
+    "candidate_b": {
+      "audio": "../../../shared-voices/qwen3-tts-german/male_young_adult.wav",
+      "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+    }
+  },
+  "turns": [
+    {
+      "id": "propose-time",
+      "speaker": "candidate_a",
+      "name": "Lea",
+      "phase": "dialogue",
+      "text": "Ich möchte am Samstag Deutsch üben. Hast du Zeit?",
+      "camera": "candidate_a",
+      "action": "propose",
+      "look_at": "candidate_b",
+      "pause_after": 0.8
+    },
+    {
+      "id": "offer-place",
+      "speaker": "candidate_b",
+      "name": "Samir",
+      "phase": "dialogue",
+      "text": "Ja, gern. Wir können uns um drei in der Bibliothek treffen.",
+      "camera": "candidate_b",
+      "action": "agree",
+      "look_at": "candidate_a",
+      "pause_after": 0.8
+    },
+    {
+      "id": "confirm-plan",
+      "speaker": "candidate_a",
+      "name": "Lea",
+      "phase": "dialogue",
+      "text": "Das passt. Ich bringe mein Übungsbuch mit.",
+      "camera": "candidate_a",
+      "action": "agree",
+      "look_at": "candidate_b",
+      "pause_after": 1.4
+    }
+  ]
+}

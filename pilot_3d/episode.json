@@ -1,0 +1,94 @@
+{
+  "id": "dtz_ausflug_pilot",
+  "title": "Gemeinsam einen Ausflug planen",
+  "label": "DTZ B1 · Sprechen · Teil 3",
+  "disclaimer": "Unabhängige Übungssimulation · kurzer Ausschnitt",
+  "source": {
+    "book": "../../german_exam_books/b1/speaking_dtz_gpt_v1/book_no_toc.md",
+    "exercise": "Teil 3, Übung 4: Einen Ausflug mit dem Deutschlandticket planen",
+    "adaptation": "New shortened dialogue inspired by the exercise; not the complete book model answer."
+  },
+  "fps": 24,
+  "intro_seconds": 4.0,
+  "outro_seconds": 4.0,
+  "task_card": ["Tagesausflug am Sonntag", "Ziel · Abfahrt · Programm", "Essen · Budget · Plan B"],
+  "branding": "DEUTSCHKOMPASS",
+  "book_cover": "assets/book-cover.jpg",
+  "cta": ["Mehr Aufgaben und Modelldialoge", "im DTZ-B1-Sprechbuch", "Buch & Leseprobe: Link im Profil"],
+  "voices": {
+    "examiner": {
+      "audio": "../../shared-voices/qwen3-tts-german/male_middle_aged.wav",
+      "transcript": "../../shared-voices/qwen3-tts-german/reference_text.txt"
+    },
+    "candidate_a": {
+      "audio": "../../shared-voices/qwen3-tts-german/female_young_adult.wav",
+      "transcript": "../../shared-voices/qwen3-tts-german/reference_text.txt"
+    },
+    "candidate_b": {
+      "audio": "../../shared-voices/qwen3-tts-german/male_young_adult.wav",
+      "transcript": "../../shared-voices/qwen3-tts-german/reference_text.txt"
+    }
+  },
+  "turns": [
+    {
+      "id": "01",
+      "speaker": "examiner",
+      "name": "Prüfer",
+      "text": "Guten Tag. Nehmen Sie bitte Platz.",
+      "camera": "examiner",
+      "action": "welcome",
+      "look_at": "candidate_a",
+      "pause_after": 0.6
+    },
+    {
+      "id": "02",
+      "speaker": "examiner",
+      "name": "Prüfer",
+      "text": "Planen Sie zusammen einen Tagesausflug. Wohin möchten Sie fahren, und was möchten Sie dort machen?",
+      "camera": "wide",
+      "action": "explain",
+      "look_at": "candidate_b",
+      "pause_after": 1.0
+    },
+    {
+      "id": "03",
+      "speaker": "candidate_a",
+      "name": "Lea · Teilnehmerin A",
+      "text": "Wie wäre es mit Münster? Wir könnten zuerst im Park spazieren gehen.",
+      "camera": "candidate_a",
+      "action": "propose",
+      "look_at": "candidate_b",
+      "pause_after": 0.4
+    },
+    {
+      "id": "04",
+      "speaker": "candidate_b",
+      "name": "Samir · Teilnehmer B",
+      "text": "Gute Idee. Aber ich möchte höchstens zwanzig Euro ausgeben.",
+      "camera": "candidate_b",
+      "action": "consider",
+      "look_at": "candidate_a",
+      "pause_after": 0.5
+    },
+    {
+      "id": "05",
+      "speaker": "candidate_a",
+      "name": "Lea · Teilnehmerin A",
+      "text": "Dann nehmen wir Essen von zu Hause mit. Passt dir die Abfahrt um zehn?",
+      "camera": "candidates",
+      "action": "propose",
+      "look_at": "candidate_b",
+      "pause_after": 0.4
+    },
+    {
+      "id": "06",
+      "speaker": "candidate_b",
+      "name": "Samir · Teilnehmer B",
+      "text": "Ja, das passt. Ich schaue nach einer passenden Zugverbindung.",
+      "camera": "candidate_b",
+      "action": "agree",
+      "look_at": "candidate_a",
+      "pause_after": 0.8
+    }
+  ]
+}

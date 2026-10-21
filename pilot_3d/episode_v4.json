@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "id": "dtz_ausflug_v4",
+  "presentation": "social",
+  "visual_version": 6,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "Einen Tagesausflug planen",
+  "label": "DTZ B1 · Sprechen · Teil 3",
+  "disclaimer": "Unabhängige Übungssimulation, keine vollständige DTZ-Prüfung.",
+  "branding": "DEUTSCHKOMPASS",
+  "scene": {
+    "template": "exam_room",
+    "base_scene": "build_v2/studio.blend",
+    "entrance": true,
+    "wall_logo": "assets/deutschkompass-logo.png"
+  },
+  "header": {
+    "brand": "DEUTSCHKOMPASS · B1 SPRECHEN",
+    "topic": "Teil 3 · Einen Ausflug planen"
+  },
+  "hook": "DTZ B1: Sprechen üben",
+  "task_title": "DEINE AUFGABE",
+  "task_summary": "Sonntag: Ausflug zu zweit.",
+  "task_hint": "Lernpause · Video bei Bedarf anhalten.",
+  "takeaway_seconds": 0,
+  "publication": {
+    "intro": "Erst selbst einen Vorschlag machen, dann die Modellantwort anhören.",
+    "disclosure": "Unabhängige, verkürzte Übungssimulation; keine offizielle Aufgabe und keine vollständige Prüfung. Die Lernpause gehört zum Video, nicht zum Prüfungsablauf.",
+    "hashtags": ["#DTZ", "#B1Deutsch", "#DeutschLernen", "#GemeinsamPlanen"]
+  },
+  "promo": {
+    "hook": "DTZ B1: Gemeinsam planen",
+    "intro_seconds": 2.5,
+    "outro_seconds": 6.0,
+    "min_seconds": 30.0,
+    "max_seconds": 45.0
+  },
+  "book_cover": "assets/book-cover.jpg",
+  "source": {
+    "book": "../../german_exam_books/b1/speaking_dtz_gpt_v1/book_no_toc.md",
+    "exercise": "Teil 3, Übung 4: Einen Ausflug mit dem Deutschlandticket planen",
+    "adaptation": "Original compact practice dialogue covering all planning points; not an official task or a real-time complete speaking examination."
+  },
+  "fps": 24,
+  "intro_seconds": 2.5,
+  "outro_seconds": 6.0,
+  "task_card": [
+    "Ziel und Programm",
+    "Treffpunkt und Abfahrt",
+    "Rückfahrt",
+    "Essen und Budget",
+    "Alternative bei Regen",
+    "Aufgaben verteilen"
+  ],
+  "takeaway": [],
+  "cta": [
+    "Mehr Aufgaben und Dialoge",
+    "im DTZ-B1-Sprechbuch",
+    "Amazon-Buchlink im Profil"
+  ],
+  "voices": {
+    "examiner": {
+      "audio": "../../shared-voices/qwen3-tts-german/male_middle_aged.wav",
+      "transcript": "../../shared-voices/qwen3-tts-german/reference_text.txt"
+    },
+    "candidate_a": {
+      "audio": "../../shared-voices/qwen3-tts-german/female_young_adult.wav",
+      "transcript": "../../shared-voices/qwen3-tts-german/reference_text.txt"
+    },
+    "candidate_b": {
+      "audio": "../../shared-voices/qwen3-tts-german/male_young_adult.wav",
+      "transcript": "../../shared-voices/qwen3-tts-german/reference_text.txt"
+    }
+  },
+  "turns": [
+    {
+      "id": "01", "speaker": "examiner", "name": "Prüfer",
+      "text": "Guten Tag. Nehmen Sie bitte Platz.",
+      "camera": "wide", "action": "welcome", "look_at": "candidate_a", "pause_after": 3.0
+    },
+    {
+      "id": "02", "speaker": "examiner", "name": "Prüfer",
+      "text": "Planen Sie gemeinsam einen Tagesausflug am Sonntag. Besprechen Sie die Punkte auf dem Aufgabenblatt.",
+      "camera": "examiner", "action": "explain", "look_at": "candidate_b", "pause_after": 9.2,
+      "task_card_delay_seconds": 1.2
+    },
+    {
+      "id": "03", "speaker": "candidate_a", "name": "Lea",
+      "text": "Wie wäre es mit Münster? Wir könnten zuerst im Park spazieren gehen.",
+      "camera": "candidate_a", "action": "propose", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "04", "speaker": "candidate_b", "name": "Samir",
+      "text": "Das klingt gut. Ich möchte aber höchstens zwanzig Euro zusätzlich ausgeben.",
+      "camera": "candidate_b", "action": "consider", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "05", "speaker": "candidate_a", "name": "Lea",
+      "text": "Dann nehmen wir Essen von zu Hause mit. Passt dir die Abfahrt um zehn?",
+      "camera": "candidate_a", "action": "propose", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "06", "speaker": "candidate_b", "name": "Samir",
+      "text": "Ja, das passt. Ich schaue nach einer passenden Zugverbindung.",
+      "camera": "candidate_b", "action": "agree", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "07", "speaker": "candidate_a", "name": "Lea",
+      "text": "Wir haben beide schon Fahrkarten. Dann nehmen wir einen Regionalzug. Wo treffen wir uns?",
+      "camera": "candidate_a", "action": "propose", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "08", "speaker": "candidate_b", "name": "Samir",
+      "text": "Am Haupteingang vom Bahnhof, um Viertel vor zehn. Nach dem Park würde ich gern in die Innenstadt gehen.",
+      "camera": "candidate_b", "action": "propose", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "09", "speaker": "candidate_a", "name": "Lea",
+      "text": "Gern. Wir können uns die Altstadt anschauen. Wann möchtest du zurückfahren?",
+      "camera": "candidate_a", "action": "agree", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "10", "speaker": "candidate_b", "name": "Samir",
+      "text": "Ich muss abends zu Hause sein. Können wir gegen sechs zurückfahren?",
+      "camera": "candidate_b", "action": "consider", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "11", "speaker": "candidate_a", "name": "Lea",
+      "text": "Ja, das passt. Und wenn es regnet? Dann macht der Spaziergang nicht so viel Spaß.",
+      "camera": "candidate_a", "action": "consider", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "12", "speaker": "candidate_b", "name": "Samir",
+      "text": "Dann gehen wir lieber in ein Café. Ich nehme trotzdem etwas zu essen und eine Flasche Wasser mit.",
+      "camera": "candidate_b", "action": "propose", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "13", "speaker": "candidate_a", "name": "Lea",
+      "text": "Gut, ich bringe auch etwas mit. Du prüfst die Zugverbindungen, und ich schaue nach einem günstigen Café.",
+      "camera": "candidate_a", "action": "agree", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "14", "speaker": "candidate_b", "name": "Samir",
+      "text": "Abgemacht. Also: Sonntag, Viertel vor zehn am Bahnhof, Münster, Park und Altstadt. Bei Regen gehen wir ins Café.",
+      "camera": "candidate_b", "action": "agree", "look_at": "candidate_a", "pause_after": 1.2
+    }
+  ]
+}

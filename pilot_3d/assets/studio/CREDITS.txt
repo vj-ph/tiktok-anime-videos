@@ -1,0 +1,32 @@
+CHARACTER ASSETS — CC BY 4.0
+
+Snow Rig (CC) Blender Foundation | studio.blender.org
+Source: https://studio.blender.org/characters/snow/v4/
+Download: https://studio.blender.org/download-source/files/ba/0f/ba0fe6d810333b1d73c1c359e4dc03cb-6.zip
+Archive SHA-256: 98d58ef3a07083ede14140bc462cccb55d317062846aa0eb652d2e4a7ac422a6
+Asset in archive: Snow/snow_v4.2.blend
+
+Rain Rig (CC) Blender Foundation | studio.blender.org
+Source: https://studio.blender.org/characters/rain/v3/
+Download: https://studio.blender.org/download-source/files/ee/a7/eea73e55dba1cea31c09848df6a794b2-4.zip
+Archive SHA-256: 80217f163f6392dc829233d63c2cfb5e1376775bc34101ad14f39631fea70d24
+Asset in archive: Rain v3.3/rain_v3.2.blend
+
+License: Creative Commons Attribution 4.0 International
+https://creativecommons.org/licenses/by/4.0/
+
+Modifications for this project: clothing/hair recoloring, scaling, duplication,
+posing, custom keyframed gestures, facial/lip animation and scene integration.
+No endorsement by the Blender Foundation or Blender Studio is implied.
+The original archived sources have not been modified.
+Legacy V1/V2/V3 exports include attribution in BOTH video masters.
+New explicitly opted-in social exports omit the permanent on-screen footer:
+their supplied publishing_caption.txt MUST accompany each post and include
+the credits, license/source links and modification notice.
+When publishing any clips, keep the attribution or reproduce these credits and
+the license/source links in the associated description or credits.
+CC BY 4.0 section 3(a)(2) allows attribution reasonable to the medium/context:
+https://creativecommons.org/licenses/by/4.0/legalcode.en
+
+The source pages are retained as snow-source.html and rain-source.html.
+Original asset textures remain under the applicable source asset license.

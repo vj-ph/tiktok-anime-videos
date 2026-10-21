@@ -1,0 +1,51 @@
+# Python bytecode and local test/tool caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local environments, credentials and downloaded tools
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+!.env.template
+.tools/
+.cache/
+
+# Generated builds and render/export directories, not build_*.py source files
+build/
+build_*/
+renders/
+exports/
+
+# Generated delivery media; keep reference audio and source images trackable
+*.mp4
+*.m4v
+*.mov
+*.mkv
+*.webm
+narration*.wav
+
+# Blender backups; authored .blend scenes remain trackable
+*.blend[0-9]*
+
+# Temporary files and logs
+*.log
+*.tmp
+*.part
+*.swp
+*.swo
+*~
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+dtz_b1_speaking/
