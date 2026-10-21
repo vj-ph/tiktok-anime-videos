@@ -2,7 +2,7 @@
 
 import math
 
-VERSION = 6
+VERSION = 7
 FUNCTION_WORDS = set(
     "aber als am an auch auf aus bei bis das dem den der des die doch du ein eine "
     "einem einen einer es für haben ich im in ist ja können könnten mit nach nicht "
@@ -25,11 +25,54 @@ def conversation_turn(timeline, t):
     return next((turn for turn in reversed(timeline["turns"]) if turn["start"] <= t), None)
 
 
+def attention_yaw(actor, turn):
+    target = turn.get("look_at") if turn["speaker"] == actor else turn["speaker"]
+    if actor.startswith("candidate"):
+        if target in ("candidate_a", "candidate_b") and target != actor:
+            return .48 if actor == "candidate_a" else -.48
+    elif target in ("candidate_a", "candidate_b"):
+        return .10 if target == "candidate_a" else -.10
+    return 0.0
+
+
+def gaze_at(plan, actor, t):
+    events = plan["attention"][actor]
+
+    def track(delay, duration):
+        value = 0.0
+        for index, event in enumerate(events):
+            if event["start"] > t:
+                break
+            stop = min(t, events[index + 1]["start"]) if index + 1 < len(events) else t
+            value += (event["yaw"] - value) * ease((stop - event["start"] - delay) / duration)
+        return value
+
+    head = track(.06, .60)
+    eyes = track(0, .42) * 1.18
+    # Eyes lead the head, but never swivel far enough to hide the irises.
+    eyes = head + min(.16, max(-.16, eyes - head))
+    return {"head": head, "eyes": eyes}
+
+
+def blink_at(plan, actor, t, fps, motion_step):
+    pose_fps = fps / motion_step
+    return max((math.cos(math.pi * (t - round(peak * pose_fps) / pose_fps) / .18) ** 2
+                if abs(t - round(peak * pose_fps) / pose_fps) < .09 else 0.0
+                for peak in plan["blinks"][actor]), default=0.0)
+
+
 def performance_plan(timeline):
     gestures, nods, glances = [], [], []
+    actors = ("candidate_a", "candidate_b", "examiner", "observer")
+    attention = {actor: [] for actor in actors}
     counts = {}
     for index, turn in enumerate(timeline["turns"]):
         speaker, action = turn["speaker"], turn["action"]
+        for actor in actors:
+            events = attention[actor]
+            yaw = attention_yaw(actor, turn)
+            if yaw != (events[-1]["yaw"] if events else 0.0):
+                events.append({"start": turn["start"], "yaw": yaw})
         ordinal = counts.get(speaker, 0)
         counts[speaker] = ordinal + 1
         words = turn["words"]
@@ -53,7 +96,7 @@ def performance_plan(timeline):
             peak = turn["start"] + (focus["start"] + focus["end"]) / 2
             if not peaks or peak - peaks[-1][0] >= 2.15:
                 peaks.append((peak, focus["word"]))
-            if len(peaks) == 3:
+            if len(peaks) == (2 if action in ("propose", "explain") else 1):
                 break
         for beat, (peak, word) in enumerate(peaks):
             side = "L" if (ordinal + beat + (speaker == "candidate_b")) % 2 == 0 else "R"
@@ -61,17 +104,26 @@ def performance_plan(timeline):
                 "actor": speaker, "turn_id": turn["id"], "action": action,
                 "peak": peak, "word": word, "hand": side,
                 "strength": (0.68 if action == "consider" else 1.0) * (1 if beat == 0 else 0.72),
+                "rise": (.32, .42, .36)[ordinal % 3],
+                "hold": (.08, .14, .06)[ordinal % 3],
+                "fall": (.62, .74, .56)[ordinal % 3],
+                "reach": (.80, 1.0, .90)[ordinal % 3],
             })
         if action == "agree":
             nods.append({"actor": speaker, "peak": turn["start"] + words[0]["end"] + 0.10,
                          "amount": 0.065})
         following = timeline["turns"][index + 1] if index + 1 < len(timeline["turns"]) else None
-        if speaker.startswith("candidate") and following and following["speaker"] != speaker:
-            nods.append({
-                "actor": following["speaker"],
-                "peak": turn["start"] + words[-1]["end"] + 0.16,
-                "amount": 0.042 if following["action"] == "agree" else 0.024,
-            })
+        listener = turn.get("look_at")
+        if (speaker.startswith("candidate") and listener in ("candidate_a", "candidate_b")
+                and listener != speaker and following and following["speaker"] == listener
+                and (following["action"] == "agree" or (ordinal % 2 == 0 and turn["duration"] >= 3))):
+            peak = min(turn["start"] + words[-1]["end"] + .12, following["start"] - .34)
+            if peak - .19 >= turn["start"]:
+                nods.append({
+                    "actor": listener, "turn_id": turn["id"], "kind": "listener",
+                    "peak": peak,
+                    "amount": .034 if following["action"] == "agree" else .022,
+                })
         if action == "consider":
             pause = next(((left["end"] + right["start"]) / 2 for left, right in zip(words, words[1:])
                           if right["start"] - left["end"] >= 0.18 and left["end"] >= 1.1
@@ -81,25 +133,43 @@ def performance_plan(timeline):
         if speaker.startswith("candidate") and index % 3 == 1:
             glances.append({"actor": "observer", "peak": turn["start"] + min(1.6, turn["duration"] / 2),
                             "amount": 0.6})
+    blinks = {}
+    for index, actor in enumerate(actors):
+        peaks, peak, ordinal = [], .65 + index * .61, 0
+        while peak < timeline["duration"]:
+            peaks.append(peak)
+            peak += (4.3, 5.1, 3.9, 4.8)[(ordinal + index) % 4]
+            ordinal += 1
+        for event in attention[actor]:
+            if abs(event["yaw"]) < .2:
+                continue
+            peak = event["start"] + .12
+            if peak < timeline["duration"]:
+                peaks = [value for value in peaks if abs(value - peak) >= .75]
+                peaks.append(peak)
+        blinks[actor] = sorted(peaks)
     return {"version": VERSION, "gestures": gestures, "nods": nods, "glances": glances,
-            "timing": "Aligned content-word emphasis; anticipation, hold and release; attention held across gaps."}
+            "attention": attention, "blinks": blinks,
+            "timing": "Aligned, varied emphasis; selective listener responses; bounded eye lead and smooth head turns."}
 
 
 def performance_at(plan, actor, t):
     hands = {"L": 0.0, "R": 0.0}
     actions = {"L": "", "R": ""}
+    reach = {"L": 1.0, "R": 1.0}
     for event in plan["gestures"]:
         if event["actor"] != actor:
             continue
-        value = event["strength"] * envelope(t, event["peak"])
+        value = event["strength"] * envelope(t, event["peak"], event["rise"], event["hold"], event["fall"])
         if value > hands[event["hand"]]:
             hands[event["hand"]] = value
             actions[event["hand"]] = event["action"]
+            reach[event["hand"]] = event["reach"]
     nod = sum(event["amount"] * envelope(t, event["peak"], .19, 0, .32)
               for event in plan["nods"] if event["actor"] == actor)
     glance = max((event["amount"] * envelope(t, event["peak"], .20, .08, .42)
                   for event in plan["glances"] if event["actor"] == actor), default=0.0)
-    return {"hands": hands, "actions": actions, "accent": max(hands.values()),
+    return {"hands": hands, "actions": actions, "reach": reach, "accent": max(hands.values()),
             "nod": min(.085, nod), "glance": glance}
 
 

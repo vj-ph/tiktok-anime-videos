@@ -84,6 +84,41 @@ It is set-dressing, not a floating video watermark; it is visible in the room an
 Lea's coverage, not forced into every camera angle. Omit this field for an
 unbranded room or provide your own image. Source/asset hashes track these changes.
 
+### V7 conversational acting
+
+New scene builds coordinate the eye target and head turn instead of snapping the
+eyes to a partner before the head has moved. Eyes lead gently, with at most
+0.16 radians of planned head-relative yaw; both tracks are continuous functions
+of speech time, independent of bake sampling. This prevents preview and
+production profiles from accumulating different gaze poses. The limit is a
+project animation choice, not an exam requirement or a substitute for checking
+rendered iris visibility.
+
+Blink spacing varies by actor, with a blink near a major attention change.
+Peaks land on the actual pose grid so both profiles retain full eyelid closure.
+Listener acknowledgements are selective and finish before that listener starts
+speaking. Proposals/explanations have at most two emphasis gestures; other
+actions have at most one. Reach and anticipation/hold/release timing vary across
+turns, while fingertip/table contact constraints remain enforced. Speaker
+cameras, mouth cues, subtitle timing and learner pauses are unchanged.
+
+`build_v7_acting_test/pilot.mp4` is a **12.417-second internal acting test**, not
+a short promotional cut or a replacement publication video. It uses complete
+turns 03–04 and their original pauses, with an exact PCM crop from
+`build_v6_hold12_cta6_production/`. Its newly baked animation runs on every frame
+at 24 fps; native 360×640, four-sample diagnostic renders are upscaled for
+review. `DIAGNOSTIC.json` records the source crop; `scene_checks.json` records
+native rig, contact, blink and gaze-continuity checks. Review the moving
+transition and listener poses, not only a settled still. `comparison.mp4`
+shows the same dialogue side by side (original V6 / refined V7);
+`encoded_eye_transition.jpg` shows 24 consecutive encoded transition frames.
+
+The approved 103.917-second full production remains unchanged at
+`build_v6_hold12_cta6_production/pilot.mp4`. Future full episodes use V7 acting
+when built into a **fresh directory**. Do not resume a pre-V7 scene build with
+changed source files; use the existing verified speech-reuse options instead.
+No promotional cut is needed for this workflow.
+
 ### Shared German voices and V6 entrance
 
 The shipped episode files now use the existing references in

@@ -278,6 +278,39 @@ def check(build):
                         raise ValueError(f"{name}: attention resets during the pause after {turn['id']}.")
                     gap_samples += 1
         report["attention_during_turn_gaps"] = {"candidate_poses_checked": gap_samples}
+    if manifest.get("visual_version", 0) >= 7:
+        from scene_direction import gaze_at
+
+        previous = {}
+        maximum_head_step, maximum_eye_step, maximum_eye_lead = 0.0, 0.0, 0.0
+        samples = 0
+        for frame in range(1, timeline["total_frames"] + 1, step):
+            scene.frame_set(frame)
+            t = (frame - 1) / timeline["fps"]
+            for name, actor in actors.items():
+                gaze = gaze_at(manifest["performance"], name, t)
+                yaw = actor.bones["FK-Head"].rotation_euler.y
+                eyes = actor.bones["TGT-Eyes"].matrix.translation.copy()
+                if abs(yaw - gaze["head"]) > .0001:
+                    raise ValueError(f"{name}: baked head does not match the continuous attention plan at frame {frame}.")
+                lead = abs(gaze["eyes"] - gaze["head"])
+                if lead > .160001:
+                    raise ValueError(f"{name}: eye lead exceeds the head-relative limit at frame {frame}.")
+                maximum_eye_lead = max(maximum_eye_lead, lead)
+                if name in previous:
+                    last_yaw, last_eyes = previous[name]
+                    head_step, eye_step = abs(yaw - last_yaw), (eyes - last_eyes).length
+                    if head_step > .055 * step or eye_step > .17 * step:
+                        raise ValueError(f"{name}: gaze snaps at frame {frame}: {head_step:.4f}rad, {eye_step:.4f}m.")
+                    maximum_head_step = max(maximum_head_step, head_step)
+                    maximum_eye_step = max(maximum_eye_step, eye_step)
+                previous[name] = (yaw, eyes)
+                samples += 1
+        report["continuous_attention"] = {
+            "native_control_samples": samples, "maximum_head_step_radians": maximum_head_step,
+            "maximum_eye_target_step_m": maximum_eye_step, "maximum_planned_eye_lead_radians": maximum_eye_lead,
+            "note": "Control-space continuity and eye-lead bounds; iris visibility also requires rendered review.",
+        }
     for frame in range(1, timeline["total_frames"] + 1, 38):
         scene.frame_set(frame)
         t = (frame - 1) / timeline["fps"]

@@ -196,7 +196,7 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
     from mathutils import Matrix, Vector
     from polish_exchange import MOUTH_POSES, mouth_pose, pulse, smooth
     from studio_characters import key
-    from scene_direction import conversation_turn, performance_at, performance_plan
+    from scene_direction import blink_at, gaze_at, performance_at, performance_plan
 
     candidate = actor.name.startswith("candidate")
     rain = actor.kind == "rain"
@@ -211,7 +211,6 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
     for obj in (actor.root, actor.rig):
         if obj.animation_data:
             obj.animation_data.action = None
-    gaze = 0.0
     top = "MSTR-UpperLip" if rain else "MSTR-Lip_Top"
     bottom = "MSTR-LowerLip" if rain else "MSTR-Lip_Bottom"
     upper = "ACT-Eyelid_Upper" if rain else "MSTR-Eyelid_Upper"
@@ -277,13 +276,8 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
             0, -0.045 * math.sin(seated * math.pi) - 0.006 * gesture,
             -(0.23 if rain else 0.25) * seated + 0.0012 * math.sin(t * 1.55 + index * 1.7),
         )), frame)
-        context = conversation_turn(timeline, t)
-        target = context.get("look_at") if context and context["speaker"] == actor.name else context["speaker"] if context else None
-        partner_attention = candidate and target in ("candidate_a", "candidate_b") and target != actor.name
-        want = side_sign * 0.48 if partner_attention else 0
-        if not candidate and target in ("candidate_a", "candidate_b"):
-            want = 0.10 if target == "candidate_a" else -0.10
-        gaze += (want - gaze) * (1 - math.exp(-motion_step / timeline["fps"] / .28))
+        attention = gaze_at(plan, actor.name, t)
+        gaze = attention["head"]
         reading = direction["glance"]
         if window is not None and window[0] <= t < window[1]:
             reading = pulse(t, window[0] + 0.3 + index * 0.24, 3)
@@ -294,10 +288,10 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
                                 gaze, side_sign * (0.025 if thinking else 0.012) * gesture), frame)
         bpy.context.view_layer.update()
         eye_height = (1.47 if rain else 1.62) - (0.23 if rain else 0.25) * seated
-        if partner_attention:
-            eye_height += (0.05 if rain else -0.05) / actor.scale
-        eye_target = Vector((side_sign * 1.75 if partner_attention else gaze * 4,
-                             -1.05 if partner_attention else -1.65, eye_height - 0.015))
+        if candidate:
+            eye_height += (0.05 if rain else -0.05) / actor.scale * min(1, abs(gaze) / .48)
+        eye_target = Vector((math.sin(attention["eyes"]) * 1.65,
+                             -math.cos(attention["eyes"]) * 1.65, eye_height - 0.015))
         eye_target = eye_target.lerp(Vector((side_sign * 0.15, -0.95, eye_height - 0.30)), min(1, reading))
         actor.position("TGT-Eyes", eye_target, frame)
         jaw, width, rounding, seal = mouth_pose(turn["mouth_cues"], phase) if speaking else MOUTH_POSES["X"]
@@ -307,10 +301,7 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
         offset("MSTR-Mouth", (0, -0.004 * rounding, 0), frame)
         offset(top, (0, -0.0015 * rounding, -0.0011 * seal), frame)
         offset(bottom, (0, -0.0018 * rounding, 0.0017 * seal), frame)
-        blink_cycle = math.floor((t + index * 0.71) / 4.7)
-        pose_fps = timeline["fps"] / motion_step
-        blink_peak = round((blink_cycle * 4.7 + 0.54 - index * 0.71) * pose_fps) / pose_fps
-        blink = pulse(t, blink_peak - 0.09, 0.18)
+        blink = blink_at(plan, actor.name, t, timeline["fps"], motion_step)
         hand_poses = {}
         for side, sign in (("L", 1), ("R", -1)):
             smile = 0.08 if speaking else 0.18 + 0.24 * nod / 0.065
@@ -324,12 +315,13 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
                     offset(f"MSTR-Eyering_{region}.{side}", (0, 0, 0), frame)
             wrist = 0.902 if rain else 0.91
             hand_gesture = direction["hands"][side]
+            hand_reach = direction["reach"][side] * hand_gesture
             action = direction["actions"][side]
             reflect = action == "consider"
             lift = .038 if reflect else .055 if action in ("welcome", "explain") else .066
-            hand = Vector((sign * (.24 + (-.018 if reflect else .032) * hand_gesture),
-                           -.38 - (.008 if reflect else .035) * hand_gesture,
-                           wrist / actor.scale + lift * hand_gesture))
+            hand = Vector((sign * (.24 + (-.018 if reflect else .032) * hand_reach),
+                           -.38 - (.008 if reflect else .035) * hand_reach,
+                           wrist / actor.scale + lift * hand_reach))
             hanging = Vector((sign * 0.24, -0.02, 0.82 / actor.scale))
             hand = hanging.lerp(hand, seated)
             rotation = Matrix.Rotation(sign * hand_gesture * (.32 if reflect else .85), 4, "Y") @ Matrix.Rotation(-sign * math.pi / 2, 4, "Z")
