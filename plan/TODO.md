@@ -13,24 +13,28 @@ Status recorded: October 22, 2026. Paths below are relative to the repository ro
 - [x] Complete the Ausflug production video.
 - [x] Generate the full Lerntreffen preview.
 - [x] Generate and quality-check the full Teil 1 preview, including both candidates' introductions and examiner follow-ups.
-- [x] Prepare TikTok captions for all three episodes.
-- [x] Prepare Instagram captions for all three episodes.
+- [x] Generate and quality-check the full Teil 2 preview, with separate pictures, descriptions and personal-experience follow-ups for both candidates.
+- [x] Prepare TikTok captions for all four episodes.
+- [x] Prepare Instagram captions for all four episodes.
 
 ## Extend DTZ speaking coverage
 
 Ausflug and Lerntreffen cover Teil 3, jointly planning something.
 The new Teil 1 format covers introductions and linked examiner follow-ups for both candidates.
-Teil 2 remains to be implemented:
+Teil 2 now covers picture descriptions and linked personal-experience interviews
+for both candidates, using the book's weekly-market and supermarket pictures:
 
 - [x] Create a Teil 1 practice-video format using the existing exam room and characters: examiner invitation, candidate introduction, examiner follow-up and candidate response.
 - [x] Cover Teil 1A, introducing oneself: background, birthplace, residence, work, family and languages.
 - [x] Cover Teil 1B, answering examiner follow-up questions connected to the introduction, with natural model responses rather than only a prepared monologue.
-- [ ] Create a Teil 2 practice-video format with a clearly readable photograph, candidate description and examiner-led discussion of related personal experiences.
-- [ ] Cover Teil 2A, describing the photograph and the situation it shows; use an original or appropriately licensed image rather than copying an official exam picture.
-- [ ] Cover Teil 2B, discussing personal experiences and answering related follow-up questions, including explanations or comparisons where appropriate. Do not end the episode after the picture description.
+- [x] Create a Teil 2 practice-video format with a clearly readable photograph, candidate description and examiner-led discussion of related personal experiences.
+- [x] Cover Teil 2A, describing the photograph and the situation it shows; use an original or appropriately licensed image rather than copying an official exam picture. The user confirmed promotional reuse rights for the two book images.
+- [x] Cover Teil 2B, discussing personal experiences and answering related follow-up questions, including explanations or comparisons where appropriate. Do not end the episode after the picture description.
 - [ ] Adapt the new scripts from the speaking book, review a full preview of each new format, and prepare production videos and matching TikTok/Instagram captions after approval.
 - [x] Prepare the book-based Teil 1 script and full-episode TikTok/Instagram caption drafts; production and publication remain pending.
+- [x] Prepare the book-based Teil 2 script and full-episode TikTok/Instagram caption drafts, with image attribution and complete disclosures; production and publication remain pending.
 - [ ] Review and approve the full Teil 1 preview, then render and quality-check its production video with unchanged speech and timing.
+- [ ] Review and approve the full Teil 2 preview, then render and quality-check its production video with unchanged speech and timing.
 
 ## Publication tasks
 
@@ -62,6 +66,7 @@ Teil 2 remains to be implemented:
 | Ausflug | `pilot_3d/builds/v6_hold12_cta6_production/pilot.mp4` - production | `posts/dtz_b1_ausflug/` |
 | Lerntreffen | `pilot_3d/builds/lerntreffen_v7_preview_r1/pilot.mp4` - preview only | `posts/dtz_b1_lerntreffen/` |
 | Teil 1: Vorstellung und Nachfragen | `pilot_3d/builds/teil1_vorstellung_v7_preview_r2/pilot.mp4` - preview only | `posts/dtz_b1_teil1_vorstellung/` |
+| Teil 2: Bildbeschreibung und Erfahrungen beim Einkaufen | `pilot_3d/builds/teil2_einkaufen_v7_preview_r2/pilot.mp4` - preview only | `posts/dtz_b1_teil2_einkaufen/` |
 
 Each caption folder contains `tiktok.txt` and `instagram.txt`.
 No publication dates, published-post status or performance results have been confirmed here yet.

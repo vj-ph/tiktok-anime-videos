@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "id": "dtz_teil2_einkaufen_v7",
+  "exam_part": 2,
+  "presentation": "social",
+  "visual_version": 7,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "Einkaufen auf dem Markt und im Supermarkt",
+  "label": "DTZ B1 · Sprechen · Teil 2",
+  "disclaimer": "Unabhängige, verkürzte Übungssimulation zu Teil 2; keine vollständige DTZ-Prüfung.",
+  "branding": "DEUTSCHKOMPASS",
+  "scene": {
+    "template": "exam_room",
+    "base_scene": "../builds/v2/studio.blend",
+    "entrance": true,
+    "wall_logo": "../assets/deutschkompass-logo.png"
+  },
+  "header": {
+    "brand": "DEUTSCHKOMPASS · B1 SPRECHEN",
+    "topic": "Teil 2 · Einkaufen"
+  },
+  "sections": {
+    "2A": "Teil 2A · Bild beschreiben",
+    "2B": "Teil 2B · Erfahrungen"
+  },
+  "pictures": {
+    "wochenmarkt": {
+      "candidate": "candidate_a",
+      "path": "../assets/pictures/wochenmarkt.jpg",
+      "label": "Wochenmarkt",
+      "credit": "Bildimpulse: DeutschKompass, aus dem DTZ-B1-Sprechbuch (Übungen 1 und 7).",
+      "permission": "The user confirmed ownership/rights for commercial promotional video reuse on 2026-10-22."
+    },
+    "supermarkt": {
+      "candidate": "candidate_b",
+      "path": "../assets/pictures/supermarkt.jpg",
+      "label": "Supermarkt",
+      "credit": "Bildimpulse: DeutschKompass, aus dem DTZ-B1-Sprechbuch (Übungen 1 und 7).",
+      "permission": "The user confirmed ownership/rights for commercial promotional video reuse on 2026-10-22."
+    }
+  },
+  "hook": "DTZ B1: Beschreibe das Bild",
+  "task_card": [],
+  "takeaway": [],
+  "takeaway_seconds": 0,
+  "cta": ["Mehr Aufgaben und Dialoge", "im DTZ-B1-Sprechbuch", "Amazon-Buchlink im Profil"],
+  "publication": {
+    "intro": "Zwei Bilder, zwei Modelldialoge: Lea beschreibt einen Wochenmarkt, Samir eine Einkaufssituation im Supermarkt. Beide beantworten anschließend Fragen zu ihren eigenen Erfahrungen.",
+    "disclosure": "Unabhängige, verkürzte Übungssimulation zu Teil 2; keine offizielle Aufgabe und keine vollständige Prüfung. Die Lernpausen gehören zum Video, nicht zum Prüfungsablauf.",
+    "hashtags": ["#DTZ", "#B1Deutsch", "#Bildbeschreibung", "#DeutschLernen", "#DeutschKompass"]
+  },
+  "book_cover": "../assets/book-cover.jpg",
+  "source": {
+    "book": "../../../german_exam_books/b1/speaking_dtz_gpt_v1/book_no_toc.md",
+    "exercises": ["Teil 2, Übung 1: Auf dem Wochenmarkt einkaufen", "Teil 2, Übung 7: Angebote im Supermarkt vergleichen"],
+    "images": {
+      "wochenmarkt": "../../../german_exam_books/b1/speaking_dtz_gpt_v1/images/01.jpg",
+      "supermarkt": "../../../german_exam_books/b1/speaking_dtz_gpt_v1/images/07.jpg"
+    },
+    "adaptation": "Original B1 practice dialogue based on the book's shopping topics and supplied pictures, not copied from an official task. Both candidates describe a different picture and answer two linked personal-experience questions. Visible details are distinguished from guesses; fictional biographies remain consistent with Teil 1.",
+    "framework_reference": "https://www.gast.de/fileadmin/gast.de/GAST/5_DTZ/PDF/gast_DTZ_UEbungssatz_1.pdf",
+    "framework_checked": "2026-10-22",
+    "coverage": {
+      "Wochenmarkt beschreiben": ["02", "03"],
+      "Eigene Einkaufsgewohnheiten erklären": ["04", "05"],
+      "Erfahrungen vergleichen": ["06", "07"],
+      "Supermarkt beschreiben": ["08", "09"],
+      "Einkäufe planen und begründen": ["10", "11"],
+      "Ein persönliches Beispiel nennen": ["12", "13"]
+    }
+  },
+  "fps": 24,
+  "intro_seconds": 2.5,
+  "outro_seconds": 6.0,
+  "voices": {
+    "examiner": {
+      "audio": "../../../shared-voices/qwen3-tts-german/male_middle_aged.wav",
+      "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+    },
+    "candidate_a": {
+      "audio": "../../../shared-voices/qwen3-tts-german/female_young_adult.wav",
+      "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+    },
+    "candidate_b": {
+      "audio": "../../../shared-voices/qwen3-tts-german/male_young_adult.wav",
+      "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+    }
+  },
+  "turns": [
+    {
+      "id": "01", "speaker": "examiner", "name": "Prüfer",
+      "text": "Guten Tag. Nehmen Sie bitte Platz.",
+      "camera": "wide", "action": "welcome", "look_at": "candidate_a", "pause_after": 3.0
+    },
+    {
+      "id": "02", "speaker": "examiner", "name": "Prüfer",
+      "text": "Im zweiten Teil sprechen wir über Alltagssituationen. Lea, Ihr Bild zeigt einen Markt. Beschreiben Sie die Situation.",
+      "camera": "examiner", "action": "explain", "look_at": "candidate_a", "pause_after": 9.2,
+      "picture": "wochenmarkt", "picture_card_delay_seconds": 1.2
+    },
+    {
+      "id": "03", "speaker": "candidate_a", "name": "Lea", "section": "2A",
+      "text": "Auf dem Bild sehe ich einen Markt im Freien. Vorne steht eine Frau mit einem großen Einkaufskorb. Sie spricht mit einem Mann hinter einem Stand. Auf dem Tisch liegen Obst und Gemüse, zum Beispiel Äpfel und Karotten. Im Hintergrund sind weitere Stände und Kunden. Vielleicht fragt die Frau gerade nach einem Preis.",
+      "camera": "picture_a", "action": "describe", "look_at": "examiner", "pause_after": 1.2, "picture": "wochenmarkt"
+    },
+    {
+      "id": "04", "speaker": "examiner", "name": "Prüfer", "section": "2B",
+      "text": "Kaufen Sie selbst auf dem Markt ein? Was gefällt Ihnen daran?",
+      "camera": "examiner", "action": "ask", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "05", "speaker": "candidate_a", "name": "Lea", "section": "2B",
+      "text": "Ja, samstags gehe ich manchmal mit meiner Schwester auf den Markt. Wir kaufen dort Gemüse für die Woche. Ich mag es, dass ich Fragen zu den Produkten stellen kann. Wenn ich wenig Zeit habe, gehe ich aber lieber in den Supermarkt.",
+      "camera": "candidate_a", "action": "answer", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "06", "speaker": "examiner", "name": "Prüfer", "section": "2B",
+      "text": "Und wie war das früher in Polen?",
+      "camera": "examiner", "action": "ask", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "07", "speaker": "candidate_a", "name": "Lea", "section": "2B",
+      "text": "In meiner Nachbarschaft gab es auch einen Markt. Meine Mutter hat dort oft eingekauft. Ich bin manchmal mitgegangen. Hier in Köln kaufe ich ähnlich ein, aber ich kenne die Verkäufer noch nicht so gut.",
+      "camera": "candidate_a", "action": "answer", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "08", "speaker": "examiner", "name": "Prüfer", "section": "2A",
+      "text": "Danke, Lea. Samir, Ihr Bild zeigt einen Supermarkt. Was sehen Sie dort?",
+      "camera": "examiner", "action": "ask", "look_at": "candidate_b", "pause_after": 9.2,
+      "picture": "supermarkt", "picture_card_delay_seconds": 1.2
+    },
+    {
+      "id": "09", "speaker": "candidate_b", "name": "Samir", "section": "2A",
+      "text": "Das Bild zeigt eine Frau im Supermarkt. Sie steht vor einem Kühlregal und hält zwei Becher in den Händen. Neben ihr steht ein Einkaufswagen. Am Regal sehe ich gelbe Schilder mit Angeboten. Vielleicht vergleicht sie gerade die Preise. Im Hintergrund sind noch andere Kunden.",
+      "camera": "picture_b", "action": "describe", "look_at": "examiner", "pause_after": 1.2, "picture": "supermarkt"
+    },
+    {
+      "id": "10", "speaker": "examiner", "name": "Prüfer", "section": "2B",
+      "text": "Wie planen Sie Ihre Einkäufe für die Familie?",
+      "camera": "examiner", "action": "ask", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "11", "speaker": "candidate_b", "name": "Samir", "section": "2B",
+      "text": "Meine Frau und ich schreiben meistens eine Liste. Vorher schauen wir nach, was noch im Kühlschrank ist. So kaufen wir nicht zu viel. Bei Angeboten vergleiche ich auch die Preise. Große Packungen nehme ich nur, wenn wir sie wirklich brauchen.",
+      "camera": "candidate_b", "action": "answer", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "12", "speaker": "examiner", "name": "Prüfer", "section": "2B",
+      "text": "Haben Sie schon einmal zu viel eingekauft?",
+      "camera": "examiner", "action": "ask", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "13", "speaker": "candidate_b", "name": "Samir", "section": "2B",
+      "text": "Ja, einmal habe ich viel Obst im Angebot gekauft. Leider konnten wir nicht alles essen. Ein Teil ist schlecht geworden. Seitdem kaufe ich lieber kleinere Mengen, auch wenn eine große Packung günstiger aussieht.",
+      "camera": "candidate_b", "action": "answer", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "14", "speaker": "examiner", "name": "Prüfer",
+      "text": "Vielen Dank. Damit ist der zweite Teil beendet.",
+      "camera": "examiner", "action": "explain", "phase": "dialogue", "look_at": "candidate_b", "pause_after": 1.2
+    }
+  ]
+}

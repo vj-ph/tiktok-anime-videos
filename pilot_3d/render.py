@@ -229,7 +229,38 @@ def mux(build, episode_path=None):
     if social:
         video = (f"scale={output_size[0]}:{output_size[1]}:flags=lanczos,"
                  f"fps={timeline['fps']},ass=captions.ass")
-        if episode.get("social_kind") == "exchange" or episode["outro_seconds"] == 0:
+        if episode.get("pictures"):
+            from picture_presentation import picture_filters
+            from prepare_audio import atomic_json
+            from social_captions import cover_bounds
+            from episode_config import takeaway_seconds
+
+            inputs, filters, output, windows = picture_filters(episode, timeline)
+            filters.insert(0, f"[0:v]{video}[captioned]")
+            if episode["outro_seconds"] > 0:
+                cover = Path(episode["book_cover"])
+                x, y, right, bottom = cover_bounds(cover)
+                cover_input = 2 + len(windows)
+                inputs += ["-loop", "1", "-framerate", str(timeline["fps"]), "-i", str(cover)]
+                cover_start = round((timeline["duration"] - episode["outro_seconds"]
+                                     + takeaway_seconds(episode)) * timeline["fps"])
+                filters += [f"[{cover_input}:v]scale={right-x}:{bottom-y}[cover]",
+                            f"[{output}][cover]overlay=x={x}:y={y}:enable='gte(n,{cover_start})'[covered]"]
+                output = "covered"
+            filters.append(f"[{output}]fps={timeline['fps']}[video]")
+            run(common + inputs + ["-filter_complex_threads", "1", "-filter_complex", ";".join(filters),
+                                  "-map", "[video]", "-map", "1:a:0"] + encoding + ["pilot.mp4"], cwd=build)
+            atomic_json(build / "picture_timing_report.json", {
+                "fps": timeline["fps"], "windows": windows,
+                "policy": "Whole image, aspect-fit without cropping; output-frame enables, end exclusive.",
+            })
+            report_path = build / "safe_zone_report.json"
+            report = json.loads(report_path.read_text())
+            report["pictures"] = windows
+            if episode["outro_seconds"] > 0:
+                report["book_cover"] = {"bounds": [x, y, right, bottom], "start": cover_start / timeline["fps"]}
+            atomic_json(report_path, report)
+        elif episode.get("social_kind") == "exchange" or episode["outro_seconds"] == 0:
             run(common + ["-vf", video + f",fps={timeline['fps']}"] + encoding + ["pilot.mp4"], cwd=build)
         else:
             from social_captions import cover_bounds

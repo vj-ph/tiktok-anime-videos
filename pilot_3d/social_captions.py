@@ -7,6 +7,7 @@ from pathlib import Path
 
 from align_words import validate_words
 from episode_config import instruction_turn, section_windows, takeaway_seconds, task_window
+from picture_presentation import picture_windows
 
 SAFE = (88, 200, 512, 752)
 LEFT, RIGHT = 104, 496
@@ -134,6 +135,7 @@ def readable_pages(words, start, end, fps=24):
 
 def caption_pages(episode, timeline):
     pages = []
+    reveals = {w["turn"]: w["start"] for w in picture_windows(episode, timeline) if w["mode"] == "reveal"}
     for index, turn in enumerate(timeline["turns"]):
         words = validate_words(turn["words"], turn["text"], turn["wav_duration"])
         if episode.get("subtitle_mode") == "readable":
@@ -141,7 +143,9 @@ def caption_pages(episode, timeline):
                    else timeline["duration"] - (0 if episode.get("social_kind") == "exchange"
                                                else episode["outro_seconds"]))
             instruction = instruction_turn(timeline["turns"])
-            if episode.get("social_kind") not in ("exchange", "promo") and instruction is turn:
+            if turn.get("id") in reveals:
+                end = reveals[turn["id"]]
+            elif episode.get("social_kind") not in ("exchange", "promo") and instruction is turn:
                 window = task_window(timeline)
                 end = window[0] if window is not None else turn["end"]
             try:
@@ -234,6 +238,11 @@ def validate_layout(episode):
     for label in episode.get("sections", {}).values():
         if 241 + len(measured_lines(label, 22, True)) * 27 > limits["header"]:
             raise ValueError(f"Section header overlaps or exceeds the safe area: {label!r}; shorten the text.")
+    for picture in episode.get("pictures", {}).values():
+        if len(measured_lines(picture["label"], 24, True)) != 1:
+            raise ValueError("Picture reading-card labels must fit one line.")
+        if len(measured_lines("Bild · " + picture["label"], 19, True, width=220)) != 1:
+            raise ValueError("Compact picture labels must fit beside the speaker.")
     return rows
 
 
@@ -313,6 +322,19 @@ def make_ass(episode, timeline):
                 y = 650 + index * 33 if examiner else 625 + index * 35 if readable else 651 + index * 38
                 event(a, b, f"{{\\an7\\pos({LEFT},{y})\\fs{29 if examiner else 31}}}" + " ".join(rendered))
 
+    for picture in picture_windows(episode, timeline):
+        start, end = picture["start"], picture["end"]
+        label = episode["pictures"][picture["picture"]]["label"]
+        if picture["mode"] == "reveal":
+            panel(start, end, 287, 742, "08")
+            text(start, end, label, 303, 24, True, "CDECD9")
+            text(start, end, "Beschreibe das Bild.", 579, 24)
+            text(start, end, "Erzähle von dir.", 620, 24)
+            text(start, end, "Lernpause · Video anhalten.", 700, 19)
+        else:
+            event(start, end, r"{\pos(0,0)\p1\alpha&H08&}"
+                  + "m 96 280 l 332 280 332 437 96 437" + r"{\p0}", "Box")
+            text(start, end, "Bild · " + label, 284, 19, True, "CDECD9")
     if episode.get("social_kind") == "exchange":
         return "".join(lines)
     intro_end = timeline["turns"][0]["start"]
@@ -340,13 +362,17 @@ def make_ass(episode, timeline):
 def write_publication(build, episode):
     credit = (Path(__file__).resolve().parent / "assets/studio/CREDITS.txt").read_text()
     publication = episode.get("publication", {})
+    picture_credit = "\n".join(dict.fromkeys(p["credit"] for p in episode.get("pictures", {}).values()))
+    if picture_credit:
+        picture_credit += "\n\n"
+        credit += "\nPicture stimuli\n" + picture_credit
     caption = (
         f"{episode['title']} | {episode.get('label', '')}\n\n"
         + publication.get("intro", episode.get("hook", "")) + "\n"
         + " ".join(episode.get("cta", [])) + "\n\n"
         + publication.get("disclosure", episode.get("disclaimer", ""))
         + "\nKI-generierte Stimmen und animierte Figuren.\n\n"
-        +
+        + picture_credit +
         "Snow Rig (CC) Blender Foundation | studio.blender.org\n"
         "https://studio.blender.org/characters/snow/v4/\n"
         "Rain Rig (CC) Blender Foundation | studio.blender.org\n"

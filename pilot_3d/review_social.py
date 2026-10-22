@@ -13,6 +13,55 @@ from prepare_audio import atomic_json, sha256_file
 from episode_config import promo_settings, task_window
 from social_captions import (MAX_PAGE_CPS, MIN_PAGE_SECONDS, SAFE, caption_pages,
                              displayed_seconds, make_ass)
+from picture_presentation import picture_filters, picture_windows
+
+
+def review_pictures(build, episode, timeline):
+    """Check real decoded pixels at both edges, not merely an overlay manifest."""
+    import numpy as np
+    from PIL import Image
+    windows = picture_filters(episode, timeline)[3]
+    recorded = json.loads((build / "picture_timing_report.json").read_text())
+    if recorded["windows"] != windows or recorded["fps"] != timeline["fps"]:
+        raise ValueError("Picture receipt differs from the episode/assets/clock.")
+    numbers = sorted({frame for w in windows
+                      for frame in (w["start_frame"]-1, w["start_frame"],
+                                    (w["start_frame"]+w["end_frame"])//2,
+                                    w["end_frame"]-1, w["end_frame"])
+                      if 0 <= frame < timeline["total_frames"]})
+    expression = "+".join(f"eq(n\\,{n})" for n in numbers)
+    result = subprocess.run([
+        "ffmpeg", "-nostdin", "-v", "error", "-i", str(build / "pilot.mp4"),
+        "-vf", f"select={expression}", "-fps_mode", "vfr",
+        "-pix_fmt", "rgb24", "-f", "rawvideo", "pipe:1",
+    ], check=True, capture_output=True)
+    size = 720 * 1280 * 3
+    if len(result.stdout) != size * len(numbers):
+        raise ValueError("Decoded picture-boundary frame count differs from the request.")
+    frames = {n: np.frombuffer(result.stdout[i*size:(i+1)*size], dtype=np.uint8).reshape(1280, 720, 3)
+              for i, n in enumerate(numbers)}
+    checks = []
+    for window in windows:
+        x, y, right, bottom = window["bounds"]
+        with Image.open(window["path"]) as source:
+            reference = np.asarray(source.convert("RGB").resize(
+                (right-x, bottom-y), Image.Resampling.LANCZOS)).astype(float)
+        comparisons = []
+        for frame in (window["start_frame"]-1, window["start_frame"],
+                      (window["start_frame"]+window["end_frame"])//2,
+                      window["end_frame"]-1, window["end_frame"]):
+            if frame not in frames:
+                continue
+            error = float(np.abs(frames[frame][y:bottom, x:right].astype(float) - reference).mean())
+            visible = window["start_frame"] <= frame < window["end_frame"]
+            if (visible and error > 12) or (not visible and error < 18):
+                raise ValueError(f"Wrong encoded picture/transition at frame {frame}: {window['picture']}, "
+                                 f"expected visible={visible}, mean absolute RGB error={error:.3f}")
+            comparisons.append({"frame": frame, "visible": visible, "mean_absolute_rgb_error": error})
+        checks.append({**window, "decoded_checks": comparisons})
+    return {"windows": checks, "decoded_frames_checked": len(numbers),
+            "maximum_visible_mean_absolute_rgb_error": 12,
+            "minimum_absent_mean_absolute_rgb_error": 18}
 
 
 def frame_at(build, filename, seconds, target):
@@ -150,10 +199,14 @@ def review(build):
     if not safe["all_inside"] or safe.get("overlapping_text_states"):
         raise ValueError("Missing successful text-safe-area audit.")
     report["safe_area_states_checked"] = safe["states_checked"]
+    if episode.get("pictures"):
+        report["picture_review"] = review_pictures(build, episode, timeline)
     if not (build / "publishing_caption.txt").is_file():
         raise ValueError("Missing required publishing attribution.")
     moments = [0.7, timeline["duration"] - 2]
     moments += [turn["start"] + min(1.3, turn["wav_duration"] / 2) for turn in timeline["turns"]]
+    moments += [(w["start"] + w["end"]) / 2 for w in picture_windows(episode, timeline)
+                if w["mode"] == "reveal"]
     if episode.get("social_kind") not in ("exchange", "promo"):
         window = task_window(timeline)
         if window is not None:

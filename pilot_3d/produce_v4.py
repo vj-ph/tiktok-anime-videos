@@ -19,6 +19,7 @@ from prepare_audio import atomic_json, ceil_frames, sha256_file, subtitles
 from episode_config import (ACTORS, CAMERA_PREFIXES, PROFILES, check_timeline, entrance_enabled,
                             promo_settings, read_episode, seating_deadline, task_window, turn_phase)
 from entrance import HINGE, door_angle, doorway_geometry, entrance_plan, path_at, walk_pose
+from picture_presentation import add_table_pictures, picture_windows
 
 
 def isolated(source, build):
@@ -40,8 +41,10 @@ def camera_shots(episode, timeline):
     shots = [(0, initial)]
     shots += [(turn["start"], turn["camera"]) for turn in timeline["turns"]]
     window = task_window(timeline)
-    if window is not None:
+    if window is not None and not episode.get("pictures"):
         shots.append((window[0], "candidates"))
+    shots += [(window["start"], "candidates") for window in picture_windows(episode, timeline)
+              if window["mode"] == "reveal"]
     if episode["outro_seconds"] > 0:
         shots.append((timeline["duration"] - episode["outro_seconds"], "candidates"))
     return sorted(shots)
@@ -204,6 +207,10 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
     side_sign = 1 if actor.name in ("candidate_a", "examiner") else -1
     entrance = entrance_enabled(episode)
     window = task_window(timeline)
+    reading_windows = [(w["start"], w["end"]) for w in picture_windows(episode, timeline)
+                       if w["mode"] == "reveal"]
+    if not episode.get("pictures") and window is not None:
+        reading_windows.append(window)
     blocking = entrance_direction["actors"].get(actor.name, {})
     seat_start, seat_end = blocking.get("seat_start", 0), blocking.get("seat_end", 0)
     walk_start, walk_end = blocking.get("walk_start", 0), blocking.get("walk_end", 0)
@@ -280,8 +287,11 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
         attention = gaze_at(plan, actor.name, t)
         gaze = attention["head"]
         reading = direction["glance"]
-        if window is not None and window[0] <= t < window[1]:
-            reading = pulse(t, window[0] + 0.3 + index * 0.24, 3)
+        for read_start, read_end in reading_windows:
+            if read_start <= t < read_end:
+                reading = pulse(t, read_start + 0.3 + index * 0.24, 3)
+        if speaking and turn["action"] == "describe":
+            reading = max(reading, .42 * pulse(t, turn["start"] + .15, 1.6))
         nod = direction["nod"] * seated
         thinking = speaking and turn["action"] == "consider"
         actor.rotate("FK-Chest", (0.018 * gesture, gaze * 0.24, 0.006 * gesture if thinking else 0), frame)
@@ -391,6 +401,8 @@ def scene_build(build, episode_path=None, profile="preview"):
         raise ValueError("Align final speech before building performance.")
     scene = bpy.context.scene
     design = room_design(scene, episode)
+    if episode.get("pictures"):
+        design["pictures"] = add_table_pictures(scene, episode)
     design["doorway"] = doorway_geometry(scene)
     entrance_direction = entrance_plan(episode, timeline)
     scene.frame_set(1 + 10 * timeline["fps"])
@@ -419,7 +431,7 @@ def scene_build(build, episode_path=None, profile="preview"):
     for curve in hinge.animation_data.action.fcurves:
         for point in curve.keyframe_points:
             point.interpolation = "LINEAR"
-    cameras = configure_cameras(scene)
+    cameras = configure_cameras(scene, episode, timeline)
     scene.timeline_markers.clear()
     shots = camera_shots(episode, timeline)
     for t, name in shots:
@@ -454,7 +466,7 @@ def scene_build(build, episode_path=None, profile="preview"):
         "room_design": design, "performance": performance_plan(timeline), "entrance": entrance_direction,
         "quality": profile,
         "source_sha256": {name: sha256_file(ROOT / name) for name in
-                          ("produce_v4.py", "episode_config.py", "studio_characters.py", "polish_exchange.py", "scene_direction.py", "entrance.py", "build_scene.py")},
+                          ("produce_v4.py", "episode_config.py", "picture_presentation.py", "studio_characters.py", "polish_exchange.py", "scene_direction.py", "entrance.py", "build_scene.py")},
         "blocking": {actor.name: json.loads(actor.root["blocking"]) for actor in actors},
         "shots": shots,
         "camera_markers": [{"frame": marker.frame, "camera": marker.camera.name}

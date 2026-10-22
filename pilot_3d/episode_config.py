@@ -7,9 +7,10 @@ from pathlib import Path
 from build_paths import resolve_build_reference
 from prepare_audio import SAFE_ID, ceil_frames, inspect_wav, nonempty, number, validate_episode
 from scene_direction import GESTURE_LIMITS
+from picture_presentation import PICTURE_CAMERAS, validate_pictures
 
 CAMERA_PREFIXES = {"wide": "01", "examiner": "02", "candidates": "03",
-                   "candidate_a": "04", "candidate_b": "05"}
+                   "candidate_a": "04", "candidate_b": "05", "picture_a": "06", "picture_b": "07"}
 ACTORS = ("candidate_a", "candidate_b", "examiner", "observer")
 PROFILES = {
     "preview": {"width": 360, "height": 640, "samples": 2, "motion_step": 2},
@@ -35,6 +36,10 @@ def read_episode(path):
                     voice[field] = str((path.parent / voice[field]).resolve())
         if isinstance(episode.get("book_cover"), str):
             episode["book_cover"] = str((path.parent / episode["book_cover"]).resolve())
+        if isinstance(episode.get("pictures"), dict):
+            for picture in episode["pictures"].values():
+                if isinstance(picture, dict) and isinstance(picture.get("path"), str):
+                    picture["path"] = str((path.parent / picture["path"]).resolve())
         scene = episode.get("scene", {})
         if isinstance(scene, dict) and isinstance(scene.get("base_scene"), str):
             scene["base_scene"] = str((path.parent / scene["base_scene"]).resolve())
@@ -147,6 +152,8 @@ def validate_template(episode, *, check_assets=False):
     for turn in episode["turns"]:
         role, camera = turn["speaker"], turn.get("camera")
         allowed = {"wide", role} | ({"candidates"} if role.startswith("candidate") else set())
+        if role in PICTURE_CAMERAS:
+            allowed.add(PICTURE_CAMERAS[role])
         if camera not in allowed:
             raise ValueError(f"Turn {turn['id']}: camera must include its speaker; allowed: {sorted(allowed)}.")
         if turn.get("action") not in GESTURE_LIMITS:
@@ -171,6 +178,7 @@ def validate_template(episode, *, check_assets=False):
         raise ValueError("Phases must run in order: welcome, instruction, dialogue.")
     if entrance_enabled(episode) and "welcome" not in phases:
         raise ValueError("scene.entrance=true requires a welcome phase.")
+    validate_pictures(episode, check_assets=check_assets)
     header = episode.get("header", {})
     if not isinstance(header, dict):
         raise ValueError("header must be an object.")

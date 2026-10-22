@@ -5,7 +5,7 @@ import math
 VERSION = 7
 GESTURE_LIMITS = {
     "welcome": 1, "explain": 2, "propose": 2, "consider": 1, "agree": 1,
-    "introduce": 3, "ask": 1, "answer": 2,
+    "introduce": 3, "describe": 3, "ask": 1, "answer": 2,
 }
 FUNCTION_WORDS = set(
     "aber als am an auch auf aus bei bis das dem den der des die doch du ein eine "
@@ -100,9 +100,9 @@ def performance_plan(timeline):
             peak = turn["start"] + (focus["start"] + focus["end"]) / 2
             if not peaks or peak - peaks[-1][0] >= 2.15:
                 peaks.append((peak, focus["word"]))
-            if action != "introduce" and len(peaks) == GESTURE_LIMITS[action]:
+            if action not in ("introduce", "describe") and len(peaks) == GESTURE_LIMITS[action]:
                 break
-        if action == "introduce" and len(peaks) > GESTURE_LIMITS[action]:
+        if action in ("introduce", "describe") and len(peaks) > GESTURE_LIMITS[action]:
             peaks = [peaks[round(i * (len(peaks) - 1) / (GESTURE_LIMITS[action] - 1))]
                      for i in range(GESTURE_LIMITS[action])]
         for beat, (peak, word) in enumerate(peaks):
@@ -110,7 +110,7 @@ def performance_plan(timeline):
             gestures.append({
                 "actor": speaker, "turn_id": turn["id"], "action": action,
                 "peak": peak, "word": word, "hand": side,
-                "strength": {"consider": .68, "introduce": .72, "ask": .55, "answer": .75}.get(
+                "strength": {"consider": .68, "introduce": .72, "describe": .72, "ask": .55, "answer": .75}.get(
                     action, 1.0) * (1 if beat == 0 else 0.72),
                 "rise": (.32, .42, .36)[ordinal % 3],
                 "hold": (.08, .14, .06)[ordinal % 3],
@@ -125,7 +125,7 @@ def performance_plan(timeline):
         partner_response = (
             listener in ("candidate_a", "candidate_b") and listener != speaker and following
             and (following["action"] == "agree" or (ordinal % 2 == 0 and turn["duration"] >= 3)))
-        interview_response = listener == "examiner" and action in ("introduce", "answer") and turn["duration"] >= 3
+        interview_response = listener == "examiner" and action in ("introduce", "describe", "answer") and turn["duration"] >= 3
         if (speaker.startswith("candidate") and following and following["speaker"] == listener
                 and (partner_response or interview_response)):
             peak = min(turn["start"] + words[-1]["end"] + .12, following["start"] - .34)
@@ -184,7 +184,7 @@ def performance_at(plan, actor, t):
             "nod": min(.085, nod), "glance": glance}
 
 
-def configure_cameras(scene):
+def configure_cameras(scene, episode=None, timeline=None):
     from mathutils import Vector
 
     cameras = {name: next(obj for obj in scene.objects if obj.type == "CAMERA" and obj.name.startswith(prefix))
@@ -198,6 +198,45 @@ def configure_cameras(scene):
         camera.location = location
         camera.rotation_euler = (Vector(target) - camera.location).to_track_quat("-Z", "Y").to_euler()
         camera.data.lens = 47
+    if episode and episode.get("pictures"):
+        from bpy_extras.object_utils import world_to_camera_view
+        from picture_presentation import FACE_BOX, PICTURE_CAMERAS
+        from studio_characters import StudioCharacter
+        for role, name in PICTURE_CAMERAS.items():
+            turn = next((t for t in timeline["turns"] if t["speaker"] == role and t["action"] == "describe"), None)
+            if turn is None:
+                continue
+            scene.frame_set(1 + round((turn["start"] + .5) * timeline["fps"]))
+            camera = cameras[role].copy()
+            camera.data = camera.data.copy()
+            camera.name = ("06" if role == "candidate_a" else "07") + " Picture " + role
+            scene.collection.objects.link(camera)
+            actor = StudioCharacter.from_scene(role)
+            mesh = next(obj for obj in actor.root.children_recursive
+                        if obj.type == "MESH" and obj.name.startswith("GEO-") and "head" in obj.name.lower())
+            evaluated = mesh.evaluated_get(scene.view_layers[0].depsgraph)
+            points = [evaluated.matrix_world @ Vector(corner) for corner in evaluated.bound_box]
+
+            def bounds():
+                projected = [world_to_camera_view(scene, camera, point) for point in points]
+                return (min(p.x for p in projected) * 720, min(1-p.y for p in projected) * 1280,
+                        max(p.x for p in projected) * 720, max(1-p.y for p in projected) * 1280)
+
+            box = bounds()
+            camera.data.lens *= min(1, 158 / (box[2]-box[0]), 235 / (box[3]-box[1]))
+            for axis, target, coordinate in (("shift_x", 420, 0), ("shift_y", 446, 1)):
+                box = bounds()
+                current = (box[coordinate] + box[coordinate+2]) / 2
+                old = getattr(camera.data, axis)
+                setattr(camera.data, axis, old + .01)
+                changed = bounds()
+                delta = (changed[coordinate] + changed[coordinate+2]) / 2 - current
+                setattr(camera.data, axis, old + .01 * (target-current) / delta)
+            box = bounds()
+            if not (FACE_BOX[0] <= box[0] < box[2] <= FACE_BOX[2]
+                    and FACE_BOX[1] <= box[1] < box[3] <= FACE_BOX[3]):
+                raise ValueError(f"{role}: picture camera cannot keep the face clear: {box}")
+            cameras[name] = camera
     return cameras
 
 

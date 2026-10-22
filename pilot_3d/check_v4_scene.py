@@ -227,6 +227,43 @@ def check(build):
                 settled[side] = point.copy()
         drift[name] = {"maximum_stance_drift_m": maximum, "checked_stance_samples": samples}
     report["foot_contacts"] = drift
+    if episode.get("pictures"):
+        from bpy_extras.object_utils import world_to_camera_view
+        from mathutils import Vector
+        from picture_presentation import FACE_BOX
+        from episode_config import CAMERA_PREFIXES
+        from prepare_audio import sha256_file
+        import hashlib
+
+        props = manifest["room_design"]["pictures"]
+        for prop in props:
+            image = bpy.data.images[prop["packed_image"]]
+            plane = scene.objects[prop["object"]]
+            expected = sha256_file(Path(episode["pictures"][prop["picture"]]["path"]))
+            if (not image.packed_file or hashlib.sha256(image.packed_file.data).hexdigest() != expected
+                    or plane.get("picture_sha256") != expected or prop["sha256"] != expected):
+                raise ValueError("Physical task picture is missing, changed or not packed.")
+        checked = []
+        for turn in timeline["turns"]:
+            if turn["action"] != "describe":
+                continue
+            actor = actors[turn["speaker"]]
+            camera = next(obj for obj in scene.objects if obj.type == "CAMERA"
+                          and obj.name.startswith(CAMERA_PREFIXES[turn["camera"]]))
+            mesh = next(obj for obj in actor.root.children_recursive if obj.type == "MESH"
+                        and obj.name.startswith("GEO-") and "head" in obj.name.lower())
+            for seconds in (turn["start"], turn["start"] + turn["duration"]/2, turn["end"]):
+                scene.frame_set(1 + round(seconds * timeline["fps"]))
+                evaluated = mesh.evaluated_get(bpy.context.evaluated_depsgraph_get())
+                projected = [world_to_camera_view(scene, camera, evaluated.matrix_world @ Vector(corner))
+                             for corner in evaluated.bound_box]
+                bounds = (min(p.x for p in projected)*720, min(1-p.y for p in projected)*1280,
+                          max(p.x for p in projected)*720, max(1-p.y for p in projected)*1280)
+                if not (FACE_BOX[0] <= bounds[0] < bounds[2] <= FACE_BOX[2]
+                        and FACE_BOX[1] <= bounds[1] < bounds[3] <= FACE_BOX[3]):
+                    raise ValueError(f"Picture or captions cover {actor.name}'s face: {bounds}")
+                checked.append({"turn": turn["id"], "seconds": seconds, "face_bounds": bounds})
+        report["picture_presentation"] = {"packed_table_pictures": len(props), "unobscured_heads": checked}
     if manifest.get("visual_version", 0) >= 6:
         report["entrance"] = check_entrance(scene, actors, manifest, timeline, build)
     if manifest.get("visual_version", 0) >= 5:

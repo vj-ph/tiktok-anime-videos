@@ -19,7 +19,7 @@ from episode_config import PROFILES, check_timeline, read_episode, validate_temp
 from prepare_audio import (atomic_json, atomic_text, content_hash, inspect_wav,
                            load_audio_cache, make_cache_payload, sha256_file)
 
-SOURCES = ("pipeline.py", "build_paths.py", "episode_config.py", "prepare_audio.py", "align_words.py",
+SOURCES = ("pipeline.py", "build_paths.py", "episode_config.py", "picture_presentation.py", "prepare_audio.py", "align_words.py",
            "produce_v4.py", "render.py", "social_captions.py", "review_social.py",
            "check_v4_scene.py", "studio_characters.py", "polish_exchange.py",
            "scene_direction.py", "entrance.py", "build_scene.py")
@@ -90,6 +90,15 @@ def freeze_delivery(build):
                "subtitle_timing_report.json", "safe_zone_report.json", "delivery_checks.json")
     outputs += tuple(name for name in ("audio_reuse.json", "word_alignment.json", "scene_checks.json")
                      if (build / name).is_file())
+    episode = read_episode(build / "episode.json")
+    if episode.get("pictures"):
+        assets = build / "picture_assets"
+        assets.mkdir(exist_ok=True)
+        for key, picture in episode["pictures"].items():
+            name = f"picture_assets/{key}{Path(picture['path']).suffix.lower()}"
+            shutil.copy2(picture["path"], build / name)
+            outputs += (name,)
+        outputs += ("picture_timing_report.json",)
     atomic_json(build / "export_manifest.json", {
         "files_sha256": {name: sha256_file(build / name) for name in outputs},
         "source_sha256": {name: sha256_file(snapshot / name) for name in SOURCES},
@@ -157,6 +166,7 @@ def build_episode(path, build, profile="preview", jobs=4, with_promo=False, unti
             "asset_sha256": {value: sha256_file(Path(value)) for value in (
                 [voice[field] for voice in episode["voices"].values() for field in ("audio", "transcript")]
                 + ([episode["book_cover"]] if episode["outro_seconds"] > 0 else [])
+                + [picture["path"] for picture in episode.get("pictures", {}).values()]
                 + ([episode["scene"]["wall_logo"]] if episode["scene"].get("wall_logo") else []))},
             "code_sha256": {name: sha256_file(ROOT / name) for name in SOURCES}}
     if reuse_audio is not None:

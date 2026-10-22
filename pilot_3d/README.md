@@ -19,6 +19,9 @@ pilot_3d/
     teil1_vorstellung_v7_preview/   First Teil 1 audio take
     teil1_vorstellung_v7_preview_r1/ Original full Teil 1 native render
     teil1_vorstellung_v7_preview_r2/ Delivered full-rate caption correction
+    teil2_einkaufen_v7_preview/    First Teil 2 audio take
+    teil2_einkaufen_v7_preview_r1/ Second Teil 2 audio take
+    teil2_einkaufen_v7_preview_r2/ Full Teil 2 picture-led practice build
 ```
 
 Each run keeps its audio, alignment, frames, scene, exports, logs and frozen
@@ -254,6 +257,126 @@ attention plans are unchanged.
 repeatable section labels, exact header windows, metadata rejection, CTA reset,
 preserved pacing, gesture distribution, attention and publishing credits.
 
+### Book-based Teil 2: pictures and personal experiences
+
+`episodes/teil2_einkaufen.json` adapts **Teil 2, Übung 1: Auf dem Wochenmarkt
+einkaufen** and **Übung 7: Angebote im Supermarkt vergleichen**. Lea describes
+the market picture, explains her shopping habits and compares her experiences
+in Poland with life in Cologne. Samir describes a customer at a supermarket
+refrigerator, explains how his family plans purchases and gives a concrete
+example of buying more fruit than they could eat. Each candidate receives two
+linked follow-ups, not only a picture-description monologue.
+
+The 14-turn script uses the existing cast and 1.7B voices, one corridor
+entrance, restrained `describe` gestures, 1.2-second dialogue gaps and the
+six-second book CTA. Before **each** description the examiner holds for
+1.2 seconds, followed by an eight-second picture-reading card. These learning
+pauses are part of the video, not an official examination time allowance.
+There is no tips card or requested promotional cut.
+
+```bash
+python3 pipeline.py validate --episode episodes/teil2_einkaufen.json
+
+# New preview; stop after alignment first if reviewing voices separately.
+python3 pipeline.py build \
+  --episode episodes/teil2_einkaufen.json \
+  --build builds/teil2_einkaufen_v7_preview_r2 \
+  --speech-cache-from builds/teil2_einkaufen_v7_preview_r1 \
+  --profile preview --jobs 4 --until audio
+
+# Resume the same unchanged job through rendering and delivery checks.
+python3 pipeline.py build \
+  --episode episodes/teil2_einkaufen.json \
+  --build builds/teil2_einkaufen_v7_preview_r2 \
+  --speech-cache-from builds/teil2_einkaufen_v7_preview_r1 \
+  --profile preview --jobs 4
+```
+
+Posting drafts are in `../posts/dtz_b1_teil2_einkaufen/`. They include the
+book-image attribution, advertising and AI disclosures, independent-practice
+disclaimer, and full character credits. Production rendering and publication
+remain separate approval steps.
+
+The delivered full preview is
+`builds/teil2_einkaufen_v7_preview_r2/pilot.mp4`: **153.167 seconds, 3,676
+output frames at 24 fps**, using 1,838 native preview poses. The clean review
+movie, contact sheet, frozen source snapshots and reports are alongside it.
+Independent, unprompted ASR matched all 14 turns after case/punctuation
+normalization; this is a plausibility check, not a pronunciation guarantee.
+All 36 subtitle pages have at least 1.917 encoded seconds and stay below
+19.295 characters per second. The export audits 443 distinct caption states;
+actual decoded pixels verify both pictures' reading/description windows,
+section changes and the complete 144-frame CTA. Eight low-confidence
+word-alignment warnings remain explicitly recorded in `delivery_checks.json`.
+
+The unsuffixed run and `_r1` preserve the earlier audio takes. Two lines were
+shortened to satisfy measured subtitle readability; voice settings, speech
+rate and approved pause lengths were not changed. Matching recordings were
+reused rather than resynthesized. All 45 pre-existing videos remain
+byte-identical, and the previous Ausflug, Lerntreffen and Teil 1 caption/acting
+plans are unchanged. The final audio is verified for exact reuse in a future
+production build, but no production version, promo cut or upload was made.
+
+#### Reusable picture stimuli
+
+Optional `pictures` maps safe IDs to `path`, `candidate`, `label`, `credit`
+and `permission`. Paths resolve relative to the authored episode, including
+episodes outside this project. This room template supports one assigned
+picture per candidate:
+
+```json
+"pictures": {
+  "wochenmarkt": {
+    "candidate": "candidate_a",
+    "path": "../assets/pictures/wochenmarkt.jpg",
+    "label": "Wochenmarkt",
+    "credit": "Your picture attribution",
+    "permission": "Your documented reuse permission or license basis"
+  }
+}
+```
+
+An examiner prompt selects `picture` and `picture_card_delay_seconds`; its
+`pause_after` must leave positive reading time after that delay. The following
+turn must use the same `picture`, action `describe`, the assigned candidate,
+and camera `picture_a` or `picture_b`. The repeated reading cards are
+independent of animation phases: the second card does not restart the entrance
+or require a second instruction phase. Do not combine the initial picture card
+with the ordinary text `task_card`.
+
+The reading card shows the **whole** image within `(104,344)–(496,558)` on the
+720×1280 canvas. During the description, a labelled reference image fits within
+`(104,310)–(324,430)`. Separate picture cameras frame the candidate's head to
+its right, inside `(336,284)–(504,570)`, clear of both the image and unchanged
+31px subtitles. The close speaker cameras return for personal answers.
+Pictures are aspect-fitted, not cropped; dimensions and positions are rounded
+to even pixels to match the 4:2:0 overlay grid. Portrait stimuli are letterboxed
+within the same rectangles. Full reading cards intentionally cover the room;
+description layouts do not cover the candidate's head.
+
+The exact same source bytes are packed onto the physical table sheets.
+Preflight checks image decodability, resolution, metadata references and
+measured labels. Build specs hash every picture and the shared
+`picture_presentation.py`; frozen deliveries also preserve image copies under
+`picture_assets/`. `picture_timing_report.json` records image hashes, bounds
+and end-exclusive output-frame windows. The compositor expands native poses
+to 24 fps before ASS and timed image overlays.
+
+`review_social.py` compares actual decoded picture pixels with the intended
+source at each window's first, middle and final frames, plus both outside
+boundary frames. Wrong images, late changes and pictures that fail to clear
+are errors, not a successful manifest-only check. Native checks verify packed
+image bytes and projected head visibility. `test_teil2_episode.py` also covers
+both candidate sequences, preserved pacing, caption holds, image ownership
+references, corrupt/missing assets, immutable asset hashes, frozen copies,
+portrait fitting and real odd-frame image transitions.
+
+The supplied photographs are unchanged copies of the book's `01.jpg` and
+`07.jpg`. On October 22, 2026, the user confirmed rights for promotional
+reuse; `assets/pictures/README.md` records the sources and hashes. This does
+**not** grant public reuse or put the photographs under the rigs' CC BY 4.0
+license. No official exam pictures or official task texts are reproduced.
+
 ### V5 acting and room direction
 
 New scene builds use speech-aligned content-word beats rather than the same
@@ -459,7 +582,7 @@ Focused regression suite:
 
 ```bash
 /home/ronggong/lang/german/.venvs/qwen-tts-test/bin/python \
-  -m unittest test_build_paths test_episode_config test_teil1_episode test_lerntreffen_episode test_entrance test_direction test_social test_audio test_render test_exchange
+  -m unittest test_build_paths test_episode_config test_teil1_episode test_teil2_episode test_lerntreffen_episode test_entrance test_direction test_social test_audio test_render test_exchange
 ```
 
 ## Preserved productions
