@@ -1,5 +1,48 @@
 # DTZ speaking: reusable 3D pilot
 
+## Project and build layout
+
+Keep Python scripts, episode JSON, assets and tools separate from generated runs:
+
+```text
+pilot_3d/
+  episodes/                         Authored episode scripts
+  assets/                           Covers, logo and character sources
+  .tools/                           Downloaded Blender and Rhubarb
+  builds/                           Generated files; ignored by Git
+    pilot_v1/                       Original pilot
+    v2/                             Reusable base scene and original V2 delivery
+    v6_hold12_cta6_production/       Approved full Ausflug production
+    v7_acting_test/                 Internal acting diagnostic
+    lerntreffen_v7_preview/         First audio-only take
+    lerntreffen_v7_preview_r1/      Complete Lerntreffen preview
+```
+
+Each run keeps its audio, alignment, frames, scene, exports, logs and frozen
+manifests together. Existing runs were moved, not regenerated or deleted.
+There are no compatibility symlinks cluttering the project directory.
+Use explicit `builds/RUN` paths in commands. A project-level output name such as
+`--build new_preview` also goes to `builds/new_preview`; the old output spelling
+`--build build_new_preview` maps to the same location. Explicit nested or
+external output paths retain their existing meaning. Never use `builds/` itself
+as an individual run.
+
+Frozen episode/timeline/receipt files retain their original bytes and hashes,
+including embedded absolute paths. Current tools resolve missing old
+`pilot_3d/build_NAME/...` references to `pilot_3d/builds/NAME/...`, and old
+`pilot_3d/build/...` references to `pilot_3d/builds/pilot_v1/...`, only when the
+relocated file exists. This supports saved scenes, review and verified speech
+reuse without rewriting delivery records. External tools such as Blender still
+need the new physical path on their command line. Frozen `.blend` files also
+retain their old saved render-output path: override it with Blender's `-o`
+option when rendering directly. The pipeline already sets the correct output
+path for every render worker.
+
+The normal source-code hash guard still applies: this tooling change does not
+make pre-change pipeline checkpoints resumable under changed code. Keep those
+deliveries frozen; create a new run for new work, reusing verified audio where
+appropriate. No production render is started by organizing the directories.
+
 ## Episode-driven production
 
 Use **`pipeline.py`** for new videos. It accepts a JSON episode at any path,
@@ -16,11 +59,11 @@ cd /home/ronggong/lang/german/tiktok_anime_videos/pilot_3d
 # Validate content, reference files, tools, static text and cover geometry.
 python3 pipeline.py validate --episode episodes/lerntreff.json
 
-# Produce the full video and an exact-speech promotional edit.
+# Produce the full practice video.
 python3 pipeline.py build \
   --episode episodes/lerntreff.json \
-  --build build_lerntreff \
-  --profile preview --promo
+  --build builds/lerntreff \
+  --profile preview --jobs 4
 ```
 
 The entry point automatically uses the existing Qwen Python environment.
@@ -53,13 +96,63 @@ For the full entrance/examiner/task-card version:
 ```bash
 python3 pipeline.py build \
   --episode episode_v4.json \
-  --build build_ausflug_new \
-  --profile preview --promo
+  --build builds/ausflug_new \
+  --profile preview --jobs 4
 ```
 
 For higher-resolution/full-rate output, select `--profile production` and a
 different output directory after approving the preview. This improves render
 quality, not the underlying procedural acting.
+
+### Full book-based episode: Lerntreffen
+
+`episodes/lerntreffen_dtz.json` adapts **Teil 3, Übung 2: Lerntreffen für die
+DTZ-Prüfung planen** from `b1/speaking_dtz_gpt_v1/book_no_toc.md`. This is a new
+complete-topic practice dialogue, not the separate three-turn technical demo
+in `episodes/lerntreff.json`; neither is an official task or a full DTZ exam.
+The original book and the approved Ausflug video remain unchanged.
+
+| Planning point | Model-dialogue decision |
+| --- | --- |
+| Day and time | Saturday, 10:00 outside the library; Samir is only available until 11:30 |
+| Place and duration | One hour in the quiet library, then a short visit to an inexpensive café |
+| Study topics | Picture descriptions, then planning together; help each other with vocabulary |
+| Materials and preparation | Lea: notebook, topic cards and dialogue questions; Samir: pens, water and picture-description tasks |
+| Food and budget | Something to eat afterwards; Samir wants to spend at most five euros |
+| Plan B | If no library seat is available, use the quiet tables at the neighbouring café |
+
+The `source.coverage` map links each visible task point to dialogue turn IDs.
+`test_lerntreffen_episode.py` checks those links, concrete decisions, source
+identity, shared voices, speaker cameras and preserved pacing. The six task
+points include the five source-book points plus its food/budget role constraint.
+The episode uses V7 acting with the approved entrance, examiner hold, full
+eight-second task card, candidate pauses and six-second CTA; there is no tips
+card and no requested promotional cut. Speech settings are unchanged.
+
+```bash
+# New preview in a fresh directory, reusing matching raw speech from r1.
+python3 pipeline.py build \
+  --episode episodes/lerntreffen_dtz.json \
+  --build builds/lerntreffen_v7_preview_r2 \
+  --speech-cache-from builds/lerntreffen_v7_preview_r1 \
+  --profile preview --jobs 4
+
+# Only after approving the delivered r1 preview: production with identical speech/timing.
+python3 pipeline.py build \
+  --episode builds/lerntreffen_v7_preview_r1/episode.json \
+  --build builds/lerntreffen_v7_production \
+  --reuse-audio builds/lerntreffen_v7_preview_r1 \
+  --profile production --jobs 4
+```
+
+The full preview is `builds/lerntreffen_v7_preview_r1/pilot.mp4`: **103 seconds,
+2,472 output frames at 24 fps**, with 1,236 native preview poses. The clean review
+version is alongside it. Copy-ready posting text is in
+`../posts/dtz_b1_lerntreffen/tiktok.txt` and `instagram.txt`, including the
+disclosure and complete character attribution. The generated
+`publishing_caption.txt` remains part of each frozen build. The unsuffixed
+`builds/lerntreffen_v7_preview/` contains the first audio-only take; `_r1`
+makes the café location proposal explicit and reuses the other recordings.
 
 ### V5 acting and room direction
 
@@ -102,10 +195,10 @@ actions have at most one. Reach and anticipation/hold/release timing vary across
 turns, while fingertip/table contact constraints remain enforced. Speaker
 cameras, mouth cues, subtitle timing and learner pauses are unchanged.
 
-`build_v7_acting_test/pilot.mp4` is a **12.417-second internal acting test**, not
+`builds/v7_acting_test/pilot.mp4` is a **12.417-second internal acting test**, not
 a short promotional cut or a replacement publication video. It uses complete
 turns 03–04 and their original pauses, with an exact PCM crop from
-`build_v6_hold12_cta6_production/`. Its newly baked animation runs on every frame
+`builds/v6_hold12_cta6_production/`. Its newly baked animation runs on every frame
 at 24 fps; native 360×640, four-sample diagnostic renders are upscaled for
 review. `DIAGNOSTIC.json` records the source crop; `scene_checks.json` records
 native rig, contact, blink and gaze-continuity checks. Review the moving
@@ -114,7 +207,7 @@ shows the same dialogue side by side (original V6 / refined V7);
 `encoded_eye_transition.jpg` shows 24 consecutive encoded transition frames.
 
 The approved 103.917-second full production remains unchanged at
-`build_v6_hold12_cta6_production/pilot.mp4`. Future full episodes use V7 acting
+`builds/v6_hold12_cta6_production/pilot.mp4`. Future full episodes use V7 acting
 when built into a **fresh directory**. Do not resume a pre-V7 scene build with
 changed source files; use the existing verified speech-reuse options instead.
 No promotional cut is needed for this workflow.
@@ -172,8 +265,8 @@ Generate a new pacing preview using the verified 1.7B speech:
 
 ```bash
 python3 pipeline.py build \
-  --episode episode_v4.json --build build_v6_hold12_cta6_preview \
-  --speech-cache-from build_v6_qwen17b_release \
+  --episode episode_v4.json --build builds/v6_hold12_cta6_preview \
+  --speech-cache-from builds/v6_qwen17b_release \
   --profile preview --jobs 4
 ```
 
@@ -196,8 +289,8 @@ episode whose voice references and spoken timing still match the source:
 
 ```bash
 python3 pipeline.py build \
-  --episode build_v5_final/episode.json --build build_visual_revision \
-  --reuse-audio build_v5_final --profile preview --promo
+  --episode builds/v5_final/episode.json --build builds/visual_revision \
+  --reuse-audio builds/v5_final --profile preview
 ```
 
 `--reuse-audio` requires a previously verified delivery with its original
@@ -264,7 +357,7 @@ Focused regression suite:
 
 ```bash
 /home/ronggong/lang/german/.venvs/qwen-tts-test/bin/python \
-  -m unittest test_episode_config test_entrance test_direction test_social test_audio test_render test_exchange
+  -m unittest test_build_paths test_episode_config test_lerntreffen_episode test_entrance test_direction test_social test_audio test_render test_exchange
 ```
 
 ## Preserved productions
@@ -280,8 +373,8 @@ word highlighting were regenerated for the new speech.
 
 | Video | Path | Duration |
 | --- | --- | --- |
-| Full book-based Ausflug practice | `build_v6_qwen17b_release/pilot.mp4` | 97.625 s |
-| Promotional cut | `build_v6_qwen17b_release_promo/pilot.mp4` | 42.917 s |
+| Full book-based Ausflug practice | `builds/v6_qwen17b_release/pilot.mp4` | 97.625 s |
+| Promotional cut | `builds/v6_qwen17b_release_promo/pilot.mp4` | 42.917 s |
 
 These are preview-profile renders, not native-resolution/full-rate production
 renders: native 360×640, two Cycles samples and animation on twos, exported at
@@ -294,8 +387,8 @@ Known preview issue: the promo's opening freezes Lea during an eye-gaze
 transition. Choose a calmer opening hold before treating the promo as
 publication-ready; the complete dialogue and exact-PCM edit are unaffected.
 
-V5 remains preserved in `build_v5_final/` (98.625s) and
-`build_v5_final_promo/` (44.792s), with its original V4-readable audio unchanged.
+V5 remains preserved in `builds/v5_final/` (98.625s) and
+`builds/v5_final_promo/` (44.792s), with its original V4-readable audio unchanged.
 V4 readable and all earlier masters are also preserved. The approved V3 study
 has a separate safe-area/word-highlight re-export; the original pilot description follows.
 
@@ -309,8 +402,8 @@ viewer to finish the plan and showing the real book cover.
 
 Both versions run **39.25 seconds** and use the same approved Qwen dialogue,
 so visual comparisons do not depend on a different script or voice performance.
-Version 1's outputs remain untouched in `build/`; version 2 uses `build_v2/`.
-The old generator scripts are saved in `build/source_v1/`.
+Version 1's outputs remain untouched in `builds/pilot_v1/`; version 2 uses `builds/v2/`.
+The old generator scripts are saved in `builds/pilot_v1/source_v1/`.
 
 The original shortened dialogue is inspired by **Teil 3, Übung 4** in
 `german_exam_books/b1/speaking_dtz_gpt_v1/book_no_toc.md`. It demonstrates proposing,
@@ -324,11 +417,11 @@ New work is isolated from all previous masters:
 
 | Directory | Length | Purpose |
 | --- | --- | --- |
-| `build_v3_social/` | 10.000s | Approved V3 acting study, re-exported with safe-area word highlights and no rig-credit footer |
-| `build_v4_readable/` | 98.625s | Preserved readable V4 practice: stable speaker cameras, readable subtitles, clearer takeaway and Amazon CTA |
-| `build_v4_readable_promo/` | 44.792s | Preserved readable V4 promo, using a whole-turn exact-PCM excerpt |
-| `build_v4/` | 98.625s | Preserved initial V4: entrance/seating, examiner prompt, six-point task card, eight-second learner pause, compact dialogue, useful phrases and book CTA |
-| `build_v4_promo/` | 44.792s | Preserved initial promotional edit |
+| `builds/v3_social/` | 10.000s | Approved V3 acting study, re-exported with safe-area word highlights and no rig-credit footer |
+| `builds/v4_readable/` | 98.625s | Preserved readable V4 practice: stable speaker cameras, readable subtitles, clearer takeaway and Amazon CTA |
+| `builds/v4_readable_promo/` | 44.792s | Preserved readable V4 promo, using a whole-turn exact-PCM excerpt |
+| `builds/v4/` | 98.625s | Preserved initial V4: entrance/seating, examiner prompt, six-point task card, eight-second learner pause, compact dialogue, useful phrases and book CTA |
+| `builds/v4_promo/` | 44.792s | Preserved initial promotional edit |
 
 Watch `pilot.mp4` in either preserved V4-readable directory. The readable revision does not cut
 to a listener before a speaker finishes or briefly cut back afterward: the
@@ -456,12 +549,12 @@ one-time; interrupted rendering resumes with the `frames` command.
 ```bash
 QPY=/home/ronggong/lang/german/.venvs/qwen-tts-test/bin/python
 .tools/blender/blender -b --disable-autoexec -t 4 --python-exit-code 1 \
-  --python produce_v4.py -- revise-cameras --source build_v4 --build build_v4_readable
-python3 render.py frames --episode build_v4_readable/episode.json --build build_v4_readable --jobs 4
-$QPY render.py mux --episode build_v4_readable/episode.json --build build_v4_readable
-$QPY produce_v4.py promo --source build_v4_readable --build build_v4_readable_promo
-$QPY review_social.py --build build_v4_readable
-$QPY review_social.py --build build_v4_readable_promo
+  --python produce_v4.py -- revise-cameras --source builds/v4 --build builds/v4_readable
+python3 render.py frames --episode builds/v4_readable/episode.json --build builds/v4_readable --jobs 4
+$QPY render.py mux --episode builds/v4_readable/episode.json --build builds/v4_readable
+$QPY produce_v4.py promo --source builds/v4_readable --build builds/v4_readable_promo
+$QPY review_social.py --build builds/v4_readable
+$QPY review_social.py --build builds/v4_readable_promo
 $QPY -m unittest test_social test_audio test_render test_exchange
 ```
 
@@ -472,18 +565,18 @@ masters you want to retain unchanged.
 
 ```bash
 QPY=/home/ronggong/lang/german/.venvs/qwen-tts-test/bin/python
-$QPY produce_v4.py v3 --build build_v3_social
-$QPY prepare_audio.py --episode episode_v4.json --output-dir build_v4 --threads 4
-$QPY align_words.py --build build_v4
-.tools/blender/blender -b --disable-autoexec build_v2/studio.blend -t 4 \
-  --python-exit-code 1 --python produce_v4.py -- scene --episode episode_v4.json --build build_v4
-.tools/blender/blender -b --disable-autoexec build_v4/studio.blend -t 2 \
-  --python-exit-code 1 --python check_v4_scene.py -- build_v4
-python3 render.py frames --episode episode_v4.json --build build_v4 --jobs 4
-$QPY render.py mux --episode episode_v4.json --build build_v4
-$QPY produce_v4.py promo --source build_v4 --build build_v4_promo
-$QPY review_social.py --build build_v4
-$QPY review_social.py --build build_v4_promo
+$QPY produce_v4.py v3 --build builds/v3_social
+$QPY prepare_audio.py --episode episode_v4.json --output-dir builds/v4 --threads 4
+$QPY align_words.py --build builds/v4
+.tools/blender/blender -b --disable-autoexec builds/v2/studio.blend -t 4 \
+  --python-exit-code 1 --python produce_v4.py -- scene --episode episode_v4.json --build builds/v4
+.tools/blender/blender -b --disable-autoexec builds/v4/studio.blend -t 2 \
+  --python-exit-code 1 --python check_v4_scene.py -- builds/v4
+python3 render.py frames --episode episode_v4.json --build builds/v4 --jobs 4
+$QPY render.py mux --episode episode_v4.json --build builds/v4
+$QPY produce_v4.py promo --source builds/v4 --build builds/v4_promo
+$QPY review_social.py --build builds/v4
+$QPY review_social.py --build builds/v4_promo
 $QPY -m unittest test_social test_audio test_render test_exchange
 ```
 
@@ -494,7 +587,7 @@ the **full source scene**: the promo edit and pose sampling are described by
 
 ## Earlier outputs
 
-Current generated production files live in `build_v2/`:
+Current generated production files live in `builds/v2/`:
 
 | File | Purpose |
 | --- | --- |
@@ -554,7 +647,7 @@ in `episode.json` point to the existing local `simple-tts/voices` directory.
 Those files must remain available for regenerating speech. Existing production
 audio can be rendered without loading Qwen. Models and synthesis stay local;
 no book text or voice recordings are uploaded to an external service.
-The first v2 build reuses `build/dialogue.wav` and its measured timeline; the
+The first v2 build reuses `builds/pilot_v1/dialogue.wav` and its measured timeline; the
 packed `studio.blend` is self-contained for texture/audio playback. Running
 `audio` or `all` creates a new audio cache inside the selected build directory.
 
@@ -573,7 +666,7 @@ python3 render.py mux
 Frame rendering defaults to two independent Blender workers, each using four
 CPU threads. Use `python3 render.py frames --jobs 1` on a busy host, or
 `--jobs 4` when CPU capacity is available. Each worker writes a separate
-`build_v2/render_*.log`; failure in any worker stops the pipeline.
+`builds/v2/render_*.log`; failure in any worker stops the pipeline.
 The command reports a completed-frame count approximately every minute.
 Rendering enables Cycles persistent-data caching so textures are not reloaded
 from scratch for every animation frame.
@@ -667,13 +760,13 @@ template deliberately rather than changing turn order blindly.
 
 ```bash
 python3 -m unittest test_audio test_render -v
-.tools/blender/blender -b --disable-autoexec build_v2/studio.blend --python-exit-code 1 \
-  --python test_scene.py -- build_v2
+.tools/blender/blender -b --disable-autoexec builds/v2/studio.blend --python-exit-code 1 \
+  --python test_scene.py -- builds/v2
 ```
 
 ### V3: short character-acting study
 
-`build_v3_exchange/` is a separate **10-second** proposal/agreement exchange,
+`builds/v3_exchange/` is a separate **10-second** proposal/agreement exchange,
 using turns 05–06 from the completed V2 scene. It is an acting review, not a new
 complete promotional film: no entrance, task presentation or book end card.
 V1 and V2 outputs are not overwritten. The original Qwen audio is cropped at
@@ -700,19 +793,19 @@ All **24 frames per second are rendered distinctly**, rather than on twos.
 ```bash
 python3 polish_exchange.py prepare
 .tools/blender/blender -b --disable-autoexec -t 4 --python-exit-code 1 \
-  build_v2/studio.blend --python polish_exchange.py -- scene
+  builds/v2/studio.blend --python polish_exchange.py -- scene
 .tools/blender/blender -b --disable-autoexec -t 4 --python-exit-code 1 \
-  build_v3_exchange/studio.blend --python polish_exchange.py -- check
-python3 render.py frames --build build_v3_exchange \
-  --episode build_v3_exchange/episode.json --jobs 4
-python3 render.py mux --build build_v3_exchange \
-  --episode build_v3_exchange/episode.json
+  builds/v3_exchange/studio.blend --python polish_exchange.py -- check
+python3 render.py frames --build builds/v3_exchange \
+  --episode builds/v3_exchange/episode.json --jobs 4
+python3 render.py mux --build builds/v3_exchange \
+  --episode builds/v3_exchange/episode.json
 python3 -m unittest test_audio test_render test_exchange -v
 .tools/blender/blender -b --disable-autoexec -t 2 --python-exit-code 1 \
   --python test_native_loader.py
 ```
 
-The exports are `build_v3_exchange/pilot.mp4` (compact German captions) and
+The exports are `builds/v3_exchange/pilot.mp4` (compact German captions) and
 `pilot_clean.mp4` (without teaching overlays). Both retain the character credits.
 `before_after.jpg` compares the same audio moment in V2 and V3;
 `contact_sheet.jpg` shows the final shot sequence.

@@ -12,6 +12,7 @@ import textwrap
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from pathlib import Path
 
+from build_paths import BUILDS, build_directory, resolve_build_reference
 ROOT = Path(__file__).resolve().parent
 RIG_CREDITS = (
     "Snow Rig (CC) Blender Foundation | studio.blender.org",
@@ -295,7 +296,7 @@ def mux(build, episode_path=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("stage", choices=("audio", "scene", "stills", "frames", "mux", "all"))
-    parser.add_argument("--build", type=Path, default=ROOT / "build_v2")
+    parser.add_argument("--build", type=Path, default=BUILDS / "v2")
     parser.add_argument("--episode", type=Path, default=ROOT / "episode.json")
     parser.add_argument("--width", type=int, default=720)
     parser.add_argument("--height", type=int, default=1280)
@@ -308,7 +309,8 @@ def main():
     parser.add_argument("--qwen-python", default=os.environ.get("QWEN_PYTHON", "/home/ronggong/lang/german/.venvs/qwen-tts-test/bin/python"))
     args = parser.parse_args()
     os.environ.setdefault("LP_NUM_THREADS", "4")
-    build = args.build.resolve()
+    build = build_directory(args.build)
+    args.episode = resolve_build_reference(args.episode)
     blender = ROOT / ".tools/blender/blender"
     if args.stage in ("audio", "all"):
         run([args.qwen_python, ROOT / "prepare_audio.py", "--episode", args.episode, "--output-dir", build, "--rhubarb", ROOT / ".tools/rhubarb/rhubarb"])

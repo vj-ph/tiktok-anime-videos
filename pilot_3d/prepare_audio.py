@@ -31,6 +31,7 @@ from fractions import Fraction
 from pathlib import Path
 from typing import Any
 
+from build_paths import BUILDS, build_directory, resolve_build_reference
 
 ROOT = Path(__file__).resolve().parent
 MODEL = "Qwen/Qwen3-TTS-12Hz-1.7B-Base"
@@ -661,7 +662,7 @@ def assemble_dialogue(timeline: dict[str, Any], output_dir: Path) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--episode", type=Path, default=ROOT / "episode.json")
-    parser.add_argument("--output-dir", type=Path, default=ROOT / "build")
+    parser.add_argument("--output-dir", type=Path, default=BUILDS / "pilot_v1")
     parser.add_argument("--rhubarb", type=Path, default=ROOT / ".tools/rhubarb/rhubarb")
     parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--device", default="cpu")
@@ -675,15 +676,15 @@ def main() -> None:
     if not args.device.strip() or not args.model.strip():
         parser.error("--device and --model cannot be empty")
     started = time.monotonic()
-    episode_path = args.episode.resolve(strict=True)
+    episode_path = resolve_build_reference(args.episode).resolve(strict=True)
     from episode_config import read_episode
     episode = read_episode(episode_path)
     validate_episode(episode)
-    output_dir = args.output_dir.resolve()
+    output_dir = build_directory(args.output_dir)
     audio_dir = output_dir / "audio"
     cache_from = None
     if args.speech_cache_from is not None:
-        cache_from = args.speech_cache_from.resolve(strict=True) / "audio"
+        cache_from = resolve_build_reference(args.speech_cache_from).resolve(strict=True) / "audio"
         if not cache_from.is_dir() or cache_from == audio_dir:
             parser.error("--speech-cache-from must name another build containing an audio directory")
     audio_dir.mkdir(parents=True, exist_ok=True)

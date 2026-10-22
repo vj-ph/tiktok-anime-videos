@@ -12,6 +12,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
+from build_paths import BUILDS, build_directory, resolve_build_reference
+
 MOUTH_POSES = {
     # Jaw, width, forward lip rounding, closure.
     "X": (0.0, 1.0, 0.0, 0.0),
@@ -407,11 +409,11 @@ def check_scene(source, build):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("stage", choices=("prepare", "scene", "check"))
-    parser.add_argument("--source", type=Path, default=ROOT / "build_v2")
-    parser.add_argument("--build", type=Path, default=ROOT / "build_v3_exchange")
+    parser.add_argument("--source", type=Path, default=BUILDS / "v2")
+    parser.add_argument("--build", type=Path, default=BUILDS / "v3_exchange")
     arguments = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:]
     args = parser.parse_args(arguments)
-    source, build = args.source.resolve(), args.build.resolve()
+    source, build = resolve_build_reference(args.source), build_directory(args.build)
     if args.stage == "prepare":
         prepare(source, build)
     elif args.stage == "scene":

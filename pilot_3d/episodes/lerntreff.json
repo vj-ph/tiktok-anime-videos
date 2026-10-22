@@ -10,7 +10,7 @@
   "disclaimer": "Eigenständiger kurzer Übungsdialog, keine vollständige Prüfung.",
   "scene": {
     "template": "exam_room",
-    "base_scene": "../build_v2/studio.blend",
+    "base_scene": "../builds/v2/studio.blend",
     "entrance": false,
     "wall_logo": "../assets/deutschkompass-logo.png"
   },

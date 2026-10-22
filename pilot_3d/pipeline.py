@@ -14,11 +14,12 @@ import time
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
+from build_paths import build_directory, resolve_build_reference
 from episode_config import PROFILES, check_timeline, read_episode, validate_template
 from prepare_audio import (atomic_json, atomic_text, content_hash, inspect_wav,
                            load_audio_cache, make_cache_payload, sha256_file)
 
-SOURCES = ("pipeline.py", "episode_config.py", "prepare_audio.py", "align_words.py",
+SOURCES = ("pipeline.py", "build_paths.py", "episode_config.py", "prepare_audio.py", "align_words.py",
            "produce_v4.py", "render.py", "social_captions.py", "review_social.py",
            "check_v4_scene.py", "studio_characters.py", "polish_exchange.py",
            "scene_direction.py", "entrance.py", "build_scene.py")
@@ -99,7 +100,7 @@ def freeze_delivery(build):
 def audio_reuse_spec(episode, source):
     from align_words import validate_words
 
-    source = Path(source).resolve(strict=True)
+    source = resolve_build_reference(source).resolve(strict=True)
     export = json.loads((source / "export_manifest.json").read_text())
     recorded = export.get("files_sha256", export.get("input_files_sha256", {}))
     timeline = json.loads((source / "timeline.json").read_text())
@@ -124,7 +125,7 @@ def audio_reuse_spec(episode, source):
     cache_hashes = {}
     for turn in timeline["turns"]:
         validate_words(turn["words"], turn["text"], turn["wav_duration"])
-        raw = Path(turn["raw_audio"])
+        raw = resolve_build_reference(turn["raw_audio"])
         metadata = raw.with_suffix(".cache.json")
         saved = json.loads(metadata.read_text())
         voice = episode["voices"][turn["speaker"]]
@@ -142,17 +143,17 @@ def build_episode(path, build, profile="preview", jobs=4, with_promo=False, unti
     from render import valid_frame
 
     episode = preflight(path)
-    build = Path(build).resolve()
+    build = build_directory(build)
     if build == ROOT or build in ROOT.parents:
         raise ValueError("Use a dedicated output directory, not the project or an ancestor.")
     if speech_cache_from is not None:
-        speech_cache_from = Path(speech_cache_from).resolve(strict=True)
+        speech_cache_from = resolve_build_reference(speech_cache_from).resolve(strict=True)
         if speech_cache_from == build or not (speech_cache_from / "audio").is_dir():
             raise ValueError("--speech-cache-from must name another build containing an audio directory.")
         if reuse_audio is not None:
             raise ValueError("Choose either exact --reuse-audio or raw --speech-cache-from, not both.")
     spec = {"episode": episode, "profile": profile,
-            "base_scene_sha256": sha256_file(Path(episode["scene"]["base_scene"])),
+            "base_scene_sha256": sha256_file(resolve_build_reference(episode["scene"]["base_scene"])),
             "asset_sha256": {value: sha256_file(Path(value)) for value in (
                 [voice[field] for voice in episode["voices"].values() for field in ("audio", "transcript")]
                 + ([episode["book_cover"]] if episode["outro_seconds"] > 0 else [])
@@ -171,7 +172,7 @@ def build_episode(path, build, profile="preview", jobs=4, with_promo=False, unti
         if build.exists() and any(build.iterdir()):
             raise ValueError("Output directory is nonempty and is not a matching pipeline build; choose a new directory.")
         build.mkdir(parents=True, exist_ok=True)
-        state = {"spec": spec, "episode_file": str(Path(path).resolve()), "stages": {},
+        state = {"spec": spec, "episode_file": str(resolve_build_reference(path)), "stages": {},
                  "speech_cache_from": str(speech_cache_from) if speech_cache_from is not None else None}
         atomic_json(build / "episode.json", episode)
         atomic_json(state_path, state)
@@ -237,7 +238,8 @@ def build_episode(path, build, profile="preview", jobs=4, with_promo=False, unti
     caption_preflight(build, episode, with_promo)
     if until == "audio":
         return build
-    step("scene", command("scene", [blender, "-b", "--disable-autoexec", episode["scene"]["base_scene"],
+    step("scene", command("scene", [blender, "-b", "--disable-autoexec",
+                                   resolve_build_reference(episode["scene"]["base_scene"]),
                                    "-t", "4", "--python-exit-code", "1", "--python", ROOT / "produce_v4.py",
                                    "--", "scene", "--episode", snapshot, "--build", build, "--profile", profile]),
          ("studio.blend", "scene_manifest.json"))
@@ -297,7 +299,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("validate", "build"))
     parser.add_argument("--episode", type=Path, required=True)
-    parser.add_argument("--build", type=Path)
+    parser.add_argument("--build", type=Path,
+                        help="Run directory; a project-level name is placed under builds/.")
     parser.add_argument("--profile", choices=tuple(PROFILES), default="preview")
     parser.add_argument("--jobs", type=int, choices=(1, 2, 4), default=4)
     parser.add_argument("--promo", action="store_true")

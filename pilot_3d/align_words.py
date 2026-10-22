@@ -7,6 +7,7 @@ import json
 import math
 from pathlib import Path
 
+from build_paths import resolve_build_reference
 from prepare_audio import atomic_json, content_hash, inspect_wav, sha256_file
 
 MODEL = "VOXPOPULI_ASR_BASE_10K_DE"
@@ -54,7 +55,7 @@ def align_build(build):
     cache = build / "alignment"
     cache.mkdir(exist_ok=True)
     for turn in timeline["turns"]:
-        audio = Path(turn["audio"])
+        audio = resolve_build_reference(turn["audio"])
         info = inspect_wav(audio)
         if abs(info["wav_duration"] - turn["wav_duration"]) > 1e-9:
             raise ValueError(f"Turn {turn['id']}: source WAV and timeline disagree.")
@@ -94,4 +95,4 @@ def align_build(build):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--build", required=True, type=Path)
-    align_build(parser.parse_args().build.resolve())
+    align_build(resolve_build_reference(parser.parse_args().build))

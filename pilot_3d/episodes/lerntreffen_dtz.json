@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "id": "dtz_lerntreffen_v7",
+  "presentation": "social",
+  "visual_version": 7,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "Ein Lerntreffen planen",
+  "label": "DTZ B1 · Sprechen · Teil 3",
+  "disclaimer": "Unabhängige Übungssimulation, keine vollständige DTZ-Prüfung.",
+  "branding": "DEUTSCHKOMPASS",
+  "scene": {
+    "template": "exam_room",
+    "base_scene": "../builds/v2/studio.blend",
+    "entrance": true,
+    "wall_logo": "../assets/deutschkompass-logo.png"
+  },
+  "header": {
+    "brand": "DEUTSCHKOMPASS · B1 SPRECHEN",
+    "topic": "Teil 3 · Ein Lerntreffen planen"
+  },
+  "hook": "DTZ B1: Gemeinsam lernen",
+  "task_title": "DEINE AUFGABE",
+  "task_summary": "Zu zweit lernen: wenig Zeit.",
+  "task_hint": "Lernpause · Video bei Bedarf anhalten.",
+  "takeaway_seconds": 0,
+  "publication": {
+    "intro": "Bibliothek oder Café? Erst eigene Vorschläge machen, dann den Modelldialog anhören.",
+    "disclosure": "Unabhängige, verkürzte Übungssimulation; keine offizielle Aufgabe und keine vollständige Prüfung. Die Lernpause gehört zum Video, nicht zum Prüfungsablauf.",
+    "hashtags": ["#DTZ", "#B1Deutsch", "#DeutschLernen", "#GemeinsamPlanen"]
+  },
+  "book_cover": "../assets/book-cover.jpg",
+  "source": {
+    "book": "../../../german_exam_books/b1/speaking_dtz_gpt_v1/book_no_toc.md",
+    "exercise": "Teil 3, Übung 2: Lerntreffen für die DTZ-Prüfung planen",
+    "adaptation": "New compact dialogue adapted from the book task, not the unrelated three-turn Lerntreff technical demo. Covers all five source task points and the role constraints: quiet study, little time, food and a small budget. Not an official task or a real-time complete examination.",
+    "framework_reference": "https://www.gast.de/fileadmin/gast.de/GAST/5_DTZ/PDF/gast_DTZ_UEbungssatz_1.pdf",
+    "framework_checked": "2026-10-22",
+    "coverage": {
+      "Tag und Uhrzeit": ["03", "04", "07", "14"],
+      "Ort und Dauer": ["04", "05", "06", "14"],
+      "Was üben?": ["07", "08", "09", "13"],
+      "Wer bringt was mit?": ["09", "10"],
+      "Essen und Budget": ["05", "06", "10", "11"],
+      "Plan B": ["11", "12"]
+    }
+  },
+  "fps": 24,
+  "intro_seconds": 2.5,
+  "outro_seconds": 6.0,
+  "task_card": [
+    "Tag und Uhrzeit",
+    "Ort und Dauer",
+    "Was üben?",
+    "Wer bringt was mit?",
+    "Essen und Budget",
+    "Plan B"
+  ],
+  "takeaway": [],
+  "cta": [
+    "Mehr Aufgaben und Dialoge",
+    "im DTZ-B1-Sprechbuch",
+    "Amazon-Buchlink im Profil"
+  ],
+  "voices": {
+    "examiner": {
+      "audio": "../../../shared-voices/qwen3-tts-german/male_middle_aged.wav",
+      "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+    },
+    "candidate_a": {
+      "audio": "../../../shared-voices/qwen3-tts-german/female_young_adult.wav",
+      "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+    },
+    "candidate_b": {
+      "audio": "../../../shared-voices/qwen3-tts-german/male_young_adult.wav",
+      "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+    }
+  },
+  "turns": [
+    {
+      "id": "01", "speaker": "examiner", "name": "Prüfer",
+      "text": "Guten Tag. Nehmen Sie bitte Platz.",
+      "camera": "wide", "action": "welcome", "look_at": "candidate_a", "pause_after": 3.0
+    },
+    {
+      "id": "02", "speaker": "examiner", "name": "Prüfer",
+      "text": "Planen Sie gemeinsam ein Lerntreffen für die DTZ-Prüfung. Besprechen Sie die Punkte auf dem Aufgabenblatt.",
+      "camera": "examiner", "action": "explain", "look_at": "candidate_b", "pause_after": 9.2,
+      "task_card_delay_seconds": 1.2
+    },
+    {
+      "id": "03", "speaker": "candidate_a", "name": "Lea",
+      "text": "Wollen wir am Samstag zusammen für die Prüfung lernen? Ich hätte ab zehn Zeit.",
+      "camera": "candidate_a", "action": "propose", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "04", "speaker": "candidate_b", "name": "Samir",
+      "text": "Ja, aber ich kann nur bis halb zwölf. Können wir in einem Café lernen?",
+      "camera": "candidate_b", "action": "consider", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "05", "speaker": "candidate_a", "name": "Lea",
+      "text": "Lieber in der Bibliothek. Dort ist es ruhiger. Danach könnten wir kurz etwas essen.",
+      "camera": "candidate_a", "action": "consider", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "06", "speaker": "candidate_b", "name": "Samir",
+      "text": "Einverstanden. Wir lernen eine Stunde und gehen danach in ein günstiges Café.",
+      "camera": "candidate_b", "action": "agree", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "07", "speaker": "candidate_a", "name": "Lea",
+      "text": "Gut. Treffen wir uns um zehn vor der Bibliothek. Was möchtest du üben?",
+      "camera": "candidate_a", "action": "propose", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "08", "speaker": "candidate_b", "name": "Samir",
+      "text": "Zuerst Bildbeschreibungen und danach gemeinsam planen. Bei der Bildbeschreibung fehlen mir manchmal die Wörter.",
+      "camera": "candidate_b", "action": "propose", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "09", "speaker": "candidate_a", "name": "Lea",
+      "text": "Dann helfen wir uns gegenseitig. Ich bringe mein Heft und Themenkarten mit.",
+      "camera": "candidate_a", "action": "agree", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "10", "speaker": "candidate_b", "name": "Samir",
+      "text": "Ich bringe Stifte und Wasser mit. Für das Café möchte ich höchstens fünf Euro ausgeben.",
+      "camera": "candidate_b", "action": "propose", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "11", "speaker": "candidate_a", "name": "Lea",
+      "text": "Gut, wir suchen etwas Günstiges. Und wenn in der Bibliothek kein Platz frei ist?",
+      "camera": "candidate_a", "action": "consider", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "12", "speaker": "candidate_b", "name": "Samir",
+      "text": "Dann gehen wir direkt ins Café nebenan. Dort gibt es hinten ruhige Tische.",
+      "camera": "candidate_b", "action": "propose", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "13", "speaker": "candidate_a", "name": "Lea",
+      "text": "Gut, du suchst die Aufgaben für die Bildbeschreibung aus. Ich bereite Fragen für unseren Dialog vor.",
+      "camera": "candidate_a", "action": "agree", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "14", "speaker": "candidate_b", "name": "Samir",
+      "text": "Abgemacht. Samstag um zehn vor der Bibliothek. Wir lernen bis elf und essen danach kurz etwas.",
+      "camera": "candidate_b", "action": "agree", "look_at": "candidate_a", "pause_after": 1.2
+    }
+  ]
+}

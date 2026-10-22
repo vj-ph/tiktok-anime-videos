@@ -7,6 +7,7 @@ import subprocess
 import wave
 from pathlib import Path
 
+from build_paths import resolve_build_reference
 from align_words import validate_words
 from prepare_audio import atomic_json, sha256_file
 from episode_config import promo_settings, task_window
@@ -23,7 +24,7 @@ def review_cameras(build, timeline, manifest):
     from produce_v4 import CAMERA_PREFIXES, camera_at_frame
 
     edit = manifest.get("derived_edit")
-    context = Path(edit["source"]) if edit else build
+    context = resolve_build_reference(edit["source"]) if edit else build
     source_manifest = json.loads((context / "scene_manifest.json").read_text())
     receipt = json.loads((context / "frames_manifest.json").read_text())
     scene_hash = sha256_file(build / "studio.blend")
@@ -99,7 +100,7 @@ def review(build):
     if (build / "audio_reuse.json").is_file():
         reuse = json.loads((build / "audio_reuse.json").read_text())
         for name, digest in reuse["files_sha256"].items():
-            if sha256_file(build / name) != digest or sha256_file(Path(reuse["source"]) / name) != digest:
+            if sha256_file(build / name) != digest or sha256_file(resolve_build_reference(reuse["source"]) / name) != digest:
                 raise ValueError(f"Visual revision changed approved source audio/alignment: {name}")
         report["original_audio_and_alignment_unchanged"] = True
     if episode.get("subtitle_mode") == "readable":
@@ -118,7 +119,7 @@ def review(build):
         }
         report["camera_review"] = review_cameras(build, timeline, manifest)
         if not manifest.get("derived_edit") and "camera_revision_from" in manifest:
-            source = Path(manifest["camera_revision_from"]["source"])
+            source = resolve_build_reference(manifest["camera_revision_from"]["source"])
             for name in ("dialogue.wav", "word_alignment.json"):
                 if sha256_file(build / name) != sha256_file(source / name):
                     raise ValueError(f"Camera-only revision changed {name}.")
@@ -128,7 +129,7 @@ def review(build):
         if not limits["min_seconds"] <= timeline["duration"] <= limits["max_seconds"]:
             raise ValueError("Promo is outside the configured duration bounds.")
         edit = json.loads((build / "scene_manifest.json").read_text())["derived_edit"]
-        with wave.open(str(Path(edit["source"]) / "dialogue.wav"), "rb") as original:
+        with wave.open(str(resolve_build_reference(edit["source"]) / "dialogue.wav"), "rb") as original:
             samples = original.getframerate() // timeline["fps"]
             original.setpos(edit["source_start_frame_zero_based"] * samples)
             expected = original.readframes((edit["source_stop_frame_exclusive"] -
@@ -195,4 +196,4 @@ def review(build):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--build", type=Path, required=True)
-    review(parser.parse_args().build.resolve())
+    review(resolve_build_reference(parser.parse_args().build))

@@ -11,7 +11,7 @@
   "branding": "DEUTSCHKOMPASS",
   "scene": {
     "template": "exam_room",
-    "base_scene": "build_v2/studio.blend",
+    "base_scene": "builds/v2/studio.blend",
     "entrance": true,
     "wall_logo": "assets/deutschkompass-logo.png"
   },

@@ -19,6 +19,7 @@ venv/
 .cache/
 
 # Generated builds and render/export directories, not build_*.py source files
+builds/
 build/
 build_*/
 renders/

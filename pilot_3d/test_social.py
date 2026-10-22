@@ -214,7 +214,7 @@ class SocialTests(unittest.TestCase):
                 output.setframerate(48000)
                 output.writeframes(samples)
             with patch("produce_v4.ROOT", root), patch("render.mux"):
-                promo(build)
+                promo(build, source)
             with wave.open(str(build / "dialogue.wav"), "rb") as excerpt:
                 self.assertEqual(excerpt.getnframes(), 798 * 2000)
                 self.assertFalse(any(excerpt.readframes(60 * 2000)))

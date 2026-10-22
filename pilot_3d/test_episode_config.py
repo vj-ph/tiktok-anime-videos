@@ -370,6 +370,28 @@ class PipelineCheckpointTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "different text/reference"):
             audio_reuse_spec(self.episode, source)
 
+    def test_audio_reuse_follows_moved_raw_cache_without_rewriting_frozen_timeline(self):
+        source = self.reuse_source()
+        old = self.root / "build_voice"
+        timeline = json.loads((source / "timeline.json").read_text())
+        for turn in timeline["turns"]:
+            turn["raw_audio"] = str(old / Path(turn["raw_audio"]).name)
+        atomic_json(source / "timeline.json", timeline)
+        manifest = json.loads((source / "export_manifest.json").read_text())
+        manifest["files_sha256"]["timeline.json"] = sha256_file(source / "timeline.json")
+        atomic_json(source / "export_manifest.json", manifest)
+        before = {name: sha256_file(source / name) for name in
+                  ("timeline.json", "dialogue.wav", "word_alignment.json", "export_manifest.json")}
+        moved = self.root / "builds/voice"
+        moved.parent.mkdir()
+        source.rename(moved)
+        with patch("build_paths.ROOT", self.root), patch("build_paths.BUILDS", moved.parent):
+            receipt = audio_reuse_spec(self.episode, old)
+        self.assertEqual(receipt["source"], str(moved))
+        self.assertEqual(len(receipt["voice_cache_sha256"]), len(timeline["turns"]))
+        self.assertEqual(before, {name: sha256_file(moved / name) for name in before})
+        self.assertFalse(old.exists())
+
     def test_audio_reuse_rejects_tampered_source_and_alignment(self):
         source = self.reuse_source()
         sidecar = json.loads((source / "word_alignment.json").read_text())

@@ -4,6 +4,7 @@ import copy
 import json
 from pathlib import Path
 
+from build_paths import resolve_build_reference
 from prepare_audio import SAFE_ID, ceil_frames, inspect_wav, nonempty, number, validate_episode
 
 CAMERA_PREFIXES = {"wide": "01", "examiner": "02", "candidates": "03",
@@ -16,7 +17,7 @@ PROFILES = {
 
 
 def read_episode(path):
-    path = Path(path).resolve(strict=True)
+    path = resolve_build_reference(path).resolve(strict=True)
     episode = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(episode, dict):
         raise ValueError("Episode must be a JSON object.")
@@ -193,7 +194,7 @@ def validate_template(episode, *, check_assets=False):
         if any(turn_phase(episode["turns"][i]) != "dialogue" for i in indexes):
             raise ValueError("Promo selection must contain dialogue, not the welcome/task card.")
     if check_assets:
-        if not Path(scene["base_scene"]).is_file():
+        if not resolve_build_reference(scene["base_scene"]).is_file():
             raise FileNotFoundError(f"Base scene not found: {scene['base_scene']}")
         if "wall_logo" in scene and not Path(scene["wall_logo"]).is_file():
             raise FileNotFoundError(f"Wall logo not found: {scene['wall_logo']}")

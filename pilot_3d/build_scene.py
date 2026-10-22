@@ -343,7 +343,9 @@ def camera(name, pos, target, lens=43):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--episode", type=Path, default=Path(__file__).with_name("episode.json"))
-    parser.add_argument("--build", type=Path, default=Path(__file__).with_name("build_v2"))
+    from build_paths import BUILDS, build_directory
+
+    parser.add_argument("--build", type=Path, default=BUILDS / "v2")
     parser.add_argument("--width", type=int, default=720)
     parser.add_argument("--height", type=int, default=1280)
     parser.add_argument("--engine", choices=("workbench", "cycles"), default="cycles")
@@ -353,7 +355,7 @@ def main():
     parser.add_argument("--start", type=int)
     parser.add_argument("--end", type=int)
     args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [])
-    args.build = args.build.resolve()
+    args.build = build_directory(args.build)
     episode = json.loads(args.episode.read_text())
     timeline = json.loads((args.build / "timeline.json").read_text())
     if min(args.width, args.height) <= 0:

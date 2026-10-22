@@ -14,6 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
+from build_paths import BUILDS, build_directory, resolve_build_reference
 from prepare_audio import atomic_json, ceil_frames, sha256_file, subtitles
 from episode_config import (ACTORS, CAMERA_PREFIXES, PROFILES, check_timeline, entrance_enabled,
                             promo_settings, read_episode, seating_deadline, task_window, turn_phase)
@@ -166,7 +167,7 @@ def social_exchange(build):
     from align_words import align_build
     from render import mux, scene_hash
 
-    source = ROOT / "build_v3_exchange"
+    source = BUILDS / "v3_exchange"
     isolated(source, build)
     episode = json.loads((source / "episode.json").read_text())
     episode.update(presentation="social", social_kind="exchange", credit_policy="publishing_caption")
@@ -541,7 +542,7 @@ def promo(build, source=None):
     from render import mux, scene_hash
     from social_captions import make_ass
 
-    source = source if source is not None else ROOT / "build_v4"
+    source = source if source is not None else BUILDS / "v4"
     isolated(source, build)
     original = json.loads((source / "timeline.json").read_text())
     source_manifest = json.loads((source / "scene_manifest.json").read_text())
@@ -594,6 +595,9 @@ def main():
     parser.add_argument("--episode", type=Path)
     parser.add_argument("--profile", choices=tuple(PROFILES), default="preview")
     args = parser.parse_args(argv)
+    args.build = build_directory(args.build)
+    if args.source is not None:
+        args.source = resolve_build_reference(args.source)
     if args.stage in ("promo", "revise-cameras"):
         if args.source is None:
             parser.error("--source is required for derived edits")
