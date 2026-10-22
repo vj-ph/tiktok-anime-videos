@@ -3,6 +3,10 @@
 import math
 
 VERSION = 7
+GESTURE_LIMITS = {
+    "welcome": 1, "explain": 2, "propose": 2, "consider": 1, "agree": 1,
+    "introduce": 3, "ask": 1, "answer": 2,
+}
 FUNCTION_WORDS = set(
     "aber als am an auch auf aus bei bis das dem den der des die doch du ein eine "
     "einem einen einer es für haben ich im in ist ja können könnten mit nach nicht "
@@ -96,14 +100,18 @@ def performance_plan(timeline):
             peak = turn["start"] + (focus["start"] + focus["end"]) / 2
             if not peaks or peak - peaks[-1][0] >= 2.15:
                 peaks.append((peak, focus["word"]))
-            if len(peaks) == (2 if action in ("propose", "explain") else 1):
+            if action != "introduce" and len(peaks) == GESTURE_LIMITS[action]:
                 break
+        if action == "introduce" and len(peaks) > GESTURE_LIMITS[action]:
+            peaks = [peaks[round(i * (len(peaks) - 1) / (GESTURE_LIMITS[action] - 1))]
+                     for i in range(GESTURE_LIMITS[action])]
         for beat, (peak, word) in enumerate(peaks):
             side = "L" if (ordinal + beat + (speaker == "candidate_b")) % 2 == 0 else "R"
             gestures.append({
                 "actor": speaker, "turn_id": turn["id"], "action": action,
                 "peak": peak, "word": word, "hand": side,
-                "strength": (0.68 if action == "consider" else 1.0) * (1 if beat == 0 else 0.72),
+                "strength": {"consider": .68, "introduce": .72, "ask": .55, "answer": .75}.get(
+                    action, 1.0) * (1 if beat == 0 else 0.72),
                 "rise": (.32, .42, .36)[ordinal % 3],
                 "hold": (.08, .14, .06)[ordinal % 3],
                 "fall": (.62, .74, .56)[ordinal % 3],
@@ -114,9 +122,12 @@ def performance_plan(timeline):
                          "amount": 0.065})
         following = timeline["turns"][index + 1] if index + 1 < len(timeline["turns"]) else None
         listener = turn.get("look_at")
-        if (speaker.startswith("candidate") and listener in ("candidate_a", "candidate_b")
-                and listener != speaker and following and following["speaker"] == listener
-                and (following["action"] == "agree" or (ordinal % 2 == 0 and turn["duration"] >= 3))):
+        partner_response = (
+            listener in ("candidate_a", "candidate_b") and listener != speaker and following
+            and (following["action"] == "agree" or (ordinal % 2 == 0 and turn["duration"] >= 3)))
+        interview_response = listener == "examiner" and action in ("introduce", "answer") and turn["duration"] >= 3
+        if (speaker.startswith("candidate") and following and following["speaker"] == listener
+                and (partner_response or interview_response)):
             peak = min(turn["start"] + words[-1]["end"] + .12, following["start"] - .34)
             if peak - .19 >= turn["start"]:
                 nods.append({

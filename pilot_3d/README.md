@@ -16,6 +16,9 @@ pilot_3d/
     v7_acting_test/                 Internal acting diagnostic
     lerntreffen_v7_preview/         First audio-only take
     lerntreffen_v7_preview_r1/      Complete Lerntreffen preview
+    teil1_vorstellung_v7_preview/   First Teil 1 audio take
+    teil1_vorstellung_v7_preview_r1/ Original full Teil 1 native render
+    teil1_vorstellung_v7_preview_r2/ Delivered full-rate caption correction
 ```
 
 Each run keeps its audio, alignment, frames, scene, exports, logs and frozen
@@ -154,6 +157,103 @@ disclosure and complete character attribution. The generated
 `builds/lerntreffen_v7_preview/` contains the first audio-only take; `_r1`
 makes the café location proposal explicit and reuses the other recordings.
 
+### Book-based Teil 1: introductions and follow-up questions
+
+`episodes/teil1_vorstellung.json` adapts the book's **Teil 1, Übungen 1–3** into
+an original, shortened practice episode. Both candidates participate: Lea
+introduces herself and answers a question about working in retail; Samir
+introduces himself and explains how he practises German alongside childcare.
+Their fictional biographies cover name, birthplace, residence, work, family
+and languages. The examiner closes **the first part**, not the entire exam.
+The original book and all previous deliveries remain unchanged.
+
+The episode retains the real entrance, shared 1.7B voices, existing synthesis
+settings, 1.2-second examiner hold, eight-second learning card, 1.2-second
+dialogue gaps and six-second book CTA. The learning pause is pedagogical, not
+an official exam time allowance. There is no tips card or promotional cut.
+
+```bash
+# Validate the script, tools, assets and all section-header labels.
+python3 pipeline.py validate --episode episodes/teil1_vorstellung.json
+
+# Fresh full preview; reuse only raw recordings with matching text/voice/settings.
+python3 pipeline.py build \
+  --episode episodes/teil1_vorstellung.json \
+  --build builds/teil1_vorstellung_v7_preview_r3 \
+  --speech-cache-from builds/teil1_vorstellung_v7_preview_r2 \
+  --profile preview --jobs 4
+
+# After approval only: preserve the preview's exact speech and timing.
+python3 pipeline.py build \
+  --episode builds/teil1_vorstellung_v7_preview_r2/episode.json \
+  --build builds/teil1_vorstellung_v7_production \
+  --reuse-audio builds/teil1_vorstellung_v7_preview_r2 \
+  --profile production --jobs 4
+```
+
+Copy-ready, full-episode caption drafts are in
+`../posts/dtz_b1_teil1_vorstellung/tiktok.txt` and `instagram.txt`.
+Approval, production rendering and manual publication are separate steps;
+creating the preview does not publish anything.
+
+The delivered preview is `builds/teil1_vorstellung_v7_preview_r2/pilot.mp4`:
+**115.375 seconds, 2,769 output frames at 24 fps**, using 1,385 native preview
+poses. The clean video, contact sheet and review reports are alongside it.
+All ten turns matched independent, unprompted ASR after case/punctuation
+normalization; this is a plausibility check, not a pronunciation guarantee.
+The 28 subtitle pages have at least 2.375 encoded seconds each and stay below
+20 characters per second.
+
+`_r2` reuses the verified `_r1` scene, controls, cameras, frames and audio
+byte-for-byte; only FFmpeg compositing/export was rerun to correct output-frame
+caption updates. The complete native-file hashes, original source hashes and
+reuse policy are recorded in the frozen `audio_reuse.json`. Neither the first
+full render nor earlier episode masters were overwritten.
+`encoded_section_checks.json` checks actual decoded frames immediately before
+and at each header transition and both ends of the full 144-frame CTA.
+
+Optional `exam_part` identifies part 1, 2 or 3. Optional `sections` maps IDs to
+short, measured header labels, and each turn can select a `section`:
+
+```json
+"sections": {
+  "1A": "Teil 1A · Vorstellung",
+  "1B": "Teil 1B · Nachfragen"
+}
+```
+
+These labels describe the exam task, **not animation phases**. The entrance,
+instruction and dialogue phases still run once in that order, while section
+labels can repeat for the second candidate. A turn without `section` restores
+the base topic; the CTA also restores it. Episodes without section metadata
+keep their existing static header. All labels, including unused declarations,
+are checked for fit before synthesis, then audited as rendered libass pixels.
+
+ASS timestamps have centisecond precision. New social exports preserve frame
+boundaries when serializing subtitle windows, headers and cards, rather than
+rounding a boundary upward and losing its first encoded frame. In particular,
+an odd-frame episode still receives all **144 frames** of its six-second CTA at
+24 fps. Arbitrary aligned-word timings retain their existing centisecond
+rounding. Previously frozen videos/captions are not rewritten; regenerating
+an older episode can now correct boundary timestamps without changing its
+caption text, layout or acting.
+The compositor expands held native poses to the output frame rate **before**
+rendering ASS, so headers, word highlights and cards update at 24 fps even
+when preview animation is rendered on twos. Applying `fps` only after ASS
+would duplicate old caption states over odd-frame transitions. An encoded
+synthetic regression checks that case, not just the filter command.
+
+The `introduce`, `ask` and `answer` actions support examiner-led interaction.
+Introductions select up to three restrained, speech-aligned gestures spread
+across the monologue. Questions use at most one smaller gesture; answers use
+up to two. Candidates address the examiner, who selectively acknowledges the
+end of their contribution before speaking again. Existing Teil 3 gesture and
+attention plans are unchanged.
+
+`test_teil1_episode.py` covers both candidate sequences, source coverage,
+repeatable section labels, exact header windows, metadata rejection, CTA reset,
+preserved pacing, gesture distribution, attention and publishing credits.
+
 ### V5 acting and room direction
 
 New scene builds use speech-aligned content-word beats rather than the same
@@ -190,8 +290,9 @@ rendered iris visibility.
 Blink spacing varies by actor, with a blink near a major attention change.
 Peaks land on the actual pose grid so both profiles retain full eyelid closure.
 Listener acknowledgements are selective and finish before that listener starts
-speaking. Proposals/explanations have at most two emphasis gestures; other
-actions have at most one. Reach and anticipation/hold/release timing vary across
+speaking. Proposals/explanations have at most two emphasis gestures; the
+original welcome/consider/agreement actions have at most one. The interview
+actions use the limits described above. Reach and anticipation/hold/release timing vary across
 turns, while fingertip/table contact constraints remain enforced. Speaker
 cameras, mouth cues, subtitle timing and learner pauses are unchanged.
 
@@ -315,6 +416,7 @@ structure. Copy either JSON file and edit:
 | `scene.template: "exam_room"`, `scene.base_scene`, `scene.entrance` | Reusable room asset and optional entrance/seating sequence |
 | Optional `scene.wall_logo` | Real logo image mounted beside the entrance; omitted for no logo |
 | `header.brand`, `header.topic`, `hook` | Actual visible header and opening hook; no fixed topic text |
+| Optional `exam_part`, `sections`, turn `section` | Part 1/2/3 metadata and timed section headers, independent of animation phases; omit a turn's section to restore the base topic |
 | `voices` | Reference WAV/transcript pairs for the speaking actor slots |
 | `turns` | Arbitrary unique IDs, speaker slot, display name, spoken text, camera, acting action, gaze target and pause |
 | `phase` on a turn | `welcome`, `instruction` or `dialogue`; without it, `welcome`/`explain` actions imply the first two phases |
@@ -334,8 +436,8 @@ adjusting its relative paths, or using absolute paths.
 Actor slots remain `candidate_a`, `candidate_b` and `examiner`; their display
 names are freely editable. Supported cameras are `wide`, `candidates`,
 `candidate_a`, `candidate_b` and `examiner`; a selected shot must include its
-speaker. Acting actions are `welcome`, `explain`, `propose`, `consider` and
-`agree`. Turn IDs and the number of dialogue turns are not fixed.
+speaker. Acting actions are `welcome`, `explain`, `propose`, `consider`,
+`agree`, `introduce`, `ask` and `answer`. Turn IDs and the number of dialogue turns are not fixed.
 Episode/turn IDs use filename-safe ASCII letters, digits, underscores and
 hyphens, begin with a letter or digit, and are at most 64 characters long.
 Entrance-enabled episodes need enough welcome/intro time for seating.
@@ -357,7 +459,7 @@ Focused regression suite:
 
 ```bash
 /home/ronggong/lang/german/.venvs/qwen-tts-test/bin/python \
-  -m unittest test_build_paths test_episode_config test_lerntreffen_episode test_entrance test_direction test_social test_audio test_render test_exchange
+  -m unittest test_build_paths test_episode_config test_teil1_episode test_lerntreffen_episode test_entrance test_direction test_social test_audio test_render test_exchange
 ```
 
 ## Preserved productions

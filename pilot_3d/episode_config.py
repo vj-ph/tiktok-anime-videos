@@ -6,6 +6,7 @@ from pathlib import Path
 
 from build_paths import resolve_build_reference
 from prepare_audio import SAFE_ID, ceil_frames, inspect_wav, nonempty, number, validate_episode
+from scene_direction import GESTURE_LIMITS
 
 CAMERA_PREFIXES = {"wide": "01", "examiner": "02", "candidates": "03",
                    "candidate_a": "04", "candidate_b": "05"}
@@ -48,6 +49,26 @@ def turn_phase(turn):
 
 def instruction_turn(turns):
     return next((turn for turn in turns if turn_phase(turn) == "instruction"), None)
+
+
+def section_windows(episode, timeline):
+    """Exam task labels are independent of entrance/instruction/dialogue blocking."""
+    default = episode.get("header", {}).get("topic", episode.get("title", ""))
+    labels = episode.get("sections", {})
+    changes = [{"start": 0.0, "section": None, "label": default}]
+    events = [(turn["start"], turn.get("section")) for turn in timeline["turns"]]
+    events.append((timeline["duration"] - episode.get("outro_seconds", 0), None))
+    for start, section in events:
+        if start >= timeline["duration"] or section == changes[-1]["section"]:
+            continue
+        event = {"start": start, "section": section,
+                 "label": labels[section] if section is not None else default}
+        if start == changes[-1]["start"]:
+            changes[-1] = event
+        else:
+            changes.append(event)
+    return [{**event, "end": changes[index + 1]["start"] if index + 1 < len(changes)
+             else timeline["duration"]} for index, event in enumerate(changes)]
 
 
 def task_window(timeline):
@@ -103,6 +124,16 @@ def validate_template(episode, *, check_assets=False):
         raise ValueError("credit_policy must be publishing_caption; posting attribution remains required.")
     if episode.get("subtitle_mode") != "readable":
         raise ValueError("subtitle_mode must be readable.")
+    if "exam_part" in episode and (type(episode["exam_part"]) is not int
+                                  or episode["exam_part"] not in (1, 2, 3)):
+        raise ValueError("exam_part must be 1, 2 or 3.")
+    sections = episode.get("sections", {})
+    if not isinstance(sections, dict):
+        raise ValueError("sections must be an object of section IDs and header labels.")
+    for section, label in sections.items():
+        if not isinstance(section, str) or not SAFE_ID.fullmatch(section):
+            raise ValueError("Section IDs must be safe filename identifiers.")
+        nonempty(label, f"sections.{section}")
     scene = episode.get("scene", {})
     if not isinstance(scene, dict) or scene.get("template", "exam_room") != "exam_room":
         raise ValueError("Only the exam_room scene template is currently supported.")
@@ -118,8 +149,10 @@ def validate_template(episode, *, check_assets=False):
         allowed = {"wide", role} | ({"candidates"} if role.startswith("candidate") else set())
         if camera not in allowed:
             raise ValueError(f"Turn {turn['id']}: camera must include its speaker; allowed: {sorted(allowed)}.")
-        if turn.get("action") not in ("welcome", "explain", "propose", "consider", "agree"):
+        if turn.get("action") not in GESTURE_LIMITS:
             raise ValueError(f"Turn {turn['id']}: unsupported acting action.")
+        if "section" in turn and (not isinstance(turn["section"], str) or turn["section"] not in sections):
+            raise ValueError(f"Turn {turn['id']}: section must name a declared section ID.")
         if turn_phase(turn) not in ("welcome", "instruction", "dialogue"):
             raise ValueError(f"Turn {turn['id']}: unknown phase.")
         if turn.get("look_at") not in ACTORS:

@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "id": "dtz_teil1_vorstellung_v7",
+  "exam_part": 1,
+  "presentation": "social",
+  "visual_version": 7,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "Sich vorstellen und nachfragen",
+  "label": "DTZ B1 · Sprechen · Teil 1",
+  "disclaimer": "Unabhängige, verkürzte Übungssimulation zu Teil 1; keine vollständige DTZ-Prüfung.",
+  "branding": "DEUTSCHKOMPASS",
+  "scene": {
+    "template": "exam_room",
+    "base_scene": "../builds/v2/studio.blend",
+    "entrance": true,
+    "wall_logo": "../assets/deutschkompass-logo.png"
+  },
+  "header": {
+    "brand": "DEUTSCHKOMPASS · B1 SPRECHEN",
+    "topic": "Teil 1 · Sich vorstellen"
+  },
+  "sections": {
+    "1A": "Teil 1A · Vorstellung",
+    "1B": "Teil 1B · Nachfragen"
+  },
+  "hook": "DTZ B1: Stell dich vor",
+  "task_title": "DEINE VORSTELLUNG",
+  "task_summary": "Erzähle etwas über dich.",
+  "task_hint": "Lernpause · Video bei Bedarf anhalten.",
+  "task_card": ["Name", "Geburtsort", "Wohnort", "Arbeit / Beruf", "Familie", "Sprachen"],
+  "takeaway": [],
+  "takeaway_seconds": 0,
+  "cta": ["Mehr Aufgaben und Dialoge", "im DTZ-B1-Sprechbuch", "Amazon-Buchlink im Profil"],
+  "publication": {
+    "intro": "Lea und Samir stellen sich nacheinander vor und beantworten jeweils eine passende Nachfrage. Übe zuerst deine eigene Vorstellung.",
+    "disclosure": "Unabhängige, verkürzte Übungssimulation zu Teil 1; keine offizielle Aufgabe und keine vollständige Prüfung. Die Lernpause gehört zum Video, nicht zum Prüfungsablauf.",
+    "hashtags": ["#DTZ", "#B1Deutsch", "#DeutschLernen", "#SichVorstellen", "#DeutschKompass"]
+  },
+  "book_cover": "../assets/book-cover.jpg",
+  "source": {
+    "book": "../../../german_exam_books/b1/speaking_dtz_gpt_v1/book_no_toc.md",
+    "exercises": [
+      "Teil 1, Übung 1: Mein Basisprofil",
+      "Teil 1, Übung 2: Wohnen und Familie in Deutschland",
+      "Teil 1, Übung 3: Arbeit, Beruf und Tagesablauf"
+    ],
+    "adaptation": "Original compact dialogue adapted from the book's profile, housing/family and work exercises. Lea and Samir have fictional biographies created for this episode. Both receive a self-introduction and a linked examiner follow-up; this is not a complete examination or a copy of an official task.",
+    "framework_reference": "https://www.gast.de/fileadmin/gast.de/GAST/5_DTZ/PDF/gast_DTZ_UEbungssatz_1.pdf",
+    "framework_checked": "2026-10-22",
+    "coverage": {
+      "Name": ["03", "07"],
+      "Geburtsort": ["03", "07"],
+      "Wohnort": ["03", "07"],
+      "Arbeit / Beruf": ["03", "07"],
+      "Familie": ["03", "07"],
+      "Sprachen": ["03", "07"],
+      "Nachfrage zum Beruf": ["04", "05"],
+      "Nachfrage zum Deutschlernen": ["08", "09"]
+    }
+  },
+  "fps": 24,
+  "intro_seconds": 2.5,
+  "outro_seconds": 6.0,
+  "voices": {
+    "examiner": {
+      "audio": "../../../shared-voices/qwen3-tts-german/male_middle_aged.wav",
+      "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+    },
+    "candidate_a": {
+      "audio": "../../../shared-voices/qwen3-tts-german/female_young_adult.wav",
+      "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+    },
+    "candidate_b": {
+      "audio": "../../../shared-voices/qwen3-tts-german/male_young_adult.wav",
+      "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+    }
+  },
+  "turns": [
+    {
+      "id": "01", "speaker": "examiner", "name": "Prüfer",
+      "text": "Guten Tag. Nehmen Sie bitte Platz.",
+      "camera": "wide", "action": "welcome", "look_at": "candidate_a", "pause_after": 3.0
+    },
+    {
+      "id": "02", "speaker": "examiner", "name": "Prüfer",
+      "text": "Im ersten Teil sprechen Sie über sich. Auf dem Blatt stehen einige Stichwörter. Lea, beginnen Sie bitte.",
+      "camera": "examiner", "action": "explain", "look_at": "candidate_a", "pause_after": 9.2,
+      "task_card_delay_seconds": 1.2
+    },
+    {
+      "id": "03", "speaker": "candidate_a", "name": "Lea", "section": "1A",
+      "text": "Ich heiße Lea. Ich bin in Warschau in Polen geboren. Seit einem Jahr wohne ich mit meiner Schwester in Köln. In Polen habe ich als Verkäuferin gearbeitet. Zurzeit besuche ich vormittags einen Deutschkurs. Meine Muttersprache ist Polnisch. Außerdem spreche ich etwas Englisch. In meiner Freizeit koche ich gern. Später möchte ich hier wieder in einem Geschäft arbeiten.",
+      "camera": "candidate_a", "action": "introduce", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "04", "speaker": "examiner", "name": "Prüfer", "section": "1B",
+      "text": "Sie möchten wieder im Verkauf arbeiten. Was gefällt Ihnen an diesem Beruf?",
+      "camera": "examiner", "action": "ask", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "05", "speaker": "candidate_a", "name": "Lea", "section": "1B",
+      "text": "Ich spreche gern mit Menschen und helfe ihnen bei der Auswahl. Schön finde ich auch, wenn Kunden zufrieden wiederkommen. Deshalb möchte ich in diesem Beruf bleiben.",
+      "camera": "candidate_a", "action": "answer", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "06", "speaker": "examiner", "name": "Prüfer", "section": "1A",
+      "text": "Danke, Lea. Samir, nun sind Sie dran. Erzählen Sie etwas von sich.",
+      "camera": "examiner", "action": "ask", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "07", "speaker": "candidate_b", "name": "Samir", "section": "1A",
+      "text": "Ich heiße Samir und bin in Casablanca in Marokko geboren. Ich wohne seit einem Jahr mit meiner Frau und unseren zwei Kindern in Dortmund. Zurzeit arbeite ich nicht. Morgens besuche ich einen Deutschkurs. Nachmittags kümmere ich mich um die Kinder. Meine Muttersprache ist Arabisch. Ich spreche auch etwas Französisch. Am Wochenende gehe ich gern mit meiner Familie in den Park.",
+      "camera": "candidate_b", "action": "introduce", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "08", "speaker": "examiner", "name": "Prüfer", "section": "1B",
+      "text": "Sie lernen Deutsch und betreuen Ihre Kinder. Wie finden Sie Zeit zum Üben?",
+      "camera": "examiner", "action": "ask", "look_at": "candidate_b", "pause_after": 1.2
+    },
+    {
+      "id": "09", "speaker": "candidate_b", "name": "Samir", "section": "1B",
+      "text": "Abends lese ich kurze Texte, wenn die Kinder schlafen. Manchmal üben wir auch zusammen. Sie erzählen mir von der Schule, und ich frage nach, wenn ich etwas nicht verstehe.",
+      "camera": "candidate_b", "action": "answer", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "10", "speaker": "examiner", "name": "Prüfer",
+      "text": "Vielen Dank. Damit ist der erste Teil beendet.",
+      "camera": "examiner", "action": "explain", "phase": "dialogue",
+      "look_at": "candidate_b", "pause_after": 1.2
+    }
+  ]
+}

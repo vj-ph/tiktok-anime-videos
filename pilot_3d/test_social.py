@@ -3,6 +3,7 @@ import math
 import os
 import shutil
 import struct
+import subprocess
 import tempfile
 import unittest
 import wave
@@ -12,7 +13,7 @@ from unittest.mock import patch
 from align_words import validate_words
 from produce_v4 import ROOT, camera_at_frame, camera_shots, path_at, promo, verify_speaker_cameras
 from social_captions import (MAX_PAGE_CPS, MIN_PAGE_SECONDS, SAFE, active_word, audit_ass,
-                             caption_pages, chunks, editorial_rows, hook_bounds, make_ass, measured_lines, readable_pages,
+                             caption_pages, chunks, editorial_rows, frame_safe_time, hook_bounds, make_ass, measured_lines, readable_pages,
                              write_caption_timing, write_publication)
 
 
@@ -30,6 +31,18 @@ class SocialTests(unittest.TestCase):
             {"name": "Lea", "text": "Gute Idee.", "start": 0.0, "end": 1.0,
              "wav_duration": 1.0, "words": self.words}
         ]}
+
+    def test_frame_boundaries_survive_centisecond_serialization_without_delays(self):
+        from render import ass_time
+
+        for fps in (12, 24, 25, 30, 50, 60, 100):
+            for frame in range(fps * 4 + 1):
+                timestamp = ass_time(frame_safe_time(frame / fps, fps))
+                hours, minutes, seconds = timestamp.split(":")
+                actual = int(hours) * 3600 + int(minutes) * 60 + float(seconds)
+                self.assertEqual(math.ceil(actual * fps - 1e-7), frame, (fps, frame))
+        self.assertEqual(frame_safe_time(1.234, 24), 1.234)
+        self.assertEqual(frame_safe_time(1 / 120, 120), 1 / 120)
 
     def test_missing_or_interpolated_words_are_rejected(self):
         for words in (self.words[:1], [{**self.words[0], "word": "Andere"}, self.words[1]],
@@ -234,8 +247,16 @@ class SocialTests(unittest.TestCase):
             build = Path(directory)
             (build / "frames").mkdir()
             screenplay = {"name": "Lea", "text": "Gute Idee."}
-            episode = {**self.episode, "fps": 24, "turns": [screenplay]}
-            timeline = {**self.timeline, "fps": 24, "total_frames": 30}
+            episode = {**self.episode, "fps": 24, "turns": [screenplay, {**screenplay, "section": "1B"}],
+                       "header": {"brand": "TEST", "topic": "Vorstellung"},
+                       "sections": {"1B": "Nachfragen"}}
+            words = [{"word": "Gute", "start": .01, "end": .11, "score": .9},
+                     {"word": "Idee.", "start": .12, "end": .21, "score": .9}]
+            timeline = {**self.timeline, "fps": 24, "total_frames": 30, "turns": [
+                {**screenplay, "start": 0, "end": .25, "wav_duration": .25, "words": words},
+                {**screenplay, "section": "1B", "start": .375, "end": .625,
+                 "wav_duration": .25, "words": words},
+            ]}
             manifest = {"episode": episode, "timeline": timeline,
                         "width": 90, "height": 160, "motion_step": 2}
             for name, value in (("episode.json", episode), ("timeline.json", timeline),
@@ -261,6 +282,16 @@ class SocialTests(unittest.TestCase):
             self.assertTrue((build / "publishing_caption.txt").is_file())
             self.assertFalse((build / "credits.ass").exists())
             self.assertNotIn("Snow Rig", (build / "captions.ass").read_text())
+            result = subprocess.run([
+                "ffmpeg", "-nostdin", "-v", "error", "-i", str(build / "pilot.mp4"),
+                "-vf", r"select=eq(n\,8)+eq(n\,9)+eq(n\,10),crop=392:30:104:241",
+                "-fps_mode", "vfr", "-pix_fmt", "gray", "-f", "rawvideo", "pipe:1",
+            ], check=True, capture_output=True)
+            size = 392 * 30
+            self.assertEqual(len(result.stdout), size * 3)
+            before, first, settled = [result.stdout[i * size:(i + 1) * size] for i in range(3)]
+            self.assertLess(sum(abs(a - b) for a, b in zip(first, settled)) / size, 1.5)
+            self.assertGreater(sum(abs(a - b) for a, b in zip(before, settled)) / size, 8)
 
     @unittest.skipUnless(shutil.which("ffmpeg"), "FFmpeg required")
     def test_every_actual_caption_raster_fits_and_unsafe_state_is_rejected(self):

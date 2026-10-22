@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 
 from align_words import validate_words
-from episode_config import instruction_turn, takeaway_seconds, task_window
+from episode_config import instruction_turn, section_windows, takeaway_seconds, task_window
 
 SAFE = (88, 200, 512, 752)
 LEFT, RIGHT = 104, 496
@@ -85,14 +85,22 @@ def displayed_seconds(start, end, fps):
     return (math.ceil(end * fps - 1e-9) - math.ceil(start * fps - 1e-9)) / fps
 
 
+def frame_safe_time(seconds, fps):
+    # Rounding a frame boundary upward can hide its first frame in libass.
+    frame = round(seconds * fps)
+    if fps <= 100 and abs(frame / fps - seconds) < 1e-8:
+        return (frame * 100 // fps) / 100
+    return seconds
+
+
 def readable_pages(words, start, end, fps=24):
     """Balance up to three lines, keeping measured spoken words on their page."""
     if not words or end < start + words[-1]["end"] - 0.005:
         raise ValueError("Subtitle window would truncate spoken words.")
-    boundaries = [round(start * 100)]
+    boundaries = [round(frame_safe_time(start, fps) * 100)]
     boundaries += [round((start + (a["end"] + b["start"]) / 2) * 100)
                    for a, b in zip(words, words[1:])]
-    boundaries.append(round(end * 100))
+    boundaries.append(round(frame_safe_time(end, fps) * 100))
     best = {0: (0, [])}
     weak_endings = {"aber", "und", "oder", "um", "die", "der", "das", "am", "im",
                     "in", "mit", "einen", "einem", "von", "zu", "eine",
@@ -223,6 +231,9 @@ def validate_layout(episode):
             if y < previous_bottom or bottom > limits[card]:
                 raise ValueError(f"{card} text overlaps or exceeds the safe area: {value!r}; shorten the text.")
             previous_bottom = bottom
+    for label in episode.get("sections", {}).values():
+        if 241 + len(measured_lines(label, 22, True)) * 27 > limits["header"]:
+            raise ValueError(f"Section header overlaps or exceeds the safe area: {label!r}; shorten the text.")
     return rows
 
 
@@ -248,6 +259,8 @@ def make_ass(episode, timeline):
     def event(start, end, text, style="Text"):
         if end <= start:
             raise ValueError("Caption interval must be positive.")
+        start = frame_safe_time(start, timeline.get("fps", 24))
+        end = frame_safe_time(end, timeline.get("fps", 24))
         lines.append(f"Dialogue: 0,{ass_time(start)},{ass_time(end)},{style},,0,0,0,,{text}\n")
 
     def panel(start, end, top, bottom, opacity="18"):
@@ -269,7 +282,12 @@ def make_ass(episode, timeline):
     rows = validate_layout(episode)
     duration = timeline["duration"]
     panel(0, duration, 204, 271)
-    emit(rows["header"], 0, duration)
+    for row in rows["header"]:
+        if row[1] == 241:
+            for window in section_windows(episode, timeline):
+                text(window["start"], window["end"], window["label"], *row[1:])
+        else:
+            emit([row], 0, duration)
     for page in caption_pages(episode, timeline):
         start, end = page["start"], page["end"]
         readable = page["readable"]

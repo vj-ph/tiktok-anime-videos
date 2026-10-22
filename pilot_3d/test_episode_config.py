@@ -13,7 +13,8 @@ from prepare_audio import (atomic_json, build_timeline, ceil_frames, content_has
                            make_cache_payload, sha256_file)
 from produce_v4 import camera_at_frame, camera_shots, plan_promo
 from render import ass_time
-from social_captions import audit_ass, caption_pages, make_ass, validate_layout, write_publication
+from social_captions import (audit_ass, caption_pages, frame_safe_time, make_ass,
+                             validate_layout, write_publication)
 
 ROOT = Path(__file__).resolve().parent
 
@@ -137,11 +138,12 @@ class EpisodeConfigTests(unittest.TestCase):
         self.assertEqual(camera_at_frame(markers, 1 + round(end * fps)), "candidate_a")
         last_page = [page for page in caption_pages(episode, timeline)
                      if page["turn_id"] == instruction["id"]][-1]
-        self.assertEqual(last_page["end"], round(start * 100) / 100)
+        self.assertEqual(last_page["end"], round(frame_safe_time(start, fps) * 100) / 100)
         ass = make_ass(episode, timeline)
         card = [line for line in ass.splitlines() if "DEINE AUFGABE" in line]
         self.assertEqual(len(card), 1)
-        self.assertTrue(card[0].startswith(f"Dialogue: 0,{ass_time(start)},{ass_time(end)},"))
+        self.assertTrue(card[0].startswith(
+            f"Dialogue: 0,{ass_time(frame_safe_time(start, fps))},{ass_time(frame_safe_time(end, fps))},"))
 
     def test_instruction_hold_validates_scope_values_and_frame_quantization(self):
         for value in (-1, True, "1.2", float("nan"), float("inf"), 9.2, 10):
@@ -183,7 +185,8 @@ class EpisodeConfigTests(unittest.TestCase):
         cta = [line for line in ass.splitlines() if "Amazon-Buchlink im Profil" in line]
         self.assertEqual(len(cta), 1)
         self.assertTrue(cta[0].startswith(
-            f"Dialogue: 0,{ass_time(timeline['duration'] - 6)},{ass_time(timeline['duration'])},"))
+            f"Dialogue: 0,{ass_time(frame_safe_time(timeline['duration'] - 6, timeline['fps']))},"
+            f"{ass_time(frame_safe_time(timeline['duration'], timeline['fps']))},"))
 
     def test_invalid_template_camera_phase_and_layout_fail_explicitly(self):
         variants = []

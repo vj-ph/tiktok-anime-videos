@@ -227,7 +227,8 @@ def mux(build, episode_path=None):
         "-t", str(timeline["duration"]), "-movflags", "+faststart",
     ]
     if social:
-        video = f"scale={output_size[0]}:{output_size[1]}:flags=lanczos,ass=captions.ass"
+        video = (f"scale={output_size[0]}:{output_size[1]}:flags=lanczos,"
+                 f"fps={timeline['fps']},ass=captions.ass")
         if episode.get("social_kind") == "exchange" or episode["outro_seconds"] == 0:
             run(common + ["-vf", video + f",fps={timeline['fps']}"] + encoding + ["pilot.mp4"], cwd=build)
         else:
@@ -250,7 +251,7 @@ def mux(build, episode_path=None):
             report["book_cover"] = {"bounds": [x, y, x + cover_width, y + 224], "start": cover_start}
             report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     elif episode.get("presentation") == "exchange":
-        run(common + ["-vf", f"ass=captions.ass,fps={timeline['fps']}"] + encoding + ["pilot.mp4"], cwd=build)
+        run(common + ["-vf", f"fps={timeline['fps']},ass=captions.ass"] + encoding + ["pilot.mp4"], cwd=build)
     else:
         cover = (ROOT / episode["book_cover"]).resolve()
         if not cover.is_file():
@@ -261,14 +262,14 @@ def mux(build, episode_path=None):
         outro = timeline["duration"] - episode["outro_seconds"]
         filters = (
             f"[2:v]scale=-2:{cover_height}[cover];"
-            f"[0:v]ass=captions.ass[captioned];"
+            f"[0:v]fps={timeline['fps']},ass=captions.ass[captioned];"
             f"[captioned][cover]overlay=x=(W-w)/2:y={cover_y}:enable='gte(t,{outro})',fps={timeline['fps']}[video]"
         )
         run(common + ["-loop", "1", "-i", cover, "-filter_complex", filters,
                       "-map", "[video]", "-map", "1:a:0"] + encoding + ["pilot.mp4"], cwd=build)
     clean_filter = (
         f"scale={output_size[0]}:{output_size[1]}:flags=lanczos,fps={timeline['fps']}"
-        if social else f"ass=credits.ass,fps={timeline['fps']}"
+        if social else f"fps={timeline['fps']},ass=credits.ass"
     )
     run(common + ["-vf", clean_filter] + encoding + ["pilot_clean.mp4"], cwd=build)
     for filename, report_name in (("pilot.mp4", "media_report.json"), ("pilot_clean.mp4", "media_report_clean.json")):
