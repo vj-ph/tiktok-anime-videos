@@ -9,6 +9,7 @@ from pathlib import Path
 
 from build_paths import resolve_build_reference
 from prepare_audio import atomic_json, content_hash, inspect_wav, sha256_file
+from episode_profiles import language_code, language_profile
 
 MODEL = "VOXPOPULI_ASR_BASE_10K_DE"
 
@@ -35,23 +36,30 @@ def validate_words(words, text, duration):
 
 
 def align_build(build):
+    path = build / "timeline.json"
+    timeline = json.loads(path.read_text())
+    code = language_code(timeline)
+    model_name = language_profile(timeline)["alignment_model"]
+    snapshot = build / "episode.json"
+    if snapshot.is_file() and language_code(json.loads(snapshot.read_text())) != code:
+        raise ValueError("Episode and prepared timeline use different languages; regenerate audio.")
+
     import torch
     import torchaudio
     import whisperx
 
     torch.set_num_threads(4)
-    model, metadata = whisperx.load_align_model(language_code="de", device="cpu", model_name=MODEL)
+    model, metadata = whisperx.load_align_model(language_code=code, device="cpu", model_name=model_name)
     checkpoint = Path(torch.hub.get_dir()) / "checkpoints" / Path(
-        getattr(torchaudio.pipelines, MODEL)._path
+        getattr(torchaudio.pipelines, model_name)._path
     ).name
     provenance = {
-        "model": MODEL, "model_sha256": sha256_file(checkpoint),
-        "language": "de", "device": "cpu", "interpolate_method": "ignore",
-        "reuse_reference": "/home/ronggong/lang/german/bildbeschreibung/bildbeschreibung_video/tts.py",
+        "model": model_name, "model_sha256": sha256_file(checkpoint),
+        "language": code, "device": "cpu", "interpolate_method": "ignore",
+        "reuse_reference": ("/home/ronggong/lang/german/bildbeschreibung/bildbeschreibung_video/tts.py"
+                            if code == "de" else "WhisperX French torchaudio alignment"),
         "packages": {name: importlib.metadata.version(name) for name in ("whisperx", "torch", "torchaudio")},
     }
-    path = build / "timeline.json"
-    timeline = json.loads(path.read_text())
     cache = build / "alignment"
     cache.mkdir(exist_ok=True)
     for turn in timeline["turns"]:

@@ -9,6 +9,7 @@ from unittest.mock import patch
 from episode_config import (PROFILES, check_timeline, read_episode, takeaway_seconds, task_window,
                             validate_template)
 from pipeline import audio_reuse_spec, build_episode
+from episode_profiles import language_code, language_profile
 from prepare_audio import (atomic_json, build_timeline, ceil_frames, content_hash, inspect_wav,
                            make_cache_payload, sha256_file)
 from produce_v4 import camera_at_frame, camera_shots, plan_promo
@@ -322,7 +323,7 @@ class PipelineCheckpointTests(unittest.TestCase):
         source = self.root / "source"
         source.mkdir()
         timeline = clock(self.episode)
-        timeline["word_alignment"] = {"fixture": True}
+        timeline["word_alignment"] = {"fixture": True, "language": language_code(self.episode)}
 
         def wav(path, frames):
             with wave.open(str(path), "wb") as output:
@@ -336,7 +337,9 @@ class PipelineCheckpointTests(unittest.TestCase):
             turn["raw_audio"] = str(raw)
             turn["alignment_key"] = turn["id"] + "-fixture"
             voice = self.episode["voices"][turn["speaker"]]
-            payload = make_cache_payload(turn, Path(voice["audio"]), Path(voice["transcript"]), {})
+            payload = make_cache_payload(
+                turn, Path(voice["audio"]), Path(voice["transcript"]) if "transcript" in voice else None,
+                {"language": language_profile(self.episode)["tts"]}, reference_text=voice.get("reference_text"))
             atomic_json(raw.with_suffix(".cache.json"), {
                 "cache_key": content_hash(payload), "payload": payload,
                 "wav_sha256": sha256_file(raw), "audio_info": inspect_wav(raw)})
@@ -347,6 +350,38 @@ class PipelineCheckpointTests(unittest.TestCase):
         atomic_json(source / "export_manifest.json", {
             "files_sha256": {name: sha256_file(source / name) for name in ("dialogue.wav", "timeline.json")}})
         return source
+
+    def test_french_inline_references_support_exact_verified_reuse(self):
+        self.episode["language"] = "fr"
+        for voice in self.episode["voices"].values():
+            voice["reference_text"] = Path(voice.pop("transcript")).read_text()
+        source = self.reuse_source()
+        receipt = audio_reuse_spec(self.episode, source)
+        self.assertEqual(receipt["source"], str(source))
+        with patch("pipeline.preflight", return_value=self.episode), \
+                patch("pipeline.caption_preflight"), patch("pipeline.run_command") as run:
+            build_episode(self.path, self.build, until="audio", reuse_audio=source)
+        run.assert_not_called()
+        self.assertEqual((source / "dialogue.wav").read_bytes(), (self.build / "dialogue.wav").read_bytes())
+
+    def test_reuse_rejects_wrong_alignment_and_synthesis_languages(self):
+        source = self.reuse_source()
+        alignment_path = source / "word_alignment.json"
+        original = json.loads(alignment_path.read_text())
+        bad = copy.deepcopy(original)
+        bad["provenance"]["language"] = "fr"
+        atomic_json(alignment_path, bad)
+        with self.assertRaisesRegex(ValueError, "alignment language"):
+            audio_reuse_spec(self.episode, source)
+        atomic_json(alignment_path, original)
+        timeline = json.loads((source / "timeline.json").read_text())
+        metadata_path = Path(timeline["turns"][0]["raw_audio"]).with_suffix(".cache.json")
+        saved = json.loads(metadata_path.read_text())
+        saved["payload"]["settings"]["language"] = "French"
+        saved["cache_key"] = content_hash(saved["payload"])
+        atomic_json(metadata_path, saved)
+        with self.assertRaisesRegex(ValueError, "synthesis language"):
+            audio_reuse_spec(self.episode, source)
 
     def test_visual_revision_reuses_exact_audio_and_alignment_without_models(self):
         source = self.reuse_source()

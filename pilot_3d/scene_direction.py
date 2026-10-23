@@ -1,17 +1,14 @@
 """Speech-led acting and restrained art direction for the reusable exam room."""
 
 import math
+from episode_profiles import ACTORS, active_actors, language_profile, scene_layout
 
 VERSION = 7
 GESTURE_LIMITS = {
     "welcome": 1, "explain": 2, "propose": 2, "consider": 1, "agree": 1,
     "introduce": 3, "describe": 3, "ask": 1, "answer": 2,
 }
-FUNCTION_WORDS = set(
-    "aber als am an auch auf aus bei bis das dem den der des die doch du ein eine "
-    "einem einen einer es für haben ich im in ist ja können könnten mit nach nicht "
-    "oder sie so um und uns von vor wäre wir zu zum zur".split()
-)
+FUNCTION_WORDS = set(language_profile({})["function_words"].split())
 
 
 def ease(value):
@@ -65,9 +62,11 @@ def blink_at(plan, actor, t, fps, motion_step):
                 for peak in plan["blinks"][actor]), default=0.0)
 
 
-def performance_plan(timeline):
+def performance_plan(timeline, episode=None):
     gestures, nods, glances = [], [], []
-    actors = ("candidate_a", "candidate_b", "examiner", "observer")
+    context = episode if episode is not None else timeline
+    actors = active_actors(context)
+    function_words = set(language_profile(context)["function_words"].split())
     attention = {actor: [] for actor in actors}
     counts = {}
     for index, turn in enumerate(timeline["turns"]):
@@ -92,7 +91,7 @@ def performance_plan(timeline):
         for phrase in phrases:
             candidates = [word for word in phrase if word["start"] >= 0.30 and
                           word["end"] <= turn["duration"] - 0.12 and
-                          word["word"].strip(".,?!;:").lower() not in FUNCTION_WORDS]
+                          word["word"].strip(".,?!;:").lower() not in function_words]
             if not candidates:
                 continue
             focus = max(candidates, key=lambda w: min(14, len(w["word"])) +
@@ -141,11 +140,12 @@ def performance_plan(timeline):
                           and right["start"] < turn["duration"] - 0.75), None)
             if pause is not None:
                 glances.append({"actor": speaker, "peak": turn["start"] + pause, "amount": 0.30})
-        if speaker.startswith("candidate") and index % 3 == 1:
+        if "observer" in actors and speaker.startswith("candidate") and index % 3 == 1:
             glances.append({"actor": "observer", "peak": turn["start"] + min(1.6, turn["duration"] / 2),
                             "amount": 0.6})
     blinks = {}
-    for index, actor in enumerate(actors):
+    for actor in actors:
+        index = ACTORS.index(actor)
         peaks, peak, ordinal = [], .65 + index * .61, 0
         while peak < timeline["duration"]:
             peaks.append(peak)
@@ -238,6 +238,40 @@ def configure_cameras(scene, episode=None, timeline=None):
                 raise ValueError(f"{role}: picture camera cannot keep the face clear: {box}")
             cameras[name] = camera
     return cameras
+
+
+def configure_cast(scene, episode):
+    active = active_actors(episode)
+    hidden = []
+
+    def hide(obj):
+        animation = getattr(obj, "animation_data", None)
+        if animation is not None:
+            for curve in animation.drivers:
+                if curve.data_path == "hide_render":
+                    # Native visibility drivers otherwise undo the inactive cast's hide flags.
+                    curve.mute = True
+        obj.hide_render = True
+        obj.hide_set(True)
+        hidden.append(obj.name)
+
+    for name in ACTORS:
+        if name in active:
+            continue
+        root = scene.objects[name]
+        for obj in (root, *root.children_recursive):
+            hide(obj)
+    if scene_layout(episode) == "interview":
+        for obj in scene.objects:
+            unused_chair = (obj.name.startswith("Chair") and obj.parent is None and obj.location.x > 0
+                            and (obj.location.y > 0 or "observer" not in active))
+            unused_task = obj.name.startswith(("Task sheet", "Printed task line")) and obj.location.x > 0
+            personal_item = obj.name.startswith(("Pen", "Water cup", "Examiner clipboard", "Examiner notes"))
+            if unused_chair or unused_task or personal_item:
+                for item in (obj, *obj.children_recursive):
+                    hide(item)
+    return {"layout": scene_layout(episode), "active_actors": list(active),
+            "hidden_objects": sorted(set(hidden))}
 
 
 def room_design(scene, episode):

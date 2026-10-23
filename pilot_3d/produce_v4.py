@@ -20,6 +20,7 @@ from episode_config import (ACTORS, CAMERA_PREFIXES, PROFILES, check_timeline, e
                             promo_settings, read_episode, seating_deadline, task_window, turn_phase)
 from entrance import HINGE, door_angle, doorway_geometry, entrance_plan, path_at, walk_pose
 from picture_presentation import add_table_pictures, picture_windows
+from episode_profiles import active_actors, overview_camera
 
 
 def isolated(source, build):
@@ -42,11 +43,11 @@ def camera_shots(episode, timeline):
     shots += [(turn["start"], turn["camera"]) for turn in timeline["turns"]]
     window = task_window(timeline)
     if window is not None and not episode.get("pictures"):
-        shots.append((window[0], "candidates"))
-    shots += [(window["start"], "candidates") for window in picture_windows(episode, timeline)
+        shots.append((window[0], overview_camera(episode)))
+    shots += [(window["start"], overview_camera(episode)) for window in picture_windows(episode, timeline)
               if window["mode"] == "reveal"]
     if episode["outro_seconds"] > 0:
-        shots.append((timeline["duration"] - episode["outro_seconds"], "candidates"))
+        shots.append((timeline["duration"] - episode["outro_seconds"], overview_camera(episode)))
     return sorted(shots)
 
 
@@ -223,7 +224,7 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
     bottom = "MSTR-LowerLip" if rain else "MSTR-Lip_Bottom"
     upper = "ACT-Eyelid_Upper" if rain else "MSTR-Eyelid_Upper"
     lower = "ACT-Eyelid_Lower" if rain else "MSTR-Eyelid_Lower"
-    plan = performance_plan(timeline)
+    plan = performance_plan(timeline, episode)
     maximum_contact_correction = 0.0
 
     def offset(name, delta, frame):
@@ -392,7 +393,7 @@ def scene_build(build, episode_path=None, profile="preview"):
     import bpy
     from mathutils import Vector
     from studio_characters import StudioCharacter
-    from scene_direction import VERSION, configure_cameras, performance_plan, room_design
+    from scene_direction import VERSION, configure_cameras, configure_cast, performance_plan, room_design
 
     episode = read_episode(episode_path or build / "episode.json")
     timeline = json.loads((build / "timeline.json").read_text())
@@ -404,11 +405,14 @@ def scene_build(build, episode_path=None, profile="preview"):
     if episode.get("pictures"):
         design["pictures"] = add_table_pictures(scene, episode)
     design["doorway"] = doorway_geometry(scene)
+    cast = configure_cast(scene, episode)
     entrance_direction = entrance_plan(episode, timeline)
     scene.frame_set(1 + 10 * timeline["fps"])
     actors = []
     quality = PROFILES[profile]
     for index, name in enumerate(ACTORS):
+        if name not in active_actors(episode):
+            continue
         actor = StudioCharacter.from_scene(name)
         actor.restore_native_drivers()
         animate(actor, timeline, index, episode, quality["motion_step"], entrance_direction)
@@ -463,10 +467,11 @@ def scene_build(build, episode_path=None, profile="preview"):
         "episode": episode, "timeline": timeline, "width": quality["width"], "height": quality["height"],
         "output_width": 720, "output_height": 1280, "motion_step": quality["motion_step"],
         "visual_version": VERSION, "engine": "cycles", "samples": quality["samples"],
-        "room_design": design, "performance": performance_plan(timeline), "entrance": entrance_direction,
+        "room_design": design, "performance": performance_plan(timeline, episode), "entrance": entrance_direction,
         "quality": profile,
         "source_sha256": {name: sha256_file(ROOT / name) for name in
-                          ("produce_v4.py", "episode_config.py", "picture_presentation.py", "studio_characters.py", "polish_exchange.py", "scene_direction.py", "entrance.py", "build_scene.py")},
+                          ("produce_v4.py", "episode_config.py", "episode_profiles.py", "picture_presentation.py", "studio_characters.py", "polish_exchange.py", "scene_direction.py", "entrance.py", "build_scene.py")},
+        "cast": cast,
         "blocking": {actor.name: json.loads(actor.root["blocking"]) for actor in actors},
         "shots": shots,
         "camera_markers": [{"frame": marker.frame, "camera": marker.camera.name}

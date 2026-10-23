@@ -8,10 +8,10 @@ from build_paths import resolve_build_reference
 from prepare_audio import SAFE_ID, ceil_frames, inspect_wav, nonempty, number, validate_episode
 from scene_direction import GESTURE_LIMITS
 from picture_presentation import PICTURE_CAMERAS, validate_pictures
+from episode_profiles import ACTORS, active_actors, language_code, scene_layout
 
 CAMERA_PREFIXES = {"wide": "01", "examiner": "02", "candidates": "03",
                    "candidate_a": "04", "candidate_b": "05", "picture_a": "06", "picture_b": "07"}
-ACTORS = ("candidate_a", "candidate_b", "examiner", "observer")
 PROFILES = {
     "preview": {"width": 360, "height": 640, "samples": 2, "motion_step": 2},
     "production": {"width": 720, "height": 1280, "samples": 16, "motion_step": 1},
@@ -117,8 +117,7 @@ def promo_settings(episode):
 
 def validate_template(episode, *, check_assets=False):
     validate_episode(episode)
-    if episode.get("language", "de") != "de":
-        raise ValueError("This voice/alignment pipeline currently supports German (language=de).")
+    language_code(episode)
     for field in ("id", "title", "label", "branding", "disclaimer"):
         nonempty(episode.get(field), field)
     if not SAFE_ID.fullmatch(episode["id"]):
@@ -132,6 +131,16 @@ def validate_template(episode, *, check_assets=False):
     if "exam_part" in episode and (type(episode["exam_part"]) is not int
                                   or episode["exam_part"] not in (1, 2, 3)):
         raise ValueError("exam_part must be 1, 2 or 3.")
+    exam = episode.get("exam")
+    if exam is not None:
+        if not isinstance(exam, dict):
+            raise ValueError("exam must be an object.")
+        for field in ("family", "section"):
+            value = exam.get(field)
+            if not isinstance(value, str) or not SAFE_ID.fullmatch(value):
+                raise ValueError(f"exam.{field} must be a safe identifier.")
+        if exam.get("skill") != "speaking":
+            raise ValueError("Only exam.skill=speaking is implemented; listening needs a listening template.")
     sections = episode.get("sections", {})
     if not isinstance(sections, dict):
         raise ValueError("sections must be an object of section IDs and header labels.")
@@ -142,6 +151,8 @@ def validate_template(episode, *, check_assets=False):
     scene = episode.get("scene", {})
     if not isinstance(scene, dict) or scene.get("template", "exam_room") != "exam_room":
         raise ValueError("Only the exam_room scene template is currently supported.")
+    layout = scene_layout(episode)
+    actors = active_actors(episode)
     if "entrance" in scene and type(scene["entrance"]) is not bool:
         raise ValueError("scene.entrance must be a boolean.")
     nonempty(scene.get("base_scene"), "scene.base_scene")
@@ -149,6 +160,8 @@ def validate_template(episode, *, check_assets=False):
         nonempty(scene["wall_logo"], "scene.wall_logo")
     if set(episode["voices"]) - {"candidate_a", "candidate_b", "examiner"}:
         raise ValueError("exam_room supports candidate_a, candidate_b and examiner voice slots.")
+    if set(episode["voices"]) - set(actors):
+        raise ValueError("A voice cannot be assigned to an inactive scene actor.")
     for turn in episode["turns"]:
         role, camera = turn["speaker"], turn.get("camera")
         allowed = {"wide", role} | ({"candidates"} if role.startswith("candidate") else set())
@@ -156,13 +169,15 @@ def validate_template(episode, *, check_assets=False):
             allowed.add(PICTURE_CAMERAS[role])
         if camera not in allowed:
             raise ValueError(f"Turn {turn['id']}: camera must include its speaker; allowed: {sorted(allowed)}.")
+        if layout == "interview" and camera == "candidates":
+            raise ValueError("The two-candidate camera is not supported by scene.layout=interview.")
         if turn.get("action") not in GESTURE_LIMITS:
             raise ValueError(f"Turn {turn['id']}: unsupported acting action.")
         if "section" in turn and (not isinstance(turn["section"], str) or turn["section"] not in sections):
             raise ValueError(f"Turn {turn['id']}: section must name a declared section ID.")
         if turn_phase(turn) not in ("welcome", "instruction", "dialogue"):
             raise ValueError(f"Turn {turn['id']}: unknown phase.")
-        if turn.get("look_at") not in ACTORS:
+        if turn.get("look_at") not in actors:
             raise ValueError(f"Turn {turn['id']}: look_at must name an exam_room actor slot.")
         if "task_card_delay_seconds" in turn:
             delay = number(turn["task_card_delay_seconds"], f"turn {turn['id']}.task_card_delay_seconds")
@@ -241,12 +256,16 @@ def validate_template(episode, *, check_assets=False):
             raise FileNotFoundError(f"Wall logo not found: {scene['wall_logo']}")
         for role, voice in episode["voices"].items():
             inspect_wav(Path(voice["audio"]))
-            nonempty(Path(voice["transcript"]).read_text(encoding="utf-8"), f"{role} reference transcript")
+            text = (Path(voice["transcript"]).read_text(encoding="utf-8")
+                    if "transcript" in voice else voice["reference_text"])
+            nonempty(text, f"{role} reference transcript")
         if episode["outro_seconds"] > 0 and not Path(episode["book_cover"]).is_file():
             raise FileNotFoundError(f"Book cover not found: {episode['book_cover']}")
 
 
 def check_timeline(episode, timeline):
+    if language_code(episode) != language_code(timeline):
+        raise ValueError("Episode and prepared timeline use different languages; regenerate audio.")
     if timeline["fps"] != episode["fps"] or len(timeline["turns"]) != len(episode["turns"]):
         raise ValueError("Episode and prepared timeline differ; regenerate audio.")
     for expected, actual in zip(episode["turns"], timeline["turns"]):

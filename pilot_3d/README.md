@@ -1,4 +1,4 @@
-# DTZ speaking: reusable 3D pilot
+# Reusable 3D exam-practice generator
 
 ## Project and build layout
 
@@ -56,8 +56,9 @@ including outside this project, without editing Python or replacing
 `episode_v4.json`. The current scene template is the existing exam room with
 two candidate slots, one speaking examiner and one observing examiner.
 Content is configurable; a different cast, location or arbitrary cinematic
-plot still needs another animation template. Speech and alignment currently
-support German.
+plot still needs another animation template. Speech and alignment support
+German and French. The default layout retains both DTZ candidates; the
+optional interview layout uses one candidate and one examiner.
 
 ```bash
 cd /home/ronggong/lang/german/tiktok_anime_videos/pilot_3d
@@ -109,6 +110,144 @@ python3 pipeline.py build \
 For higher-resolution/full-rate output, select `--profile production` and a
 different output directory after approving the preview. This improves render
 quality, not the underlying procedural acting.
+
+### Language, exam identity and scene layout
+
+These are separate choices, not a growing list of DTZ-specific code paths:
+
+```json
+{
+  "language": "fr",
+  "exam": {"family": "tef_canada", "skill": "speaking", "section": "A"},
+  "scene": {
+    "template": "exam_room",
+    "layout": "interview",
+    "observer": false,
+    "entrance": true,
+    "base_scene": "../builds/v2/studio.blend"
+  }
+}
+```
+
+`episode_profiles.py` selects the Qwen language, WhisperX alignment model,
+speaker/picture prompts, publishing disclosures and gesture function-word list.
+French uses `French` and `VOXPOPULI_ASR_BASE_10K_FR`; German retains its original
+settings/model. Language is part of the speech-cache fingerprint, prepared
+timeline and alignment provenance. Exact audio reuse rejects a language change.
+`fr` selects the language, not a guaranteed regional accent: cast an existing
+French/Quebec reference voice and review the actual result.
+
+Omitting the new fields preserves `language: "de"`, `layout: "pair"` and the
+silent observer. Existing DTZ scripts need no migration. `exam_part` still
+accepts legacy numeric DTZ parts; new `exam.family`, `exam.skill` and
+`exam.section` identify other exams without pretending that section A is
+DTZ Teil 1. Semantic headers remain configured through `sections` and turns.
+
+The interview layout uses internal slots `candidate_a` and `examiner`, with
+freely chosen display names. It hides the second candidate, unused seating,
+personal props and, by default, the observer. Native visibility drivers on
+inactive objects are muted so they cannot undo hiding; active native drivers
+are preserved. `scene.observer: true` optionally retains the observer and chair.
+The candidate can enter alone. Learning cards and the CTA use the wide camera,
+not the two-candidate shot; turn shots still retain the speaking actor.
+
+Voice references accept **exactly one** of a transcript-file path or inline
+reference text:
+
+```json
+"examiner": {
+  "audio": "/path/to/existing/reference.wav",
+  "reference_text": "The exact words spoken in that reference recording."
+}
+```
+
+Inline text is hashed into the cache and frozen episode; it is not a replacement
+for checking the actual recording. Existing `audio`/`transcript` pairs retain
+their original cache payload. Both forms require nonempty, matching text.
+
+Current implementations are German/French **speaking** in the pair/interview
+exam room. DTZ, ÖIF and fide listening need an explicit listening presentation,
+including prompt, response and answer-reveal behavior; they are **not**
+implemented by changing an exam label. Other speaking exams similarly require
+their own reviewed tasks/configurations. Unsupported languages, layouts and
+`exam.skill: "listening"` fail rather than quietly producing the wrong format.
+
+### First TEF Canada configuration: Section A, practice A1
+
+`episodes/tef_canada_a1.json` adapts only **Practice set A1: Neighbourhood digital
+workshop** from `french_exam_books/tef_canada/speaking/book.md`. Its 24-turn
+French script covers the schedule, free registration, shared computers,
+practical activities, accessible room/transport, clarification of “quelques
+places”, the full Thursday group, waiting-list alternative and natural close.
+The examiner plays the service contact; the fictional telephone situation is
+performed face-to-face, not presented as two people in separate locations.
+
+The configuration uses the existing `fr_fr_conversation_f01.wav` and
+`fr_fr_service_m01.wav` with their exact `voices.json` reference texts, plus
+the speaking book's own cover. There is no copied official stimulus or newly
+reused book photograph. Full-episode posting **drafts** are in
+`../posts/tef_canada_a1/`; a real preview and speech review are still required.
+The learning pause and adapted length are not claims about official test timing.
+Framework and language-model references, checked October 22, 2026:
+
+- TEF Canada: https://www.lefrancaisdesaffaires.fr/candidat/test-evaluation-francais/tef-canada/passation/
+- Qwen3-TTS French voice cloning: https://github.com/QwenLM/Qwen3-TTS
+- WhisperX French alignment: https://github.com/m-bain/whisperX/blob/main/whisperx/alignment.py
+
+Development is isolated in the `feat/multilingual-tef` branch/worktree at
+`../tiktok_anime_videos_tef` relative to the original repository. Do not switch,
+edit or merge the original checkout while its DTZ jobs are running. This
+development checkout has its own `builds/` root; only existing tools, rig
+sources and the reusable base scene are linked for read-only use. Do not
+install/update tools through those links. Heavy TEF synthesis and rendering
+are deferred while DTZ production runs.
+
+After the DTZ jobs have finished, the staged workflow in the TEF checkout is:
+
+```bash
+python3 pipeline.py validate --episode episodes/tef_canada_a1.json
+python3 pipeline.py build \
+  --episode episodes/tef_canada_a1.json \
+  --build builds/tef_canada_a1_preview_r1 \
+  --profile preview --jobs 4 --until audio
+
+# Run with the configured Qwen runtime, after audio/alignment have succeeded.
+"${QWEN_PYTHON:-/home/ronggong/lang/german/.venvs/qwen-tts-test/bin/python}" \
+  check_speech.py --build builds/tef_canada_a1_preview_r1
+
+# Only after speech, alignment warnings and caption preflight are reviewed:
+python3 pipeline.py build \
+  --episode episodes/tef_canada_a1.json \
+  --build builds/tef_canada_a1_preview_r1 \
+  --profile preview --jobs 4
+```
+
+`check_speech.py` independently transcribes every prepared turn using cached
+faster-whisper-small, the episode's language, CPU int8, no initial prompt and
+no prior-text conditioning. It writes `speech_asr_check.json`, records source
+hashes and exits nonzero on any normalized difference. Names/numeral differences
+need review, not edited pass flags; matching ASR is not a pronunciation/accent
+guarantee. It does not download missing models automatically. A supplied report
+is included in the frozen manifest; this command is separate from forced
+alignment and is not automatically run by `pipeline.py`.
+
+`test_profiles.py` checks French TTS/alignment/ASR API wiring using explicit
+mocks, cache separation, inline references, localization and inactive-cast
+rules. `test_tef_episode.py` checks actual book/voice/cover references, content,
+turn-taking and pacing. `test_interview_scene.py` is a tiny **synthetic native
+fixture**, not a preview: it bakes nine frames, checks native controls and
+hidden objects, and never synthesizes speech or renders images:
+
+```bash
+.tools/blender/blender -b --disable-autoexec builds/v2/studio.blend \
+  -t 1 --python-exit-code 1 --python test_interview_scene.py \
+  -- builds/tef_native_fixture_new
+```
+
+Use a new empty fixture directory. Full French synthesis, measured subtitle
+readability, a complete single-candidate entrance and rendered-pixel review
+remain acceptance gates for the first real TEF preview. Production rendering,
+merging into the DTZ checkout and publication are separate later steps.
 
 ### Full book-based episode: Lerntreffen
 
@@ -582,7 +721,7 @@ Focused regression suite:
 
 ```bash
 /home/ronggong/lang/german/.venvs/qwen-tts-test/bin/python \
-  -m unittest test_build_paths test_episode_config test_teil1_episode test_teil2_episode test_lerntreffen_episode test_entrance test_direction test_social test_audio test_render test_exchange
+  -m unittest test_build_paths test_episode_config test_teil1_episode test_teil2_episode test_lerntreffen_episode test_entrance test_direction test_social test_audio test_render test_exchange test_profiles test_tef_episode
 ```
 
 ## Preserved productions

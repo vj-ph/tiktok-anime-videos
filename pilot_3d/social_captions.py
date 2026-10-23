@@ -8,6 +8,7 @@ from pathlib import Path
 from align_words import validate_words
 from episode_config import instruction_turn, section_windows, takeaway_seconds, task_window
 from picture_presentation import picture_windows
+from episode_profiles import language_profile
 
 SAFE = (88, 200, 512, 752)
 LEFT, RIGHT = 104, 496
@@ -264,6 +265,7 @@ def make_ass(episode, timeline):
     if episode.get("credit_policy") != "publishing_caption":
         raise ValueError("Social exports require explicit accompanying publishing-caption attribution.")
     lines = [HEADER]
+    language = language_profile(episode)
 
     def event(start, end, text, style="Text"):
         if end <= start:
@@ -303,7 +305,7 @@ def make_ass(episode, timeline):
         # This camera frames the examiner's mouth lower than the candidates'.
         examiner = readable and page["camera"] == "examiner"
         panel(start, end, 612 if examiner else 578 if readable else 604, 746 if examiner else 742)
-        text(start, end, "Es spricht: " + page["name"],
+        text(start, end, language["speaker_prefix"] + page["name"],
              622 if examiner else 588 if readable else 614, 19, True, "CDECD9")
         wrapped = measured_lines(page["text"], 31)
         boundaries = {start, end}
@@ -328,13 +330,13 @@ def make_ass(episode, timeline):
         if picture["mode"] == "reveal":
             panel(start, end, 287, 742, "08")
             text(start, end, label, 303, 24, True, "CDECD9")
-            text(start, end, "Beschreibe das Bild.", 579, 24)
-            text(start, end, "Erzähle von dir.", 620, 24)
-            text(start, end, "Lernpause · Video anhalten.", 700, 19)
+            text(start, end, language["picture_prompt"], 579, 24)
+            text(start, end, language["experience_prompt"], 620, 24)
+            text(start, end, language["learning_pause"], 700, 19)
         else:
             event(start, end, r"{\pos(0,0)\p1\alpha&H08&}"
                   + "m 96 280 l 332 280 332 437 96 437" + r"{\p0}", "Box")
-            text(start, end, "Bild · " + label, 284, 19, True, "CDECD9")
+            text(start, end, language["picture_prefix"] + label, 284, 19, True, "CDECD9")
     if episode.get("social_kind") == "exchange":
         return "".join(lines)
     intro_end = timeline["turns"][0]["start"]
@@ -360,6 +362,7 @@ def make_ass(episode, timeline):
 
 
 def write_publication(build, episode):
+    language = language_profile(episode)
     credit = (Path(__file__).resolve().parent / "assets/studio/CREDITS.txt").read_text()
     publication = episode.get("publication", {})
     picture_credit = "\n".join(dict.fromkeys(p["credit"] for p in episode.get("pictures", {}).values()))
@@ -371,15 +374,14 @@ def write_publication(build, episode):
         + publication.get("intro", episode.get("hook", "")) + "\n"
         + " ".join(episode.get("cta", [])) + "\n\n"
         + publication.get("disclosure", episode.get("disclaimer", ""))
-        + "\nKI-generierte Stimmen und animierte Figuren.\n\n"
+        + "\n" + language["ai_disclosure"] + "\n\n"
         + picture_credit +
         "Snow Rig (CC) Blender Foundation | studio.blender.org\n"
         "https://studio.blender.org/characters/snow/v4/\n"
         "Rain Rig (CC) Blender Foundation | studio.blender.org\n"
         "https://studio.blender.org/characters/rain/v3/\n"
         "CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\n"
-        "Für dieses Video: Kleidung/Haare umgefärbt, Figuren skaliert, posiert und animiert. "
-        "Keine Unterstützung oder Empfehlung durch Blender Foundation/Blender Studio.\n\n"
+        + language["rig_adaptation"] + "\n\n"
         + " ".join(publication.get("hashtags", [])) + "\n"
     )
     (build / "publishing_caption.txt").write_text(caption, encoding="utf-8")

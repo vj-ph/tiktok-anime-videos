@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "id": "tef_canada_speaking_a1",
+  "language": "fr",
+  "exam": {"family": "tef_canada", "skill": "speaking", "section": "A"},
+  "presentation": "social",
+  "visual_version": 7,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "Se renseigner sur un atelier numérique",
+  "label": "TEF Canada · Expression orale · Section A",
+  "disclaimer": "Simulation pédagogique indépendante et adaptée ; ni sujet officiel ni épreuve complète.",
+  "branding": "FRENCH COMPASS",
+  "scene": {
+    "template": "exam_room",
+    "layout": "interview",
+    "base_scene": "../builds/v2/studio.blend",
+    "entrance": true,
+    "observer": false
+  },
+  "header": {
+    "brand": "FRENCH COMPASS · TEF CANADA",
+    "topic": "Section A · Se renseigner"
+  },
+  "sections": {"A": "Section A · Jeu de rôle"},
+  "hook": "À vous de poser les questions",
+  "task_title": "ATELIER CLIC VOISIN",
+  "task_summary": "Initiation à l'ordinateur.",
+  "task_hint": "Pause · Préparez vos questions.",
+  "task_card": [
+    "Horaires et durée",
+    "Tarif et inscription",
+    "Matériel et programme",
+    "Accès et transport",
+    "Places disponibles",
+    "Précisions et alternatives"
+  ],
+  "takeaway": [],
+  "takeaway_seconds": 0,
+  "cta": [
+    "D'autres jeux de rôle",
+    "dans notre livre TEF Canada",
+    "Lien Amazon dans le profil"
+  ],
+  "publication": {
+    "intro": "Publicité pour notre livre. Un atelier vous intéresse : comment obtenir des précisions, réagir à une réponse vague et trouver une autre possibilité ? Essayez avant d'écouter le modèle.",
+    "disclosure": "Adaptation pédagogique de la pratique A1 du livre French Compass. Simulation indépendante, sans affiliation avec l'organisme du TEF ; ni sujet officiel ni épreuve complète. La pause de lecture appartient à la vidéo, pas au temps officiel de l'épreuve.",
+    "hashtags": ["#TEFCanada", "#ExpressionOrale", "#ApprendreLeFrançais", "#FrenchCompass"]
+  },
+  "book_cover": "../../../../french/french_exam_books/tef_canada/speaking/speaking.jpg",
+  "source": {
+    "book": "../../../../french/french_exam_books/tef_canada/speaking/book.md",
+    "exercise": "Practice set A1: Neighbourhood digital workshop",
+    "voice_registry": "../../../../french/french_exam_books/tef_canada/listening/audio/voices/voices.json",
+    "adaptation": "Original compact Section A role-play based on the single A1 candidate page, hidden partner card and model. One candidate speaks face-to-face with an examiner playing the service representative; the telephone situation is fictional, not a second location. The six-week course, two separate groups, free registration, six shared computers, second-floor accessible room, two Tuesday places and full Thursday group stay consistent with the book. Pedagogical pauses and shortening do not represent official test timing.",
+    "framework_reference": "https://www.lefrancaisdesaffaires.fr/candidat/test-evaluation-francais/tef-canada/passation/",
+    "framework_checked": "2026-10-22",
+    "coverage": {
+      "Formal opening and purpose": ["03"],
+      "Schedule and course duration": ["05", "06"],
+      "Price and registration": ["07", "08"],
+      "Equipment and useful activities": ["09", "10", "11", "12"],
+      "Location and accessible transport": ["13", "14", "15", "16"],
+      "Vague answer and full Thursday group": ["17", "18", "19", "20"],
+      "Alternative and natural close": ["21", "22", "23", "24"]
+    }
+  },
+  "fps": 24,
+  "intro_seconds": 2.5,
+  "outro_seconds": 6.0,
+  "voices": {
+    "candidate_a": {
+      "audio": "../../../../french/french_exam_books/tef_canada/listening/audio/voices/references/fr_fr_conversation_f01.wav",
+      "voice_id": "fr_fr_conversation_f01",
+      "reference_text": "Samedi, je passe au marché de Grenoble vers 11 heures. J’ai besoin de trois pommes, d’un kilo de carottes et d’un pain complet. Le vendeur accepte la carte bancaire, même pour 4 euros 50."
+    },
+    "examiner": {
+      "audio": "../../../../french/french_exam_books/tef_canada/listening/audio/voices/references/fr_fr_service_m01.wav",
+      "voice_id": "fr_fr_service_m01",
+      "reference_text": "Attention, le guichet de la mairie ferme exceptionnellement à 15 h 45 le 28 février. Les demandes urgentes peuvent être déposées dans la boîte bleue, rue Victor-Hugo. Le service rouvrira mardi à 9 heures."
+    }
+  },
+  "turns": [
+    {
+      "id": "01", "speaker": "examiner", "name": "Examinateur",
+      "text": "Bonjour. Entrez, je vous en prie. Installez-vous.",
+      "camera": "wide", "action": "welcome", "look_at": "candidate_a", "pause_after": 3.0
+    },
+    {
+      "id": "02", "speaker": "examiner", "name": "Examinateur",
+      "text": "Vous avez vu l'annonce de l'Atelier Clic voisin. Vous téléphonez pour obtenir des renseignements. Je joue le rôle de votre interlocuteur.",
+      "camera": "examiner", "action": "explain", "look_at": "candidate_a",
+      "pause_after": 9.2, "task_card_delay_seconds": 1.2
+    },
+    {
+      "id": "03", "speaker": "candidate_a", "name": "Candidate", "section": "A",
+      "text": "Bonjour Monsieur. Je vous appelle au sujet de l'atelier numérique. J'aimerais apprendre à mieux utiliser un ordinateur. Pourriez-vous me renseigner ?",
+      "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "04", "speaker": "examiner", "name": "Interlocuteur", "section": "A",
+      "text": "Bonjour. Bien sûr, je vous écoute. Que souhaitez-vous savoir ?",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "05", "speaker": "candidate_a", "name": "Candidate", "section": "A",
+      "text": "L'annonce ne précise pas les horaires. Quels jours proposez-vous cet atelier, et combien de temps dure la formation ?",
+      "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "06", "speaker": "examiner", "name": "Interlocuteur", "section": "A",
+      "text": "Vous choisissez le mardi ou le jeudi, de dix-huit heures à dix-neuf heures trente. Chaque groupe se retrouve une fois par semaine, pendant six semaines.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "07", "speaker": "candidate_a", "name": "Candidate", "section": "A",
+      "text": "Donc, je ne dois pas venir les deux soirs. Quel est le tarif ? Y a-t-il des frais pour le matériel ou pour l'inscription ?",
+      "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "08", "speaker": "examiner", "name": "Interlocuteur", "section": "A",
+      "text": "Non, tout est gratuit. Il faut simplement s'inscrire à l'avance, car le nombre de postes est limité.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "09", "speaker": "candidate_a", "name": "Candidate", "section": "A",
+      "text": "Je n'ai pas d'ordinateur portable. Est-ce que je peux quand même participer ?",
+      "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "10", "speaker": "examiner", "name": "Interlocuteur", "section": "A",
+      "text": "Oui. Nous avons six ordinateurs sur place. Vous travaillez à deux sur chaque poste, donc vous n'avez rien à apporter.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "11", "speaker": "candidate_a", "name": "Candidate", "section": "A",
+      "text": "Très bien. J'aimerais surtout apprendre à envoyer des messages et à remplir des formulaires. Ces activités font-elles partie du programme ?",
+      "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "12", "speaker": "examiner", "name": "Interlocuteur", "section": "A",
+      "text": "Oui. Nous commençons par le clavier et la souris, puis la messagerie. Ensuite, nous travaillons sur des documents et des formulaires simples.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "13", "speaker": "candidate_a", "name": "Candidate", "section": "A",
+      "text": "Où se déroule l'atelier exactement ? Ma mère voudrait peut-être venir aussi, mais elle monte difficilement les escaliers.",
+      "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "14", "speaker": "examiner", "name": "Interlocuteur", "section": "A",
+      "text": "C'est dans la salle deux cent quatre du centre Saint-Paul, au deuxième étage. L'entrée sur le côté donne accès à un ascenseur.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "15", "speaker": "candidate_a", "name": "Candidate", "section": "A",
+      "text": "Merci pour cette précision. Nous viendrions en bus. Quel arrêt conseillez-vous, et reste-t-il des places dans les groupes ?",
+      "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "16", "speaker": "examiner", "name": "Interlocuteur", "section": "A",
+      "text": "L'arrêt Saint-Paul est à deux minutes à pied. Les lignes quatre et neuf passent encore après l'atelier. Il reste quelques places.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "17", "speaker": "candidate_a", "name": "Candidate", "section": "A",
+      "text": "Quand vous dites quelques places, est-ce dans les deux groupes ? Le jeudi serait plus pratique pour moi.",
+      "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "18", "speaker": "examiner", "name": "Interlocuteur", "section": "A",
+      "text": "Il reste deux places le mardi. En revanche, le groupe du jeudi est complet.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "19", "speaker": "candidate_a", "name": "Candidate", "section": "A",
+      "text": "Je comprends. Pourrais-je commencer le mardi tout en restant sur une liste d'attente pour le jeudi ?",
+      "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "20", "speaker": "examiner", "name": "Interlocuteur", "section": "A",
+      "text": "Oui. Nous pouvons vous inscrire le mardi et vous appeler si une place se libère le jeudi.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "21", "speaker": "candidate_a", "name": "Candidate", "section": "A",
+      "text": "Et si je change de groupe plus tard, pourrai-je continuer sans recommencer la formation ?",
+      "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "22", "speaker": "examiner", "name": "Interlocuteur", "section": "A",
+      "text": "Oui, les deux groupes suivent le même programme. Vous pourrez poursuivre normalement si une place devient disponible.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "23", "speaker": "candidate_a", "name": "Candidate", "section": "A",
+      "text": "Merci beaucoup. Je vais vérifier mon trajet du mardi et en parler à ma mère. Je vous rappellerai pour confirmer l'inscription. Bonne journée.",
+      "camera": "candidate_a", "action": "answer", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "24", "speaker": "examiner", "name": "Interlocuteur",
+      "text": "Avec plaisir. Bonne journée à vous aussi.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    }
+  ]
+}

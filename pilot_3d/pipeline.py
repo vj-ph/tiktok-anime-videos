@@ -16,10 +16,11 @@ sys.path.insert(0, str(ROOT))
 
 from build_paths import build_directory, resolve_build_reference
 from episode_config import PROFILES, check_timeline, read_episode, validate_template
+from episode_profiles import language_profile
 from prepare_audio import (atomic_json, atomic_text, content_hash, inspect_wav,
                            load_audio_cache, make_cache_payload, sha256_file)
 
-SOURCES = ("pipeline.py", "build_paths.py", "episode_config.py", "picture_presentation.py", "prepare_audio.py", "align_words.py",
+SOURCES = ("pipeline.py", "build_paths.py", "episode_config.py", "episode_profiles.py", "picture_presentation.py", "prepare_audio.py", "align_words.py", "check_speech.py",
            "produce_v4.py", "render.py", "social_captions.py", "review_social.py",
            "check_v4_scene.py", "studio_characters.py", "polish_exchange.py",
            "scene_direction.py", "entrance.py", "build_scene.py")
@@ -88,7 +89,8 @@ def freeze_delivery(build):
                "dialogue.wav", "timeline.json", "episode.json", "scene_manifest.json",
                "frames_manifest.json", "publishing_caption.txt", "CREDITS.txt",
                "subtitle_timing_report.json", "safe_zone_report.json", "delivery_checks.json")
-    outputs += tuple(name for name in ("audio_reuse.json", "word_alignment.json", "scene_checks.json")
+    outputs += tuple(name for name in ("audio_reuse.json", "word_alignment.json", "scene_checks.json",
+                                      "speech_asr_check.json")
                      if (build / name).is_file())
     episode = read_episode(build / "episode.json")
     if episode.get("pictures"):
@@ -126,6 +128,8 @@ def audio_reuse_spec(episode, source):
     if info["sample_rate"] != 48000 or info["frames"] * timeline["fps"] != timeline["total_frames"] * 48000:
         raise ValueError("Audio reuse source does not match its exact video clock.")
     alignment = json.loads((source / "word_alignment.json").read_text())
+    if alignment.get("provenance", {}).get("language") != episode.get("language", "de"):
+        raise ValueError("Audio reuse requires matching alignment language.")
     expected = {"provenance": timeline["word_alignment"], "turns": [
         {key: turn[key] for key in ("id", "start", "words", "alignment_key")} for turn in timeline["turns"]]}
     if alignment != expected:
@@ -138,8 +142,12 @@ def audio_reuse_spec(episode, source):
         metadata = raw.with_suffix(".cache.json")
         saved = json.loads(metadata.read_text())
         voice = episode["voices"][turn["speaker"]]
-        payload = make_cache_payload(turn, Path(voice["audio"]), Path(voice["transcript"]),
-                                     saved["payload"]["settings"])
+        settings = saved["payload"]["settings"]
+        if settings.get("language") != language_profile(episode)["tts"]:
+            raise ValueError("Audio reuse requires matching synthesis language.")
+        payload = make_cache_payload(turn, Path(voice["audio"]),
+                                     Path(voice["transcript"]) if "transcript" in voice else None,
+                                     settings, reference_text=voice.get("reference_text"))
         if saved["payload"] != payload or load_audio_cache(raw, payload) is None:
             raise ValueError(f"Turn {turn['id']}: reused speech has different text/reference voice or corrupt audio.")
         cache_hashes[str(metadata)] = sha256_file(metadata)
@@ -164,7 +172,8 @@ def build_episode(path, build, profile="preview", jobs=4, with_promo=False, unti
     spec = {"episode": episode, "profile": profile,
             "base_scene_sha256": sha256_file(resolve_build_reference(episode["scene"]["base_scene"])),
             "asset_sha256": {value: sha256_file(Path(value)) for value in (
-                [voice[field] for voice in episode["voices"].values() for field in ("audio", "transcript")]
+                [voice[field] for voice in episode["voices"].values() for field in ("audio", "transcript")
+                 if field in voice]
                 + ([episode["book_cover"]] if episode["outro_seconds"] > 0 else [])
                 + [picture["path"] for picture in episode.get("pictures", {}).values()]
                 + ([episode["scene"]["wall_logo"]] if episode["scene"].get("wall_logo") else []))},

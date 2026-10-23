@@ -47,6 +47,26 @@ for both candidates, using the book's weekly-market and supermarket pictures:
 - [ ] Publish Ausflug on any outstanding platform and publish Lerntreffen after production approval, using the prepared platform-specific captions.
 - [ ] Record available performance results and review them to guide the next topics and publishing cadence.
 
+## Flexible generator and TEF Canada
+
+Development is isolated on `feat/multilingual-tef` in the
+`tiktok_anime_videos_tef` worktree. Leave the original DTZ checkout and running
+production jobs unchanged; do not merge or launch competing heavy work yet.
+
+- [x] Separate language, exam metadata and pair/interview scene layout while retaining German defaults.
+- [x] Add French TTS/alignment/localization, inline voice-reference text and language-aware cache/reuse checks.
+- [x] Add a one-candidate interview layout, optional observer and single-candidate entrance planning.
+- [x] Add the single TEF Canada Section A practice A1 script using the existing French voices and speaking-book cover.
+- [x] Add independent per-turn ASR tooling and focused language/content/native-fixture checks; unit API checks use explicit mocks, not real French inference.
+- [x] Prepare full-episode French posting drafts with disclosures and rig credits.
+- [ ] After current DTZ jobs finish, synthesize and independently check the first real TEF A1 audio, alignment and caption readability.
+- [ ] Bake and review the complete TEF entrance, full preview, encoded headers/CTA and frozen delivery.
+- [ ] Obtain preview approval before production rendering; publication remains separately approved.
+- [ ] Review and merge only after DTZ jobs finish; use fresh builds under changed source hashes.
+- [ ] Add a TEF Section B persuasion practice and its own content tests.
+- [ ] Add reviewed ÖIF/fide and TCF IRN speaking configurations.
+- [ ] Design and implement explicit DTZ/ÖIF/fide listening templates, including learner response time and answer reveal; listening is not implemented by relabelling a speaking episode.
+
 ## Before each publication
 
 - [ ] Use the approved production master, not a preview or internal acting diagnostic.

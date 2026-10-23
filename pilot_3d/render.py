@@ -146,10 +146,13 @@ def credit_captions(duration):
 
 def load_inputs(build, episode_path=None):
     from episode_config import read_episode
+    from episode_profiles import language_code
     episode = read_episode(episode_path or ROOT / "episode.json")
     if episode.get("presentation", "promotion") not in ("promotion", "exchange", "social"):
         raise ValueError("Unsupported episode presentation.")
     timeline = json.loads((build / "timeline.json").read_text(encoding="utf-8"))
+    if language_code(episode) != language_code(timeline):
+        raise ValueError("Episode and audio languages differ; regenerate audio.")
     if timeline["fps"] != episode["fps"]:
         raise ValueError("Episode and audio frame rates differ; regenerate audio.")
     if not math.isfinite(timeline["duration"]) or timeline["duration"] <= 0:

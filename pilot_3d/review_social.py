@@ -14,6 +14,7 @@ from episode_config import promo_settings, task_window
 from social_captions import (MAX_PAGE_CPS, MIN_PAGE_SECONDS, SAFE, caption_pages,
                              displayed_seconds, make_ass)
 from picture_presentation import picture_filters, picture_windows
+from episode_profiles import language_code
 
 
 def review_pictures(build, episode, timeline):
@@ -119,6 +120,8 @@ def review(build):
     timeline = json.loads((build / "timeline.json").read_text())
     manifest = json.loads((build / "scene_manifest.json").read_text())
     episode = manifest["episode"]
+    if language_code(episode) != language_code(timeline):
+        raise ValueError("Episode and exported timeline use different languages.")
     report = {"duration": timeline["duration"], "frames": timeline["total_frames"], "files": {}}
     for filename in ("pilot.mp4", "pilot_clean.mp4"):
         result = subprocess.run(["ffprobe", "-v", "error", "-show_streams", "-show_format", "-of", "json",

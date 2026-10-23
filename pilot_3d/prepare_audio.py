@@ -32,6 +32,7 @@ from pathlib import Path
 from typing import Any
 
 from build_paths import BUILDS, build_directory, resolve_build_reference
+from episode_profiles import language_code, language_profile
 
 ROOT = Path(__file__).resolve().parent
 MODEL = "Qwen/Qwen3-TTS-12Hz-1.7B-Base"
@@ -58,6 +59,7 @@ def nonempty(value: Any, label: str) -> str:
 def validate_episode(episode: Any) -> None:
     if not isinstance(episode, dict):
         raise ValueError("Episode must be a JSON object.")
+    language_code(episode)
     fps = episode.get("fps")
     if isinstance(fps, bool) or not isinstance(fps, int) or not 1 <= fps <= 240:
         raise ValueError("fps must be an integer between 1 and 240.")
@@ -73,8 +75,11 @@ def validate_episode(episode: Any) -> None:
             raise ValueError(f"Unsafe voice role: {role!r}")
         if not isinstance(voice, dict):
             raise ValueError(f"voices.{role} must be an object.")
-        for field in ("audio", "transcript"):
-            nonempty(voice.get(field), f"voices.{role}.{field}")
+        nonempty(voice.get("audio"), f"voices.{role}.audio")
+        if ("transcript" in voice) == ("reference_text" in voice):
+            raise ValueError(f"voices.{role} needs exactly one of transcript or reference_text.")
+        field = "transcript" if "transcript" in voice else "reference_text"
+        nonempty(voice.get(field), f"voices.{role}.{field}")
     turns = episode.get("turns")
     if not isinstance(turns, list) or not turns:
         raise ValueError("turns must be a nonempty array.")
@@ -152,7 +157,8 @@ def inspect_wav(path: Path) -> dict[str, Any]:
     return {"frames": frames, "sample_rate": rate, "wav_duration": frames / rate}
 
 
-def synthesis_settings(model: str, device: str, threads: int, text: str) -> dict[str, Any]:
+def synthesis_settings(model: str, device: str, threads: int, text: str,
+                       language: str = "de") -> dict[str, Any]:
     return {
         "model": model,
         "device": device,
@@ -161,7 +167,7 @@ def synthesis_settings(model: str, device: str, threads: int, text: str) -> dict
         "threads": threads,
         "interop_threads": min(threads, 4),
         "seed": 0,
-        "language": "German",
+        "language": language_profile({"language": language})["tts"],
         "x_vector_only_mode": False,
         "non_streaming_mode": True,
         "max_new_tokens": max(256, min(1536, math.ceil(len(text) * 6))),
@@ -183,16 +189,24 @@ def synthesis_settings(model: str, device: str, threads: int, text: str) -> dict
     }
 
 
-def make_cache_payload(turn: dict[str, Any], reference_audio: Path, transcript: Path,
-                       settings: dict[str, Any]) -> dict[str, Any]:
-    reference_text = transcript.read_text(encoding="utf-8").strip()
+def make_cache_payload(turn: dict[str, Any], reference_audio: Path, transcript: Path | None,
+                       settings: dict[str, Any], *, reference_text: str | None = None) -> dict[str, Any]:
+    if transcript is not None:
+        if reference_text is not None:
+            raise ValueError("Choose a transcript file or inline reference_text, not both.")
+        reference_text = transcript.read_text(encoding="utf-8").strip()
+        transcript_hash = sha256_file(transcript)
+    else:
+        nonempty(reference_text, "reference_text")
+        reference_text = reference_text.strip()
+        transcript_hash = hashlib.sha256(reference_text.encode("utf-8")).hexdigest()
     nonempty(reference_text, f"Reference transcript {transcript}")
     return {
         "schema": CACHE_SCHEMA,
         "speaker": turn["speaker"],
         "text": turn["text"],
         "reference_audio_sha256": sha256_file(reference_audio),
-        "reference_transcript_sha256": sha256_file(transcript),
+        "reference_transcript_sha256": transcript_hash,
         "reference_text": reference_text,
         "settings": settings,
     }
@@ -242,16 +256,18 @@ def synthesize(episode: dict[str, Any], episode_dir: Path, audio_dir: Path,
     references = {}
     for role, voice in episode["voices"].items():
         reference_audio = (episode_dir / voice["audio"]).resolve(strict=True)
-        transcript = (episode_dir / voice["transcript"]).resolve(strict=True)
+        transcript = ((episode_dir / voice["transcript"]).resolve(strict=True)
+                      if "transcript" in voice else None)
         inspect_wav(reference_audio)
         references[role] = (reference_audio, transcript)
     model = sf = torch = None
     prompts: dict[str, Any] = {}
     results = []
     for turn in episode["turns"]:
-        settings = synthesis_settings(model_name, device, threads, turn["text"])
+        settings = synthesis_settings(model_name, device, threads, turn["text"], language_code(episode))
         reference_audio, transcript = references[turn["speaker"]]
-        payload = make_cache_payload(turn, reference_audio, transcript, settings)
+        payload = make_cache_payload(turn, reference_audio, transcript, settings,
+                                     reference_text=episode["voices"][turn["speaker"]].get("reference_text"))
         key = content_hash(payload)
         audio_path = audio_dir / f"{turn['id']}-{key[:20]}.wav"
         info = load_audio_cache(audio_path, payload)
@@ -563,7 +579,7 @@ def build_timeline(episode: dict[str, Any], audio: list[dict[str, Any]],
         })
         cursor += length + gap
     total_frames = cursor + outro_frames
-    return {
+    timeline = {
         "fps": fps,
         "intro_seconds": intro_frames / fps,
         "outro_seconds": outro_frames / fps,
@@ -571,6 +587,9 @@ def build_timeline(episode: dict[str, Any], audio: list[dict[str, Any]],
         "total_frames": total_frames,
         "turns": turns,
     }
+    if "language" in episode:
+        timeline["language"] = language_code(episode)
+    return timeline
 
 
 def srt_timestamp(seconds: float) -> str:

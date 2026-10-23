@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 from studio_characters import StudioCharacter
 from episode_config import seating_deadline
+from episode_profiles import ACTORS, active_actors
 
 
 def check_entrance(scene, actors, manifest, timeline, build):
@@ -20,6 +21,7 @@ def check_entrance(scene, actors, manifest, timeline, build):
     from render import ass_time
 
     plan = manifest["entrance"]
+    candidates = [name for name in actors if name.startswith("candidate")]
     left, right, top = plan["portal"]
     radius = plan["body_radius_m"]
     scene.frame_set(1)
@@ -85,14 +87,15 @@ def check_entrance(scene, actors, manifest, timeline, build):
     for frame_number in range(1, math.ceil(last * timeline["fps"]) + 1, manifest["motion_step"]):
         scene.frame_set(frame_number)
         t = (frame_number - 1) / timeline["fps"]
-        a, b = (actors[name].root.matrix_world.translation for name in ("candidate_a", "candidate_b"))
-        distance = math.dist(a[:2], b[:2])
-        minimum_pair = min(minimum_pair, distance)
-        if distance < 2 * radius:
-            raise ValueError(f"Entering candidates intersect at {t:.3f}s: {distance:.3f}m.")
+        if len(candidates) == 2:
+            a, b = (actors[name].root.matrix_world.translation for name in candidates)
+            distance = math.dist(a[:2], b[:2])
+            minimum_pair = min(minimum_pair, distance)
+            if distance < 2 * radius:
+                raise ValueError(f"Entering candidates intersect at {t:.3f}s: {distance:.3f}m.")
         door = scene.objects["Door"]
         inverse = door.matrix_world.inverted()
-        for name in ("candidate_a", "candidate_b"):
+        for name in candidates:
             point = actors[name].root.matrix_world.translation
             local = inverse @ Vector((point.x, point.y, 1.1))
             clearance = math.hypot(max(abs(local.x) - .51, 0), max(abs(local.y) - .035, 0)) - radius
@@ -117,9 +120,10 @@ def check_entrance(scene, actors, manifest, timeline, build):
                 if overlaps(bounds, hook):
                     raise ValueError(f"Opening title covers {name}'s head at {t:.3f}s: {bounds}")
                 head_samples += 1
-    if portal_samples < 4:
-        raise ValueError("Entrance check did not observe both candidates passing through the opening.")
-    report.update(outside_mesh_minimum_y_m=outside, minimum_candidate_distance_m=minimum_pair,
+    if portal_samples < 2 * len(candidates):
+        raise ValueError("Entrance check did not observe every candidate passing through the opening.")
+    report.update(outside_mesh_minimum_y_m=outside,
+                  minimum_candidate_distance_m=minimum_pair if len(candidates) == 2 else None,
                   minimum_door_to_body_clearance_m=minimum_door, actual_portal_mesh_samples=portal_samples,
                   hook_bounds_px=hook, doorway_bounds_px=doorway_bounds,
                   unobscured_candidate_head_samples=head_samples)
@@ -134,8 +138,15 @@ def check(build):
     step = manifest["motion_step"]
     if (scene.frame_start, scene.frame_end, scene.render.fps) != (1, timeline["total_frames"], timeline["fps"]):
         raise ValueError("Saved scene and final audio clock differ.")
-    actors = {name: StudioCharacter.from_scene(name)
-              for name in ("candidate_a", "candidate_b", "examiner", "observer")}
+    actors = {name: StudioCharacter.from_scene(name) for name in active_actors(episode)}
+    hidden = manifest.get("cast", {}).get("hidden_objects", [])
+    for name in hidden:
+        if not scene.objects[name].hide_render:
+            raise ValueError(f"Inactive actor or prop is still renderable: {name}")
+    for name in set(ACTORS) - set(actors):
+        root = scene.objects[name]
+        if not all(obj.hide_render for obj in (root, *root.children_recursive)):
+            raise ValueError(f"Inactive actor remains visible: {name}")
     closed = max(4, manifest.get("entrance", {}).get("door", {}).get("close_end", 0) + .1)
     scene.frame_set(1 + math.ceil(closed * timeline["fps"]))
     for name, expected in (("Door", (-2.9, 3.09, 1.15)), ("Door handle", (-2.53, 3.0, 1.12))):
@@ -143,7 +154,8 @@ def check(build):
         if math.dist(actual, expected) > 0.0001:
             raise ValueError(f"{name}: hinge parenting moved the closed door: {actual}")
     scene.frame_set(round((seating_deadline(episode, timeline) + 0.1) * timeline["fps"]) + 1)
-    report = {"frames": timeline["total_frames"], "fps": timeline["fps"], "actors": {}}
+    report = {"frames": timeline["total_frames"], "fps": timeline["fps"], "actors": {},
+              "cast": {"active_actors": list(actors), "hidden_objects_checked": len(hidden)}}
     for name, actor in actors.items():
         drivers = actor.rig.animation_data.drivers
         expected = 514 if actor.kind == "rain" else 1070
@@ -180,7 +192,7 @@ def check(build):
         raise ValueError(f"Blinks fail to reach actual facial deformation: {blink_max}")
     report["actual_eyelid_closure_maxima"] = blink_max
     drift = {}
-    for index, name in enumerate(("candidate_a", "candidate_b")):
+    for index, name in enumerate(name for name in actors if name.startswith("candidate")):
         actor = actors[name]
         blocking = json.loads(actor.root["blocking"])
         if not blocking.get("entrance", True):

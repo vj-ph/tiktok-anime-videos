@@ -40,15 +40,19 @@ def walk_pose(blocking, t):
 
 def entrance_plan(episode, timeline):
     from episode_config import entrance_enabled, seating_deadline
+    from episode_profiles import active_actors
 
     result = {"enabled": entrance_enabled(episode), "portal": PORTAL, "hinge": HINGE,
               "body_radius_m": BODY_RADIUS, "actors": {}}
     if not result["enabled"]:
         return result
+    candidates = [name for name in active_actors(episode) if name.startswith("candidate")]
     last_seat = min(seating_deadline(episode, timeline), 8.0) - .12
     for name, x, start, outside_y in (
             ("candidate_a", -.82, .65, 3.95), ("candidate_b", .82, 1.20, 4.8)):
-        seat_end = last_seat - (.8 if name == "candidate_a" else 0)
+        if name not in candidates:
+            continue
+        seat_end = last_seat - (.8 if name == "candidate_a" and len(candidates) == 2 else 0)
         points = ([(-2.9, outside_y, 0), (-2.9, 2.85, 0), (-2.9, 1.35, 0),
                    (-1.38, 1.35, 0), (-1.38, .30, 0), (x, .30, 0)]
                   if name == "candidate_a" else
@@ -63,11 +67,16 @@ def entrance_plan(episode, timeline):
         result["actors"][name] = {"walk_start": start, "walk_end": walk_end,
                                   "seat_start": seat_end - 1.15, "seat_end": seat_end,
                                   "path": points, "walk_speed_m_s": speed}
-    second = result["actors"]["candidate_b"]
+    second = result["actors"][candidates[-1]]
     points = second["path"]
     clear_x = HINGE[0] + 1.02 + BODY_RADIUS + .06
-    distance = math.dist(points[0], points[1])
-    distance += math.dist(points[1], points[2]) * (clear_x - points[1][0]) / (points[2][0] - points[1][0])
+    distance = 0
+    for a, b in zip(points, points[1:]):
+        length = math.dist(a, b)
+        if a[0] < clear_x <= b[0]:
+            distance += length * (clear_x - a[0]) / (b[0] - a[0])
+            break
+        distance += length
     close_start = second["walk_start"] + distance / second["walk_speed_m_s"] + .20
     result["door"] = {"open_start": .15, "open_end": .85,
                       "close_start": close_start, "close_end": close_start + .90}
