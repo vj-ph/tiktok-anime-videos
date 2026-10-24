@@ -12,9 +12,12 @@ LANGUAGES = {
         ),
         "speaker_prefix": "Es spricht: ",
         "picture_prompt": "Beschreibe das Bild.",
+        "task_picture_prompt": "Bereite deine Fragen vor.",
         "experience_prompt": "Erzähle von dir.",
         "learning_pause": "Lernpause · Video anhalten.",
         "picture_prefix": "Bild · ",
+        "notice_title": "Anzeige · vergrößerter Text",
+        "notice_prefix": "Detail · ",
         "ai_disclosure": "KI-generierte Stimmen und animierte Figuren.",
         "rig_adaptation": (
             "Für dieses Video: Kleidung/Haare umgefärbt, Figuren skaliert, posiert und animiert. "
@@ -31,9 +34,12 @@ LANGUAGES = {
         ),
         "speaker_prefix": "Intervenant : ",
         "picture_prompt": "Décrivez l'image.",
+        "task_picture_prompt": "Préparez vos questions.",
         "experience_prompt": "Parlez de votre expérience.",
         "learning_pause": "Pause · Arrêtez la vidéo.",
         "picture_prefix": "Image · ",
+        "notice_title": "Annonce · texte agrandi",
+        "notice_prefix": "Détail · ",
         "ai_disclosure": "Voix de synthèse et personnages animés générés avec l'IA.",
         "rig_adaptation": (
             "Pour cette vidéo : vêtements et cheveux recolorés, personnages redimensionnés, "

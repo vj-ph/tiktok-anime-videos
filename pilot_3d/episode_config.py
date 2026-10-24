@@ -84,7 +84,8 @@ def task_window(timeline):
                       if turn["start"] >= instruction["end"] and turn_phase(turn) == "dialogue"), None)
     if following is None or following["start"] <= instruction["end"]:
         return None
-    delay = ceil_frames(instruction.get("task_card_delay_seconds", 0), timeline["fps"])
+    delay = ceil_frames(instruction.get("task_card_delay_seconds",
+                                       instruction.get("picture_card_delay_seconds", 0)), timeline["fps"])
     start = instruction["end"] + delay / timeline["fps"]
     if start >= following["start"]:
         raise ValueError("task_card_delay_seconds leaves no task-card reading time.")

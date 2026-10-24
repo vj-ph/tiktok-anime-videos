@@ -184,9 +184,12 @@ performed face-to-face, not presented as two people in separate locations.
 
 The configuration uses the existing `fr_fr_conversation_f01.wav` and
 `fr_fr_service_m01.wav` with their exact `voices.json` reference texts, plus
-the speaking book's own cover. There is no copied official stimulus or newly
-reused book photograph. Full-episode posting **drafts** are in
-`../posts/tef_canada_a1/`; a real preview and speech review are still required.
+the speaking book's own cover. The revised configuration includes the book's
+original A1 advertisement and the French Compass wall logo, with explicit
+commercial reuse permission confirmed October 24, 2026. Source copies and
+hashes are recorded under `assets/`; no official stimulus is copied.
+Full-episode posting **drafts** are in
+`../posts/tef_canada_a1/`; the full preview is delivered below for approval.
 The learning pause and adapted length are not claims about official test timing.
 Framework and language-model references, checked October 22, 2026:
 
@@ -194,31 +197,89 @@ Framework and language-model references, checked October 22, 2026:
 - Qwen3-TTS French voice cloning: https://github.com/QwenLM/Qwen3-TTS
 - WhisperX French alignment: https://github.com/m-bain/whisperX/blob/main/whisperx/alignment.py
 
-Development is isolated in the `feat/multilingual-tef` branch/worktree at
-`../tiktok_anime_videos_tef` relative to the original repository. Do not switch,
-edit or merge the original checkout while its DTZ jobs are running. This
-development checkout has its own `builds/` root; only existing tools, rig
-sources and the reusable base scene are linked for read-only use. Do not
-install/update tools through those links. Heavy TEF synthesis and rendering
-are deferred while DTZ production runs.
+TEF previews and historical review artifacts remain in the separate
+`../tiktok_anime_videos_tef` worktree, even when the shared code is merged into
+main. Its `builds/` root is independent; only existing tools, rig sources and
+the reusable base scene are linked for read-only use. Do not install/update
+tools through those links, or change shared source while a build is running.
+Keep heavy CPU jobs sequential rather than competing with DTZ production.
 
-After the DTZ jobs have finished, the staged workflow in the TEF checkout is:
+The delivered full preview is
+`builds/tef_canada_a1_preview_r2/pilot.mp4`, with an uncaptioned
+`pilot_clean.mp4` alongside it: **189.7917 seconds, 4,555 output frames at 24 fps,
+720x1280**, from 2,278 native preview poses. Both masters decode successfully.
+The candidate enters alone through the real doorway; the examiner then plays
+the service contact. The observer/second candidate and 142 unused objects stay
+hidden. Native rigs, walking/foot contact, door clearance, gaze, gestures and
+speaker-camera coverage pass.
+
+Real French Qwen3-TTS 1.7B Base speech and French forced alignment are used.
+There are 50 subtitle pages: minimum encoded display **1.8333 seconds** and
+maximum **19.84 characters/second**. Actual decoded frames verify both header
+changes, the 29-frame examiner hold, 192-frame learning card and 144-frame CTA.
+`episode_content_checks.json`, `delivery_checks.json`, `scene_checks.json`,
+`contact_sheet.jpg` and `qa/encoded_boundary_contact_sheet.jpg` retain evidence;
+the frozen export/source hashes and exact audio-reuse eligibility also verify.
+All 50 video masters that existed before this work remain unchanged.
+
+The first audio take, `tef_canada_a1_preview_r1`, stopped at caption preflight
+because turn 17 was too dense. The new clarification keeps the Thursday
+availability question; r2 reuses the other 23 raw recordings byte-for-byte.
+No fonts, timing limits, dialogue gaps or synthesis settings were relaxed.
+
+Independent unprompted ASR checks all 24 turns. Seventeen match the strict
+case/punctuation comparison; `speech_review.json` explicitly reviews seven
+numerical/homophonic spelling differences, with no unresolved textual omissions.
+The strict `speech_asr_check.json` remains unchanged, including its nonmatching
+result. Twelve low-confidence alignment tokens remain disclosed: nine standalone
+question marks and the words `à`, `et`, `des`. **No auditory listening or
+pronunciation/accent certification is claimed.** Review the actual audio and
+preview before approving production. No production render or publication was
+started for TEF.
+
+The completed image/logo revision is
+**`builds/tef_canada_a1_preview_r3/pilot.mp4`**, with `pilot_clean.mp4` alongside
+it: **189.7917 seconds, 4,555 frames, 720x1280 at 24 fps**. Its fresh run
+imports all 24 raw/prepared recordings from r2 byte-for-byte; combined dialogue,
+word alignment, lip cues and timing are unchanged. The advertisement replaces
+the text card with the same 29-frame hold and 192-frame reading pause, appears
+beside the candidate's opening question, and is packed onto the physical task
+sheet. Later questions use normal close-ups with the French Compass wall
+plaque, verified against the original packed logo bytes and actual decoded
+frames.
+
+All 182 Python tests pass. Native image/head/logo checks, both complete movie
+decodes, eight decoded image-boundary frames, 18 decoded header samples and
+nine reading-prompt/CTA samples pass. The 50 subtitle pages retain the same
+1.8333-second minimum and 19.84 characters/second maximum. All **52** prior
+masters and **33** original German pipeline sources remain unchanged.
+`qa/check_delivery.py`, `qa/evidence_manifest.json`,
+`qa/encoded_boundary_contact_sheet.jpg` and `qa/wall_logo_closeup.png` retain
+the additional checks and visible evidence. Fresh independent ASR reproduces
+the seven reviewed spelling/numeral ambiguities; the 12 alignment warnings
+and lack of auditory pronunciation/accent review still apply. This is a
+preview for approval, not production or a published video.
+
+The commands used for r3 are below. Its completed run is frozen; use a new
+unused build directory for any further revision.
 
 ```bash
 python3 pipeline.py validate --episode episodes/tef_canada_a1.json
 python3 pipeline.py build \
   --episode episodes/tef_canada_a1.json \
-  --build builds/tef_canada_a1_preview_r1 \
+  --build builds/tef_canada_a1_preview_r3 \
+  --speech-cache-from builds/tef_canada_a1_preview_r2 \
   --profile preview --jobs 4 --until audio
 
 # Run with the configured Qwen runtime, after audio/alignment have succeeded.
 "${QWEN_PYTHON:-/home/ronggong/lang/german/.venvs/qwen-tts-test/bin/python}" \
-  check_speech.py --build builds/tef_canada_a1_preview_r1
+  check_speech.py --build builds/tef_canada_a1_preview_r3
 
 # Only after speech, alignment warnings and caption preflight are reviewed:
 python3 pipeline.py build \
   --episode episodes/tef_canada_a1.json \
-  --build builds/tef_canada_a1_preview_r1 \
+  --build builds/tef_canada_a1_preview_r3 \
+  --speech-cache-from builds/tef_canada_a1_preview_r2 \
   --profile preview --jobs 4
 ```
 
@@ -230,6 +291,135 @@ need review, not edited pass flags; matching ASR is not a pronunciation/accent
 guarantee. It does not download missing models automatically. A supplied report
 is included in the frozen manifest; this command is separate from forced
 alignment and is not automatically run by `pipeline.py`.
+
+### Short TEF A1 excerpt: under 90 seconds
+
+`episodes/tef_canada_a1_short.json` is the user-requested short adaptation,
+not a complete model answer. It keeps ten turns: entrance and task prompt,
+formal opening, two linked question/answer exchanges on schedule and price,
+and a brief polite close. Equipment, activities, accessibility, transport,
+availability and alternative-group questions remain in the source book and
+the separate full episode. The source book and earlier full previews are
+unchanged.
+
+The opening title is **Atelier informatique**. One fixed
+**Section A · Se renseigner** header remains throughout; there is no switch
+to “Jeu de rôle”. The six-second ending explicitly reads **Réponse modèle
+complète / dans notre livre TEF Canada / Lien Amazon dans le profil**.
+The advertisement, printed sheet, French Compass wall plaque, original
+reference voices, eight-second reading pause, dialogue gaps and caption
+readability limits are retained. Runtime is reduced by removing exchanges,
+not speeding up voices or cutting readability/pause time.
+
+The new preview uses `builds/tef_canada_a1_short_preview_r1/`, importing nine
+unchanged recordings from r3 and synthesizing only the concise candidate
+closing. `source.duration_limit_seconds: 90` records the user's strict limit:
+the owned build's `qa/check_delivery.py --audio` must verify
+`total_frames < 90 * fps` before Blender. Final checks also require **both
+actual encoded movie durations** below 90 seconds, including intro, entrance,
+all pauses and the CTA. A production run must reuse the approved short
+preview's exact audio/timeline, not the 24-turn full episode.
+Short-excerpt posting drafts are in `../posts/tef_canada_a1_short/`.
+The delivered preview is
+**`builds/tef_canada_a1_short_preview_r1/pilot.mp4`**, with
+`pilot_clean.mp4` alongside it. Both actual exports measure
+**86.5833 seconds / 2,078 frames, 720x1280 at 24 fps**, with 19
+subtitle pages (minimum 1.9167 encoded seconds, maximum 19.5254 characters per
+second). This is **54.4% fewer production frames** than the 4,555-frame full
+version, with no speed-up of speech. Both movies decode completely. Native
+entrance, rigs, speaker cameras, packed desk advertisement, face framing and
+wall-logo checks pass. Actual decoded pixels verify the advertisement at both
+window boundaries, one fixed header at 25 sampled frames, and the opening
+title/reading instructions/CTA at ten samples. The full-size title, book
+ending and logo plus both contact sheets were visually inspected.
+
+All 54 earlier masters and 33 original German pipeline sources remain
+unchanged. The nine reused recordings retain identical prepared audio,
+alignment and lip cues. Fresh independent ASR checks all ten turns; the new
+closing matches exactly, while the inherited schedule homophone and numeral
+formatting differences remain separately reviewed. Four low-confidence
+question-mark tokens remain disclosed; no auditory pronunciation/accent
+review is claimed. Frozen export/source hashes, future exact-audio reuse and
+the supplementary `qa/evidence_manifest.json` verify. This is a preview for
+approval, not production or publication. The full episode and old previews
+remain available.
+
+The requested enlarged-image **frame-only** review is in
+`builds/tef_canada_a1_image_size_frames_r1/`. `comparison.jpg` shows the old
+layouts beside three 720x1280 sample PNGs: `01_full_ad_larger.png` keeps the
+whole original at 608px wide instead of 392px; `02_notice_closeup.png` adds
+an explicitly labelled detail of all printed notice text; and
+`03_dialogue_larger_reference.png` shows that detail beside a same-frame
+candidate portrait, with the original subtitle pixels unchanged. The detail
+omits only decorative photo/background; the whole-ad sample is uncropped.
+These are composited from frozen rendered backgrounds, not newly rendered
+cameras or a revised video. The wider graphic/portrait positions are layout
+proposals, not approved platform-safe placements. `render_samples.py` and
+`review_manifest.json` record crop coordinates, sizes and preservation of
+all 56 video masters. No TTS, Blender or full-video job was run, and shared
+pipeline/episode behavior stays unchanged pending visual review.
+
+The follow-up frame review is in
+`builds/tef_canada_a1_image_size_frames_r2/`. `01_notice_closeup.png` retains
+the user-selected reading detail byte-for-byte.
+`02_dialogue_notice_below_subtitles.png` places the 608px-wide notice below
+the subtitle panel with a 24px gap, removes the old thumbnail and portrait
+inset, and retains the original candidate face/framing. Face, subtitle and
+header pixels are checked against the original frame. `comparison.jpg`
+shows the retained reading detail, previous dialogue proposal and revised
+dialogue. Both 720x1280 samples were inspected; all 56 masters, earlier
+review files, frozen inputs and live Python sources remain unchanged.
+This is still a frame-only proposal, not a revised video or a platform-safe
+placement certification; no shared compositor/episode changes were made.
+
+The smaller lower-reference review is in
+`builds/tef_canada_a1_image_size_frames_r3/`.
+`02_dialogue_compact_notice.png` reduces the notice from 608px to 320px wide,
+below the unchanged subtitles and aligned left. Its panel leaves 266px below
+and 288px to the right; the selected reading close-up is unchanged.
+`comparison.jpg` and `clearance_review.png` show the size change and design
+margins. The latter is explicitly not an official platform safe-zone template.
+TikTok's current guidance says safe zones depend on captions and format;
+Meta's help page required login, so no current Meta geometry was verified.
+The reference/check date and limitation are recorded in `review_manifest.json`.
+Actual Instagram/TikTok placement review is still needed, particularly for
+expanded captions or ad CTA/anchor overlays. Frame/source/master checks pass;
+this remains sample-only with no video, speech or shared pipeline changes.
+The user selected the 320px lower reference on October 24, 2026. Both authored
+TEF episodes now opt into the implemented `notice_detail` layout: the reading
+detail is 608x412 at `(56,370)`, and the dialogue detail is 320x216 at
+`(104,790)`, below the unchanged subtitles with the original face unobscured.
+The source crop is `[236,44,966,538]`; it retains every printed notice line
+and removes only decoration. The physical task sheet still uses the whole
+original. Default whole-image behavior and German caption output are unchanged.
+
+All 192 Python regressions pass, including actual FFmpeg encoding/decoded
+odd-frame transitions, cropped-source comparisons, face visibility and scoped
+caption-bound checks. Both TEF configurations validate, and the native
+interview fixture passes without synthesizing speech or rendering a movie.
+`builds/tef_canada_a1_live_layout_check_20261024/` contains two inspected
+720x1280 frames produced by the current ASS/picture compositor on unchanged
+rendered backgrounds and the real 86.5833-second speech clock. These are
+frame probes, not a new full preview. Earlier movies remain frozen with their
+old sizing; any revised full video requires a fresh build. The approved
+graphic placement is not a platform safe-zone certification.
+
+The commands below document this now-frozen run. Choose an unused directory
+for any further revision.
+
+```bash
+python3 pipeline.py validate --episode episodes/tef_canada_a1_short.json
+python3 pipeline.py build \
+  --episode episodes/tef_canada_a1_short.json \
+  --build builds/tef_canada_a1_short_preview_r1 \
+  --speech-cache-from builds/tef_canada_a1_preview_r3 \
+  --profile preview --jobs 4 --until audio
+```
+
+This is an original book-based promotional excerpt, not an official TEF task
+or a claim that a full examination lasts under 90 seconds. The Section A
+information-seeking framework was checked against the official reference on
+October 24, 2026; its wording and official tasks are not reproduced.
 
 `test_profiles.py` checks French TTS/alignment/ASR API wiring using explicit
 mocks, cache separation, inline references, localization and inactive-cast
@@ -244,10 +434,10 @@ hidden objects, and never synthesizes speech or renders images:
   -- builds/tef_native_fixture_new
 ```
 
-Use a new empty fixture directory. Full French synthesis, measured subtitle
-readability, a complete single-candidate entrance and rendered-pixel review
-remain acceptance gates for the first real TEF preview. Production rendering,
-merging into the DTZ checkout and publication are separate later steps.
+Use a new empty fixture directory. The delivered r2 preview also passes the
+full entrance and encoded-pixel checks, beyond this synthetic fixture.
+Listening/preview approval, production rendering, merging into the DTZ checkout
+and publication remain separate later steps.
 
 ### Full book-based episode: Lerntreffen
 
@@ -483,15 +673,35 @@ independent of animation phases: the second card does not restart the entrance
 or require a second instruction phase. Do not combine the initial picture card
 with the ordinary text `task_card`.
 
+The default `purpose: "description"` preserves that DTZ behavior. For a
+role-play advertisement, set `purpose: "task"`: one examiner reading-card
+prompt must immediately precede the assigned candidate's genuine response,
+such as `action: "ask"`, using the same picture and picture camera. Do not
+label a role-play question as `describe`. Additional candidate references are
+optional, must follow the reveal, and use the picture camera. Unmarked turns
+retain their normal speaker shot. By default, the task card uses the larger whole-image
+box `(104,334)–(496,628)` and localized question-preparation instructions,
+not picture-description or personal-experience prompts.
+
 The reading card shows the **whole** image within `(104,344)–(496,558)` on the
 720×1280 canvas. During the description, a labelled reference image fits within
 `(104,310)–(324,430)`. Separate picture cameras frame the candidate's head to
 its right, inside `(336,284)–(504,570)`, clear of both the image and unchanged
 31px subtitles. The close speaker cameras return for personal answers.
-Pictures are aspect-fitted, not cropped; dimensions and positions are rounded
+Default pictures are aspect-fitted, not cropped; dimensions and positions are rounded
 to even pixels to match the 4:2:0 overlay grid. Portrait stimuli are letterboxed
 within the same rectangles. Full reading cards intentionally cover the room;
 description layouts do not cover the candidate's head.
+
+Task advertisements can explicitly opt into `"layout": "notice_detail"` with
+`"crop": [left, top, right, bottom]`. The TEF advertisement uses
+`[236,44,966,538]`, a labelled 608x412 reading detail and a 320x216 lower
+reference. Crop coordinates must be even integers within the source, and the
+selected region must be at least 392px in both dimensions. This is not available
+for DTZ description pictures; omitting `layout` keeps the whole-image defaults.
+Only the named notice graphic/label styles get their own measured audit
+rectangles. Ordinary headings, speaker labels, subtitles and CTA retain the
+original conservative text-safe bounds and fonts. Source images are not edited.
 
 The exact same source bytes are packed onto the physical table sheets.
 Preflight checks image decodability, resolution, metadata references and
@@ -852,6 +1062,11 @@ simultaneously visible text is also checked for overlap, and the book cover's
 full image rectangle is checked separately. `contact_sheet.jpg` reviews the
 whole edit, while `safe_zone_review.png` shades the excluded areas; neither
 review overlay is baked into the delivered masters.
+
+The opt-in `notice_detail` task layout has explicitly scoped exceptions for
+its reading graphic and lower reference label/panel. Its audit report records
+those rectangles separately, without widening the ordinary text-safe area.
+Those user-approved graphics are not certified platform-safe placements.
 
 Sources checked on October 20, 2026:
 

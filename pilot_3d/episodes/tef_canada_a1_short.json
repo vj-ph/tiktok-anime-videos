@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "id": "tef_canada_speaking_a1_short",
+  "language": "fr",
+  "exam": {"family": "tef_canada", "skill": "speaking", "section": "A"},
+  "presentation": "social",
+  "visual_version": 7,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "Atelier informatique",
+  "label": "TEF Canada · Expression orale · Section A · Extrait",
+  "disclaimer": "Extrait pédagogique indépendant et adapté ; ni sujet officiel ni réponse modèle complète.",
+  "branding": "FRENCH COMPASS",
+  "scene": {
+    "template": "exam_room",
+    "layout": "interview",
+    "base_scene": "../builds/v2/studio.blend",
+    "wall_logo": "../assets/frenchcompass-logo.png",
+    "entrance": true,
+    "observer": false
+  },
+  "header": {
+    "brand": "FRENCH COMPASS · TEF CANADA",
+    "topic": "Section A · Se renseigner"
+  },
+  "pictures": {
+    "atelier_clic_voisin": {
+      "candidate": "candidate_a",
+      "purpose": "task",
+      "layout": "notice_detail",
+      "crop": [236, 44, 966, 538],
+      "path": "../assets/pictures/tef_canada_a1.jpg",
+      "label": "Clic Voisin",
+      "credit": "Annonce : French Compass, livre TEF Canada Expression orale, pratique A1. Réutilisation autorisée.",
+      "permission": "The user confirmed ownership/rights and approved commercial promotional video reuse on 2026-10-24."
+    }
+  },
+  "hook": "Atelier informatique",
+  "task_card": [],
+  "takeaway": [],
+  "takeaway_seconds": 0,
+  "cta": [
+    "Réponse modèle complète",
+    "dans notre livre TEF Canada",
+    "Lien Amazon dans le profil"
+  ],
+  "publication": {
+    "intro": "Publicité pour notre livre. Atelier informatique : comment demander les horaires et le tarif ? Regardez ce court extrait de la pratique A1. Retrouvez la réponse modèle complète dans notre livre TEF Canada.",
+    "disclosure": "Extrait adapté de la pratique A1 du livre French Compass : horaires, durée, tarif et inscription. Les autres questions et la réponse modèle complète sont dans le livre. Simulation indépendante, sans affiliation avec l'organisme du TEF ; ni sujet officiel ni épreuve complète. La limite de cette vidéo et sa pause de lecture ne correspondent pas au temps officiel de l'épreuve.",
+    "hashtags": ["#TEFCanada", "#ExpressionOrale", "#ApprendreLeFrançais", "#FrenchCompass"]
+  },
+  "book_cover": "../../../../french/french_exam_books/tef_canada/speaking/speaking.jpg",
+  "source": {
+    "book": "../../../../french/french_exam_books/tef_canada/speaking/book.md",
+    "exercise": "Practice set A1: Neighbourhood digital workshop",
+    "voice_registry": "../../../../french/french_exam_books/tef_canada/listening/audio/voices/voices.json",
+    "images": {"atelier_clic_voisin": "../../../../french/french_exam_books/tef_canada/speaking/images/01.jpg"},
+    "logo": "../../../../french/logo.png",
+    "full_episode": "tef_canada_a1.json",
+    "scope": "short_excerpt",
+    "duration_limit_seconds": 90,
+    "adaptation": "User-requested promotional excerpt, strictly shorter than 90 seconds including entrance, reading pause and book CTA. Keep the original formal opening, two linked schedule/price exchanges and a short polite close. Preserve the separate full episode and source book. The examiner plays the service contact face-to-face in a fictional telephone situation. This excerpt intentionally omits later task points and does not claim to be a complete model answer or official test-length simulation.",
+    "framework_reference": "https://www.lefrancaisdesaffaires.fr/candidat/test-evaluation-francais/tef-canada/passation/",
+    "framework_checked": "2026-10-24",
+    "coverage": {
+      "Formal opening and purpose": ["03", "04"],
+      "Schedule and course duration": ["05", "06"],
+      "Price and registration": ["07", "08"],
+      "Polite close": ["23", "24"]
+    },
+    "omitted_from_excerpt": [
+      "Equipment and practical activities",
+      "Location, accessibility and transport",
+      "Clarifying vague availability and the full Thursday group",
+      "Waiting list and switching groups"
+    ]
+  },
+  "fps": 24,
+  "intro_seconds": 2.5,
+  "outro_seconds": 6.0,
+  "voices": {
+    "candidate_a": {
+      "audio": "../../../../french/french_exam_books/tef_canada/listening/audio/voices/references/fr_fr_conversation_f01.wav",
+      "voice_id": "fr_fr_conversation_f01",
+      "reference_text": "Samedi, je passe au marché de Grenoble vers 11 heures. J’ai besoin de trois pommes, d’un kilo de carottes et d’un pain complet. Le vendeur accepte la carte bancaire, même pour 4 euros 50."
+    },
+    "examiner": {
+      "audio": "../../../../french/french_exam_books/tef_canada/listening/audio/voices/references/fr_fr_service_m01.wav",
+      "voice_id": "fr_fr_service_m01",
+      "reference_text": "Attention, le guichet de la mairie ferme exceptionnellement à 15 h 45 le 28 février. Les demandes urgentes peuvent être déposées dans la boîte bleue, rue Victor-Hugo. Le service rouvrira mardi à 9 heures."
+    }
+  },
+  "turns": [
+    {
+      "id": "01", "speaker": "examiner", "name": "Examinateur",
+      "text": "Bonjour. Entrez, je vous en prie. Installez-vous.",
+      "camera": "wide", "action": "welcome", "look_at": "candidate_a", "pause_after": 3.0
+    },
+    {
+      "id": "02", "speaker": "examiner", "name": "Examinateur",
+      "text": "Vous avez vu l'annonce de l'Atelier Clic voisin. Vous téléphonez pour obtenir des renseignements. Je joue le rôle de votre interlocuteur.",
+      "camera": "examiner", "action": "explain", "look_at": "candidate_a",
+      "pause_after": 9.2, "picture": "atelier_clic_voisin", "picture_card_delay_seconds": 1.2
+    },
+    {
+      "id": "03", "speaker": "candidate_a", "name": "Candidate",
+      "text": "Bonjour Monsieur. Je vous appelle au sujet de l'atelier numérique. J'aimerais apprendre à mieux utiliser un ordinateur. Pourriez-vous me renseigner ?",
+      "camera": "picture_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2,
+      "picture": "atelier_clic_voisin"
+    },
+    {
+      "id": "04", "speaker": "examiner", "name": "Interlocuteur",
+      "text": "Bonjour. Bien sûr, je vous écoute. Que souhaitez-vous savoir ?",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "05", "speaker": "candidate_a", "name": "Candidate",
+      "text": "L'annonce ne précise pas les horaires. Quels jours proposez-vous cet atelier, et combien de temps dure la formation ?",
+      "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "06", "speaker": "examiner", "name": "Interlocuteur",
+      "text": "Vous choisissez le mardi ou le jeudi, de dix-huit heures à dix-neuf heures trente. Chaque groupe se retrouve une fois par semaine, pendant six semaines.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "07", "speaker": "candidate_a", "name": "Candidate",
+      "text": "Donc, je ne dois pas venir les deux soirs. Quel est le tarif ? Y a-t-il des frais pour le matériel ou pour l'inscription ?",
+      "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "08", "speaker": "examiner", "name": "Interlocuteur",
+      "text": "Non, tout est gratuit. Il faut simplement s'inscrire à l'avance, car le nombre de postes est limité.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    },
+    {
+      "id": "23", "speaker": "candidate_a", "name": "Candidate",
+      "text": "Merci pour ces renseignements. Bonne journée.",
+      "camera": "candidate_a", "action": "answer", "look_at": "examiner", "pause_after": 1.2
+    },
+    {
+      "id": "24", "speaker": "examiner", "name": "Interlocuteur",
+      "text": "Avec plaisir. Bonne journée à vous aussi.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_a", "pause_after": 1.2
+    }
+  ]
+}

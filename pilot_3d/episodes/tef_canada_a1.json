@@ -15,6 +15,7 @@
     "template": "exam_room",
     "layout": "interview",
     "base_scene": "../builds/v2/studio.blend",
+    "wall_logo": "../assets/frenchcompass-logo.png",
     "entrance": true,
     "observer": false
   },
@@ -23,18 +24,20 @@
     "topic": "Section A · Se renseigner"
   },
   "sections": {"A": "Section A · Jeu de rôle"},
+  "pictures": {
+    "atelier_clic_voisin": {
+      "candidate": "candidate_a",
+      "purpose": "task",
+      "layout": "notice_detail",
+      "crop": [236, 44, 966, 538],
+      "path": "../assets/pictures/tef_canada_a1.jpg",
+      "label": "Clic Voisin",
+      "credit": "Annonce : French Compass, livre TEF Canada Expression orale, pratique A1. Réutilisation autorisée.",
+      "permission": "The user confirmed ownership/rights and approved commercial promotional video reuse on 2026-10-24."
+    }
+  },
   "hook": "À vous de poser les questions",
-  "task_title": "ATELIER CLIC VOISIN",
-  "task_summary": "Initiation à l'ordinateur.",
-  "task_hint": "Pause · Préparez vos questions.",
-  "task_card": [
-    "Horaires et durée",
-    "Tarif et inscription",
-    "Matériel et programme",
-    "Accès et transport",
-    "Places disponibles",
-    "Précisions et alternatives"
-  ],
+  "task_card": [],
   "takeaway": [],
   "takeaway_seconds": 0,
   "cta": [
@@ -52,6 +55,8 @@
     "book": "../../../../french/french_exam_books/tef_canada/speaking/book.md",
     "exercise": "Practice set A1: Neighbourhood digital workshop",
     "voice_registry": "../../../../french/french_exam_books/tef_canada/listening/audio/voices/voices.json",
+    "images": {"atelier_clic_voisin": "../../../../french/french_exam_books/tef_canada/speaking/images/01.jpg"},
+    "logo": "../../../../french/logo.png",
     "adaptation": "Original compact Section A role-play based on the single A1 candidate page, hidden partner card and model. One candidate speaks face-to-face with an examiner playing the service representative; the telephone situation is fictional, not a second location. The six-week course, two separate groups, free registration, six shared computers, second-floor accessible room, two Tuesday places and full Thursday group stay consistent with the book. Pedagogical pauses and shortening do not represent official test timing.",
     "framework_reference": "https://www.lefrancaisdesaffaires.fr/candidat/test-evaluation-francais/tef-canada/passation/",
     "framework_checked": "2026-10-22",
@@ -90,12 +95,13 @@
       "id": "02", "speaker": "examiner", "name": "Examinateur",
       "text": "Vous avez vu l'annonce de l'Atelier Clic voisin. Vous téléphonez pour obtenir des renseignements. Je joue le rôle de votre interlocuteur.",
       "camera": "examiner", "action": "explain", "look_at": "candidate_a",
-      "pause_after": 9.2, "task_card_delay_seconds": 1.2
+      "pause_after": 9.2, "picture": "atelier_clic_voisin", "picture_card_delay_seconds": 1.2
     },
     {
       "id": "03", "speaker": "candidate_a", "name": "Candidate", "section": "A",
       "text": "Bonjour Monsieur. Je vous appelle au sujet de l'atelier numérique. J'aimerais apprendre à mieux utiliser un ordinateur. Pourriez-vous me renseigner ?",
-      "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
+      "camera": "picture_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2,
+      "picture": "atelier_clic_voisin"
     },
     {
       "id": "04", "speaker": "examiner", "name": "Interlocuteur", "section": "A",
@@ -164,7 +170,7 @@
     },
     {
       "id": "17", "speaker": "candidate_a", "name": "Candidate", "section": "A",
-      "text": "Quand vous dites quelques places, est-ce dans les deux groupes ? Le jeudi serait plus pratique pour moi.",
+      "text": "Quand vous dites quelques places, est-ce aussi le jeudi ?",
       "camera": "candidate_a", "action": "ask", "look_at": "examiner", "pause_after": 1.2
     },
     {

@@ -7,7 +7,8 @@ from pathlib import Path
 
 from align_words import validate_words
 from episode_config import instruction_turn, section_windows, takeaway_seconds, task_window
-from picture_presentation import picture_windows
+from picture_presentation import (NOTICE_COMPACT_PANEL, NOTICE_REVEAL_PANEL,
+                                  picture_layout, picture_windows)
 from episode_profiles import language_profile
 
 SAFE = (88, 200, 512, 752)
@@ -31,6 +32,11 @@ Style: Box,DejaVu Sans,20,&H00221810,&H000000FF,&H00221810,&H00221810,0,0,0,0,10
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
+NOTICE_STYLE_BOUNDS = {
+    "NoticeReadingBox": NOTICE_REVEAL_PANEL,
+    "NoticeReferenceBox": NOTICE_COMPACT_PANEL,
+    "NoticeReferenceText": (96, 758, 432, 790),
+}
 SOURCES = {
     "checked": "2026-10-20",
     "tiktok": "https://ads.tiktok.com/help/article/tiktok-auction-in-feed-ads?lang=en",
@@ -242,7 +248,13 @@ def validate_layout(episode):
     for picture in episode.get("pictures", {}).values():
         if len(measured_lines(picture["label"], 24, True)) != 1:
             raise ValueError("Picture reading-card labels must fit one line.")
-        if len(measured_lines("Bild · " + picture["label"], 19, True, width=220)) != 1:
+        if picture_layout(picture) == "notice_detail":
+            if len(measured_lines(language_profile(episode)["notice_prefix"] + picture["label"],
+                                  18, True, width=320)) != 1:
+                raise ValueError("Notice detail labels must fit above the 320px reference.")
+            continue
+        if len(measured_lines(language_profile(episode)["picture_prefix"] + picture["label"],
+                              19, True, width=220)) != 1:
             raise ValueError("Compact picture labels must fit beside the speaker.")
     return rows
 
@@ -264,7 +276,15 @@ def make_ass(episode, timeline):
 
     if episode.get("credit_policy") != "publishing_caption":
         raise ValueError("Social exports require explicit accompanying publishing-caption attribution.")
-    lines = [HEADER]
+    header = HEADER
+    if any(picture_layout(p) == "notice_detail" for p in episode.get("pictures", {}).values()):
+        styles = []
+        for name in NOTICE_STYLE_BOUNDS:
+            original = "Text" if name.endswith("Text") else "Box"
+            template = next(line for line in HEADER.splitlines() if line.startswith(f"Style: {original},"))
+            styles.append(template.replace(f"Style: {original},", f"Style: {name},", 1))
+        header = header.replace("[Events]", "\n".join(styles) + "\n[Events]")
+    lines = [header]
     language = language_profile(episode)
 
     def event(start, end, text, style="Text"):
@@ -278,13 +298,15 @@ def make_ass(episode, timeline):
         event(start, end, r"{\pos(0,0)\p1\alpha&H" + opacity + "&}"
               + f"m 96 {top} l 504 {top} 504 {bottom} 96 {bottom}" + r"{\p0}", "Box")
 
-    def text(start, end, value, y, size=26, bold=False, color="FFFFFF"):
-        wrapped = measured_lines(value, size, bold)
-        if y + len(wrapped) * (size + 5) > SAFE[3] - 5:
+    def text(start, end, value, y, size=26, bold=False, color="FFFFFF", *, style="Text", bounds=None):
+        width = RIGHT - LEFT if bounds is None else bounds[2] - LEFT - 8
+        wrapped = measured_lines(value, size, bold, width=width)
+        if (y + len(wrapped) * (size + 5) > (SAFE[3] - 5 if bounds is None else bounds[3])
+                or bounds is not None and y < bounds[1]):
             raise ValueError(f"Text exceeds the safe bottom: {value!r}")
         for index, line in enumerate(wrapped):
             event(start, end, f"{{\\an7\\pos({LEFT},{y + index * (size + 5)})"
-                  f"\\fs{size}\\b{int(bold)}\\c&H{color}&}}" + escape_ass(line))
+                  f"\\fs{size}\\b{int(bold)}\\c&H{color}&}}" + escape_ass(line), style)
 
     def emit(rows, start, end):
         for row in rows:
@@ -327,11 +349,28 @@ def make_ass(episode, timeline):
     for picture in picture_windows(episode, timeline):
         start, end = picture["start"], picture["end"]
         label = episode["pictures"][picture["picture"]]["label"]
+        if picture.get("layout") == "notice_detail":
+            reveal = picture["mode"] == "reveal"
+            style = "NoticeReadingBox" if reveal else "NoticeReferenceBox"
+            left, top, right, bottom = NOTICE_STYLE_BOUNDS[style]
+            event(start, end, r"{\pos(0,0)\p1\alpha&H08&}"
+                  + f"m {left} {top} l {right} {top} {right} {bottom} {left} {bottom}"
+                  + r"{\p0}", style)
+            if reveal:
+                text(start, end, language["notice_title"], 288, 24, True, "CDECD9")
+                text(start, end, language["learning_pause"], 322, 19)
+            else:
+                text(start, end, language["notice_prefix"] + label, 764, 18, True, "CDECD9",
+                     style="NoticeReferenceText", bounds=NOTICE_STYLE_BOUNDS["NoticeReferenceText"])
+            continue
         if picture["mode"] == "reveal":
             panel(start, end, 287, 742, "08")
             text(start, end, label, 303, 24, True, "CDECD9")
-            text(start, end, language["picture_prompt"], 579, 24)
-            text(start, end, language["experience_prompt"], 620, 24)
+            if picture.get("purpose") == "task":
+                text(start, end, language["task_picture_prompt"], 650, 24)
+            else:
+                text(start, end, language["picture_prompt"], 579, 24)
+                text(start, end, language["experience_prompt"], 620, 24)
             text(start, end, language["learning_pause"], 700, 19)
         else:
             event(start, end, r"{\pos(0,0)\p1\alpha&H08&}"
@@ -405,7 +444,7 @@ def audit_ass(build, ass, *, raise_on_unsafe=True):
         f"color=c=black:s=720x1280:r=1:d={len(states)}",
         "-vf", "ass=safe_zone_audit.ass", "-pix_fmt", "gray", "-f", "rawvideo", "pipe:1",
     ]
-    bounds, unsafe = [], []
+    bounds, unsafe, notice_states = [], [], []
     with (build / "safe_zone_audit.log").open("w") as errors:
         process = subprocess.Popen(command, cwd=build, stdout=subprocess.PIPE, stderr=errors)
         try:
@@ -419,7 +458,11 @@ def audit_ass(build, ass, *, raise_on_unsafe=True):
                 bbox = Image.frombytes("L", (720, 1280), bytes(data)).point(lambda p: 255 if p > 5 else 0).getbbox()
                 if bbox is None:
                     raise ValueError(f"Caption state rendered no visible pixels: {state}")
-                if bbox[0] < SAFE[0] or bbox[1] < SAFE[1] or bbox[2] > SAFE[2] or bbox[3] > SAFE[3]:
+                style = state.rsplit("\t", 1)[1]
+                allowed = NOTICE_STYLE_BOUNDS.get(style, SAFE)
+                if style in NOTICE_STYLE_BOUNDS:
+                    notice_states.append({"bounds": bbox, "policy_bounds": allowed, "state": state})
+                if bbox[0] < allowed[0] or bbox[1] < allowed[1] or bbox[2] > allowed[2] or bbox[3] > allowed[3]:
                     unsafe.append({"bounds": bbox, "state": state})
                 bounds.append({"bounds": bbox, "state": state})
             if process.wait() != 0:
@@ -433,6 +476,15 @@ def audit_ass(build, ass, *, raise_on_unsafe=True):
               "method": "Every unique libass-rendered text, highlighted-word state and panel pixel bounds.",
               "states_checked": len(bounds), "states": bounds, "all_inside": not unsafe,
               "unsafe_states": unsafe}
+    if notice_states:
+        report["notice_graphic_policy"] = {
+            "states": notice_states, "bounds": NOTICE_STYLE_BOUNDS,
+            "standard_states_inside_baseline": not any(
+                item["state"].rsplit("\t", 1)[1] not in NOTICE_STYLE_BOUNDS for item in unsafe),
+            "note": "Explicit user-approved notice graphic bounds outside the baseline rectangle; "
+                    "not Instagram/TikTok safe-zone certification. Ordinary text/subtitle/panel "
+                    "states still use the unchanged baseline rectangle.",
+        }
     by_state = {item["state"]: item["bounds"] for item in bounds}
     text_events = []
 
@@ -445,9 +497,9 @@ def audit_ass(build, ass, *, raise_on_unsafe=True):
         if not line.startswith("Dialogue:"):
             continue
         fields = line.split(",", 9)
-        if fields[3] == "Text":
+        if fields[3] in ("Text", "NoticeReferenceText"):
             text_events.append((centiseconds(fields[1]), centiseconds(fields[2]),
-                                by_state[fields[-1] + "\tText"], fields[-1]))
+                                by_state[fields[-1] + "\t" + fields[3]], fields[-1]))
     overlaps = []
     for index, a in enumerate(text_events):
         for b in text_events[index + 1:]:

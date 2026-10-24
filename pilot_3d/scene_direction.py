@@ -1,7 +1,7 @@
 """Speech-led acting and restrained art direction for the reusable exam room."""
 
 import math
-from episode_profiles import ACTORS, active_actors, language_profile, scene_layout
+from episode_profiles import ACTORS, active_actors, language_code, language_profile, scene_layout
 
 VERSION = 7
 GESTURE_LIMITS = {
@@ -203,7 +203,8 @@ def configure_cameras(scene, episode=None, timeline=None):
         from picture_presentation import FACE_BOX, PICTURE_CAMERAS
         from studio_characters import StudioCharacter
         for role, name in PICTURE_CAMERAS.items():
-            turn = next((t for t in timeline["turns"] if t["speaker"] == role and t["action"] == "describe"), None)
+            turn = next((t for t in timeline["turns"]
+                         if t["speaker"] == role and t.get("camera") == name and t.get("picture")), None)
             if turn is None:
                 continue
             scene.frame_set(1 + round((turn["start"] + .5) * timeline["fps"]))
@@ -335,7 +336,8 @@ def room_design(scene, episode):
             (width + .035, .025, height + .035), mats["ivory"], .006)
         bpy.ops.mesh.primitive_plane_add(size=1, location=center, rotation=(math.pi / 2, 0, 0))
         plane = bpy.context.object
-        plane.name = "Direction Deutsch Kompass wall logo"
+        plane.name = ("Direction Deutsch Kompass wall logo" if language_code(episode) == "de"
+                      else "Direction brand wall logo")
         plane.scale = (width, height, 1)
         logo_mat = material("Direction original logo print", palette["ivory"], .78)
         nodes, links = logo_mat.node_tree.nodes, logo_mat.node_tree.links

@@ -45,6 +45,9 @@ def review_pictures(build, episode, timeline):
     for window in windows:
         x, y, right, bottom = window["bounds"]
         with Image.open(window["path"]) as source:
+            source = source.convert("RGB")
+            if "crop" in window:
+                source = source.crop(window["crop"])
             reference = np.asarray(source.convert("RGB").resize(
                 (right-x, bottom-y), Image.Resampling.LANCZOS)).astype(float)
         comparisons = []

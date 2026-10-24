@@ -255,7 +255,13 @@ def mux(build, episode_path=None):
                                   "-map", "[video]", "-map", "1:a:0"] + encoding + ["pilot.mp4"], cwd=build)
             atomic_json(build / "picture_timing_report.json", {
                 "fps": timeline["fps"], "windows": windows,
-                "policy": "Whole image, aspect-fit without cropping; output-frame enables, end exclusive.",
+                "policy": ("Explicit notice crop or whole image, aspect-fit; output-frame enables, end exclusive."
+                           if any(w.get("layout") == "notice_detail" for w in windows) else
+                           "Whole image, aspect-fit without cropping; output-frame enables, end exclusive."),
+                **({"notice_detail_policy": "Explicit task-only source crops, aspect-fit; "
+                     "full original retained on the physical task sheet. User-approved graphic bounds, "
+                     "not platform safe-zone certification."}
+                   if any(w.get("layout") == "notice_detail" for w in windows) else {}),
             })
             report_path = build / "safe_zone_report.json"
             report = json.loads(report_path.read_text())

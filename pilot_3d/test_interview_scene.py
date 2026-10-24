@@ -26,11 +26,15 @@ def main():
     build.mkdir(parents=True, exist_ok=True)
     episode = read_episode(ROOT / "episodes/tef_canada_a1.json")
     episode.update(id="synthetic_interview_fixture", intro_seconds=0, outro_seconds=0,
-                   task_card=[], cta=[], turns=episode["turns"][:3])
+                   task_card=[], pictures={}, cta=[], turns=episode["turns"][:3])
     episode["scene"]["entrance"] = False
     for turn, text in zip(episode["turns"], ("Bonjour Madame.", "Commencez maintenant.", "Bonjour Monsieur.")):
         turn.update(text=text, pause_after=0)
         turn.pop("task_card_delay_seconds", None)
+        turn.pop("picture_card_delay_seconds", None)
+        turn.pop("picture", None)
+        if turn["camera"] == "picture_a":
+            turn["camera"] = "candidate_a"
     audio = build / "synthetic_silence.wav"
     with wave.open(str(audio), "wb") as output:
         output.setparams((1, 2, 48000, 0, "NONE", "not compressed"))

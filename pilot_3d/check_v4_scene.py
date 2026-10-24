@@ -1,5 +1,6 @@
 """Blender integration checks for the full practice episode, not only rig controls."""
 
+import hashlib
 import json
 import math
 import re
@@ -245,8 +246,6 @@ def check(build):
         from picture_presentation import FACE_BOX
         from episode_config import CAMERA_PREFIXES
         from prepare_audio import sha256_file
-        import hashlib
-
         props = manifest["room_design"]["pictures"]
         for prop in props:
             image = bpy.data.images[prop["packed_image"]]
@@ -257,7 +256,7 @@ def check(build):
                 raise ValueError("Physical task picture is missing, changed or not packed.")
         checked = []
         for turn in timeline["turns"]:
-            if turn["action"] != "describe":
+            if turn.get("camera") not in ("picture_a", "picture_b"):
                 continue
             actor = actors[turn["speaker"]]
             camera = next(obj for obj in scene.objects if obj.type == "CAMERA"
@@ -288,7 +287,9 @@ def check(build):
             logo = design["logo"]
             plane = scene.objects[logo["object"]]
             image = bpy.data.images[logo["packed_image"]]
-            if not image.packed_file or plane.get("original_logo_sha256") != sha256_file(Path(logo["path"])):
+            expected = sha256_file(Path(logo["path"]))
+            if (not image.packed_file or plane.get("original_logo_sha256") != expected
+                    or hashlib.sha256(image.packed_file.data).hexdigest() != expected):
                 raise ValueError("The original wall logo is missing, changed or not packed into the scene.")
             camera = next(obj for obj in scene.objects if obj.type == "CAMERA" and obj.name.startswith("04"))
             projected = [world_to_camera_view(scene, camera, plane.matrix_world @ Vector(corner))
