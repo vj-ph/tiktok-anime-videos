@@ -13,7 +13,9 @@ from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from pathlib import Path
 
 from build_paths import BUILDS, build_directory, resolve_build_reference
-from runtime_config import RENDER_DEVICES, caption_fonts, qwen_python, render_expression, tool_path
+from runtime_config import RENDER_DEVICES, RENDER_JOBS, caption_fonts, qwen_python, render_expression, tool_path
+from generation_runtime import (cancel_processes, generation_job, render_progress,
+                                run_process, stage_completed)
 ROOT = Path(__file__).resolve().parent
 RIG_CREDITS = (
     "Snow Rig (CC) Blender Foundation | studio.blender.org",
@@ -24,7 +26,7 @@ RIG_CREDITS = (
 
 def run(command, **kwargs):
     print("+", " ".join(map(str, command)), flush=True)
-    subprocess.run(list(map(str, command)), check=True, **kwargs)
+    run_process(command, check=True, **kwargs)
 
 
 def ass_time(seconds):
@@ -336,6 +338,7 @@ def mux(build, episode_path=None):
     print(f"Created {build / 'pilot.mp4'} ({timeline['duration']:.2f}s, {expected} frames)")
 
 
+@generation_job
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("stage", choices=("audio", "scene", "stills", "frames", "mux", "all"))
@@ -347,7 +350,7 @@ def main():
     parser.add_argument("--samples", type=int, default=16)
     parser.add_argument("--motion-step", type=int, choices=(1, 2), default=2,
                         help="2 renders animation on twos (12 poses/sec at 24 fps); 1 renders every frame.")
-    parser.add_argument("--jobs", type=int, choices=(1, 2, 4), default=2,
+    parser.add_argument("--jobs", type=int, choices=RENDER_JOBS, default=2,
                         help="Independent Blender frame-range workers (four CPU threads each).")
     parser.add_argument("--qwen-python", default=str(qwen_python()))
     parser.add_argument("--render-device", choices=RENDER_DEVICES, default="CPU")
@@ -359,6 +362,7 @@ def main():
     blender = tool_path("blender")
     if args.stage in ("audio", "all"):
         run([args.qwen_python, ROOT / "prepare_audio.py", "--episode", args.episode, "--output-dir", build, "--rhubarb", tool_path("rhubarb"), "--device", args.speech_device])
+        stage_completed("audio")
     if args.stage in ("scene", "all"):
         load_inputs(build, args.episode)
         run([blender, "-b", "--disable-autoexec", "-t", "4", "--python-exit-code", "1", "--python", ROOT / "build_scene.py", "--", "--episode", args.episode, "--build", build, "--width", args.width, "--height", args.height, "--engine", args.engine, "--samples", args.samples])
@@ -372,6 +376,7 @@ def main():
                 for name in ("build_scene.py", "studio_characters.py")
             }
         }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        stage_completed("scene")
     if args.stage in ("frames", "stills", "all"):
         episode, timeline = load_inputs(build, args.episode)
         manifest = json.loads((build / "scene_manifest.json").read_text(encoding="utf-8"))
@@ -415,27 +420,37 @@ def main():
                            "-f", ",".join(map(str, chunk))]
                 with log.open("w") as output:
                     print(f"Rendering frames {chunk[0]}–{chunk[-1]}; log: {log}", flush=True)
-                    result = subprocess.run(list(map(str, command)), stdout=output, stderr=subprocess.STDOUT)
+                    result = run_process(command, stdout=output, stderr=subprocess.STDOUT)
                 if result.returncode:
                     raise RuntimeError(f"Blender exited {result.returncode}; {log}\n" + "\n".join(log.read_text(encoding="utf-8").splitlines()[-30:]))
 
             with ThreadPoolExecutor(max_workers=args.jobs) as workers:
                 pending = {workers.submit(render_chunk, chunk) for chunk in chunks}
-                while pending:
-                    completed, pending = wait(pending, timeout=60, return_when=FIRST_COMPLETED)
-                    for result in completed:
-                        result.result()
-                    count = sum(valid_frame(
-                        build / "frames" / f"frame_{frame:04d}.png", manifest["width"], manifest["height"]
-                    ) for frame in all_frames)
-                    print(f"Rendered frames: {count}/{len(all_frames)}", flush=True)
+                try:
+                    while pending:
+                        completed, pending = wait(pending, timeout=30, return_when=FIRST_COMPLETED)
+                        for result in completed:
+                            result.result()
+                        count = sum(valid_frame(
+                            build / "frames" / f"frame_{frame:04d}.png", manifest["width"], manifest["height"]
+                        ) for frame in all_frames)
+                        print(f"Rendered frames: {count}/{len(all_frames)}", flush=True)
+                        render_progress(count, len(all_frames))
+                except BaseException:
+                    cancel_processes()
+                    for future in pending:
+                        future.cancel()
+                    raise
+            render_progress(len(all_frames), len(all_frames))
             if scene_hash(build) != before:
                 raise RuntimeError("Saved scene changed during frame rendering; render again.")
             frame_manifest.write_text(json.dumps({
                 "scene": manifest, "blend_sha256": before
             }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        stage_completed("frames")
     if args.stage in ("mux", "all"):
         mux(build, args.episode)
+        stage_completed("export")
 
 
 if __name__ == "__main__":

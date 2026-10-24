@@ -21,6 +21,7 @@ from episode_config import (ACTORS, CAMERA_PREFIXES, PROFILES, check_timeline, e
 from entrance import HINGE, door_angle, doorway_geometry, entrance_plan, path_at, walk_pose
 from picture_presentation import add_table_pictures, picture_windows
 from episode_profiles import active_actors, overview_camera
+from generation_runtime import generation_job, stage_completed
 
 
 def isolated(source, build):
@@ -603,6 +604,7 @@ def promo(build, source=None):
     print(f"Promo: {timeline['duration']:.3f}s, turns {[turn['id'] for turn in timeline['turns']]}")
 
 
+@generation_job
 def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:]
     parser = argparse.ArgumentParser(description=__doc__)
@@ -622,12 +624,15 @@ def main():
             promo(args.build.resolve(), args.source.resolve())
         else:
             revise_cameras(args.build.resolve(), args.source.resolve(), args.episode)
+        stage_completed("promo" if args.stage == "promo" else "scene")
         return
     if args.stage == "scene":
         scene_build(args.build.resolve(), args.episode, args.profile)
+        stage_completed("scene")
         return
     {"v3": social_exchange, "scene": scene_build, "promo": promo,
      "repair-door": repair_door}[args.stage](args.build.resolve())
+    stage_completed("export" if args.stage == "v3" else "scene")
 
 
 if __name__ == "__main__":

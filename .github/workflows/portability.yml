@@ -29,7 +29,9 @@ jobs:
       - name: Run portable unit and encoded-video checks
         run: >-
           python -X utf8 -m unittest
-          test_runtime test_audio test_direction test_entrance test_build_paths
+          test_runtime test_generation_runtime test_benchmark_workers
+          test_audio test_direction test_entrance test_build_paths
           test_render test_social test_profiles
           test_episode_config.PipelineCheckpointTests
+          test_episode_config.EpisodeConfigTests.test_authored_duration_limit_is_strict_on_the_encoded_frame_clock
           test_tef_episode.TefEpisodeTests.test_real_encoded_task_card_and_reference_change_on_exact_odd_frames

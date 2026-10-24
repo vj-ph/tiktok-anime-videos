@@ -26,6 +26,138 @@ Start with `--jobs 1` on one GPU. Speech defaults to CPU independently;
 speech review. A requested but unavailable Blender GPU fails rather than
 silently switching to CPU.
 
+### Generation runtime controls
+
+`pipeline.py build`, the `render.py` and `produce_v4.py` entry points, and
+`benchmark_workers.py` share scoped runtime controls. Native Windows runs
+prevent automatic compute sleep **only while on AC power**, without keeping
+the display on or changing the power plan. AC/battery transitions are checked
+once per second; requests are released on completion, failure and graceful
+cancellation. Linux/WSL2 do not acquire Windows power requests.
+Cancellation cleans up only the run's owned subprocess trees; completed
+checkpoints and frames remain available for compatible resumes.
+
+Notifications are disabled unless both `VIDEO_NTFY_SERVER` and
+`VIDEO_NTFY_TOPIC` are configured externally. For example, in PowerShell:
+
+```powershell
+$env:VIDEO_NTFY_SERVER = "https://ntfy.example.org"
+$env:VIDEO_NTFY_TOPIC = "video-generation"
+# Optional: set VIDEO_NTFY_TOKEN through your environment/secret manager.
+```
+
+In Linux/WSL2, export the same variables before invoking Python. Topics use
+1-64 letters, digits, underscores or hyphens. Only fixed generic run/stage
+statuses and 25/50/75/100% render milestones are sent: never episode text,
+file paths, media, exception details or machine identifiers. Milestones are
+deduplicated per process/run and throttled to 30 seconds, except 100%.
+Verified reused stages are identified as checkpoints. A single top-level
+run owns start and terminal notifications; child renderers report milestones.
+
+Delivery is best-effort: a bounded 32-message queue, no retries or HTTP
+redirects, a two-second network-I/O timeout, and at most one second of sender
+shutdown waiting. Slow DNS/network operations run on a daemon thread and
+cannot stall generation. Terminal status takes priority when the queue fills.
+Network/configuration failures produce generic local warnings, not failed
+videos. Hard process termination, OS shutdown and power loss cannot guarantee
+a terminal notification; Windows closes the process's power requests.
+
+Benchmark an existing baked scene in a **new sibling directory**:
+
+```powershell
+.\.venv\Scripts\python.exe benchmark_workers.py `
+  --build builds\tef_canada_a1_windows_preview_r1 `
+  --output builds\tef_canada_a1_worker_benchmark_r1 `
+  --render-device HIP --frame-count 48 --repeats 2
+```
+
+The command compares 1, 2 and 4 workers, each with four CPU threads, on the
+same evenly spaced native frames. Repeat order reverses to reduce order bias.
+It does not change scene quality or rendering defaults. `benchmark.json`
+records source/code hashes, exact frames/settings, startup and aggregate warm
+throughput, sampled CPU/GPU/memory and the fastest fully verified worker count
+by median warm throughput. Every PNG is decoded and checked for size. Failed
+or cancelled trials retain their isolated logs/outputs and never alter the
+source delivery. Windows GPU counters cover the owned worker PIDs, but their
+engine activity can overlap: `gpu_owned_engine_activity_index` is a raw sum,
+not physical GPU utilization, and may exceed 100. Physical utilization stays
+null on Windows rather than inventing a capacity percentage. Linux AMD sysfs
+counters are device-wide. Other unavailable metrics, including unsupported
+WSL counters, remain null.
+
+Use `--jobs 2 4 8` to test the larger configuration. Benchmarks reserve at
+least 4 GiB of free system RAM and limit each trial to 600 seconds by default
+(`--min-free-memory-gib`, `--trial-timeout`). A guard failure stops only that
+trial's owned workers; remaining trials continue, failed trials cannot win,
+and the final command reports partial failure rather than inventing a rate.
+Use `--expect-profile production` to reject accidentally selected preview
+scenes. Native scene dimensions, sample count and fixed CPU threads are
+checked against the actual rendered worker settings.
+
+The October 24, 2026 AMD Radeon 860M **preview-only** run used 48 frames per
+trial, two trials per configuration, 360x640, two samples and four CPU threads
+per worker:
+
+| Workers | Median warm frames/min | Peak worker resident RAM |
+| --- | --- | --- |
+| 1 | 27.47 | 3.24 GiB |
+| 2 | 45.95 | 6.47 GiB |
+| 4 | 67.03 | 13.46 GiB |
+
+Four workers were fastest among those tested, about 46% faster than two.
+Use `--jobs 4` for this measured preview workload. Results, measured-code
+snapshots and 288 verified images are in
+`builds/tef_canada_a1_worker_benchmark_r1/`. Original delivery hashes still
+match; the maximum mean RGB difference from the original native frames is
+0.000064 on a 0-255 scale.
+
+This is **not a production-quality benchmark**. Production uses 720x1280,
+16 samples and every frame, versus animation on twos for preview; measure a
+production-baked scene independently. The current CLIs support 1/2/4/8
+workers; 16/32 are not supported or tested.
+
+The genuine **production** benchmark used the 86.583333-second TEF short
+episode: 720x1280, 16 samples, per-frame animation, the same 24 native frames
+per trial, two reversed-order rounds and four CPU threads per worker.
+
+| Workers | Median warm frames/min | Peak combined worker resident RAM |
+| --- | --- | --- |
+| 2 | 7.36 | 7.51 GiB |
+| 4 | 9.47 | 15.56 GiB |
+| 8 | Unverified: both attempts hit the 4 GiB free-RAM reserve | Not a completed trial |
+
+Four workers were about 29% faster than two on this production workload.
+Median end-to-end throughput, including startup, was 7.22/9.10 frames/minute
+for 2/4 workers. Eight workers were stopped safely, not measured as slower or
+recommended. The command returned partial failure because both requested
+8-worker trials were unverified; the recommendation uses only complete,
+verified configurations. Defaults are unchanged.
+
+Results, 96 decoded production PNGs, hashes and measured-code snapshots are
+in `builds/tef_canada_a1_short_production_worker_benchmark_r1/`. Their maximum
+mean RGB difference between trials is 0.000066 on a 0-255 scale (maximum
+single-channel error 1). The original 19 delivery hashes, 19 frozen source
+hashes and all 288 preview-benchmark PNG hashes remain unchanged.
+The measured code predates the GPU-counter labeling correction above:
+the saved `gpu_busiest_engine_percent` sums are **not valid physical GPU
+utilization**. This caveat is recorded in `verification.json`; throughput
+and RAM measurements are unaffected. Archived measured code is preserved.
+
+For the under-90-second TEF promotional excerpt, select
+`episodes/tef_canada_a1_short.json` (10 turns), not the full 24-turn
+`tef_canada_a1.json`. An authored `source.duration_limit_seconds` is enforced
+strictly against the measured encoded frame clock during timeline validation,
+before scene baking. The short episode declares 90 seconds, including its
+entrance, reading pause and CTA. It is not acceptable to infer this duration
+from the filename or an older machine's timing.
+
+## Development workflow
+
+The project-local `pilot-3d-dev` skill in
+`.github/skills/pilot-3d-dev/SKILL.md` (relative to the repository root) covers
+development, testing and build-preservation rules. Record project tasks in
+[`plan/TODO.md`](../plan/TODO.md), not only a session-internal todo list.
+
 ## Project and build layout
 
 Keep Python scripts, episode JSON, assets and tools separate from generated runs:

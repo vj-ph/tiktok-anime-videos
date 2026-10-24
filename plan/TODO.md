@@ -1,6 +1,6 @@
 # Publication TODO
 
-Status recorded: October 22, 2026. Paths below are relative to the repository root.
+Status recorded: October 24, 2026. Paths below are relative to the repository root.
 
 ## Agreed publishing approach
 
@@ -78,11 +78,17 @@ Leave running production jobs unchanged; keep heavy CPU builds sequential.
 - [ ] Add reviewed ÖIF/fide and TCF IRN speaking configurations.
 - [ ] Design and implement explicit DTZ/ÖIF/fide listening templates, including learner response time and answer reveal; listening is not implemented by relabelling a speaking episode.
 
+## Development workflow
+
+- [x] Create the project-local `pilot-3d-dev` skill at `.github/skills/pilot-3d-dev/SKILL.md`, covering implementation entry points, build/audio preservation, focused validation and persistent task tracking in this file rather than only a session-internal list.
+
 ## Video generation runtime
 
-- [ ] Benchmark 1, 2 and 4 HIP render workers on identical representative frames with unchanged preview settings and CPU threads per worker. Separate startup from warm rendering; record frames/minute, CPU/GPU utilization and memory; verify outputs and select the fastest stable configuration. Use isolated outputs and preserve completed builds.
-- [ ] On Windows while plugged into AC power, prevent automatic compute sleep during video generation while allowing the display to turn off. Release the blocker on completion, failure or cancellation; leave permanent power settings and battery-mode behavior unchanged. Verify acquisition/release and display-off behavior.
-- [ ] Add optional ntfy notifications for generation start, stage completion, render milestones, completion, failure and cancellation. Configure the server/topic externally, send generic status without scripts, file paths or video content, and use bounded best-effort delivery so notification errors never interrupt generation. Test milestone throttling and terminal outcomes, and document setup.
+- [x] Attempt production benchmarking with 2, 4 and 8 HIP workers on the genuine 720x1280/16-sample/per-frame bake of the 10-turn TEF short excerpt. Its measured timeline is 86.583333 seconds, strictly below 90; the authored cap is now enforced before baking. Two reversed-order 24-frame trials measured 7.36/9.47 median warm frames/min for 2/4 workers. Both 8-worker attempts hit the 4 GiB free-RAM reserve and were safely stopped, so eight remains unverified, not recommended. All 96 successful PNGs and original delivery/preview hashes verify. Reports, measured-code snapshots and the overlapping-GPU-counter caveat are in `pilot_3d/builds/tef_canada_a1_short_production_worker_benchmark_r1/`; defaults are unchanged.
+- [ ] Benchmark Qwen TTS CPU synthesis with 1, 2, 4 and 8 intra-operation threads and one speech worker, initially holding inter-operation threads fixed. Use fresh processes, identical short/medium/long utterances, reference voices, model and generation settings; bypass speech-cache hits and separate model loading, voice-prompt setup, warmup and measured synthesis. Repeat trials and compare median synthesis time, generated-audio seconds per wall-clock second, memory and speech quality. Keep outputs isolated and preserve existing deliveries; retain the four-thread default until a reliable improvement is verified. Evaluate multiple speech workers separately afterward.
+- [x] Benchmark 1, 2 and 4 HIP render workers on identical representative frames with unchanged preview settings and CPU threads per worker. Two 48-frame trials per configuration measured median warm throughput of 27.47/45.95/67.03 frames per minute; four workers are fastest for this preview workload. All 288 PNGs decode and closely match the original frames; original delivery/source hashes verify. Startup, CPU/GPU/memory, measured-code snapshots and output hashes are recorded in `pilot_3d/builds/tef_canada_a1_worker_benchmark_r1/`. GPU process-counter sums are raw activity indices, not physical utilization; see the production benchmark caveat. 16/32 workers remain unsupported and untested.
+- [x] On Windows while plugged into AC power, prevent automatic compute sleep during video generation while allowing the display to turn off. Scoped system/execution requests track AC/battery transitions, release on completion/failure/cancellation, and leave permanent settings untouched. Native request-handle and execution-state tests verify acquisition/release with no display-required flag; mocked tests cover battery transitions and terminal outcomes.
+- [x] Add optional ntfy notifications for generation start, stage completion, render milestones, completion, failure and cancellation. External server/topic/token settings, fixed generic messages, bounded daemon delivery and throttled milestones are implemented across the generation entry points. Local HTTP/error/blocked-delivery, lifecycle and throttling tests pass; setup is documented. No external notification service is configured.
 
 ## Before each publication
 

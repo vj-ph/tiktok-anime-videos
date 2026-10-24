@@ -2,6 +2,7 @@
 """Validate or build an episode-driven exam-room video without editing Python."""
 
 import argparse
+from contextlib import nullcontext
 import importlib.util
 import json
 import os
@@ -17,11 +18,12 @@ sys.path.insert(0, str(ROOT))
 from build_paths import build_directory, resolve_build_reference
 from episode_config import PROFILES, check_timeline, read_episode, validate_template
 from episode_profiles import language_profile
-from runtime_config import RENDER_DEVICES, check_render_device, font_path, qwen_python, tool_path
+from runtime_config import RENDER_DEVICES, RENDER_JOBS, check_render_device, font_path, qwen_python, tool_path
+from generation_runtime import GenerationRun, generation_job, run_process, stage_completed
 from prepare_audio import (atomic_json, atomic_text, content_hash, inspect_wav,
                            load_audio_cache, make_cache_payload, sha256_file)
 
-SOURCES = ("pipeline.py", "runtime_config.py", "build_paths.py", "episode_config.py", "episode_profiles.py", "picture_presentation.py", "prepare_audio.py", "align_words.py", "check_speech.py",
+SOURCES = ("pipeline.py", "runtime_config.py", "generation_runtime.py", "build_paths.py", "episode_config.py", "episode_profiles.py", "picture_presentation.py", "prepare_audio.py", "align_words.py", "check_speech.py",
            "produce_v4.py", "render.py", "social_captions.py", "review_social.py",
            "check_v4_scene.py", "studio_characters.py", "polish_exchange.py",
            "scene_direction.py", "entrance.py", "build_scene.py")
@@ -58,7 +60,7 @@ def preflight(path):
 
 def run_command(command, log):
     with log.open("w") as output:
-        result = subprocess.run(list(map(str, command)), cwd=ROOT, stdout=output, stderr=subprocess.STDOUT)
+        result = run_process(command, cwd=ROOT, stdout=output, stderr=subprocess.STDOUT)
     if result.returncode:
         raise RuntimeError(f"Stage failed ({result.returncode}); see {log}\n"
                            + "\n".join(log.read_text(errors="replace", encoding="utf-8").splitlines()[-30:]))
@@ -156,6 +158,7 @@ def audio_reuse_spec(episode, source):
             "policy": "Exact full dialogue and measured alignment copied; no resynthesis or retiming."}
 
 
+@generation_job
 def build_episode(path, build, profile="preview", jobs=4, with_promo=False, until="export",
                   reuse_audio=None, speech_cache_from=None, render_device="CPU", speech_device="cpu"):
     from render import valid_frame
@@ -210,6 +213,7 @@ def build_episode(path, build, profile="preview", jobs=4, with_promo=False, unti
                 (build / value).is_file() and sha256_file(build / value) == digest
                 for value, digest in previous["outputs"].items()):
             print(f"{name}: using verified checkpoint", flush=True)
+            stage_completed(name, reused=True, force=True)
             return
         print(f"{name}: running", flush=True)
         started = time.monotonic()
@@ -220,6 +224,7 @@ def build_episode(path, build, profile="preview", jobs=4, with_promo=False, unti
         state["stages"][name] = {"seconds": time.monotonic() - started,
                                 "outputs": {value: sha256_file(build / value) for value in outputs}}
         atomic_json(state_path, state)
+        stage_completed(name, force=True)
 
     def command(name, args):
         return lambda: run_command(args, build / f"pipeline_{name}.log")
@@ -315,6 +320,7 @@ def build_episode(path, build, profile="preview", jobs=4, with_promo=False, unti
                         build / "pipeline_promo.log")
             run_command([python, ROOT / "review_social.py", "--build", promo_build], build / "pipeline_promo_review.log")
             freeze_delivery(promo_build)
+        stage_completed("promo", force=True)
     print(f"Ready: {build / 'pilot.mp4'}", flush=True)
     return build
 
@@ -326,7 +332,7 @@ def main():
     parser.add_argument("--build", type=Path,
                         help="Run directory; a project-level name is placed under builds/.")
     parser.add_argument("--profile", choices=tuple(PROFILES), default="preview")
-    parser.add_argument("--jobs", type=int, choices=(1, 2, 4), default=4)
+    parser.add_argument("--jobs", type=int, choices=RENDER_JOBS, default=4)
     parser.add_argument("--render-device", choices=RENDER_DEVICES, default="CPU")
     parser.add_argument("--speech-device", default="cpu", help="PyTorch device, independent of the Blender backend.")
     parser.add_argument("--promo", action="store_true")
@@ -340,7 +346,9 @@ def main():
     if not runtime.is_file():
         parser.error(f"TTS Python not found: {runtime}")
     if Path(sys.executable).resolve() != runtime:
-        raise SystemExit(subprocess.call([str(runtime), str(Path(__file__).resolve()), *sys.argv[1:]]))
+        with GenerationRun(cleanup_python=runtime) if args.command == "build" else nullcontext():
+            result = run_process([runtime, Path(__file__).resolve(), *sys.argv[1:]])
+            raise SystemExit(result.returncode)
     os.environ.setdefault("LP_NUM_THREADS", "4")
     try:
         if args.command == "validate":
@@ -353,6 +361,8 @@ def main():
         else:
             build_episode(args.episode, args.build, args.profile, args.jobs, args.promo, args.until,
                           args.reuse_audio, args.speech_cache_from, args.render_device, args.speech_device)
+    except KeyboardInterrupt:
+        parser.exit(130, "Generation cancelled; verified checkpoints are preserved.\n")
     except (ValueError, OSError, RuntimeError, subprocess.CalledProcessError) as error:
         parser.exit(1, f"Error: {error}\n")
 

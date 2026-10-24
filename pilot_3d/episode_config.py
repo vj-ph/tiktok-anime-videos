@@ -18,6 +18,13 @@ PROFILES = {
 }
 
 
+def duration_limit(episode):
+    source = episode.get("source")
+    if not isinstance(source, dict) or "duration_limit_seconds" not in source:
+        return None
+    return number(source["duration_limit_seconds"], "source.duration_limit_seconds", positive=True)
+
+
 def read_episode(path):
     path = resolve_build_reference(path).resolve(strict=True)
     episode = json.loads(path.read_text(encoding="utf-8"))
@@ -118,6 +125,7 @@ def promo_settings(episode):
 
 def validate_template(episode, *, check_assets=False):
     validate_episode(episode)
+    duration_limit(episode)
     language_code(episode)
     for field in ("id", "title", "label", "branding", "disclaimer"):
         nonempty(episode.get(field), field)
@@ -272,6 +280,11 @@ def check_timeline(episode, timeline):
     for expected, actual in zip(episode["turns"], timeline["turns"]):
         if any(actual.get(key) != value for key, value in expected.items()):
             raise ValueError(f"Turn {expected['id']}: episode and prepared timeline differ; regenerate audio.")
+    limit = duration_limit(episode)
+    if limit is not None:
+        encoded_seconds = timeline["total_frames"] / timeline["fps"]
+        if encoded_seconds >= limit:
+            raise ValueError(f"Encoded episode duration {encoded_seconds:.3f}s must be strictly below {limit:g}s.")
     from entrance import entrance_plan
     entrance_plan(episode, timeline)
     if episode.get("task_card") and task_window(timeline) is None:

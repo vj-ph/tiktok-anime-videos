@@ -118,7 +118,7 @@ class RuntimeTests(unittest.TestCase):
 
     def test_gpu_probe_propagates_failure(self):
         with patch("runtime_config.tool_path", return_value=Path(sys.executable)):
-            with patch("runtime_config.subprocess.run", side_effect=subprocess.CalledProcessError(1, "blender")):
+            with patch("runtime_config.run_process", side_effect=subprocess.CalledProcessError(1, "blender")):
                 with self.assertRaises(subprocess.CalledProcessError):
                     runtime.check_render_device("HIP")
 
@@ -248,7 +248,7 @@ class RenderWorkerTests(unittest.TestCase):
             def invoke(backend):
                 argv = ["render.py", "frames", "--episode", str(episode_file), "--build", str(root),
                         "--jobs", "1", "--render-device", backend]
-                with patch.object(sys, "argv", argv), patch("render.subprocess.run", side_effect=worker):
+                with patch.object(sys, "argv", argv), patch("render.run_process", side_effect=worker):
                     render.main()
 
             invoke("HIP")

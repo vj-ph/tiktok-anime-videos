@@ -3,11 +3,12 @@
 import os
 from pathlib import Path
 import shutil
-import subprocess
 import sys
+from generation_runtime import run_process
 
 ROOT = Path(__file__).resolve().parent
 RENDER_DEVICES = ("CPU", "CUDA", "OPTIX", "HIP", "ONEAPI")
+RENDER_JOBS = (1, 2, 4, 8)
 
 
 def tool_path(name):
@@ -95,8 +96,8 @@ def check_render_device(backend):
         "import bpy; bpy.context.scene.render.engine='CYCLES'; "
         + render_expression(backend)
     )
-    subprocess.run([str(tool_path("blender")), "-b", "--factory-startup", "--disable-autoexec",
-                    "--python-exit-code", "1", "--python-expr", expression], check=True)
+    run_process([str(tool_path("blender")), "-b", "--factory-startup", "--disable-autoexec",
+                 "--python-exit-code", "1", "--python-expr", expression], check=True)
 
 
 if __name__ == "__main__":

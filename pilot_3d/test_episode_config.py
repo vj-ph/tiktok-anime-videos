@@ -6,7 +6,7 @@ import unittest
 import wave
 from unittest.mock import patch
 
-from episode_config import (PROFILES, check_timeline, read_episode, takeaway_seconds, task_window,
+from episode_config import (PROFILES, check_timeline, duration_limit, read_episode, takeaway_seconds, task_window,
                             validate_template)
 from pipeline import audio_reuse_spec, build_episode
 from episode_profiles import language_code, language_profile
@@ -39,6 +39,23 @@ def clock(episode, seconds=6):
 
 
 class EpisodeConfigTests(unittest.TestCase):
+    def test_authored_duration_limit_is_strict_on_the_encoded_frame_clock(self):
+        episode = example()
+        timeline = clock(episode)
+        seconds = timeline["total_frames"] / timeline["fps"]
+        episode["source"] = {"duration_limit_seconds": seconds + 1 / timeline["fps"]}
+        check_timeline(episode, timeline)
+        for limit in (seconds, seconds - 1 / timeline["fps"]):
+            episode["source"]["duration_limit_seconds"] = limit
+            with self.assertRaisesRegex(ValueError, "strictly below"):
+                check_timeline(episode, timeline)
+        for limit in (0, -1, float("inf"), float("nan"), True, "90", None):
+            episode["source"]["duration_limit_seconds"] = limit
+            with self.assertRaisesRegex(ValueError, "source.duration_limit_seconds"):
+                duration_limit(episode)
+            with self.assertRaisesRegex(ValueError, "source.duration_limit_seconds"):
+                validate_template(episode)
+
     def test_both_shipped_episodes_validate(self):
         for path in (ROOT / "episode_v4.json", ROOT / "episodes/lerntreff.json"):
             with self.subTest(path=path):
@@ -286,6 +303,26 @@ class PipelineCheckpointTests(unittest.TestCase):
             build_episode(self.path, self.build, until="audio")
             self.assertEqual(run.call_count, 2)
             self.assertEqual(before, sha256_file(self.build / "episode.json"))
+
+    def test_stage_notifications_follow_success_and_distinguish_checkpoint_reuse(self):
+        with patch("pipeline.preflight", return_value=self.episode), \
+                patch("pipeline.caption_preflight"), \
+                patch("pipeline.run_command", side_effect=self.run_fake_command), \
+                patch("pipeline.stage_completed") as completed:
+            build_episode(self.path, self.build, until="audio")
+            self.assertEqual([call.args[0] for call in completed.call_args_list], ["audio", "alignment"])
+            completed.reset_mock()
+            build_episode(self.path, self.build, until="audio")
+            self.assertEqual([call.kwargs for call in completed.call_args_list],
+                             [{"reused": True, "force": True}, {"reused": True, "force": True}])
+
+    def test_failed_stage_does_not_emit_completion(self):
+        with patch("pipeline.preflight", return_value=self.episode), \
+                patch("pipeline.run_command", side_effect=RuntimeError("synthetic stage failure")), \
+                patch("pipeline.stage_completed") as completed:
+            with self.assertRaises(RuntimeError):
+                build_episode(self.path, self.build, until="audio")
+        completed.assert_not_called()
 
     def test_modified_asset_rejects_resume_instead_of_using_stale_voice(self):
         with patch("pipeline.preflight", return_value=self.episode), \

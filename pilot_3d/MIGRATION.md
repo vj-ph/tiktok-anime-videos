@@ -33,6 +33,61 @@ The Windows/Linux GitHub Actions matrix in `.github/workflows/portability.yml`
 runs the portable regressions without production assets or model downloads.
 The new Linux job has not been executed locally on this Windows host.
 
+## Runtime backlog implementation
+
+The generation entry points now share `generation_runtime.py`. Native
+Windows AC-only system/execution power requests allow display idle and do
+not modify permanent power settings. Native tests confirmed execution state
+changes from 0 to system-required and back to 0, with display-required absent;
+the display-idle policy is unchanged. Mocked tests cover battery transitions
+and cleanup on failures/cancellation; the real request handle is closed.
+No administrator privileges are needed for the implementation/tests.
+
+Optional ntfy configuration, bounded best-effort delivery and the isolated
+`benchmark_workers.py` command are documented in the README's generation
+runtime controls. Notifications were tested against a local HTTP server,
+including server errors and blocked delivery; no external ntfy service has
+been configured or contacted for this validation.
+
+The expanded Windows portability suite ran 173 tests: 172 passed, one
+opt-in GPU smoke skipped, including strict-duration and GPU-counter regression checks.
+Real HIP benchmark rendering is validated
+separately. `psutil>=5.9` is declared in `requirements-test.txt` (also included
+by `requirements.txt`) for cross-platform owned-process cleanup and metrics;
+the Blender worker itself does not require psutil.
+
+Existing deliveries and their source snapshots stay frozen. Changed runtime
+source hashes require a fresh build for new generation, not editing old
+checkpoint receipts.
+
+### Episode selection correction
+
+The delivered Windows `tef_canada_a1_windows_preview_r1` used the full
+24-turn episode (189.791667 seconds). It is not the requested under-90-second
+promotional excerpt. The authored 10-turn `tef_canada_a1_short.json` already
+declares `source.duration_limit_seconds: 90`; timeline validation now enforces
+that bound strictly on the encoded frame clock before baking. Production
+worker benchmarking used this short episode with the verified full-run speech
+cache, not a higher-resolution copy of the full preview. Its actual Windows
+timeline is 86.583333 seconds (2078 frames at 24 fps), below the strict limit.
+No old delivery is replaced or relabelled; no complete short MP4 was rendered
+as part of this benchmark.
+
+At genuine production quality (720x1280, 16 samples, per-frame animation),
+two reversed-order 24-frame trials measured 7.36/9.47 median warm frames/minute
+for 2/4 HIP workers. Both 8-worker attempts crossed the 4 GiB free-RAM reserve
+and were stopped, so that configuration is unverified. Four workers are the
+fastest verified option for this workload; defaults remain unchanged.
+Results and 96 verified PNGs are in
+`builds/tef_canada_a1_short_production_worker_benchmark_r1/`.
+
+Windows process-engine counters overlapped and their sums exceeded 100.
+The measured reports retain their raw data and a verification caveat; those
+sums must not be interpreted as physical GPU utilization, including in the
+earlier preview report. The current sampler labels them as an activity index
+and leaves unavailable physical utilization null. Throughput and memory
+measurements are unaffected; the measured helper versions are archived.
+
 ## TEF Canada resource checklist
 
 Git contains both `episodes/tef_canada_a1.json` and

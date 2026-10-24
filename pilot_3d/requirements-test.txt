@@ -1,3 +1,4 @@
 Pillow>=10
 numpy
 soundfile
+psutil>=5.9
