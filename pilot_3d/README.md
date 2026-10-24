@@ -1,5 +1,31 @@
 # Reusable 3D exam-practice generator
 
+## Windows and Linux/WSL2
+
+The same Python entry points now resolve native Windows and Linux tools, fonts
+and interpreters. Run `python setup_runtime.py` from this directory to install
+checksum-pinned Blender 4.5.9, Rhubarb 1.14.0, DejaVu fonts and character rigs.
+FFmpeg/ffprobe must be on PATH. Recreate the Python environment using
+`requirements.txt` with `-c constraints-preview.txt`; this is a bootstrap
+manifest, not the original production
+environment's lockfile.
+
+See [MIGRATION.md](MIGRATION.md) for PowerShell/WSL setup, the TEF resource
+checklist, GPU checks and the exact limits of destination validation.
+For the tested Windows JPEG-overlay workflow, the optional
+`python setup_runtime.py --only ffmpeg` installs checksum-pinned FFmpeg 6.1.1;
+prepend `.tools\windows\ffmpeg` to the session's PATH as documented there.
+Use separate virtual environments and build directories on each OS.
+Tool downloads are separated into `.tools/windows/` and `.tools/linux/`;
+the old Linux `.tools/blender/` and `.tools/rhubarb/` layout still works.
+
+Rendering defaults to CPU. Explicitly select `--render-device HIP` for a
+compatible AMD GPU, `OPTIX`/`CUDA` for NVIDIA, or `ONEAPI` for Intel.
+Start with `--jobs 1` on one GPU. Speech defaults to CPU independently;
+`--speech-device cuda:0` requires a compatible PyTorch runtime and separate
+speech review. A requested but unavailable Blender GPU fails rather than
+silently switching to CPU.
+
 ## Project and build layout
 
 Keep Python scripts, episode JSON, assets and tools separate from generated runs:
@@ -73,8 +99,9 @@ python3 pipeline.py build \
   --profile preview --jobs 4
 ```
 
-The entry point automatically uses the existing Qwen Python environment.
-Override it with `--qwen-python /absolute/path/to/python` or `QWEN_PYTHON`.
+The entry point selects `QWEN_PYTHON`, then the local `.venv`, then the original
+Linux Qwen environment if present, otherwise the current Python interpreter.
+Override it with `--qwen-python` or `QWEN_PYTHON`.
 It does not use Ollama. All model inference, alignment and rendering stay local.
 The selected episode is saved as an immutable, asset-resolved
 `BUILD/episode.json`; commands use that snapshot throughout the build.
@@ -85,10 +112,12 @@ Output is `BUILD/pilot.mp4` and `BUILD/pilot_clean.mp4`, plus the
 | Profile/option | Behavior |
 | --- | --- |
 | `--profile preview` | 360×640, two Cycles samples, animation on twos; 720×1280 captioned export |
-| `--profile production` | 720×1280, 16 Cycles samples, one rendered pose per frame; slower CPU rendering |
+| `--profile production` | 720×1280, 16 Cycles samples, one rendered pose per frame |
 | `--until audio` | Stop after voices, lip cues, word alignment and timed-caption preflight |
 | `--until scene` | Also bake the scene and check native rigs, poses, feet and cameras; do not render the movie yet |
 | `--jobs 1`, `2` or `4` | Set independent four-thread Blender rendering workers |
+| `--render-device CPU`, `HIP`, `CUDA`, `OPTIX`, `ONEAPI` | Explicit Cycles backend; default CPU |
+| `--speech-device cpu` | Preserve the original speech device; independent of Blender |
 
 Use a **new build directory** for changed content, asset bytes, code or quality
 profile. Repeating an unchanged command resumes completed stages using hashes.

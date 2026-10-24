@@ -1,0 +1,9 @@
+# Compatible baseline for the Qwen 0.1.1 / WhisperX 3.8.6 preview runtime.
+numpy==2.2.6
+librosa==0.11.0
+pyannote-core==6.0.1
+pyannote-audio==4.0.7
+pyannote-metrics==4.0.0
+pyannote-pipeline==4.0.0
+pyannote-database==6.1.1
+av==16.0.1

@@ -22,7 +22,7 @@ def review_pictures(build, episode, timeline):
     import numpy as np
     from PIL import Image
     windows = picture_filters(episode, timeline)[3]
-    recorded = json.loads((build / "picture_timing_report.json").read_text())
+    recorded = json.loads((build / "picture_timing_report.json").read_text(encoding="utf-8"))
     if recorded["windows"] != windows or recorded["fps"] != timeline["fps"]:
         raise ValueError("Picture receipt differs from the episode/assets/clock.")
     numbers = sorted({frame for w in windows
@@ -78,15 +78,15 @@ def review_cameras(build, timeline, manifest):
 
     edit = manifest.get("derived_edit")
     context = resolve_build_reference(edit["source"]) if edit else build
-    source_manifest = json.loads((context / "scene_manifest.json").read_text())
-    receipt = json.loads((context / "frames_manifest.json").read_text())
+    source_manifest = json.loads((context / "scene_manifest.json").read_text(encoding="utf-8"))
+    receipt = json.loads((context / "frames_manifest.json").read_text(encoding="utf-8"))
     scene_hash = sha256_file(build / "studio.blend")
     if receipt != {"scene": source_manifest, "blend_sha256": scene_hash}:
         raise ValueError("Camera source frames are stale for their saved scene.")
     revision_path = context / "camera_revision_report.json"
     reused, changed = [], []
     if revision_path.exists():
-        revision = json.loads(revision_path.read_text())
+        revision = json.loads(revision_path.read_text(encoding="utf-8"))
         if scene_hash != revision["revised_scene_sha256"]:
             raise ValueError("Camera report belongs to a different source scene.")
         markers = revision["new_markers"]
@@ -120,8 +120,8 @@ def review_cameras(build, timeline, manifest):
 def review(build):
     from PIL import Image, ImageDraw, ImageFont
 
-    timeline = json.loads((build / "timeline.json").read_text())
-    manifest = json.loads((build / "scene_manifest.json").read_text())
+    timeline = json.loads((build / "timeline.json").read_text(encoding="utf-8"))
+    manifest = json.loads((build / "scene_manifest.json").read_text(encoding="utf-8"))
     episode = manifest["episode"]
     if language_code(episode) != language_code(timeline):
         raise ValueError("Episode and exported timeline use different languages.")
@@ -153,14 +153,14 @@ def review(build):
                                   "note": "Measured model confidence, not a guarantee of perceptual accuracy.",
                                   "maximum_display_quantization_seconds": 0.005 + 1 / timeline["fps"]}
     if (build / "audio_reuse.json").is_file():
-        reuse = json.loads((build / "audio_reuse.json").read_text())
+        reuse = json.loads((build / "audio_reuse.json").read_text(encoding="utf-8"))
         for name, digest in reuse["files_sha256"].items():
             if sha256_file(build / name) != digest or sha256_file(resolve_build_reference(reuse["source"]) / name) != digest:
                 raise ValueError(f"Visual revision changed approved source audio/alignment: {name}")
         report["original_audio_and_alignment_unchanged"] = True
     if episode.get("subtitle_mode") == "readable":
         pages = caption_pages(episode, timeline)
-        if (build / "captions.ass").read_text() != make_ass(episode, timeline):
+        if (build / "captions.ass").read_text(encoding="utf-8") != make_ass(episode, timeline):
             raise ValueError("Encoded caption source differs from the verified readable pages.")
         durations = [displayed_seconds(page["start"], page["end"], timeline["fps"]) for page in pages]
         rates = [len(page["text"]) / duration for page, duration in zip(pages, durations)]
@@ -183,7 +183,7 @@ def review(build):
         limits = promo_settings(episode)
         if not limits["min_seconds"] <= timeline["duration"] <= limits["max_seconds"]:
             raise ValueError("Promo is outside the configured duration bounds.")
-        edit = json.loads((build / "scene_manifest.json").read_text())["derived_edit"]
+        edit = json.loads((build / "scene_manifest.json").read_text(encoding="utf-8"))["derived_edit"]
         with wave.open(str(resolve_build_reference(edit["source"]) / "dialogue.wav"), "rb") as original:
             samples = original.getframerate() // timeline["fps"]
             original.setpos(edit["source_start_frame_zero_based"] * samples)
@@ -201,7 +201,7 @@ def review(build):
                 {"id": turn["id"], "start": turn["start"], "words": turn["words"],
                  "alignment_key": turn["alignment_key"]} for turn in timeline["turns"]],
         })
-    safe = json.loads((build / "safe_zone_report.json").read_text())
+    safe = json.loads((build / "safe_zone_report.json").read_text(encoding="utf-8"))
     if not safe["all_inside"] or safe.get("overlapping_text_states"):
         raise ValueError("Missing successful text-safe-area audit.")
     report["safe_area_states_checked"] = safe["states_checked"]
@@ -221,7 +221,8 @@ def review(build):
     moments = sorted(set(round(t, 3) for t in moments if 0 <= t < timeline["duration"]))
     folder = build / "review"
     folder.mkdir(exist_ok=True)
-    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 18)
+    from runtime_config import font_path
+    font = ImageFont.truetype(str(font_path()), 18)
     columns, thumb_w, thumb_h, label_h = 4, 270, 480, 32
     sheet = Image.new("RGB", (columns * thumb_w, ((len(moments) + columns - 1) // columns) * (thumb_h + label_h)), "#17231d")
     for index, t in enumerate(moments):

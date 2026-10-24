@@ -356,8 +356,8 @@ def main():
     parser.add_argument("--end", type=int)
     args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [])
     args.build = build_directory(args.build)
-    episode = json.loads(args.episode.read_text())
-    timeline = json.loads((args.build / "timeline.json").read_text())
+    episode = json.loads(args.episode.read_text(encoding="utf-8"))
+    timeline = json.loads((args.build / "timeline.json").read_text(encoding="utf-8"))
     if min(args.width, args.height) <= 0:
         raise ValueError("Dimensions must be positive")
     bpy.ops.object.select_all(action="SELECT")

@@ -13,6 +13,7 @@ from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from pathlib import Path
 
 from build_paths import BUILDS, build_directory, resolve_build_reference
+from runtime_config import RENDER_DEVICES, caption_fonts, qwen_python, render_expression, tool_path
 ROOT = Path(__file__).resolve().parent
 RIG_CREDITS = (
     "Snow Rig (CC) Blender Foundation | studio.blender.org",
@@ -188,14 +189,15 @@ def mux(build, episode_path=None):
     episode, timeline = load_inputs(build, episode_path)
     social = episode.get("presentation") == "social"
     ass = captions(episode, timeline)
+    caption_fonts(build)
     (build / "captions.ass").write_text(ass, encoding="utf-8")
     if not social:
         (build / "credits.ass").write_text(credit_captions(timeline["duration"]), encoding="utf-8")
     expected = round(timeline["duration"] * timeline["fps"])
-    manifest = json.loads((build / "scene_manifest.json").read_text())
+    manifest = json.loads((build / "scene_manifest.json").read_text(encoding="utf-8"))
     if manifest["episode"] != episode or manifest["timeline"] != timeline:
         raise ValueError("Saved scene is stale; rebuild it before muxing.")
-    rendered = json.loads((build / "frames_manifest.json").read_text())
+    rendered = json.loads((build / "frames_manifest.json").read_text(encoding="utf-8"))
     if rendered["scene"] != manifest or rendered["blend_sha256"] != scene_hash(build):
         raise ValueError("Frames are stale for the saved scene; render the frames again.")
     step = manifest["motion_step"]
@@ -217,7 +219,7 @@ def mux(build, episode_path=None):
         sequence.append(f"duration {min(step, expected - index + 1) / timeline['fps']:.12f}\n")
     sequence.append(f"file frames/frame_{frames[-1]:04d}.png\n")
     sequence.append(f"option framerate {timeline['fps']}\n")
-    (build / "frames.ffconcat").write_text("".join(sequence))
+    (build / "frames.ffconcat").write_text("".join(sequence), encoding="utf-8")
     common = [
         "ffmpeg", "-hide_banner", "-loglevel", "warning", "-y",
         "-f", "concat", "-safe", "0", "-i", "frames.ffconcat", "-i", "dialogue.wav",
@@ -231,7 +233,7 @@ def mux(build, episode_path=None):
     ]
     if social:
         video = (f"scale={output_size[0]}:{output_size[1]}:flags=lanczos,"
-                 f"fps={timeline['fps']},ass=captions.ass")
+                 f"fps={timeline['fps']},ass=captions.ass:fontsdir=caption_fonts")
         if episode.get("pictures"):
             from picture_presentation import picture_filters
             from prepare_audio import atomic_json
@@ -264,7 +266,7 @@ def mux(build, episode_path=None):
                    if any(w.get("layout") == "notice_detail" for w in windows) else {}),
             })
             report_path = build / "safe_zone_report.json"
-            report = json.loads(report_path.read_text())
+            report = json.loads(report_path.read_text(encoding="utf-8"))
             report["pictures"] = windows
             if episode["outro_seconds"] > 0:
                 report["book_cover"] = {"bounds": [x, y, right, bottom], "start": cover_start / timeline["fps"]}
@@ -287,11 +289,11 @@ def mux(build, episode_path=None):
             run(common + ["-loop", "1", "-i", cover, "-filter_complex", filters,
                           "-map", "[video]", "-map", "1:a:0"] + encoding + ["pilot.mp4"], cwd=build)
             report_path = build / "safe_zone_report.json"
-            report = json.loads(report_path.read_text())
+            report = json.loads(report_path.read_text(encoding="utf-8"))
             report["book_cover"] = {"bounds": [x, y, x + cover_width, y + 224], "start": cover_start}
-            report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+            report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     elif episode.get("presentation") == "exchange":
-        run(common + ["-vf", f"fps={timeline['fps']},ass=captions.ass"] + encoding + ["pilot.mp4"], cwd=build)
+        run(common + ["-vf", f"fps={timeline['fps']},ass=captions.ass:fontsdir=caption_fonts"] + encoding + ["pilot.mp4"], cwd=build)
     else:
         cover = (ROOT / episode["book_cover"]).resolve()
         if not cover.is_file():
@@ -302,14 +304,14 @@ def mux(build, episode_path=None):
         outro = timeline["duration"] - episode["outro_seconds"]
         filters = (
             f"[2:v]scale=-2:{cover_height}[cover];"
-            f"[0:v]fps={timeline['fps']},ass=captions.ass[captioned];"
+            f"[0:v]fps={timeline['fps']},ass=captions.ass:fontsdir=caption_fonts[captioned];"
             f"[captioned][cover]overlay=x=(W-w)/2:y={cover_y}:enable='gte(t,{outro})',fps={timeline['fps']}[video]"
         )
         run(common + ["-loop", "1", "-i", cover, "-filter_complex", filters,
                       "-map", "[video]", "-map", "1:a:0"] + encoding + ["pilot.mp4"], cwd=build)
     clean_filter = (
         f"scale={output_size[0]}:{output_size[1]}:flags=lanczos,fps={timeline['fps']}"
-        if social else f"fps={timeline['fps']},ass=credits.ass"
+        if social else f"fps={timeline['fps']},ass=credits.ass:fontsdir=caption_fonts"
     )
     run(common + ["-vf", clean_filter] + encoding + ["pilot_clean.mp4"], cwd=build)
     for filename, report_name in (("pilot.mp4", "media_report.json"), ("pilot_clean.mp4", "media_report_clean.json")):
@@ -330,7 +332,7 @@ def mux(build, episode_path=None):
             raise RuntimeError(f"{filename}: unexpected output codecs")
         if audio["sample_rate"] != "48000" or audio["channels"] != 1:
             raise RuntimeError(f"{filename}: expected 48 kHz mono audio")
-        (build / report_name).write_text(json.dumps(report, indent=2) + "\n")
+        (build / report_name).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(f"Created {build / 'pilot.mp4'} ({timeline['duration']:.2f}s, {expected} frames)")
 
 
@@ -347,14 +349,16 @@ def main():
                         help="2 renders animation on twos (12 poses/sec at 24 fps); 1 renders every frame.")
     parser.add_argument("--jobs", type=int, choices=(1, 2, 4), default=2,
                         help="Independent Blender frame-range workers (four CPU threads each).")
-    parser.add_argument("--qwen-python", default=os.environ.get("QWEN_PYTHON", "/home/ronggong/lang/german/.venvs/qwen-tts-test/bin/python"))
+    parser.add_argument("--qwen-python", default=str(qwen_python()))
+    parser.add_argument("--render-device", choices=RENDER_DEVICES, default="CPU")
+    parser.add_argument("--speech-device", default="cpu")
     args = parser.parse_args()
     os.environ.setdefault("LP_NUM_THREADS", "4")
     build = build_directory(args.build)
     args.episode = resolve_build_reference(args.episode)
-    blender = ROOT / ".tools/blender/blender"
+    blender = tool_path("blender")
     if args.stage in ("audio", "all"):
-        run([args.qwen_python, ROOT / "prepare_audio.py", "--episode", args.episode, "--output-dir", build, "--rhubarb", ROOT / ".tools/rhubarb/rhubarb"])
+        run([args.qwen_python, ROOT / "prepare_audio.py", "--episode", args.episode, "--output-dir", build, "--rhubarb", tool_path("rhubarb"), "--device", args.speech_device])
     if args.stage in ("scene", "all"):
         load_inputs(build, args.episode)
         run([blender, "-b", "--disable-autoexec", "-t", "4", "--python-exit-code", "1", "--python", ROOT / "build_scene.py", "--", "--episode", args.episode, "--build", build, "--width", args.width, "--height", args.height, "--engine", args.engine, "--samples", args.samples])
@@ -367,16 +371,16 @@ def main():
                 name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
                 for name in ("build_scene.py", "studio_characters.py")
             }
-        }, ensure_ascii=False, indent=2) + "\n")
+        }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     if args.stage in ("frames", "stills", "all"):
         episode, timeline = load_inputs(build, args.episode)
-        manifest = json.loads((build / "scene_manifest.json").read_text())
+        manifest = json.loads((build / "scene_manifest.json").read_text(encoding="utf-8"))
         if manifest["episode"] != episode or manifest["timeline"] != timeline:
             raise ValueError("Saved scene is stale; run the scene stage first.")
         if args.stage == "stills":
             frames = [36] + [1 + round((t["start"] + min(1.0, t["duration"] / 2)) * episode["fps"]) for t in timeline["turns"]]
             expression = (
-                "import bpy; from pathlib import Path; s=bpy.context.scene; s.render.use_persistent_data=True; "
+                render_expression(args.render_device) + "from pathlib import Path; s=bpy.context.scene; "
                 f"[(s.frame_set(f), setattr(s.render, 'filepath', str(Path({str(build)!r}) / ('still_%04d.png' % f))), bpy.ops.render.render(write_still=True)) for f in {frames!r}]"
             )
             run([blender, "-b", "--disable-autoexec", build / "studio.blend", "-t", "4", "--python-exit-code", "1", "--python-expr", expression])
@@ -388,9 +392,9 @@ def main():
             all_frames = list(range(1, round(timeline["duration"] * timeline["fps"]) + 1, step))
             frames = all_frames
             before = scene_hash(build)
-            checkpoint = {"scene": manifest, "blend_sha256": before}
+            checkpoint = {"scene": manifest, "blend_sha256": before, "render_device": args.render_device}
             checkpoint_file = build / "render_checkpoint.json"
-            resumable = checkpoint_file.exists() and json.loads(checkpoint_file.read_text()) == checkpoint
+            resumable = checkpoint_file.exists() and json.loads(checkpoint_file.read_text(encoding="utf-8")) == checkpoint
             if resumable:
                 frames = [frame for frame in frames if not valid_frame(
                     build / "frames" / f"frame_{frame:04d}.png", manifest["width"], manifest["height"]
@@ -398,7 +402,7 @@ def main():
             else:
                 for frame in frames:
                     (build / "frames" / f"frame_{frame:04d}.png").unlink(missing_ok=True)
-            checkpoint_file.write_text(json.dumps(checkpoint, ensure_ascii=False, indent=2) + "\n")
+            checkpoint_file.write_text(json.dumps(checkpoint, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
             print(f"Rendering {len(frames)} remaining frames (matching saved-scene checkpoint: {resumable}).", flush=True)
             chunk_size = max(1, math.ceil(len(frames) / args.jobs))
             chunks = [frames[index:index + chunk_size] for index in range(0, len(frames), chunk_size)]
@@ -407,13 +411,13 @@ def main():
                 log = build / f"render_{chunk[0]:04d}_{chunk[-1]:04d}.log"
                 command = [blender, "-b", "--disable-autoexec", build / "studio.blend", "-t", "4",
                            "--python-exit-code", "1", "--python-expr",
-                           "import bpy; bpy.context.scene.render.use_persistent_data=True",
+                           render_expression(args.render_device, build),
                            "-f", ",".join(map(str, chunk))]
                 with log.open("w") as output:
                     print(f"Rendering frames {chunk[0]}–{chunk[-1]}; log: {log}", flush=True)
                     result = subprocess.run(list(map(str, command)), stdout=output, stderr=subprocess.STDOUT)
                 if result.returncode:
-                    raise RuntimeError(f"Blender exited {result.returncode}; {log}\n" + "\n".join(log.read_text().splitlines()[-30:]))
+                    raise RuntimeError(f"Blender exited {result.returncode}; {log}\n" + "\n".join(log.read_text(encoding="utf-8").splitlines()[-30:]))
 
             with ThreadPoolExecutor(max_workers=args.jobs) as workers:
                 pending = {workers.submit(render_chunk, chunk) for chunk in chunks}
@@ -429,7 +433,7 @@ def main():
                 raise RuntimeError("Saved scene changed during frame rendering; render again.")
             frame_manifest.write_text(json.dumps({
                 "scene": manifest, "blend_sha256": before
-            }, ensure_ascii=False, indent=2) + "\n")
+            }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     if args.stage in ("mux", "all"):
         mux(build, args.episode)
 

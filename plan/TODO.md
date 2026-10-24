@@ -78,6 +78,12 @@ Leave running production jobs unchanged; keep heavy CPU builds sequential.
 - [ ] Add reviewed ÖIF/fide and TCF IRN speaking configurations.
 - [ ] Design and implement explicit DTZ/ÖIF/fide listening templates, including learner response time and answer reveal; listening is not implemented by relabelling a speaking episode.
 
+## Video generation runtime
+
+- [ ] Benchmark 1, 2 and 4 HIP render workers on identical representative frames with unchanged preview settings and CPU threads per worker. Separate startup from warm rendering; record frames/minute, CPU/GPU utilization and memory; verify outputs and select the fastest stable configuration. Use isolated outputs and preserve completed builds.
+- [ ] On Windows while plugged into AC power, prevent automatic compute sleep during video generation while allowing the display to turn off. Release the blocker on completion, failure or cancellation; leave permanent power settings and battery-mode behavior unchanged. Verify acquisition/release and display-off behavior.
+- [ ] Add optional ntfy notifications for generation start, stage completion, render milestones, completion, failure and cancellation. Configure the server/topic externally, send generic status without scripts, file paths or video content, and use bounded best-effort delivery so notification errors never interrupt generation. Test milestone throttling and terminal outcomes, and document setup.
+
 ## Before each publication
 
 - [ ] Use the approved production master, not a preview or internal acting diagnostic.

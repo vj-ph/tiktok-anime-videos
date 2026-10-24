@@ -682,7 +682,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--episode", type=Path, default=ROOT / "episode.json")
     parser.add_argument("--output-dir", type=Path, default=BUILDS / "pilot_v1")
-    parser.add_argument("--rhubarb", type=Path, default=ROOT / ".tools/rhubarb/rhubarb")
+    from runtime_config import tool_path
+    parser.add_argument("--rhubarb", type=Path, default=tool_path("rhubarb"))
     parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--model", default=MODEL)

@@ -10,11 +10,12 @@ from episode_config import instruction_turn, section_windows, takeaway_seconds, 
 from picture_presentation import (NOTICE_COMPACT_PANEL, NOTICE_REVEAL_PANEL,
                                   picture_layout, picture_windows)
 from episode_profiles import language_profile
+from runtime_config import caption_fonts, font_path
 
 SAFE = (88, 200, 512, 752)
 LEFT, RIGHT = 104, 496
-FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-BOLD_FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+FONT = str(font_path())
+BOLD_FONT = str(font_path(bold=True))
 MIN_PAGE_SECONDS = 1.8
 MAX_PAGE_CPS = 20.0
 HOOK_BOTTOM = 742
@@ -183,7 +184,7 @@ def write_caption_timing(build, episode, timeline):
                    "encoded_display_seconds": displayed_seconds(page["start"], page["end"], timeline.get("fps", 24))}
                   for page in pages],
     }
-    (build / "subtitle_timing_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    (build / "subtitle_timing_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     if episode.get("subtitle_mode") != "readable":
         return
     (build / "subtitles.srt").write_text("\n".join(
@@ -402,7 +403,7 @@ def make_ass(episode, timeline):
 
 def write_publication(build, episode):
     language = language_profile(episode)
-    credit = (Path(__file__).resolve().parent / "assets/studio/CREDITS.txt").read_text()
+    credit = (Path(__file__).resolve().parent / "assets/studio/CREDITS.txt").read_text(encoding="utf-8")
     publication = episode.get("publication", {})
     picture_credit = "\n".join(dict.fromkeys(p["credit"] for p in episode.get("pictures", {}).values()))
     if picture_credit:
@@ -431,6 +432,7 @@ def audit_ass(build, ass, *, raise_on_unsafe=True):
     """Rasterize EVERY distinct text/highlight/panel state with the actual libass."""
     from PIL import Image
     from render import ass_time
+    caption_fonts(build)
 
     states = list(dict.fromkeys(line.split(",", 9)[-1] + "\t" + line.split(",", 9)[3]
                                 for line in ass.splitlines() if line.startswith("Dialogue:")))
@@ -442,7 +444,7 @@ def audit_ass(build, ass, *, raise_on_unsafe=True):
     command = [
         "ffmpeg", "-nostdin", "-v", "error", "-f", "lavfi", "-i",
         f"color=c=black:s=720x1280:r=1:d={len(states)}",
-        "-vf", "ass=safe_zone_audit.ass", "-pix_fmt", "gray", "-f", "rawvideo", "pipe:1",
+        "-vf", "ass=safe_zone_audit.ass:fontsdir=caption_fonts", "-pix_fmt", "gray", "-f", "rawvideo", "pipe:1",
     ]
     bounds, unsafe, notice_states = [], [], []
     with (build / "safe_zone_audit.log").open("w") as errors:
@@ -508,7 +510,7 @@ def audit_ass(build, ass, *, raise_on_unsafe=True):
             if max(a[2][0], b[2][0]) < min(a[2][2], b[2][2]) and max(a[2][1], b[2][1]) < min(a[2][3], b[2][3]):
                 overlaps.append([a[3], b[3]])
     report["overlapping_text_states"] = overlaps
-    (build / "safe_zone_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    (build / "safe_zone_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     if unsafe and raise_on_unsafe:
         raise ValueError(f"Unsafe rendered text/panel pixels: {unsafe[0]}")
     if overlaps and raise_on_unsafe:

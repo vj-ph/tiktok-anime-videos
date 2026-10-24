@@ -1,0 +1,8 @@
+# Bootstrap environment, not a lockfile of the original WSL production runtime.
+# Install matching torch/torchaudio wheels for your hardware first if using CUDA.
+-r requirements-test.txt
+torch==2.8.0
+torchaudio==2.8.0
+qwen-tts==0.1.1
+whisperx==3.8.6
+huggingface_hub

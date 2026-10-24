@@ -1,0 +1,35 @@
+name: Windows and Linux portability
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: pilot_3d
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install FFmpeg on Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install FFmpeg on Windows
+        if: runner.os == 'Windows'
+        run: choco install ffmpeg --no-progress -y
+      - run: python -m pip install -r requirements-test.txt
+      - run: python setup_runtime.py --only fonts
+      - name: Run portable unit and encoded-video checks
+        run: >-
+          python -X utf8 -m unittest
+          test_runtime test_audio test_direction test_entrance test_build_paths
+          test_render test_social test_profiles
+          test_episode_config.PipelineCheckpointTests
+          test_tef_episode.TefEpisodeTests.test_real_encoded_task_card_and_reference_change_on_exact_odd_frames

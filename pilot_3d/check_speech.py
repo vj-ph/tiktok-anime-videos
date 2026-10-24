@@ -21,7 +21,7 @@ def tokens(text):
 def check_speech(build, *, model_dir=None, threads=4, recognizer=None):
     build = resolve_build_reference(build).resolve(strict=True)
     episode = read_episode(build / "episode.json")
-    timeline = json.loads((build / "timeline.json").read_text())
+    timeline = json.loads((build / "timeline.json").read_text(encoding="utf-8"))
     check_timeline(episode, timeline)
     code = language_code(episode)
     if recognizer is None:

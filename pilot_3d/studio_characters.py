@@ -58,7 +58,7 @@ class StudioCharacter:
         self.scale = 1.07 if kind == "snow" else 1.14
         path = ASSETS[kind]
         if not path.is_file():
-            raise FileNotFoundError(f"Missing licensed studio character: {path}; run setup_characters.sh")
+            raise FileNotFoundError(f"Missing licensed studio character: {path}; run python setup_runtime.py --only characters")
         with bpy.data.libraries.load(str(path), link=False) as (source, target):
             collection = "CH-" + kind
             if collection not in source.collections:

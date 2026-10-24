@@ -296,6 +296,21 @@ class PipelineCheckpointTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "different episode"):
                 build_episode(self.path, self.build, until="audio")
 
+    def test_render_backend_and_speech_device_are_frozen_and_forwarded(self):
+        with patch("pipeline.preflight", return_value=self.episode), \
+                patch("pipeline.caption_preflight"), \
+                patch("pipeline.check_render_device") as probe, \
+                patch("pipeline.run_command", side_effect=self.run_fake_command) as run:
+            build_episode(self.path, self.build, until="audio", render_device="HIP", speech_device="cuda:0")
+            probe.assert_called_once_with("HIP")
+            command = list(map(str, run.call_args_list[0].args[0]))
+            self.assertEqual(command[command.index("--device") + 1], "cuda:0")
+            state = json.loads((self.build / "pipeline_state.json").read_text(encoding="utf-8"))
+            self.assertEqual(state["spec"]["render_device"], "HIP")
+            self.assertEqual(state["spec"]["speech_device"], "cuda:0")
+            with self.assertRaisesRegex(ValueError, "different episode"):
+                build_episode(self.path, self.build, until="audio", render_device="CPU", speech_device="cuda:0")
+
     def test_raw_speech_cache_is_an_optional_performance_hint_not_content_reuse(self):
         source = self.root / "speech-source"
         (source / "audio").mkdir(parents=True)

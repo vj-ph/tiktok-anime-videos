@@ -111,7 +111,7 @@ def prepare(source, build):
 
     if source == build or source in build.parents or build in source.parents:
         raise ValueError("V3 must use a separate sibling output directory.")
-    manifest = json.loads((source / "scene_manifest.json").read_text())
+    manifest = json.loads((source / "scene_manifest.json").read_text(encoding="utf-8"))
     episode, timeline, start, stop = exchange_inputs(manifest["episode"], manifest["timeline"])
     before = source_fingerprints(source)
     build.mkdir(parents=True, exist_ok=True)
@@ -127,14 +127,14 @@ def prepare(source, build):
             output.setparams(original.getparams())
             output.writeframes(samples)
     for filename, value in (("episode.json", episode), ("timeline.json", timeline)):
-        (build / filename).write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+        (build / filename).write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (build / "subtitles.srt").write_text(subtitles(timeline), encoding="utf-8")
     provenance = {
         "source": str(source), "source_files_sha256": before,
         "start_frame_zero_based": start, "stop_frame_exclusive": stop,
         "audio_edit": "Exact PCM sample crop only; no resynthesis, interior cuts or time stretching.",
     }
-    (build / "source_excerpt.json").write_text(json.dumps(provenance, indent=2) + "\n")
+    (build / "source_excerpt.json").write_text(json.dumps(provenance, indent=2) + "\n", encoding="utf-8")
     if source_fingerprints(source) != before:
         raise RuntimeError("Source files changed while preparing the excerpt.")
     print(f"Prepared {timeline['duration']:.2f}s from source frames {start}:{stop} in {build}")
@@ -228,9 +228,9 @@ def scene_build(source, build):
     from mathutils import Vector
     from studio_characters import StudioCharacter
 
-    episode = json.loads((build / "episode.json").read_text())
-    timeline = json.loads((build / "timeline.json").read_text())
-    provenance = json.loads((build / "source_excerpt.json").read_text())
+    episode = json.loads((build / "episode.json").read_text(encoding="utf-8"))
+    timeline = json.loads((build / "timeline.json").read_text(encoding="utf-8"))
+    provenance = json.loads((build / "source_excerpt.json").read_text(encoding="utf-8"))
     if source_fingerprints(source) != provenance["source_files_sha256"]:
         raise ValueError("V2 source changed; prepare the excerpt again.")
     scene = bpy.context.scene
@@ -300,7 +300,7 @@ def scene_build(source, build):
         "source_sha256": {name: file_hash(ROOT / name) for name in
                           ("polish_exchange.py", "studio_characters.py", "render.py")},
     }
-    (build / "scene_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    (build / "scene_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Saved V3 performance: {build / 'studio.blend'}")
 
 
@@ -310,8 +310,8 @@ def check_scene(source, build):
     from studio_characters import StudioCharacter
 
     scene = bpy.context.scene
-    clock = json.loads((build / "timeline.json").read_text())
-    provenance = json.loads((build / "source_excerpt.json").read_text())
+    clock = json.loads((build / "timeline.json").read_text(encoding="utf-8"))
+    provenance = json.loads((build / "source_excerpt.json").read_text(encoding="utf-8"))
     actors = {name: StudioCharacter.from_scene(name) for name in ("candidate_a", "candidate_b")}
     if (scene.frame_start, scene.frame_end, scene.render.fps) != (1, 240, 24):
         raise RuntimeError("V3 must contain exactly 240 frames at 24 fps.")
@@ -402,7 +402,7 @@ def check_scene(source, build):
     report["native_driver_compatibility"] = {
         name: actor.rig["driver_compatibility"] for name, actor in actors.items() if actor.rig.get("driver_compatibility")
     }
-    (build / "scene_checks.json").write_text(json.dumps(report, indent=2) + "\n")
+    (build / "scene_checks.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(f"V3 scene checks passed: hair drop {drop:.3f}m, isolated mouths, hands, head axes, 240 frames, unchanged V2.")
 
 

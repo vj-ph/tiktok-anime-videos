@@ -57,7 +57,7 @@ class CaptionTests(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "FFmpeg required")
     def test_mux_keeps_exact_frame_count_on_twos(self):
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(prefix="vidéo export 'quoted' ") as directory:
             root = Path(directory)
             (root / "frames").mkdir()
             episode = json.loads((ROOT / "episode.json").read_text())

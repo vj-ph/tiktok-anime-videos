@@ -56,7 +56,7 @@ def check_entrance(scene, actors, manifest, timeline, build):
     hook = None
     if timeline["turns"][0]["start"] > 0:
         prefix = f"Dialogue: 0,0:00:00.00,{ass_time(timeline['turns'][0]['start'])},Box,"
-        panels = [line for line in (build / "preflight/captions.ass").read_text().splitlines()
+        panels = [line for line in (build / "preflight/captions.ass").read_text(encoding="utf-8").splitlines()
                   if line.startswith(prefix)]
         if len(panels) != 1:
             raise ValueError("Cannot identify the actual preflight opening-title panel.")
@@ -133,8 +133,8 @@ def check_entrance(scene, actors, manifest, timeline, build):
 
 def check(build):
     scene = bpy.context.scene
-    timeline = json.loads((build / "timeline.json").read_text())
-    manifest = json.loads((build / "scene_manifest.json").read_text())
+    timeline = json.loads((build / "timeline.json").read_text(encoding="utf-8"))
+    manifest = json.loads((build / "scene_manifest.json").read_text(encoding="utf-8"))
     episode = manifest["episode"]
     step = manifest["motion_step"]
     if (scene.frame_start, scene.frame_end, scene.render.fps) != (1, timeline["total_frames"], timeline["fps"]):
@@ -371,7 +371,7 @@ def check(build):
                 raise ValueError(f"{name}: invalid jaw at frame {frame}.")
             if (not turn or turn["speaker"] != name) and abs(jaw) > 0.0001:
                 raise ValueError(f"{name}: listener mouth moves at frame {frame}.")
-    (build / "scene_checks.json").write_text(json.dumps(report, indent=2) + "\n")
+    (build / "scene_checks.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2))
 
 

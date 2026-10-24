@@ -94,9 +94,9 @@ def revise_cameras(build, source, episode_path=None):
     isolated(source, build)
     if any(build.iterdir()):
         raise ValueError("Prepare a camera revision in an empty directory; use render.py to resume it.")
-    source_manifest = json.loads((source / "scene_manifest.json").read_text())
+    source_manifest = json.loads((source / "scene_manifest.json").read_text(encoding="utf-8"))
     source_hash = scene_hash(source)
-    receipt = json.loads((source / "frames_manifest.json").read_text())
+    receipt = json.loads((source / "frames_manifest.json").read_text(encoding="utf-8"))
     if receipt != {"scene": source_manifest, "blend_sha256": source_hash}:
         raise ValueError("Source frames are not verified against their saved scene.")
     episode = copy.deepcopy(source_manifest["episode"])
@@ -104,7 +104,7 @@ def revise_cameras(build, source, episode_path=None):
     if episode["turns"] != updated["turns"]:
         raise ValueError("A camera-only revision cannot change the spoken screenplay.")
     episode.update(subtitle_mode="readable", cta=updated["cta"])
-    timeline = json.loads((source / "timeline.json").read_text())
+    timeline = json.loads((source / "timeline.json").read_text(encoding="utf-8"))
     if timeline != source_manifest["timeline"]:
         raise ValueError("Source timeline is stale for its scene.")
     bpy.ops.wm.open_mainfile(filepath=str(source / "studio.blend"))
@@ -173,9 +173,9 @@ def social_exchange(build):
 
     source = BUILDS / "v3_exchange"
     isolated(source, build)
-    episode = json.loads((source / "episode.json").read_text())
+    episode = json.loads((source / "episode.json").read_text(encoding="utf-8"))
     episode.update(presentation="social", social_kind="exchange", credit_policy="publishing_caption")
-    timeline = json.loads((source / "timeline.json").read_text())
+    timeline = json.loads((source / "timeline.json").read_text(encoding="utf-8"))
     for name, value in (("episode.json", episode), ("timeline.json", timeline)):
         atomic_json(build / name, value)
     for name in ("dialogue.wav", "studio.blend"):
@@ -184,8 +184,8 @@ def social_exchange(build):
     for frame in (source / "frames").glob("frame_*.png"):
         link_frame(frame, build / "frames" / frame.name)
     align_build(build)
-    timeline = json.loads((build / "timeline.json").read_text())
-    manifest = json.loads((source / "scene_manifest.json").read_text())
+    timeline = json.loads((build / "timeline.json").read_text(encoding="utf-8"))
+    manifest = json.loads((source / "scene_manifest.json").read_text(encoding="utf-8"))
     manifest.update(episode=episode, timeline=timeline, caption_revision_from={
         "source": str(source), "scene_sha256": scene_hash(source),
         "change": "Caption-only re-export: original 3D poses, frames and exact dialogue unchanged.",
@@ -396,7 +396,7 @@ def scene_build(build, episode_path=None, profile="preview"):
     from scene_direction import VERSION, configure_cameras, configure_cast, performance_plan, room_design
 
     episode = read_episode(episode_path or build / "episode.json")
-    timeline = json.loads((build / "timeline.json").read_text())
+    timeline = json.loads((build / "timeline.json").read_text(encoding="utf-8"))
     check_timeline(episode, timeline)
     if "word_alignment" not in timeline:
         raise ValueError("Align final speech before building performance.")
@@ -497,7 +497,7 @@ def repair_door(build):
     scene.frame_set(1)
     bpy.ops.wm.save_as_mainfile(filepath=str(build / "studio.blend"), compress=True)
     manifest_path = build / "scene_manifest.json"
-    manifest = json.loads(manifest_path.read_text())
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest["door_parenting_repair"] = {
         "before_scene_sha256": before,
         "repair_script_sha256": sha256_file(Path(__file__)),
@@ -561,11 +561,11 @@ def promo(build, source=None):
 
     source = source if source is not None else BUILDS / "v4"
     isolated(source, build)
-    original = json.loads((source / "timeline.json").read_text())
-    source_manifest = json.loads((source / "scene_manifest.json").read_text())
+    original = json.loads((source / "timeline.json").read_text(encoding="utf-8"))
+    source_manifest = json.loads((source / "scene_manifest.json").read_text(encoding="utf-8"))
     if source_manifest["timeline"] != original:
         raise ValueError("Promo source scene and audio timeline differ.")
-    receipt = json.loads((source / "frames_manifest.json").read_text())
+    receipt = json.loads((source / "frames_manifest.json").read_text(encoding="utf-8"))
     if receipt != {"scene": source_manifest, "blend_sha256": scene_hash(source)}:
         raise ValueError("Promo source frames are stale.")
     episode, timeline, start, stop, intro_frames, outro_frames = plan_promo(source_manifest["episode"], original)

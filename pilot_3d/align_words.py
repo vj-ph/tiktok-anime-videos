@@ -37,11 +37,11 @@ def validate_words(words, text, duration):
 
 def align_build(build):
     path = build / "timeline.json"
-    timeline = json.loads(path.read_text())
+    timeline = json.loads(path.read_text(encoding="utf-8"))
     code = language_code(timeline)
     model_name = language_profile(timeline)["alignment_model"]
     snapshot = build / "episode.json"
-    if snapshot.is_file() and language_code(json.loads(snapshot.read_text())) != code:
+    if snapshot.is_file() and language_code(json.loads(snapshot.read_text(encoding="utf-8"))) != code:
         raise ValueError("Episode and prepared timeline use different languages; regenerate audio.")
 
     import torch
@@ -71,7 +71,7 @@ def align_build(build):
         key = content_hash(payload)
         sidecar = cache / f"{turn['id']}-{key[:20]}.words.json"
         if sidecar.exists():
-            saved = json.loads(sidecar.read_text())
+            saved = json.loads(sidecar.read_text(encoding="utf-8"))
             if saved["cache_key"] != key or saved["payload"] != payload:
                 raise ValueError(f"Corrupt alignment cache: {sidecar}")
             words = saved["words"]

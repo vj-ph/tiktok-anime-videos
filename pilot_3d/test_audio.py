@@ -156,7 +156,7 @@ class CueTests(unittest.TestCase):
         self.assertEqual(command[command.index("-r") + 1], "phonetic")
         self.assertEqual(command[command.index("-f") + 1], "json")
         self.assertEqual(command[command.index("--extendedShapes") + 1], "GHX")
-        self.assertEqual(command[command.index("-d") + 1], "/audio/01.txt")
+        self.assertEqual(command[command.index("-d") + 1], str(Path("/audio/01.txt")))
         self.assertEqual(command[-1], "/recording.wav")
         dialog.assert_called_once_with(Path("/audio/01.txt"), "Guten Tag.\n")
         self.assertEqual(save.call_count, 2)
