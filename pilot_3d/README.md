@@ -1194,6 +1194,10 @@ scene for full-rate animation. No frame interpolation is used.
 
 ## Setup on this machine
 
+For another computer, see [the migration guide](MIGRATION.md): hardware targets,
+Windows/WSL2 versus native-Windows compatibility, external assets, Python
+environment recreation and the separate GPU-enablement/validation step.
+
 System prerequisites: Python 3.12, FFmpeg with libass and libx264, DejaVu Sans,
 curl, tar, unzip, and the libraries required by the official Linux Blender build.
 
