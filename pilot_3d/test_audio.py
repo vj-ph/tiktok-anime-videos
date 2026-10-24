@@ -6,6 +6,7 @@ import io
 import json
 from pathlib import Path
 import struct
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -25,6 +26,47 @@ def episode():
              "pause_after": 0},
         ],
     }
+
+
+class CliThreadTests(unittest.TestCase):
+    def test_qwen_default_and_overrides_do_not_change_rhubarb_threads(self):
+        for options, tts_threads, rhubarb_threads in (
+                ([], 8, 4),
+                (["--threads", "2"], 2, 4),
+                (["--rhubarb-threads", "2"], 8, 2),
+                (["--threads", "4", "--rhubarb-threads", "3"], 4, 3)):
+            with self.subTest(options=options), tempfile.TemporaryDirectory() as folder:
+                root = Path(folder)
+                path = root / "episode.json"
+                path.write_text(json.dumps(episode()), encoding="utf-8")
+                binary = root / "rhubarb"
+                binary.write_bytes(b"explicit synthetic CLI fixture")
+                build = root / "build"
+                infos = [{"audio": str(root / "raw.wav"), "frames": 2400,
+                          "sample_rate": 24000, "wav_duration": 0.1}] * 2
+                argv = ["prepare_audio.py", "--episode", str(path), "--output-dir", str(build),
+                        "--rhubarb", str(binary), *options]
+                with patch.object(sys, "argv", argv), \
+                        patch("episode_config.read_episode", return_value=episode()), \
+                        patch.object(audio, "synthesize", return_value=infos) as synthesize, \
+                        patch.object(audio, "prepare_turn_audio", side_effect=lambda turn, raw, directory: raw), \
+                        patch.object(audio, "run_rhubarb",
+                                     return_value=[{"start": 0, "end": 0.1, "value": "X"}]) as rhubarb, \
+                        patch.object(audio, "assemble_dialogue"), patch("builtins.print"):
+                    audio.main()
+                self.assertEqual(synthesize.call_args.args[5], tts_threads)
+                self.assertEqual([call.args[-1] for call in rhubarb.call_args_list], [rhubarb_threads] * 2)
+
+    def test_each_thread_option_rejects_nonpositive_values(self):
+        for option in ("--threads", "--rhubarb-threads"):
+            for value in ("0", "-1"):
+                with self.subTest(option=option, value=value), \
+                        patch.object(sys, "argv", ["prepare_audio.py", option, value]), \
+                        patch("sys.stderr", new_callable=io.StringIO) as error:
+                    with self.assertRaises(SystemExit) as raised:
+                        audio.main()
+                    self.assertEqual(raised.exception.code, 2)
+                    self.assertIn(f"{option} must be positive", error.getvalue())
 
 
 class ValidationTests(unittest.TestCase):

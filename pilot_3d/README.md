@@ -151,6 +151,52 @@ before scene baking. The short episode declares 90 seconds, including its
 entrance, reading pause and CTA. It is not acceptable to infer this duration
 from the filename or an older machine's timing.
 
+### Qwen TTS CPU thread benchmark
+
+The Windows comparison used Qwen3-TTS 1.7B Base on CPU with the existing
+float32/SDPA settings, one speech worker and **four fixed inter-op threads**.
+Only intra-op threads varied. Three identical French TEF excerpts (6/19/25
+words, candidate and examiner voices) generated 17.760 seconds of raw audio
+per trial. Six fresh processes ran in order 2/4/8, then 8/4/2, each with an
+empty speech cache and one warmup. Timed synthesis excludes imports, model
+loading, voice-prompt setup, warmup and file I/O; those costs are recorded
+separately.
+
+| Intra-op threads | Median synthesis seconds | Median audio-seconds per wall second |
+| --- | --- | --- |
+| 2 | 152.23 | 0.1167 |
+| 4 | 143.55 | 0.1237 |
+| 8 | 136.63 | 0.1300 |
+
+Eight threads had about 5.1% higher synthesis throughput than four on this
+workload, not a twofold improvement. This controlled comparison fixes inter-op
+threads at four; the ordinary two-thread CLI configuration uses two inter-op
+threads and was not measured here.
+
+**Qwen now defaults to eight intra-op threads and four inter-op threads** in
+both `pipeline.py build` and standalone `prepare_audio.py`. Standalone
+`--threads N` overrides Qwen's count. Lip-sync analysis remains independently
+at four threads (`--rhubarb-threads N`), and Blender worker/thread settings
+are unchanged.
+
+All 24 raw WAVs (18 measured clips plus six warmups) decode and validate.
+Measured clips have identical sample counts and differ from the four-thread
+reference by at most one PCM16 quantization step; this is waveform comparison,
+not a new listening/pronunciation certification. Original delivery, frozen
+source and production-benchmark image hashes still match.
+
+The default update changes hashed pipeline sources. Use a **fresh build
+directory** for the next generation; the earlier prepared four-thread TEF
+build cannot resume with the updated code. Do not edit its state/source
+hashes to bypass this check. Existing audio/scenes are not rewritten.
+Thread counts also participate in raw-speech cache keys, so four-thread
+recordings are not silently relabelled as eight-thread synthesis.
+
+Reports, raw WAVs, source snapshots and the reproducible benchmark helper are
+in `builds/tef_canada_a1_qwen_cpu_threads_benchmark_r1/`. One-thread synthesis
+and multiple speech workers were not tested. Existing production speech
+was not regenerated or replaced.
+
 ## Development workflow
 
 The project-local `pilot-3d-dev` skill in

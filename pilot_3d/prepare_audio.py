@@ -36,6 +36,7 @@ from episode_profiles import language_code, language_profile
 
 ROOT = Path(__file__).resolve().parent
 MODEL = "Qwen/Qwen3-TTS-12Hz-1.7B-Base"
+DEFAULT_TTS_THREADS = 8
 SAMPLE_RATE = 48_000
 CACHE_SCHEMA = 1
 SAFE_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}\Z")
@@ -684,7 +685,10 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, default=BUILDS / "pilot_v1")
     from runtime_config import tool_path
     parser.add_argument("--rhubarb", type=Path, default=tool_path("rhubarb"))
-    parser.add_argument("--threads", type=int, default=4)
+    parser.add_argument("--threads", type=int, default=DEFAULT_TTS_THREADS,
+                        help="Qwen intra-operation CPU threads (default: %(default)s).")
+    parser.add_argument("--rhubarb-threads", type=int, default=4,
+                        help="Independent lip-sync analysis threads (default: %(default)s).")
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--model", default=MODEL)
     parser.add_argument("--prepare-only", action="store_true", help="Synthesize/cache WAVs only, before Rhubarb is available.")
@@ -693,6 +697,8 @@ def main() -> None:
     args = parser.parse_args()
     if args.threads <= 0:
         parser.error("--threads must be positive")
+    if args.rhubarb_threads <= 0:
+        parser.error("--rhubarb-threads must be positive")
     if not args.device.strip() or not args.model.strip():
         parser.error("--device and --model cannot be empty")
     started = time.monotonic()
@@ -719,7 +725,7 @@ def main() -> None:
     binary = args.rhubarb.resolve(strict=True)
     binary_hash = sha256_file(binary)
     cues = [
-        run_rhubarb(turn, info, audio_dir, binary, binary_hash, args.threads)
+        run_rhubarb(turn, info, audio_dir, binary, binary_hash, args.rhubarb_threads)
         for turn, info in zip(episode["turns"], audio)
     ]
     timeline = build_timeline(episode, audio, cues)

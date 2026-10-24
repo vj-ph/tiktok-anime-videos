@@ -49,7 +49,7 @@ runtime controls. Notifications were tested against a local HTTP server,
 including server errors and blocked delivery; no external ntfy service has
 been configured or contacted for this validation.
 
-The expanded Windows portability suite ran 173 tests: 172 passed, one
+The expanded Windows portability suite ran 175 tests: 174 passed, one
 opt-in GPU smoke skipped, including strict-duration and GPU-counter regression checks.
 Real HIP benchmark rendering is validated
 separately. `psutil>=5.9` is declared in `requirements-test.txt` (also included
@@ -87,6 +87,19 @@ sums must not be interpreted as physical GPU utilization, including in the
 earlier preview report. The current sampler labels them as an activity index
 and leaves unavailable physical utilization null. Throughput and memory
 measurements are unaffected; the measured helper versions are archived.
+
+### Qwen CPU thread default
+
+Qwen synthesis now defaults to eight intra-op threads in the pipeline and
+standalone audio CLI, retaining four inter-op threads. The controlled French
+benchmark measured about 5.1% higher synthesis throughput than four intra-op
+threads. Standalone `--threads` controls Qwen; the independent
+`--rhubarb-threads` keeps lip-sync analysis at its previous four-thread default.
+Blender settings are unchanged.
+
+This source change requires a fresh build directory rather than resuming the
+earlier prepared four-thread TEF build. Existing speech, scenes and historical
+receipts remain untouched; never modify their hashes to force reuse.
 
 ## TEF Canada resource checklist
 

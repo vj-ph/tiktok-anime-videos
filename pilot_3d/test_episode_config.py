@@ -342,6 +342,7 @@ class PipelineCheckpointTests(unittest.TestCase):
             probe.assert_called_once_with("HIP")
             command = list(map(str, run.call_args_list[0].args[0]))
             self.assertEqual(command[command.index("--device") + 1], "cuda:0")
+            self.assertEqual(command[command.index("--threads") + 1], "8")
             state = json.loads((self.build / "pipeline_state.json").read_text(encoding="utf-8"))
             self.assertEqual(state["spec"]["render_device"], "HIP")
             self.assertEqual(state["spec"]["speech_device"], "cuda:0")

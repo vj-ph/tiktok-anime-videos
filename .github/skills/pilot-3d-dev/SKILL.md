@@ -80,6 +80,10 @@ and documentation; keep changes focused.
   words. Keep alignment confidence, validation and provenance checks.
 - CPU speech and CPU rendering are independent defaults. Select accelerators
   explicitly and verify availability; do not assume GPU/NPU compatibility.
+- Qwen CPU synthesis defaults to eight intra-operation and four inter-operation
+  threads. Keep Rhubarb's four-thread default and Blender settings independent;
+  standalone `--threads` selects Qwen threads, `--rhubarb-threads` selects lip-sync
+  analysis threads.
 - Keep native Windows and Linux/WSL behavior working. Resolve tools/fonts
   through existing helpers and use the appropriate platform path conventions.
 - If changing frozen source dependencies, inspect `pipeline.py`'s `SOURCES`,

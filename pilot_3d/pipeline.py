@@ -20,7 +20,7 @@ from episode_config import PROFILES, check_timeline, read_episode, validate_temp
 from episode_profiles import language_profile
 from runtime_config import RENDER_DEVICES, RENDER_JOBS, check_render_device, font_path, qwen_python, tool_path
 from generation_runtime import GenerationRun, generation_job, run_process, stage_completed
-from prepare_audio import (atomic_json, atomic_text, content_hash, inspect_wav,
+from prepare_audio import (DEFAULT_TTS_THREADS, atomic_json, atomic_text, content_hash, inspect_wav,
                            load_audio_cache, make_cache_payload, sha256_file)
 
 SOURCES = ("pipeline.py", "runtime_config.py", "generation_runtime.py", "build_paths.py", "episode_config.py", "episode_profiles.py", "picture_presentation.py", "prepare_audio.py", "align_words.py", "check_speech.py",
@@ -258,7 +258,7 @@ def build_episode(path, build, profile="preview", jobs=4, with_promo=False, unti
         step("audio", copy_reused_audio, ("dialogue.wav", "audio_timeline.json", "audio_reuse.json"))
     else:
         audio_args = [python, ROOT / "prepare_audio.py", "--episode", snapshot,
-                      "--output-dir", build, "--threads", "4", "--device", speech_device]
+                      "--output-dir", build, "--threads", str(DEFAULT_TTS_THREADS), "--device", speech_device]
         if speech_cache_from is not None:
             audio_args += ["--speech-cache-from", speech_cache_from]
         step("audio", command("audio", audio_args),
