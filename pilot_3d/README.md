@@ -62,6 +62,48 @@ Network/configuration failures produce generic local warnings, not failed
 videos. Hard process termination, OS shutdown and power loss cannot guarantee
 a terminal notification; Windows closes the process's power requests.
 
+### Recovering a HIP production crash
+
+The long four-worker Windows production run failed after 291 saved frames:
+one worker reported a Cycles `integrator_init_from_camera` assertion and other
+workers reported access violations in `amdhip64_6.dll`. All 291 PNGs decode,
+and the episode remains 86.583333 seconds. The short production benchmark
+established throughput, **not long-run driver stability**; the exact trigger
+of this failure is not established.
+
+Use the recovery entry point in the same PowerShell window as your ntfy
+environment settings, from `pilot_3d`:
+
+```powershell
+$env:PATH = "$PWD\.tools\windows\ffmpeg;$env:PATH"
+.\.venv\Scripts\python.exe -X utf8 -u resume_pipeline.py `
+  --build builds\tef_canada_a1_short_windows_production_r1
+```
+
+It reads the existing episode/profile/devices from the build and invokes the
+unchanged pipeline through export/review, initially with **two HIP workers**.
+On a newly recorded, recognized HIP crash during the frame stage, it retries
+at lower concurrency after 10 seconds: the default sequence is 2/1/1 workers,
+at most three attempts. `--jobs`, `--max-retries` (0-3) and `--retry-delay`
+(0-60 seconds) bound this behavior. There is no CPU fallback, quality change
+or unlimited retry. Other failures, cancellation, stale error logs and
+exhausted retries stop rather than being treated as success.
+
+Source hashes, prepared-stage outputs and the matching HIP frame checkpoint
+are verified before each attempt. Compatible saved frames and completed
+audio/alignment/scene stages are reused by the pipeline. Prior and new worker
+logs and an attempt receipt are archived under the build's `recovery/`
+directory. This recovery wrapper is deliberately outside `pipeline.py`'s
+frozen sources so adding it does not invalidate an existing build; it never
+changes historical receipts or relaxes pipeline hash checks.
+
+The recovery logic is covered by mocked process/checkpoint tests. No video
+generation was rerun to validate this change at the user's request. This is
+bounded crash recovery, **not a demonstrated fix to the AMD driver**; a
+complete long-running HIP render still needs verification.
+
+### Render-worker benchmarking
+
 Benchmark an existing baked scene in a **new sibling directory**:
 
 ```powershell

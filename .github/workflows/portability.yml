@@ -29,7 +29,7 @@ jobs:
       - name: Run portable unit and encoded-video checks
         run: >-
           python -X utf8 -m unittest
-          test_runtime test_generation_runtime test_benchmark_workers
+          test_runtime test_generation_runtime test_benchmark_workers test_resume_pipeline
           test_audio test_direction test_entrance test_build_paths
           test_render test_social test_profiles
           test_episode_config.PipelineCheckpointTests

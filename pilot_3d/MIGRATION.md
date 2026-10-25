@@ -101,6 +101,24 @@ This source change requires a fresh build directory rather than resuming the
 earlier prepared four-thread TEF build. Existing speech, scenes and historical
 receipts remain untouched; never modify their hashes to force reuse.
 
+### Long production HIP crash recovery
+
+The four-worker short production run failed after 291 valid PNGs, with a
+Cycles path-kernel assertion and `amdhip64_6.dll` access violations. This
+does not invalidate the earlier short throughput measurements, but it shows
+that they did not establish long-run four-worker stability. The precise
+driver/runtime trigger is unconfirmed.
+
+`resume_pipeline.py --build <existing-build>` adds bounded recovery without
+changing the frozen pipeline sources. It verifies the original source/stage/
+frame receipts, starts at two HIP workers, and retries only fresh recognized
+frame-stage HIP crashes with lower concurrency (default 2/1/1 workers).
+Existing frames are retained and failure logs are archived. It neither
+switches to CPU nor changes quality, and it stops on unrelated errors or
+exhausted retries. See the README for the Windows command and ntfy setup.
+Mocked recovery/process tests pass; no real generation rerun was performed,
+as requested. Sustained recovered rendering remains to be verified.
+
 ## TEF Canada resource checklist
 
 Git contains both `episodes/tef_canada_a1.json` and
