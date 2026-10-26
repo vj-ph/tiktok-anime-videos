@@ -37,10 +37,32 @@ class RuntimeTests(unittest.TestCase):
         with patch.dict(os.environ, {"BLENDER_EXE": sys.executable}):
             self.assertEqual(runtime.tool_path("blender"), Path(sys.executable).resolve())
 
+    def test_portable_tools_take_priority_without_searching_path(self):
+        with tempfile.TemporaryDirectory() as folder, patch.dict(os.environ, {}, clear=True):
+            root = Path(folder)
+            portable = root / ".tools" / "linux" / "blender" / "blender"
+            legacy = root / ".tools" / "blender" / "blender"
+            for path in (portable, legacy):
+                path.parent.mkdir(parents=True)
+                path.touch()
+            with patch.object(runtime, "ROOT", root), patch.object(sys, "platform", "linux"):
+                with patch("runtime_config.shutil.which", side_effect=AssertionError("unexpected PATH lookup")):
+                    self.assertEqual(runtime.tool_path("blender"), portable)
+                    portable.unlink()
+                    self.assertEqual(runtime.tool_path("blender"), legacy)
+
     def test_path_tools_are_supported(self):
         with tempfile.TemporaryDirectory() as folder, patch.object(runtime, "ROOT", Path(folder)):
             with patch("runtime_config.shutil.which", return_value=sys.executable):
                 self.assertEqual(runtime.tool_path("rhubarb"), Path(sys.executable))
+
+    def test_missing_tool_returns_expected_portable_path(self):
+        with tempfile.TemporaryDirectory() as folder, patch.dict(os.environ, {}, clear=True):
+            root = Path(folder)
+            with patch.object(runtime, "ROOT", root), patch.object(sys, "platform", "linux"):
+                with patch("runtime_config.shutil.which", return_value=None) as which:
+                    self.assertEqual(runtime.tool_path("blender"), root / ".tools" / "linux" / "blender" / "blender")
+                    which.assert_called_once_with("blender")
 
     def test_qwen_interpreter_override_and_local_environment(self):
         with tempfile.TemporaryDirectory() as folder:

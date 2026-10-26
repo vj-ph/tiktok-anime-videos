@@ -19,8 +19,10 @@ def tool_path(name):
     platform = "windows" if sys.platform == "win32" else "linux"
     portable = ROOT / ".tools" / platform / name / executable
     local = ROOT / ".tools" / name / executable
-    return next((path for path in (portable, local) if path.is_file()),
-                Path(shutil.which(executable) or portable))
+    for path in (portable, local):
+        if path.is_file():
+            return path
+    return Path(shutil.which(executable) or portable)
 
 
 def qwen_python():
