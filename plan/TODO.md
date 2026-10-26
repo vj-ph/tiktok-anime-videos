@@ -1,6 +1,6 @@
 # Publication TODO
 
-Status recorded: October 25, 2026. Paths below are relative to the repository root.
+Status recorded: October 26, 2026. Paths below are relative to the repository root.
 
 ## Agreed publishing approach
 
@@ -58,12 +58,15 @@ short comedy/practice adaptation, not a change to the full-practice default.
 
 ## Publication tasks
 
+- [x] Record the [seasonal publication proposal for 2026-2027](seasonal_publication_plan_2026_2027.md), including all ten suggested occasions plus Halloween as the recommended next topic. Distinguish verified event dates from proposed release windows and unconfirmed publication status.
+- [ ] Select a real book exercise and script scope for `DTZ B1: Süßes oder Prüfungsangst?`; proposed release window October 29-30, 2026, ahead of Halloween on October 31. Keep `ÖIF B2: Halloween – Tradition oder Kommerz?` as an alternative, not a second approved production. No Halloween script, props, media or posting drafts have been generated.
 - [x] Confirm whether Ausflug has already been published manually; record each platform's publication date and post link. Marked complete per user confirmation on October 26, 2026; platform dates and links were not supplied in this conversation.
 - [ ] Review and approve the Lerntreffen preview.
 - [ ] Render and quality-check the Lerntreffen production video, preserving the approved audio and timing.
 - [ ] Create a prioritized queue of further book-based practice topics covering Teil 1, Teil 2 and Teil 3, not only planning dialogues.
 - [ ] Choose a release cadence, target publication times and an explicit timezone.
-- [ ] Create a dated publication calendar with the episode, platform, video path, caption path, scheduled date/time, status and published link.
+- [x] Create a dated seasonal editorial proposal with event dates, publication windows, target exam/audience, priorities and tracking fields; see the linked plan. Windows are proposals, not scheduled uploads.
+- [ ] Turn selected rows into a confirmed upload calendar with actual approved master/caption paths, exact date/time and timezone, platform status and published links. Leave unknown values unconfirmed.
 - [ ] Publish Ausflug on any outstanding platform and publish Lerntreffen after production approval, using the prepared platform-specific captions.
 - [ ] Record available performance results and review them to guide the next topics and publishing cadence.
 
