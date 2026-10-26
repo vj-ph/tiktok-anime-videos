@@ -30,8 +30,13 @@ jobs:
         run: >-
           python -X utf8 -m unittest
           test_runtime test_generation_runtime test_benchmark_workers test_resume_pipeline
-          test_audio test_direction test_entrance test_build_paths
+          test_audio test_direction test_entrance test_build_paths test_dressing
           test_render test_social test_profiles
           test_episode_config.PipelineCheckpointTests
           test_episode_config.EpisodeConfigTests.test_authored_duration_limit_is_strict_on_the_encoded_frame_clock
           test_tef_episode.TefEpisodeTests.test_real_encoded_task_card_and_reference_change_on_exact_odd_frames
+          test_nationalfeiertag_episode.NationalfeiertagEpisodeTests.test_intro_is_welcome_banter_then_one_real_instruction_and_discussion
+          test_nationalfeiertag_episode.NationalfeiertagEpisodeTests.test_comedy_history_is_not_the_discussion_or_an_official_claim
+          test_nationalfeiertag_episode.NationalfeiertagEpisodeTests.test_dialogue_reacts_to_text_shows_experience_and_debates_real_constraints
+          test_nationalfeiertag_episode.NationalfeiertagEpisodeTests.test_headers_learning_card_and_book_ending_are_coherent
+          test_nationalfeiertag_episode.NationalfeiertagEpisodeTests.test_approved_dressing_and_austrian_reference_provenance

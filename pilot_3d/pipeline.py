@@ -18,6 +18,7 @@ sys.path.insert(0, str(ROOT))
 from build_paths import build_directory, resolve_build_reference
 from episode_config import PROFILES, check_timeline, read_episode, validate_template
 from episode_profiles import language_profile
+from scene_dressing import asset_files as dressing_asset_files
 from runtime_config import RENDER_DEVICES, RENDER_JOBS, check_render_device, font_path, qwen_python, tool_path
 from generation_runtime import GenerationRun, generation_job, run_process, stage_completed
 from prepare_audio import (DEFAULT_TTS_THREADS, atomic_json, atomic_text, content_hash, inspect_wav,
@@ -26,7 +27,7 @@ from prepare_audio import (DEFAULT_TTS_THREADS, atomic_json, atomic_text, conten
 SOURCES = ("pipeline.py", "runtime_config.py", "generation_runtime.py", "build_paths.py", "episode_config.py", "episode_profiles.py", "picture_presentation.py", "prepare_audio.py", "align_words.py", "check_speech.py",
            "produce_v4.py", "render.py", "social_captions.py", "review_social.py",
            "check_v4_scene.py", "studio_characters.py", "polish_exchange.py",
-           "scene_direction.py", "entrance.py", "build_scene.py")
+           "scene_direction.py", "scene_dressing.py", "entrance.py", "build_scene.py")
 STAGES = ("audio", "alignment", "scene", "scene_checks", "frames", "export", "review")
 
 
@@ -96,6 +97,11 @@ def freeze_delivery(build):
                                       "speech_asr_check.json")
                      if (build / name).is_file())
     episode = read_episode(build / "episode.json")
+    for path in dressing_asset_files(episode, verify=True):
+        name = f"dressing_assets/{path.name}"
+        (build / "dressing_assets").mkdir(exist_ok=True)
+        shutil.copy2(path, build / name)
+        outputs += (name,)
     if episode.get("pictures"):
         assets = build / "picture_assets"
         assets.mkdir(exist_ok=True)
@@ -184,7 +190,8 @@ def build_episode(path, build, profile="preview", jobs=4, with_promo=False, unti
                 + ([episode["book_cover"]] if episode["outro_seconds"] > 0 else [])
                 + [str(font_path()), str(font_path(bold=True))]
                 + [picture["path"] for picture in episode.get("pictures", {}).values()]
-                + ([episode["scene"]["wall_logo"]] if episode["scene"].get("wall_logo") else []))},
+                + ([episode["scene"]["wall_logo"]] if episode["scene"].get("wall_logo") else [])
+                + [str(value) for value in dressing_asset_files(episode, verify=True)])},
             "code_sha256": {name: sha256_file(ROOT / name) for name in SOURCES}}
     if reuse_audio is not None:
         spec["reuse_audio"] = audio_reuse_spec(episode, reuse_audio)

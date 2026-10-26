@@ -1,5 +1,103 @@
 # Reusable 3D exam-practice generator
 
+## Checked Nationalfeiertag preview
+
+**Neutral? Nicht bei Feiertagen!** is the requested playful history introduction
+and shortened, book-based ÖIF B2 holiday discussion. The complete preview is
+**100.833333 seconds / 2420 frames**:
+
+- Captioned: `builds/oeif_b2_nationalfeiertag_v7_preview_r3/pilot.mp4`
+- Clean: `builds/oeif_b2_nationalfeiertag_v7_preview_r3/pilot_clean.mp4`
+- Posting drafts: `../posts/oeif_b2_nationalfeiertag/{tiktok,instagram}.txt`
+
+Both movies decode completely: H.264/yuv420p, 720x1280, 24 fps, AAC 48 kHz mono.
+All 13 real speech turns match independent German ASR; 24 caption pages meet
+the reading limits (minimum 1.916667 encoded seconds; maximum 19.948052 CPS).
+Actual encoded checks cover 27 header/card/ending samples, the 29-frame
+examiner hold, 192-frame reading card and 144-frame CTA with the correct cover.
+Native checks pass 1210 head/hair poses, five doorway crossings and 249
+caption-clear portraits, with minimum hair/crown clearance of 1.505 mm.
+All 51 prior masters, the source book and original shared voices are unchanged.
+
+See `episode_qa.json`, `delivery_checks.json`, `scene_checks.json`,
+`contact_sheet.jpg` and `episode_review/` in that build. The reusable extra
+check is `verify_preview.py`. Final decoded stills and review sheets have been
+inspected. Seven forced-alignment warnings remain; ASR is not a pronunciation
+or accent guarantee, and manual listening remains pending. This is a
+**preview for approval**, not production or publication. Posting copy is draft
+only; current platform upload constraints and mobile placement are not certified.
+
+The authored episode and posting drafts now use the user-requested main title
+**ÖIF B2: Neutral? Nicht bei Feiertagen!**, including the visible opening hook.
+The compact header retains its exam-labelled brand row and shorter topic row.
+The frozen r3 preview is unchanged; no replacement preview was requested.
+To render production with this title and the exact checked preview audio:
+
+```bash
+../../.venvs/qwen-tts-test/bin/python pipeline.py build \
+  --episode episodes/oeif_b2_nationalfeiertag.json \
+  --build builds/oeif_b2_nationalfeiertag_v7_production_r1 \
+  --reuse-audio builds/oeif_b2_nationalfeiertag_v7_preview_r3 \
+  --profile production --jobs 4
+```
+
+Run from `pilot_3d/` with a fresh output directory. This example uses the local
+Linux Qwen environment; on another machine use its configured Python executable.
+Providing this command does not start a render. Speech, voices and timing remain
+unchanged.
+
+## Optional room and character dressing
+
+Episodes may opt into `scene.dressing` for Austrian flags, a coffee set,
+backpack and an Alpine-style head-attached hat. Copy the object in
+`assets/props/austria.json` into that field, or select individual items.
+Existing episodes without the field retain their original props and voices.
+See [the prop catalogue](assets/props/README.md) for options, CC0 source
+provenance, asset checks and limits. No purchase or online import is required.
+
+Run the small **silent, synthetic prop fixture** from this directory with
+the configured Blender (replace the executable path on Windows):
+
+```bash
+.tools/blender/blender -b --disable-autoexec builds/v2/studio.blend -t 4 \
+  --python-exit-code 1 --python test_dressing_scene.py -- \
+  builds/austrian_props_review_new --render
+```
+
+Use a new build directory. `--render` adds six 720x1280, 16-sample PNG review
+stills, including close-up inspection cameras that are **not episode shots**.
+It also creates `_captioned.png` versions using the actual ASS overlays and a
+labelled `review/contact_sheet.jpg`; raw/captioned image hashes and dimensions
+are recorded in `dressing_review.json`. It also marks whether each view is the
+camera actually selected on the episode timeline, and annotates the backpack
+in `review/backpack_in_entrance.png`.
+Without it, only the native scene is baked/checked. Captions are prepared using
+the configured Python runtime, not extra packages in Blender's Python.
+This does not synthesize Austrian voices, validate a new exam format or create
+a movie; a voiced episode and its normal delivery checks remain separate.
+
+Checked reference: `builds/austrian_props_review_r10/review/contact_sheet.jpg`.
+Its native checks cover 326 hat-tracking poses, five hat/doorway crossings,
+upper-hair containment inside the crown, 30 caption-clear portrait poses,
+support/contact, fingertips and backpack
+routes. See `scene_checks.json`, `dressing_review.json` and the
+[episode design/review notes](../plan/oeif_b2_nationalfeiertag.md).
+
+Hat sizing uses an unposed head coordinate frame, so a longer introduction
+or a tilted head at fitting time cannot bake that tilt into its placement.
+For a deliberately tilted native regression, run the fixture in a fresh
+directory with `--tilted-fit` (add `--render` only when review stills are needed):
+
+```bash
+.tools/blender/blender -b --disable-autoexec builds/v2/studio.blend -t 4 \
+  --python-exit-code 1 --python test_dressing_scene.py -- \
+  builds/austrian_props_tilted_fit_new --tilted-fit
+```
+
+The checked `builds/austrian_props_tilted_fit_r11/` fixture passes 326
+head/hair samples, doorway crossings and caption-clear portraits. This is
+still silent regression evidence, not the voiced Nationalfeiertag movie.
+
 ## Windows and Linux/WSL2
 
 The same Python entry points now resolve native Windows and Linux tools, fonts

@@ -1,0 +1,30 @@
+{
+  "checked": "2026-10-24",
+  "assets": {
+    "coffee_set": {
+      "file": "tea_set_01_1k.blend",
+      "sha256": "cc43b05e9cdc9f7567dfd8a773f8527075ce11bc7f93a60037715783de595bee",
+      "publisher_md5": "a48bee92cba3abe48f1a91698ff24054",
+      "source": "https://polyhaven.com/a/tea_set_01",
+      "download": "https://dl.polyhaven.org/file/ph-assets/Models/blend/1k/tea_set_01/tea_set_01_1k.blend",
+      "authors": "Rico Cilliers (modeling), James Ray Cock (texturing), Jurita Burger (graphic design)",
+      "license": "CC0-1.0",
+      "license_source": "https://polyhaven.com/license",
+      "adaptation": "Append only cup_small_01 and saucer_circular_03. Replace textured materials with plain porcelain; source textures are not used. Add procedural coffee and a water glass."
+    },
+    "backpack": {
+      "file": "pixor-library-backpack.glb",
+      "sha256": "5e788b96f4cab28944df7c84088cb3f8d1a2c83a820f85a82e8541409cf18dcf",
+      "source": "https://pixor.art/library/armour/backpack/",
+      "download": "https://pixor.art/library/files/backpack/pixor-library-backpack.glb",
+      "authors": "Pixor free library",
+      "license": "CC0-1.0",
+      "license_source": "https://pixor.art/library/armour/backpack/",
+      "adaptation": "Normalize to a 0.52 m tall stationary floor prop, retain named flat-colour materials."
+    }
+  },
+  "procedural": {
+    "flags": "Original red-white-red geometry; no coat of arms or cloth simulation.",
+    "hat": "Original simplified Alpine-style felt hat with red-white-red band; free fallback, not a downloaded hat."
+  }
+}

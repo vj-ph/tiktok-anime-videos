@@ -277,6 +277,11 @@ def check(build):
         report["picture_presentation"] = {"packed_table_pictures": len(props), "unobscured_heads": checked}
     if manifest.get("visual_version", 0) >= 6:
         report["entrance"] = check_entrance(scene, actors, manifest, timeline, build)
+    from scene_dressing import check_dressing
+    dressing = check_dressing(scene, episode, manifest["room_design"].get("dressing"),
+                             timeline, manifest.get("entrance", {"enabled": False}), step, actors)
+    if dressing:
+        report["dressing"] = dressing
     if manifest.get("visual_version", 0) >= 5:
         from bpy_extras.object_utils import world_to_camera_view
         from mathutils import Vector

@@ -1,0 +1,56 @@
+{
+  "checked": "2026-10-25",
+  "source": "User-selected locally supplied Austrian synthetic reference recordings; shared originals unchanged.",
+  "method": "Bit-preserving PCM16 excerpt selected by independent word timestamps; no time stretching or retuning.",
+  "asr": {
+    "model": "Systran/faster-whisper-small",
+    "language": "de",
+    "initial_prompt": null,
+    "condition_on_previous_text": false,
+    "vad_filter": false,
+    "beam_size": 5
+  },
+  "notice": "ASR correspondence, not human listening or pronunciation certification.",
+  "voices": {
+    "candidate_a": {
+      "source_directory": "../../../../../shared-voices/gemini_3.8_flash_tts/austrain/",
+      "source_file": "female_young_adult_austrian.wav",
+      "source_sha256": "1f99a18cb74c6375ece27fc285fc1cdad8193a1248d3e258b2b4bab5903ba3f1",
+      "crop_start_seconds": 10.435,
+      "crop_end_seconds": 14.68,
+      "clip_file": "female_young_adult.wav",
+      "clip_duration_seconds": 4.245,
+      "clip_sha256": "76b433d3f61857ed1d431b3044923d3cdedf3283d4a5815486258ebcd97db1ca",
+      "transcript": "Wie ein kleiner König. Aber lass uns das jetzt schnell vergessen und das Leben genießen!",
+      "unprompted_asr": "wie ein kleiner König. Aber lass uns das jetzt schnell vergessen und das Leben genießen.",
+      "unprompted_asr_matches": true
+    },
+    "candidate_b": {
+      "source_directory": "../../../../../shared-voices/gemini_3.8_flash_tts/austrain/",
+      "source_file": "male_young_adlut_austrian.wav",
+      "source_sha256": "00ff03a3e14117cb2c3ccd77a242ae9489c6f7438362b24b6a67e9aef1115684",
+      "crop_start_seconds": 9.82,
+      "crop_end_seconds": 14.12,
+      "clip_file": "male_young_adult.wav",
+      "clip_duration_seconds": 4.3,
+      "clip_sha256": "b1f1480cfed367654f069eee4f66b7e0ef9576921a5c3570e07ef212e060a2ef",
+      "transcript": "Wie ein kleiner König. Aber lass uns das jetzt schnell vergessen und das Leben genießen!",
+      "unprompted_asr": "wie ein kleiner König. Aber lass uns das jetzt schnell vergessen und das Leben genießen.",
+      "unprompted_asr_matches": true
+    },
+    "examiner": {
+      "source_directory": "../../../../../shared-voices/gemini_3.8_flash_tts/austrain/",
+      "source_file": "male_middle_adult_austrian.wav",
+      "source_sha256": "12c7b92ce99d5911a0263e56ac87e9f033256ac86d872ae4fabcbb49a7eb30dd",
+      "crop_start_seconds": 10.26,
+      "crop_end_seconds": 15.12,
+      "clip_file": "male_middle_adult.wav",
+      "clip_duration_seconds": 4.86,
+      "clip_sha256": "17dbcfa7205fd117a639c7817fb44066be6a2d1df8718b4c75dd82406bb884f0",
+      "transcript": "Wie ein kleiner König. Aber lass uns das jetzt schnell vergessen und das Leben genießen!",
+      "unprompted_asr": "wie ein kleiner König. Aber lass uns das jetzt schnell vergessen und das Leben genießen.",
+      "unprompted_asr_matches": true
+    }
+  },
+  "source_path_base": "Directory containing this provenance file."
+}

@@ -1,0 +1,11 @@
+{
+  "props": [
+    {"type": "flag", "pattern": "austria", "anchor": "back_wall_left"},
+    {"type": "flag", "pattern": "austria", "anchor": "table_corner"},
+    {"type": "coffee_set", "anchor": "examiner_table_side"},
+    {"type": "backpack", "anchor": "candidate_b_chair_side"}
+  ],
+  "accessories": [
+    {"type": "hat", "style": "alpine", "actor": "candidate_b"}
+  ]
+}

@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "id": "oeif_b2_nationalfeiertag_v7",
+  "language": "de",
+  "presentation": "social",
+  "visual_version": 7,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "exam": {"family": "oeif", "skill": "speaking", "section": "discussion"},
+  "exam_part": 2,
+  "title": "ÖIF B2: Neutral? Nicht bei Feiertagen!",
+  "label": "Nationalfeiertag · ÖIF B2 · Übungsausschnitt",
+  "disclaimer": "Comedy-Intro und gekürzte, unabhängige ÖIF-B2-Übung. Keine offizielle Aufgabe oder vollständige Prüfung.",
+  "branding": "DEUTSCHKOMPASS",
+  "scene": {
+    "template": "exam_room",
+    "base_scene": "../builds/v2/studio.blend",
+    "entrance": true,
+    "wall_logo": "../assets/deutschkompass-logo.png",
+    "dressing": {
+      "props": [
+        {"type": "flag", "pattern": "austria", "anchor": "back_wall_left"},
+        {"type": "flag", "pattern": "austria", "anchor": "table_corner"},
+        {"type": "coffee_set", "anchor": "examiner_table_side"},
+        {"type": "backpack", "anchor": "candidate_b_chair_side"}
+      ],
+      "accessories": [{"type": "hat", "style": "alpine", "actor": "candidate_b"}]
+    }
+  },
+  "header": {
+    "brand": "DEUTSCHKOMPASS · ÖIF B2",
+    "topic": "Neutral? Nicht bei Feiertagen!"
+  },
+  "sections": {
+    "intro": "26. Oktober · Nationalfeiertag",
+    "discussion": "ÖIF B2 · Teil 2 · Kurzdialog"
+  },
+  "hook": "ÖIF B2: Neutral? Nicht bei Feiertagen!",
+  "task_title": "GEKÜRZTER LESEIMPULS",
+  "task_summary": "Ein zusätzlicher Feiertag?",
+  "task_hint": "Lernpause · Video bei Bedarf anhalten.",
+  "publication": {
+    "intro": "Neutral bei der Frage: ausschlafen oder spazieren gehen? Erst ein fiktives Comedy-Intro zum 26. Oktober, dann ein kurzer ÖIF-B2-Dialog über einen zusätzlichen Feiertag.",
+    "disclosure": "Unabhängige, gekürzte ÖIF-B2-Übung auf Basis unseres Sprechbuchs; keine offizielle Aufgabe und keine vollständige Prüfung. Das Comedy-Intro ist keine Prüfungsphase. Der gekürzte Leseimpuls und die Lernpause gehören zum Video, nicht zum offiziellen Prüfungsablauf.",
+    "hashtags": ["#Nationalfeiertag", "#Österreich", "#ÖIFB2", "#DeutschLernen", "#DeutschKompass"]
+  },
+  "book_cover": "../assets/oeif-b2-speaking-cover.jpg",
+  "source": {
+    "book": "../../../german_exam_books/b2/speaking_oeif_gpt_v2/book_no_toc.md",
+    "exercise": "Kapitel 2, Diskussion 7: Soll ein zusätzlicher gesetzlicher Feiertag eingeführt werden?",
+    "adaptation": "Original comedy introduction followed by a shortened text-based B2 discussion, not a full exam or the complete book stimulus/model. Intro banter explicitly remains in the technical welcome phase; there is one later instruction/reading card and no entrance restart. Includes personal experience, two text reactions, fixed versus flexible leave, an inclusive occasion and fair shift-work solutions.",
+    "duration_target_seconds": [100, 120],
+    "duration_limit_seconds": 120,
+    "duration_exception": "The user explicitly selected a 100-120-second comedy-plus-practice episode, overriding the project's usual under-90-second default for this episode only.",
+    "framework_reference": "https://sprachportal.at/fileadmin/user_upload/meinsprachportal-at/Materialen_zur_Pruefungsvorbereitung/B2/B2_OEIF-Test_Modelltest_ab_15.10.2026_15102026.pdf",
+    "framework_checked": "2026-10-25",
+    "history_reference": "https://www.bundeskanzleramt.gv.at/bundeskanzleramt/besuchen-sie-uns/nationalfeiertag.html",
+    "history_checked": "2026-10-25",
+    "cover_source": "../../../german_exam_books/b2/speaking_oeif_gpt_v1/oeif_b2_speaking.jpg",
+    "coverage": {
+      "Nationalfeiertag: Neutralitätsbeschluss 1955, Nationalfeiertag seit 1965": ["03"],
+      "Textreaktion: gemeinsame Freizeit und Schichtarbeit": ["07", "08"],
+      "Persönliche Erfahrung mit gemeinsamer Familienzeit": ["07"],
+      "Eigener Standpunkt: fester versus frei wählbarer Tag": ["07", "08", "09"],
+      "Interaktion: ein verbindender Anlass": ["09", "10"],
+      "Lösung: Ausgleich, Arbeitsverdichtung und kleine Betriebe": ["10", "11"],
+      "Humor mit einem kompetenten Gesprächspartner": ["02", "04", "05", "12", "13"]
+    }
+  },
+  "fps": 24,
+  "intro_seconds": 2.5,
+  "outro_seconds": 6.0,
+  "task_card": [
+    "Familien profitieren von gemeinsamer Freizeit.",
+    "Pflege und Verkehr arbeiten auch an Feiertagen.",
+    "Fester Feiertag oder frei wählbarer Tag?"
+  ],
+  "takeaway": [],
+  "takeaway_seconds": 0,
+  "cta": [
+    "Mehr B2-Dialoge",
+    "im ÖIF-B2-Sprechbuch",
+    "Amazon-Buchlink im Profil"
+  ],
+  "voices": {
+    "examiner": {
+      "audio": "../assets/voices/austrian/male_middle_adult.wav",
+      "transcript": "../assets/voices/austrian/reference_text.txt"
+    },
+    "candidate_a": {
+      "audio": "../assets/voices/austrian/female_young_adult.wav",
+      "transcript": "../assets/voices/austrian/reference_text.txt"
+    },
+    "candidate_b": {
+      "audio": "../assets/voices/austrian/male_young_adult.wav",
+      "transcript": "../assets/voices/austrian/reference_text.txt"
+    }
+  },
+  "turns": [
+    {
+      "id": "01", "speaker": "examiner", "name": "Prüfer",
+      "text": "Guten Tag. Nehmen Sie bitte Platz.",
+      "camera": "wide", "action": "welcome", "look_at": "candidate_a",
+      "section": "intro", "pause_after": 3.0
+    },
+    {
+      "id": "02", "speaker": "candidate_b", "name": "Samir",
+      "text": "So viele Fahnen! Habe ich die Prüfung oder einen Staatsbesuch gebucht?",
+      "camera": "wide", "action": "ask", "look_at": "examiner",
+      "phase": "welcome", "section": "intro", "pause_after": 1.2
+    },
+    {
+      "id": "03", "speaker": "candidate_a", "name": "Lea",
+      "text": "Nur die Prüfung. Am 26. Oktober 1955 beschloss der Nationalrat die Neutralität. Seit 1965 ist dieser Tag der Nationalfeiertag.",
+      "camera": "candidate_a", "action": "answer", "look_at": "candidate_b",
+      "phase": "welcome", "section": "intro", "pause_after": 1.2
+    },
+    {
+      "id": "04", "speaker": "candidate_b", "name": "Samir",
+      "text": "Dann bleibe ich auch neutral: ausschlafen oder spazieren gehen?",
+      "camera": "candidate_b", "action": "consider", "look_at": "candidate_a",
+      "phase": "welcome", "section": "intro", "pause_after": 1.2
+    },
+    {
+      "id": "05", "speaker": "candidate_a", "name": "Lea",
+      "text": "Beim Frühstück darfst du dich trotzdem entscheiden.",
+      "camera": "candidate_a", "action": "answer", "look_at": "candidate_b",
+      "phase": "welcome", "section": "intro", "pause_after": 1.2
+    },
+    {
+      "id": "06", "speaker": "examiner", "name": "Prüfer",
+      "text": "Und jetzt entscheiden Sie sich für ein Argument. Soll Österreich einen zusätzlichen Feiertag bekommen?",
+      "camera": "examiner", "action": "explain", "look_at": "candidate_a",
+      "section": "discussion", "pause_after": 9.2, "task_card_delay_seconds": 1.2
+    },
+    {
+      "id": "07", "speaker": "candidate_a", "name": "Lea",
+      "text": "Der Text betont gemeinsame Freizeit. Ich bin dafür: Meine Schwester und ich haben sonst selten gleichzeitig frei.",
+      "camera": "candidate_a", "action": "propose", "look_at": "candidate_b",
+      "section": "discussion", "pause_after": 1.2
+    },
+    {
+      "id": "08", "speaker": "candidate_b", "name": "Samir",
+      "text": "Mich beschäftigt der Hinweis auf Pflegekräfte: Sie arbeiten auch an Feiertagen. Wäre ein freier Tag nach eigener Wahl nicht gerechter?",
+      "camera": "candidate_b", "action": "consider", "look_at": "candidate_a",
+      "section": "discussion", "pause_after": 1.2
+    },
+    {
+      "id": "09", "speaker": "candidate_a", "name": "Lea",
+      "text": "Das stimmt. Trotzdem ersetzt Urlaub keinen gemeinsamen Tag. Welcher Anlass verbindet uns, und wie berücksichtigen wir Schichtarbeit?",
+      "camera": "candidate_a", "action": "ask", "look_at": "candidate_b",
+      "section": "discussion", "pause_after": 1.2
+    },
+    {
+      "id": "10", "speaker": "candidate_b", "name": "Samir",
+      "text": "Ein Tag fürs Ehrenamt könnte verbinden. Dazu brauchen wir verlässlichen Zeitausgleich und Schutz vor zusätzlicher Arbeitsverdichtung.",
+      "camera": "candidate_b", "action": "answer", "look_at": "candidate_a",
+      "section": "discussion", "pause_after": 1.2
+    },
+    {
+      "id": "11", "speaker": "candidate_a", "name": "Lea",
+      "text": "Einverstanden. Entscheidend ist nicht nur mehr Freizeit, sondern eine faire Verteilung. Auch kleine Betriebe brauchen Planungssicherheit.",
+      "camera": "candidate_a", "action": "agree", "look_at": "candidate_b",
+      "section": "discussion", "pause_after": 1.2
+    },
+    {
+      "id": "12", "speaker": "candidate_b", "name": "Samir",
+      "text": "Für faire Dienstpläne bin ich sofort zu haben. Für Frühdienst weniger.",
+      "camera": "candidate_b", "action": "answer", "look_at": "candidate_a",
+      "section": "discussion", "pause_after": 1.2
+    },
+    {
+      "id": "13", "speaker": "examiner", "name": "Prüfer",
+      "text": "Ein gutes Argument. Und ausschlafen können Sie nach der Prüfung.",
+      "camera": "examiner", "action": "answer", "look_at": "candidate_b",
+      "pause_after": 1.2
+    }
+  ]
+}

@@ -437,6 +437,12 @@ def scene_build(build, episode_path=None, profile="preview"):
         for point in curve.keyframe_points:
             point.interpolation = "LINEAR"
     cameras = configure_cameras(scene, episode, timeline)
+    from scene_dressing import apply_dressing
+    dressing = apply_dressing(scene, episode, {actor.name: actor for actor in actors},
+                              min(timeline["total_frames"], 1 + math.ceil(
+                                  (seating_deadline(episode, timeline) + .1) * timeline["fps"])), timeline)
+    if dressing:
+        design["dressing"] = dressing
     scene.timeline_markers.clear()
     shots = camera_shots(episode, timeline)
     for t, name in shots:
@@ -471,7 +477,7 @@ def scene_build(build, episode_path=None, profile="preview"):
         "room_design": design, "performance": performance_plan(timeline, episode), "entrance": entrance_direction,
         "quality": profile,
         "source_sha256": {name: sha256_file(ROOT / name) for name in
-                          ("produce_v4.py", "episode_config.py", "episode_profiles.py", "picture_presentation.py", "studio_characters.py", "polish_exchange.py", "scene_direction.py", "entrance.py", "build_scene.py")},
+                          ("produce_v4.py", "episode_config.py", "episode_profiles.py", "picture_presentation.py", "studio_characters.py", "polish_exchange.py", "scene_direction.py", "scene_dressing.py", "entrance.py", "build_scene.py")},
         "cast": cast,
         "blocking": {actor.name: json.loads(actor.root["blocking"]) for actor in actors},
         "shots": shots,

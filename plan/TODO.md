@@ -1,6 +1,6 @@
 # Publication TODO
 
-Status recorded: October 24, 2026. Paths below are relative to the repository root.
+Status recorded: October 25, 2026. Paths below are relative to the repository root.
 
 ## Agreed publishing approach
 
@@ -35,6 +35,26 @@ for both candidates, using the book's weekly-market and supermarket pictures:
 - [x] Prepare the book-based Teil 2 script and full-episode TikTok/Instagram caption drafts, with image attribution and complete disclosures; production and publication remain pending.
 - [ ] Review and approve the full Teil 1 preview, then render and quality-check its production video with unchanged speech and timing.
 - [ ] Review and approve the full Teil 2 preview, then render and quality-check its production video with unchanged speech and timing.
+
+## Nationalfeiertag: playful ÖIF B2 episode
+
+User-selected scope: 100-120-second target, script and visual design first.
+See [the draft](oeif_b2_nationalfeiertag.md). This is an explicitly requested
+short comedy/practice adaptation, not a change to the full-practice default.
+
+- [x] Draft a history/comedy introduction, linked book-based holiday discussion and book CTA, with the requested Austrian reference-voice casting. Record the selected flags, Samir's hat, examiner's coffee set and stationary backpack; no strudel. Document an opt-in reusable dressing implementation.
+- [x] Obtain approval for free-first flags, hat, coffee set and backpack implementation and a few checked review frames; no strudel, paid asset, full render or publication.
+- [x] Implement opt-in `scene.dressing`, pinned CC0 cup/saucer and backpack assets, procedural flags/hat/glass, native head attachment and hat-aware close-up framing. Wire validation, asset/source hashes, frozen copies and native checks without changing default episodes or runtime tooling.
+- [x] Render and inspect six 720x1280 prop-review stills plus real caption overlays and a contact sheet in `pilot_3d/builds/austrian_props_review_r8/`. Check head tracking, doorway clearance, caption-safe hat framing, table/floor and cup/saucer contact, hands/routes and packed assets. Verify all 50 prior video masters unchanged. Broad regressions: 250 pass, three skip; one pre-existing Linux/Python-3.12 Windows-tool mock failure is recorded/excluded, not fixed or claimed passing.
+- [x] Address placement feedback in `pilot_3d/builds/austrian_props_review_r10/`: drinks nearer the examiner, a lower fitted hat with owner-local upper-hair compression and all-pose crown clearance checks, and an annotated backpack in the real entrance shot. Preserve prior reviews, distinguish actual timeline shots from review-only views, and recheck native contact/clearance plus 75 focused regressions.
+- [x] Verify each selected Austrian WAV independently and create matching 4.245/4.3/4.86-second PCM16 excerpts with exact reference text and source/crop/ASR provenance. Preserve shared originals and the misspelled original filename; do not rely on the stale voice manifest. ASR agreement is not auditory/accent certification.
+- [x] Author the approved 13-turn comedy-to-discussion episode, book coverage, B2 cover, original reading summary and CTA. Keep the first five turns in the technical welcome phase and one later instruction/card. Episode validation and 81 focused regressions pass.
+- [x] Check real Qwen3-TTS 1.7B audio in `pilot_3d/builds/oeif_b2_nationalfeiertag_v7_preview_r2/`: 100.833333 seconds, 2420 frames, all 13 turns match independent German ASR, and all 24 subtitle pages pass at minimum 1.916667 encoded seconds / maximum 19.948052 encoded CPS. Two clearer-wording revisions reuse the other 11 raw recordings exactly. Retain seven alignment warnings and human listening/accent review; the first take and its disagreements remain unchanged.
+- [x] Catch and correct the second run's opening-pose hair/hat collision before rendering. Fit in unposed head coordinates and measure seating in hat-local coordinates without changing hat size or brim depth. Add `--tilted-fit` to the native fixture: `pilot_3d/builds/austrian_props_tilted_fit_r11/` passes 326 head/hair samples, five doorway samples and 30 caption-clear portraits; 81 focused tests pass. Preserve the failed build and start `oeif_b2_nationalfeiertag_v7_preview_r3` with all 13 verified recordings reused.
+- [x] Generate and check the complete preview in `pilot_3d/builds/oeif_b2_nationalfeiertag_v7_preview_r3/`: both 100.833333-second / 2420-frame movies decode, all 13 turns match independent German ASR and all 24 caption pages meet the reading limits. Native checks pass 1210 head/hair poses, five doorway crossings and 249 caption-clear portraits (minimum crown clearance 1.505 mm). Check 27 actual encoded header/card/CTA samples, the correct B2 cover and all frozen file/source hashes. Inspect final full-size props, reading/ending frames and contact sheets. Preserve all 51 prior masters, the book and shared voice originals; prepare full posting drafts. Evidence: `episode_qa.json`, `delivery_checks.json` and `episode_review/`.
+- [ ] Listen to the Austrian speech for pronunciation/accent and review the seven disclosed forced-alignment warnings; independent ASR does not replace listening.
+- [ ] Approve the Nationalfeiertag preview before requesting a separate production render with unchanged approved speech/timing. Publication and platform/mobile placement review remain separate; posting copy is draft only.
+- [x] Add the user-requested exam-prefixed main title `ÖIF B2: Neutral? Nicht bei Feiertagen!` to the authored episode, visible opening hook and posting drafts. Require exam name/level in the practice-video skill and add focused title assertions. Keep the frozen r3 preview unchanged; provide the revised-JSON production command with exact r3 audio reuse without starting another render.
 
 ## Publication tasks
 
@@ -114,6 +134,7 @@ Leave running production jobs unchanged; keep heavy CPU builds sequential.
 | Lerntreffen | `pilot_3d/builds/lerntreffen_v7_preview_r1/pilot.mp4` - preview only | `posts/dtz_b1_lerntreffen/` |
 | Teil 1: Vorstellung und Nachfragen | `pilot_3d/builds/teil1_vorstellung_v7_preview_r2/pilot.mp4` - preview only | `posts/dtz_b1_teil1_vorstellung/` |
 | Teil 2: Bildbeschreibung und Erfahrungen beim Einkaufen | `pilot_3d/builds/teil2_einkaufen_v7_preview_r2/pilot.mp4` - preview only | `posts/dtz_b1_teil2_einkaufen/` |
+| ÖIF B2: Neutral? Nicht bei Feiertagen! | `pilot_3d/builds/oeif_b2_nationalfeiertag_v7_preview_r3/pilot.mp4` - 1:40.83, preview only | `posts/oeif_b2_nationalfeiertag/` |
 | TEF Canada: Section A, pratique A1 | `pilot_3d/builds/tef_canada_a1_preview_r3/pilot.mp4` - image/logo preview only, in the isolated TEF worktree | `posts/tef_canada_a1/` |
 | TEF Canada: Atelier informatique, short A1 excerpt | `pilot_3d/builds/tef_canada_a1_short_preview_r1/pilot.mp4` - 1:26.58, preview only, in the isolated TEF worktree | `posts/tef_canada_a1_short/` |
 

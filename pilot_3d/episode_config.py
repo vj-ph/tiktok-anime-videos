@@ -167,6 +167,8 @@ def validate_template(episode, *, check_assets=False):
     nonempty(scene.get("base_scene"), "scene.base_scene")
     if "wall_logo" in scene:
         nonempty(scene["wall_logo"], "scene.wall_logo")
+    from scene_dressing import validate_dressing
+    validate_dressing(episode, check_assets=check_assets)
     if set(episode["voices"]) - {"candidate_a", "candidate_b", "examiner"}:
         raise ValueError("exam_room supports candidate_a, candidate_b and examiner voice slots.")
     if set(episode["voices"]) - set(actors):
