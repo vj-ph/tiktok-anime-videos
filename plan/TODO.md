@@ -30,11 +30,11 @@ for both candidates, using the book's weekly-market and supermarket pictures:
 - [x] Create a Teil 2 practice-video format with a clearly readable photograph, candidate description and examiner-led discussion of related personal experiences.
 - [x] Cover Teil 2A, describing the photograph and the situation it shows; use an original or appropriately licensed image rather than copying an official exam picture. The user confirmed promotional reuse rights for the two book images.
 - [x] Cover Teil 2B, discussing personal experiences and answering related follow-up questions, including explanations or comparisons where appropriate. Do not end the episode after the picture description.
-- [ ] Adapt the new scripts from the speaking book, review a full preview of each new format, and prepare production videos and matching TikTok/Instagram captions after approval.
-- [x] Prepare the book-based Teil 1 script and full-episode TikTok/Instagram caption drafts; production and publication remain pending.
-- [x] Prepare the book-based Teil 2 script and full-episode TikTok/Instagram caption drafts, with image attribution and complete disclosures; production and publication remain pending.
-- [ ] Review and approve the full Teil 1 preview, then render and quality-check its production video with unchanged speech and timing.
-- [ ] Review and approve the full Teil 2 preview, then render and quality-check its production video with unchanged speech and timing.
+- [x] Adapt the new scripts from the speaking book, review a full preview of each new format, and prepare production videos and matching TikTok/Instagram captions after approval. Closed following the user's publication confirmation on October 26, 2026; separate preview-approval records were not found.
+- [x] Prepare the book-based Teil 1 script and full-episode TikTok/Instagram caption drafts; production exists and publication was confirmed by the user.
+- [x] Prepare the book-based Teil 2 script and full-episode TikTok/Instagram caption drafts, with image attribution and complete disclosures; production exists and publication was confirmed by the user.
+- [x] Review and approve the full Teil 1 preview, then render and quality-check its production video with unchanged speech and timing. Production and delivery checks exist; publication was confirmed by the user on October 26, 2026. No separate preview-approval record was found.
+- [x] Review and approve the full Teil 2 preview, then render and quality-check its production video with unchanged speech and timing. Production and delivery checks exist; publication was confirmed by the user on October 26, 2026. No separate preview-approval record was found.
 
 ## Nationalfeiertag: playful ÖIF B2 episode
 
@@ -141,11 +141,11 @@ Leave running production jobs unchanged; keep heavy CPU builds sequential.
 | --- | --- | --- |
 | Ausflug | `pilot_3d/builds/v6_hold12_cta6_production/pilot.mp4` - production | `posts/dtz_b1_ausflug/` |
 | Lerntreffen | `pilot_3d/builds/lerntreffen_v7_preview_r1/pilot.mp4` - preview only | `posts/dtz_b1_lerntreffen/` |
-| Teil 1: Vorstellung und Nachfragen | `pilot_3d/builds/teil1_vorstellung_v7_preview_r2/pilot.mp4` - preview only | `posts/dtz_b1_teil1_vorstellung/` |
-| Teil 2: Bildbeschreibung und Erfahrungen beim Einkaufen | `pilot_3d/builds/teil2_einkaufen_v7_preview_r2/pilot.mp4` - preview only | `posts/dtz_b1_teil2_einkaufen/` |
+| Teil 1: Vorstellung und Nachfragen | `pilot_3d/builds/teil1_vorstellung_v7_production/pilot.mp4` - production, 1:55.375 | `posts/dtz_b1_teil1_vorstellung/` |
+| Teil 2: Bildbeschreibung und Erfahrungen beim Einkaufen | `pilot_3d/builds/teil2_einkaufen_v7_production/pilot.mp4` - production, 2:33.167 | `posts/dtz_b1_teil2_einkaufen/` |
 | ÖIF B2: Neutral? Nicht bei Feiertagen! | `pilot_3d/builds/oeif_b2_nationalfeiertag_v7_preview_r3/pilot.mp4` - 1:40.83, preview only | `posts/oeif_b2_nationalfeiertag/` |
 | TEF Canada: Section A, pratique A1 | `pilot_3d/builds/tef_canada_a1_preview_r3/pilot.mp4` - image/logo preview only, in the isolated TEF worktree | `posts/tef_canada_a1/` |
 | TEF Canada: Atelier informatique, short A1 excerpt | `pilot_3d/builds/tef_canada_a1_short_preview_r1/pilot.mp4` - 1:26.58, preview only, in the isolated TEF worktree | `posts/tef_canada_a1_short/` |
 
 Each caption folder contains `tiktok.txt` and `instagram.txt`.
-No publication dates, published-post status or performance results have been confirmed here yet.
+The user confirmed on October 26, 2026 that Teil 1 and Teil 2 have been published; platforms, publication dates and post links were not supplied. Both existing production videos exceed the current under-90-second limit for new videos. Performance results have not been supplied.

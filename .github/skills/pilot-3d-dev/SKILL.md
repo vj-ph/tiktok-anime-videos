@@ -49,6 +49,22 @@ repository root unless a command explicitly changes directory.
 Trace the affected path end-to-end before editing. Update directly related tests
 and documentation; keep changes focused.
 
+## DTZ listening book
+
+- The user has confirmed that the content and audio in
+  `../german_exam_books/b1/listening_dtz_v2/` may be used to create videos.
+  Preserve the originals and record the source of reused material.
+- Check any separately sourced third-party components, such as sound effects,
+  for the intended use and required attribution.
+
+## 3D objects
+
+- Reuse suitable existing assets. If an object is missing, search online for a
+  suitable 3D asset before drawing or modeling it from scratch.
+- Check compatibility and commercial-use licensing, and record source,
+  license and any required attribution. Create the object only if a suitable,
+  appropriately licensed asset cannot be found.
+
 ## Video duration
 
 - Preview and production videos must be **strictly shorter than 1 minute
