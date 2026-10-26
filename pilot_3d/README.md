@@ -48,12 +48,34 @@ unchanged.
 
 ## Optional room and character dressing
 
-Episodes may opt into `scene.dressing` for Austrian flags, a coffee set,
+Episodes may opt into `scene.dressing` for Austrian or Canadian flags, a coffee set,
 backpack and an Alpine-style head-attached hat. Copy the object in
 `assets/props/austria.json` into that field, or select individual items.
 Existing episodes without the field retain their original props and voices.
-See [the prop catalogue](assets/props/README.md) for options, CC0 source
+See [the prop catalogue](assets/props/README.md) for options, asset source
 provenance, asset checks and limits. No purchase or online import is required.
+
+The TEF Canada Section A/B configurations explicitly select the wall and desk
+flags from `assets/props/canada.json`. These are lightweight original 2:1 meshes
+with downloaded maple-leaf artwork, a packed PNG texture and separately pinned
+PNG/SVG provenance in `canada.provenance.json`; they do not import a complete
+third-party scene or change speech, timing, Austrian props or undressed episodes.
+Existing frozen videos remain unchanged; changed dressing requires a fresh
+build directory.
+
+Checked Canadian reference:
+`builds/tef_canada_b1_canada_decor_review_r2/review/contact_sheet.jpg`.
+It compares three actual episode-camera views with the unchanged previous
+preview, using the real caption overlays. Both flags appear in the wide shot;
+the complete wall flag clears the candidate header, while the friend's tight
+shot retains its existing composition. A separate wall-flag detail view is
+inspection-only. Native placement checks, three one-pose regressions rejecting
+distorted geometry/UVs/disconnected texture, 51 focused Python tests and the
+real B1 asset validation pass. These are 720x1280, 16-sample HIP stills, not a
+new movie. `canada_dressing_review.json` records image hashes, camera/frame
+IDs, checks and preservation of seven prior movies and 116 frozen files.
+The 72.833333-second dialogue, timeline and alignment are byte-identical;
+the earlier complete B1 preview still has its original undecorated scene.
 
 Run the small **silent, synthetic prop fixture** from this directory with
 the configured Blender (replace the executable path on Windows):
@@ -518,6 +540,58 @@ including prompt, response and answer-reveal behavior; they are **not**
 implemented by changing an exam label. Other speaking exams similarly require
 their own reviewed tasks/configurations. Unsupported languages, layouts and
 `exam.skill: "listening"` fail rather than quietly producing the wrong format.
+
+### TEF Canada Section B: vegetarian cooking workshop
+
+`episodes/tef_canada_b1_short.json` adapts **Practice set B1: Vegetarian cooking
+workshop** from the speaking book. B1 is the exercise number, not a CEFR level.
+The nine-turn excerpt presents the original advertisement (Saturday 10:00-12:00,
+32 dollars, ingredients included), then addresses price versus a free tutorial
+and an existing lunch commitment. The candidate acknowledges each reservation,
+suggests checking another date without promising availability, and leaves the
+decision to the friend. The examiner plays that friend, labelled **Ami**, using
+informal French after the formal instruction. This is an original shortened
+adaptation, not the complete book dialogue or a full exam simulation.
+
+The book advertisement appears as a reading close-up and compact opening-turn
+reference. Section B shows **Préparez vos arguments.**,
+while Section A and German prompts remain unchanged. The existing French voice
+IDs and exact reference transcripts are reused. The cover and voice paths assume
+the `french-exam-prep-book` checkout is a sibling of this repository on Windows
+or Linux/WSL2; the image itself is included with source/hash provenance in
+`assets/pictures/README.md`. TikTok and Instagram drafts are in
+`../posts/tef_canada_b1_short/`, with the full-model book CTA and attribution.
+
+Validate assets with `python pipeline.py validate --episode
+episodes/tef_canada_b1_short.json` and run the portable content/layout checks with
+`python -X utf8 -m unittest test_tef_section_b test_profiles` from this directory,
+using the configured environment interpreter. Asset validation and synthetic-clock
+checks alone do **not** certify actual speech duration or pronunciation.
+
+The native Windows HIP preview generated October 26, 2026 is
+`builds/tef_canada_b1_short_windows_preview_r1/pilot.mp4`, with
+`pilot_clean.mp4` alongside it. Both 720x1280 exports fully decode:
+**72.833333 seconds, 1,748 frames at 24 fps**, including entrance, the six-second
+ad-reading window and six-second book CTA. All 874 native preview poses rendered
+with four HIP workers, without a recovery retry. Native scene checks and eight
+decoded ad-boundary frame checks pass; the contact sheet and full-size reading,
+compact-ad and CTA frames have been inspected. All 19 frozen delivery-file and
+21 source hashes verify; five earlier movie masters and 50 Python sources remain
+unchanged.
+
+The 15 subtitle pages meet the reading policy: minimum 2.375 encoded seconds and
+maximum 19.5693 characters/second. Independent small-model ASR matches six of
+nine turns strictly. The two number-formatting differences and closing imperative
+are reviewed against an independent medium model in `speech_review.json`; raw
+ASR mismatch flags are unchanged. Two low-confidence alignment words (`tu`,
+`Essaie`) remain disclosed. No auditory listening or pronunciation/accent
+certification is claimed. Final verification is in `qa/preview_verification.json`.
+
+Further revisions require a fresh build and measured `total_frames / fps < 90`
+before baking; final exports must also stay strictly below 90 seconds. Preview
+approval is required before production, with publication approved separately.
+The official Section B lasts 10 minutes, not the length or reading pause of this
+promotional excerpt (framework checked October 26, 2026).
 
 ### First TEF Canada configuration: Section A, practice A1
 

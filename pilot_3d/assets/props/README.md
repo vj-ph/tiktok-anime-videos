@@ -5,6 +5,19 @@ not a standalone episode. Copy it into the episode to enable both Austrian
 flags, the examiner's coffee set, Samir's backpack and head-attached hat.
 Omitting the block adds no props and needs none of these asset files.
 
+`canada.json` enables a Canadian wall flag and a small desk flag without
+the Austrian accessories or downloaded models. The authored TEF Canada Section
+A and B episodes select this dressing explicitly; other episodes keep their
+existing defaults. Geometry and the desk pole/base are original Blender meshes.
+The wall flag is 90 x 45 cm and the desk flag is 24 x 12 cm.
+The complete maple-leaf artwork is an unmodified 1280 x 640 PNG downloaded
+from Wikimedia Commons, not an imported third-party 3D scene.
+`canada.provenance.json` records its public-domain source designation,
+publisher/download URLs, authors and exact PNG/source-SVG hashes.
+This separate catalogue leaves the existing CC0 model metadata unchanged.
+The PNG is packed into the scene for offline rendering; the original SVG is
+also checked and included with the selected source assets in frozen deliveries.
+
 The two downloaded models are free CC0 assets, checked October 24, 2026.
 `provenance.json` records their publisher pages, download URLs, authors,
 licences, exact source hashes and adaptations. No paid model was purchased.
@@ -14,8 +27,9 @@ licences, exact source hashes and adaptations. No paid model was purchased.
 | `tea_set_01_1k.blend` | Poly Haven, Tea Set 01 | Only the small cup and round saucer are appended; original texture materials are replaced with plain porcelain |
 | `pixor-library-backpack.glb` | Pixor free library, Backpack | Five mesh parts, flat colours; normalized to 52 cm high |
 
-The water glass, coffee surface, flags and simplified Alpine-style felt hat
-are original procedural geometry. The hat uses the approved custom fallback,
+The water glass, coffee surface, flag geometry and simplified Alpine-style felt
+hat are original procedural geometry; Canadian flag artwork is sourced as
+described above. The hat uses the approved custom fallback,
 not a sourced/purchased hat. No strudel, flag-waving, drinking, carrying or
 cloth simulation is included.
 
@@ -38,7 +52,7 @@ set is deliberately small:
 
 | Type | Required options |
 | --- | --- |
-| `flag` | `pattern: "austria"`; `anchor: "back_wall_left"` or `"table_corner"` |
+| `flag` | `pattern: "austria"` or `"canada"`; `anchor: "back_wall_left"` or `"table_corner"` |
 | `coffee_set` | `anchor: "examiner_table_side"` |
 | `backpack` | `anchor: "candidate_b_chair_side"`; candidate B must be active |
 | `hat` (in `accessories`) | `style: "alpine"`; `actor`: an active actor slot |
@@ -75,4 +89,19 @@ Native checks cover the actual saved objects, hat fit and head-following at
 every sampled pose, upper-hair clearance against the actual crown mesh,
 doorway clearance, floor/table support, the cup/saucer
 contact, backpack route clearance and fingertips around the desk props.
+Canadian flag checks also require the pinned packed PNG, connected shader
+texture, unchanged artwork UV orientation and 2:1 geometry. The Canadian wall
+flag sits 5 cm below the shared wall anchor to fit the interview close-up
+above its header; the Austrian placement is unchanged.
 Rendered inspection remains necessary for appearance and caption visibility.
+
+The Canadian native/visual reference is
+`builds/tef_canada_b1_canada_decor_review_r2/`. Its
+`review/contact_sheet.jpg` compares actual wide, candidate and friend shots
+with the prior B1 preview and real captions. The complete wall flag fits above
+the candidate header; the desk flag is visible in the wide shot and stays
+clear of sampled fingertips. `review/canada_flag_detail.png` is an inspection
+camera, not an episode shot. `canada_dressing_review.json` records image hashes,
+packed-source checks, three one-pose negative regressions and exact reuse of
+the 72.833333-second speech/timing. No new full video was exported; all seven
+earlier movies and 116 frozen delivery/source files were preserved.

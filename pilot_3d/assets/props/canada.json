@@ -1,0 +1,7 @@
+{
+  "props": [
+    {"type": "flag", "pattern": "canada", "anchor": "back_wall_left"},
+    {"type": "flag", "pattern": "canada", "anchor": "table_corner"}
+  ],
+  "accessories": []
+}

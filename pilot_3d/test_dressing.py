@@ -25,6 +25,11 @@ class DressingTests(unittest.TestCase):
         episode["scene"]["dressing"] = copy.deepcopy(self.config)
         return episode
 
+    def canadian(self):
+        episode = read_episode(ROOT / "episodes/tef_canada_b1_short.json")
+        episode["scene"]["dressing"] = json.loads((ASSETS / "canada.json").read_text(encoding="utf-8"))
+        return episode
+
     def test_legacy_episodes_need_no_dressing_assets_or_new_settings(self):
         for path in (ROOT / "episodes").glob("*.json"):
             episode = read_episode(path)
@@ -95,14 +100,81 @@ class DressingTests(unittest.TestCase):
             with patch("scene_dressing.ASSETS", root), self.assertRaisesRegex(ValueError, "checksum"):
                 asset_files(self.dressed(), verify=True)
 
+    def test_canadian_dressing_is_explicit_and_preserves_interview_cast_and_speech(self):
+        config = self.canadian()["scene"]["dressing"]
+        for name in ("tef_canada_a1", "tef_canada_a1_short", "tef_canada_b1_short"):
+            episode = read_episode(ROOT / "episodes" / f"{name}.json")
+            before = copy.deepcopy(episode)
+            validate_template(episode)
+            validate_dressing(episode, check_assets=True)
+            self.assertEqual(episode, before)
+            self.assertEqual(episode["scene"]["dressing"], config)
+            self.assertEqual(episode["scene"]["layout"], "interview")
+            self.assertEqual({turn["speaker"] for turn in episode["turns"]}, {"candidate_a", "examiner"})
+        self.assertTrue(all(item["pattern"] == "austria" for item in self.config["props"]
+                            if item["type"] == "flag"))
+
+    def test_canadian_artwork_is_pinned_complete_and_correctly_proportioned(self):
+        from PIL import Image
+        import xml.etree.ElementTree as ET
+
+        episode = self.canadian()
+        files = asset_files(episode, verify=True)
+        self.assertEqual({path.name for path in files},
+                         {"canada.provenance.json", "canada-flag.png", "canada-flag.svg"})
+        self.assertEqual(len(files), 3)
+        self.assertLess(sum(path.stat().st_size for path in files), 20_000)
+        record = json.loads((ASSETS / "canada.provenance.json").read_text(encoding="utf-8"))["assets"]["canada_flag"]
+        self.assertEqual(record["license"], "Public domain (PD-ineligible)")
+        self.assertIn("MapGrid", record["authors"])
+        with Image.open(ASSETS / record["file"]) as image:
+            self.assertEqual(image.size, (1280, 640))
+            rgb = image.convert("RGB")
+            self.assertEqual(rgb.getpixel((100, 320)), (213, 43, 30))
+            self.assertEqual(rgb.getpixel((1180, 320)), (213, 43, 30))
+            self.assertEqual(rgb.getpixel((350, 100)), (255, 255, 255))
+            self.assertEqual(rgb.getpixel((640, 320)), (213, 43, 30))
+        vector = ET.parse(ASSETS / record["source_file"]).getroot()
+        self.assertEqual(vector.attrib["viewBox"], "0 0 9600 4800")
+        self.assertEqual({element.tag.rsplit("}", 1)[-1] for element in vector.iter()}, {"svg", "path", "title"})
+
+    def test_canadian_png_and_vector_tampering_are_rejected(self):
+        files = asset_files(self.canadian(), verify=True)
+        for damaged in ("canada-flag.png", "canada-flag.svg"):
+            with self.subTest(damaged=damaged), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                for source in files:
+                    (root / source.name).write_bytes(source.read_bytes())
+                (root / damaged).write_bytes(b"changed")
+                with patch("scene_dressing.ASSETS", root), self.assertRaisesRegex(ValueError, "checksum"):
+                    asset_files(self.canadian(), verify=True)
+
+    def test_canadian_and_original_props_select_only_their_own_assets(self):
+        episode = self.dressed()
+        episode["scene"]["dressing"]["props"][0]["pattern"] = "canada"
+        files = asset_files(episode, verify=True)
+        self.assertEqual({path.name for path in files},
+                         {"provenance.json", "tea_set_01_1k.blend", "pixor-library-backpack.glb",
+                          "canada.provenance.json", "canada-flag.png", "canada-flag.svg"})
+        plain = copy.deepcopy(self.episode)
+        plain["scene"].pop("dressing", None)
+        with patch("scene_dressing.ASSETS", Path("missing-optional-assets")):
+            self.assertEqual(asset_files(plain, verify=True), [])
+
     def test_dressing_assets_are_copied_and_hashed_in_frozen_delivery(self):
         episode = self.dressed()
+        self.assert_frozen_assets(episode)
+
+    def test_canadian_assets_are_copied_and_hashed_in_frozen_delivery(self):
+        self.assert_frozen_assets(self.canadian())
+
+    def assert_frozen_assets(self, episode):
         with tempfile.TemporaryDirectory() as temp:
             build = Path(temp)
             for name in ("pilot.mp4", "pilot_clean.mp4", "captions.ass", "subtitles.srt", "dialogue.wav",
                          "timeline.json", "scene_manifest.json", "frames_manifest.json",
                          "publishing_caption.txt", "CREDITS.txt", "subtitle_timing_report.json",
-                         "safe_zone_report.json", "delivery_checks.json"):
+                         "safe_zone_report.json", "delivery_checks.json", "picture_timing_report.json"):
                 (build / name).write_bytes(b"synthetic freeze test")
             (build / "episode.json").write_text(json.dumps(episode), encoding="utf-8")
             freeze_delivery(build)

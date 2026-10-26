@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "id": "tef_canada_speaking_b1_short",
+  "language": "fr",
+  "exam": {"family": "tef_canada", "skill": "speaking", "section": "B"},
+  "presentation": "social",
+  "visual_version": 7,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "TEF Canada : Cuisine végétarienne",
+  "label": "TEF Canada · Expression orale · Section B · Extrait",
+  "disclaimer": "Extrait pédagogique indépendant et adapté ; ni sujet officiel ni réponse modèle complète.",
+  "branding": "FRENCH COMPASS",
+  "scene": {
+    "template": "exam_room",
+    "layout": "interview",
+    "base_scene": "../builds/v2/studio.blend",
+    "wall_logo": "../assets/frenchcompass-logo.png",
+    "entrance": true,
+    "observer": false,
+    "dressing": {
+      "props": [
+        {"type": "flag", "pattern": "canada", "anchor": "back_wall_left"},
+        {"type": "flag", "pattern": "canada", "anchor": "table_corner"}
+      ],
+      "accessories": []
+    }
+  },
+  "header": {
+    "brand": "FRENCH COMPASS · TEF CANADA",
+    "topic": "Section B · Convaincre un ami"
+  },
+  "pictures": {
+    "cuisine_vegetarienne": {
+      "candidate": "candidate_a",
+      "purpose": "task",
+      "layout": "notice_detail",
+      "crop": [340, 236, 868, 638],
+      "path": "../assets/pictures/tef_canada_b1.jpg",
+      "label": "Cuisine végétarienne",
+      "credit": "Annonce : French Compass, livre TEF Canada Expression orale, pratique B1.",
+      "permission": "User-supplied French Compass book asset; the user requested a book-based Section B video adaptation on 2026-10-26. This is not an official exam document."
+    }
+  },
+  "hook": "Cuisine : convaincre un ami",
+  "task_card": [],
+  "takeaway": [],
+  "takeaway_seconds": 0,
+  "cta": [
+    "Réponse modèle complète",
+    "dans notre livre TEF Canada",
+    "Lien Amazon dans le profil"
+  ],
+  "publication": {
+    "intro": "Publicité pour notre livre. TEF Canada · Section B : comment convaincre un ami sans ignorer ses réserves ? Cet extrait de la pratique B1 présente un atelier de cuisine végétarienne, une objection sur le prix et un conflit d'horaire.",
+    "disclosure": "Extrait adapté de la pratique B1 du livre French Compass ; B1 est le numéro de l'exercice, pas un niveau CECR. La réponse modèle complète et les autres objections sont dans le livre. Simulation indépendante, sans affiliation avec l'organisme du TEF ; ni sujet officiel ni épreuve complète. À l'examen, la section B dure 10 minutes ; la limite de cette vidéo et sa pause de lecture ne sont pas le temps officiel. Le modèle illustre une interaction, pas un texte à réciter.",
+    "hashtags": ["#TEFCanada", "#ExpressionOrale", "#Convaincre", "#FrenchCompass"]
+  },
+  "book_cover": "../../../french-exam-prep-book/french_exam_books/tef_canada/speaking/speaking.jpg",
+  "source": {
+    "book": "../../../french-exam-prep-book/french_exam_books/tef_canada/speaking/book.md",
+    "exercise": "Practice set B1: Vegetarian cooking workshop",
+    "exercise_number_not_cefr_level": true,
+    "voice_registry": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/voices.json",
+    "images": {
+      "cuisine_vegetarienne": "../../../french-exam-prep-book/french_exam_books/tef_canada/speaking/images/25.jpg"
+    },
+    "scope": "short_excerpt",
+    "duration_limit_seconds": 90,
+    "official_section_duration_seconds": 600,
+    "adaptation": "Original condensed adaptation of book practice B1, strictly shorter than 90 seconds including entrance, reading pause and book CTA. One candidate persuades the examiner playing a skeptical friend, using informal tu after the formal instruction. Preserve the offer's Saturday 10:00-12:00, 32 dollars and included ingredients. Respond to price/free-tutorial and lunch-scheduling objections; do not invent another available date or force agreement. No claim of a complete model answer, measured runtime or full exam-length simulation before actual speech checks.",
+    "framework_reference": "https://www.lefrancaisdesaffaires.fr/wp-content/uploads/2024/10/tef-exemples-epreuve-eo.pdf",
+    "framework_checked": "2026-10-26",
+    "coverage": {
+      "Present the notice and connect it to the friend's needs": ["03"],
+      "Price and free-tutorial objection, concession and specific benefit": ["04", "05"],
+      "Lunch conflict, respect existing plans and check another date": ["06", "07"],
+      "Continued hesitation and a low-pressure next step": ["08", "09"]
+    },
+    "omitted_from_excerpt": [
+      "Detailed beginner-confidence discussion",
+      "Menu, group size and equipment questions",
+      "Food preferences, ingredient substitutions and allergies",
+      "Takeaway portions, single-session terms and cancellation conditions"
+    ]
+  },
+  "fps": 24,
+  "intro_seconds": 2.5,
+  "outro_seconds": 6.0,
+  "voices": {
+    "candidate_a": {
+      "audio": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/references/fr_fr_conversation_f01.wav",
+      "voice_id": "fr_fr_conversation_f01",
+      "reference_text": "Samedi, je passe au marché de Grenoble vers 11 heures. J’ai besoin de trois pommes, d’un kilo de carottes et d’un pain complet. Le vendeur accepte la carte bancaire, même pour 4 euros 50."
+    },
+    "examiner": {
+      "audio": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/references/fr_fr_service_m01.wav",
+      "voice_id": "fr_fr_service_m01",
+      "reference_text": "Attention, le guichet de la mairie ferme exceptionnellement à 15 h 45 le 28 février. Les demandes urgentes peuvent être déposées dans la boîte bleue, rue Victor-Hugo. Le service rouvrira mardi à 9 heures."
+    }
+  },
+  "turns": [
+    {
+      "id": "01", "speaker": "examiner", "name": "Examinateur",
+      "text": "Bonjour. Entrez, je vous en prie. Installez-vous.",
+      "camera": "wide", "action": "welcome", "look_at": "candidate_a", "pause_after": 3.0
+    },
+    {
+      "id": "02", "speaker": "examiner", "name": "Examinateur",
+      "text": "Présentez cet atelier à un ami et essayez de le convaincre d'y participer. Je joue votre ami.",
+      "camera": "examiner", "action": "explain", "look_at": "candidate_a",
+      "pause_after": 7.2, "picture": "cuisine_vegetarienne", "picture_card_delay_seconds": 1.2
+    },
+    {
+      "id": "03", "speaker": "candidate_a", "name": "Candidate",
+      "text": "Tu voulais cuisiner plus vite ? Cet atelier végétarien dure deux heures samedi matin. Pour trente-deux dollars, les ingrédients sont compris.",
+      "camera": "picture_a", "action": "propose", "look_at": "examiner", "pause_after": 0.8,
+      "picture": "cuisine_vegetarienne"
+    },
+    {
+      "id": "04", "speaker": "examiner", "name": "Ami",
+      "text": "Trente-deux dollars, c'est cher. Un tutoriel gratuit me suffit.",
+      "camera": "examiner", "action": "consider", "look_at": "candidate_a", "pause_after": 0.8
+    },
+    {
+      "id": "05", "speaker": "candidate_a", "name": "Candidate",
+      "text": "C'est vrai. Mais ici, tu peux demander de l'aide quand un geste bloque. On peut comparer avec ton tutoriel avant de réserver.",
+      "camera": "candidate_a", "action": "answer", "look_at": "examiner", "pause_after": 0.8
+    },
+    {
+      "id": "06", "speaker": "examiner", "name": "Ami",
+      "text": "Et samedi, j'ai déjà un déjeuner. Je ne veux pas courir.",
+      "camera": "examiner", "action": "consider", "look_at": "candidate_a", "pause_after": 0.8
+    },
+    {
+      "id": "07", "speaker": "candidate_a", "name": "Candidate",
+      "text": "Gardons ton déjeuner. Vérifions une autre date : deux heures pour apprendre une recette à refaire, sans y passer la journée.",
+      "camera": "candidate_a", "action": "propose", "look_at": "examiner", "pause_after": 0.8
+    },
+    {
+      "id": "08", "speaker": "examiner", "name": "Ami",
+      "text": "Peut-être, mais je préfère essayer seul avant de payer.",
+      "camera": "examiner", "action": "consider", "look_at": "candidate_a", "pause_after": 0.8
+    },
+    {
+      "id": "09", "speaker": "candidate_a", "name": "Candidate",
+      "text": "D'accord. Essaie ton tutoriel, puis voyons si un accompagnement te serait utile. Tu décideras.",
+      "camera": "candidate_a", "action": "answer", "look_at": "examiner", "pause_after": 0.8
+    }
+  ]
+}

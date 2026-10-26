@@ -17,7 +17,14 @@
     "base_scene": "../builds/v2/studio.blend",
     "wall_logo": "../assets/frenchcompass-logo.png",
     "entrance": true,
-    "observer": false
+    "observer": false,
+    "dressing": {
+      "props": [
+        {"type": "flag", "pattern": "canada", "anchor": "back_wall_left"},
+        {"type": "flag", "pattern": "canada", "anchor": "table_corner"}
+      ],
+      "accessories": []
+    }
   },
   "header": {
     "brand": "FRENCH COMPASS · TEF CANADA",

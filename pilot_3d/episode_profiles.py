@@ -57,7 +57,14 @@ def language_code(episode):
 
 
 def language_profile(episode):
-    return LANGUAGES[language_code(episode)]
+    profile = LANGUAGES[language_code(episode)]
+    exam = episode.get("exam", {})
+    if (language_code(episode) == "fr" and isinstance(exam, dict)
+            and exam.get("family") == "tef_canada" and exam.get("skill") == "speaking"
+            and exam.get("section") == "B"):
+        return {**profile, "task_picture_prompt": "Préparez vos arguments.",
+                "notice_title": "Préparez vos arguments."}
+    return profile
 
 
 def scene_layout(episode):

@@ -36,7 +36,8 @@ def validate_dressing(episode, *, check_assets=False):
                 if not isinstance(anchor, str) or anchor not in ANCHORS[kind]:
                     raise ValueError(f"Unsupported anchor for {kind}.")
                 fields = {"type", "anchor"} | ({"pattern"} if kind == "flag" else set())
-                if set(item) != fields or kind == "flag" and item["pattern"] != "austria":
+                if (set(item) != fields or kind == "flag"
+                        and item["pattern"] not in ("austria", "canada")):
                     raise ValueError(f"Unsupported options for {kind}.")
                 if anchor == "candidate_b_chair_side" and "candidate_b" not in actors:
                     raise ValueError("Backpack anchor requires active candidate_b.")
@@ -58,19 +59,28 @@ def validate_dressing(episode, *, check_assets=False):
 
 
 def asset_files(episode, *, verify=False):
-    selected = {item["type"] for item in episode.get("scene", {}).get("dressing", {}).get("props", [])}
-    selected &= {"coffee_set", "backpack"}
-    if not selected:
-        return []
-    provenance = ASSETS / "provenance.json"
-    catalog = json.loads(provenance.read_text(encoding="utf-8"))["assets"]
-    result = [provenance]
-    for kind in sorted(selected):
-        record = catalog[kind]
-        path = ASSETS / record["file"]
-        if verify and hashlib.sha256(path.read_bytes()).hexdigest() != record["sha256"]:
-            raise ValueError(f"Dressing asset checksum mismatch: {path.name}")
-        result.append(path)
+    props = episode.get("scene", {}).get("dressing", {}).get("props", [])
+    selected = {item["type"] for item in props} & {"coffee_set", "backpack"}
+    catalogs = [("provenance.json", selected)]
+    if any(item.get("pattern") == "canada" and item["type"] == "flag" for item in props):
+        catalogs.append(("canada.provenance.json", {"canada_flag"}))
+    result = []
+    for filename, kinds in catalogs:
+        if not kinds:
+            continue
+        provenance = ASSETS / filename
+        catalog = json.loads(provenance.read_text(encoding="utf-8"))["assets"]
+        result.append(provenance)
+        for kind in sorted(kinds):
+            record = catalog[kind]
+            files = [(record["file"], record["sha256"])]
+            if "source_file" in record:
+                files.append((record["source_file"], record["source_sha256"]))
+            for name, expected in files:
+                path = ASSETS / name
+                if verify and hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+                    raise ValueError(f"Dressing asset checksum mismatch: {path.name}")
+                result.append(path)
     return result
 
 
@@ -205,6 +215,16 @@ def apply_dressing(scene, episode, actors, fit_frame, timeline):
         ("porcelain", (.83, .80, .72), .24), ("coffee", (.025, .009, .003), .2),
         ("glass", (.8, .9, .95), .08),
     )}
+    canada = None
+    if any(item.get("pattern") == "canada" for item in config.get("props", [])):
+        canada = json.loads((ASSETS / "canada.provenance.json").read_text(encoding="utf-8"))["assets"]["canada_flag"]
+        canada_image = bpy.data.images.load(str(ASSETS / canada["file"]), check_existing=True)
+        canada_image.pack()
+        mats["canada"] = material("Dressing Canada flag", (1, 1, 1), .8)
+        texture = mats["canada"].node_tree.nodes.new("ShaderNodeTexImage")
+        texture.image = canada_image
+        mats["canada"].node_tree.links.new(
+            texture.outputs["Color"], mats["canada"].node_tree.nodes.get("Principled BSDF").inputs["Base Color"])
     glass = mats["glass"].node_tree.nodes.get("Principled BSDF")
     # Transparent/Fresnel glass keeps the existing four-bounce scene budget.
     nodes, links = mats["glass"].node_tree.nodes, mats["glass"].node_tree.links
@@ -286,10 +306,32 @@ def apply_dressing(scene, episode, actors, fit_frame, timeline):
             if not wall:
                 lathe("flag base", [(0, 0), (.046, 0), (.046, .015), (0, .015)], mats["gold"], root)
                 lathe("flag pole", [(0, .015), (.006, .015), (.006, .39), (0, .39)], mats["gold"], root)
-            for band, color in enumerate(("red", "white", "red")):
-                cube(f"{index} flag stripe {band}", (0 if wall else width / 2 + .007,
-                     0, (1 - band) * height / 3 + (0 if wall else .29)),
-                     (width, .006, height / 3), mats[color], root)
+            if item["pattern"] == "canada":
+                height = width / 2
+                if wall:
+                    # Keep the complete flag above the interview header.
+                    root.location.z -= .05
+                x, z = (0, 0) if wall else (width / 2 + .007, .29)
+                mesh = bpy.data.meshes.new("Dressing Canada flag")
+                mesh.from_pydata([(x - width / 2, 0, z - height / 2),
+                                  (x + width / 2, 0, z - height / 2),
+                                  (x + width / 2, 0, z + height / 2),
+                                  (x - width / 2, 0, z + height / 2)], [], [(0, 1, 2, 3)])
+                mesh.materials.append(mats["canada"])
+                uv = mesh.uv_layers.new(name="Flag artwork")
+                for loop, coordinate in zip(uv.data, ((0, 0), (1, 0), (1, 1), (0, 1))):
+                    loop.uv = coordinate
+                flag = bpy.data.objects.new("Dressing Canada flag", mesh)
+                collection.objects.link(flag)
+                adopt(flag, f"{index} Canada flag cloth", root)
+                flag.modifiers.new("Thin flag cloth", "SOLIDIFY").thickness = .001
+                entry.update(pattern="canada", flag_object=flag.name, image=canada_image.name,
+                             width_m=width, height_m=height, source=canada)
+            else:
+                for band, color in enumerate(("red", "white", "red")):
+                    cube(f"{index} flag stripe {band}", (0 if wall else width / 2 + .007,
+                         0, (1 - band) * height / 3 + (0 if wall else .29)),
+                         (width, .006, height / 3), mats[color], root)
         elif kind == "coffee_set":
             replaced = [obj for obj in scene.objects
                         if obj.name.startswith("Water cup") and obj.location.x < 0]
@@ -515,6 +557,25 @@ def check_dressing(scene, episode, receipt, timeline, entrance, motion_step, act
         else:
             scene.frame_set(1)
             contact_gap = None
+            if entry["type"] == "flag" and any(
+                    item.get("pattern") == "canada" and item["anchor"] == entry["anchor"]
+                    for item in config.get("props", [])):
+                record = json.loads((ASSETS / "canada.provenance.json").read_text(encoding="utf-8"))["assets"]["canada_flag"]
+                flag = scene.objects[entry["flag_object"]]
+                image = bpy.data.images[entry["image"]]
+                nodes = flag.data.materials[0].node_tree.nodes
+                shader = nodes.get("Principled BSDF")
+                if (entry.get("pattern") != "canada" or not image.packed_file
+                        or hashlib.sha256(image.packed_file.data).hexdigest() != record["sha256"]
+                        or shader is None or not any(link.from_node.type == "TEX_IMAGE"
+                                                     and link.from_node.image == image
+                                                     for link in shader.inputs["Base Color"].links)
+                        or len(flag.data.uv_layers) != 1
+                        or tuple(tuple(loop.uv) for loop in flag.data.uv_layers[0].data)
+                        != ((0, 0), (1, 0), (1, 1), (0, 1))
+                        or flag.dimensions.z <= 0
+                        or abs(flag.dimensions.x / flag.dimensions.z - 2) > 1e-5):
+                    raise ValueError("Canadian flag artwork, proportions or packed image differ from the pinned asset.")
             if entry["type"] == "coffee_set":
                 gaps = cup_saucer_gaps(scene.objects[entry["cup_object"]], scene.objects[entry["saucer_object"]])
                 contact_gap = min(gaps)

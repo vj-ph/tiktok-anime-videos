@@ -39,3 +39,20 @@ Its `purpose: "task"` identifies a role-play stimulus, not picture description.
 Use the episode's picture attribution in the posting caption. Builds hash the
 source bytes, pack the same images onto physical task sheets, freeze copies
 under `picture_assets/`, and verify their actual encoded display windows.
+
+## TEF Canada Section B advertisement
+
+`tef_canada_b1.jpg` is a byte-identical copy of the user-supplied
+`french_exam_books/tef_canada/speaking/images/25.jpg`, **Practice set B1:
+Vegetarian cooking workshop**. SHA-256:
+`dc04ff7a120a28039e770da9a61fe96ccbe7be21038043b5e335d5810e09e9c6`.
+The notice offers Saturday 10:00-12:00, 32 dollars, ingredients included, with
+the fictional information address `cuisine-verte.example`.
+
+The user requested a book-based Section B adaptation on October 26, 2026.
+That request is recorded in the episode; the earlier A1-specific authorization
+is not represented as a separate B1 authorization or a public license.
+This is a French Compass book stimulus, not an official TEF exam document.
+The Section B episode uses `notice_detail` crop `[340,236,868,638]`, retaining
+all printed text. The original image bytes and physical task sheet remain
+uncropped. Follow the episode's publishing-caption attribution.
