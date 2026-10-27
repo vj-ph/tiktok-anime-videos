@@ -266,7 +266,7 @@ class PipelineCheckpointTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name)
+        self.root = Path(self.temp.name).resolve()
         self.episode = example()
         asset = self.root / "asset.bin"
         asset.write_bytes(b"explicit synthetic checkpoint asset")

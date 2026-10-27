@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -12,7 +13,7 @@ class BuildPathTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name) / "project"
+        self.root = Path(self.temp.name).resolve() / "project"
         self.root.mkdir()
         self.builds = self.root / "builds"
         for name, value in (("ROOT", self.root), ("BUILDS", self.builds)):
@@ -28,7 +29,7 @@ class BuildPathTests(unittest.TestCase):
 
     def test_explicit_nested_and_external_directories_remain_explicit(self):
         for path in (self.builds / "lerntreffen/preview", self.root / "custom/output",
-                     Path(self.temp.name) / "external"):
+                     self.root.parent / "external"):
             with self.subTest(path=path):
                 self.assertEqual(build_directory(path), path)
 
@@ -60,8 +61,33 @@ class BuildPathTests(unittest.TestCase):
             resolve_build_reference(missing).read_bytes()
 
     def test_external_build_names_are_not_remapped(self):
-        external = Path(self.temp.name) / "outside/build_v2/audio.wav"
+        external = self.root.parent / "outside/build_v2/audio.wav"
         self.assertEqual(resolve_build_reference(external), external)
+
+    @unittest.skipUnless(os.name == "nt", "Windows short-path aliases")
+    def test_windows_short_path_aliases_use_canonical_project_and_reject_containers(self):
+        import ctypes
+
+        get_short_path = ctypes.windll.kernel32.GetShortPathNameW
+        get_short_path.argtypes = [ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint]
+        get_short_path.restype = ctypes.c_uint
+        buffer = ctypes.create_unicode_buffer(32768)
+        length = get_short_path(str(self.root), buffer, len(buffer))
+        if not length:
+            raise ctypes.WinError()
+        if length >= len(buffer):
+            self.fail("Short path exceeds buffer")
+        alias = Path(buffer.value)
+        if alias == self.root:
+            self.skipTest("Short path aliases are not enabled for this fixture")
+        self.assertEqual(alias.resolve(), self.root)
+        self.assertEqual(build_directory(alias / "new_preview"), self.builds / "new_preview")
+        with self.assertRaisesRegex(ValueError, "dedicated output"):
+            build_directory(alias)
+        moved = self.builds / "v2" / "audio.wav"
+        moved.parent.mkdir(parents=True)
+        moved.write_bytes(b"fixture")
+        self.assertEqual(resolve_build_reference(alias / "build_v2" / "audio.wav"), moved)
 
     def test_frozen_episode_can_be_opened_by_its_old_path_without_rewriting_asset_values(self):
         moved = self.builds / "v2/episode.json"

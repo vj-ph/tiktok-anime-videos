@@ -78,6 +78,9 @@ TEF previews and historical build artifacts remain in the
 `tiktok_anime_videos_tef` worktree independently of shared-code merges into main.
 Leave running production jobs unchanged; keep heavy CPU builds sequential.
 
+- [x] Fix Windows portability test fixtures that mixed short and resolved temporary paths; preserve legacy-path and checkpoint safeguards and verify the portable suite on Linux and native Windows with short TEMP paths.
+- [ ] Confirm the portability workflow passes on GitHub Actions for the Windows and Linux matrix after these changes are pushed.
+
 - [x] Separate language, exam metadata and pair/interview scene layout while retaining German defaults.
 - [x] Add French TTS/alignment/localization, inline voice-reference text and language-aware cache/reuse checks.
 - [x] Add a one-candidate interview layout, optional observer and single-candidate entrance planning.

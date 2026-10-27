@@ -242,7 +242,7 @@ class RenderWorkerTests(unittest.TestCase):
         import render
 
         with tempfile.TemporaryDirectory(prefix="vidéo workers 'quoted' ") as folder:
-            root = Path(folder)
+            root = Path(folder).resolve()
             (root / "frames").mkdir()
             episode = json.loads((runtime.ROOT / "episode.json").read_text(encoding="utf-8"))
             episode["turns"] = []

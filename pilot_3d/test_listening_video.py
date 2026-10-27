@@ -78,7 +78,7 @@ def reuse_fixture(root):
 class ListeningVideoTest(unittest.TestCase):
     def test_load_validates_section_choices_questions_and_excerpt_bounds(self):
         with TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             for name in ("book.wav", "voice.wav"):
                 write_wav(root / name)
             for name in ("voice.txt", "book.md", "scene.blend", "device.glb"):
@@ -157,7 +157,7 @@ class ListeningVideoTest(unittest.TestCase):
 
     def test_reuse_checks_excerpt_against_master_and_delivery_hash(self):
         with TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data, files, sources, source, answer, _ = reuse_fixture(root)
             data["audio_excerpt"] = {"start_sample": 100, "end_sample": 18000}
             excerpt = listening.book_audio_file(data, source, create=True)
@@ -244,7 +244,7 @@ class ListeningVideoTest(unittest.TestCase):
 
     def test_production_reuses_verified_audio_without_synthesis(self):
         with TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data, files, _, source, answer, timeline = reuse_fixture(root)
             build = root / "production"
             with (patch.object(listening, "load_episode", return_value=(data, files)),
@@ -268,7 +268,7 @@ class ListeningVideoTest(unittest.TestCase):
         for problem in ("episode", "video", "answer", "hook", "hook_metadata", "legacy", "timeline", "metadata", "source",
                         "snapshot", "ambiguous", "nested"):
             with self.subTest(problem=problem), TemporaryDirectory() as directory:
-                root = Path(directory)
+                root = Path(directory).resolve()
                 data, files, sources, source, answer, _ = reuse_fixture(root)
                 build = root / "production"
                 if problem == "episode":
@@ -310,7 +310,7 @@ class ListeningVideoTest(unittest.TestCase):
 
     def test_production_requires_exact_reuse_and_rejects_cache_conflict(self):
         with TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data, files, _, source, _, _ = reuse_fixture(root)
             with patch.object(listening, "load_episode", return_value=(data, files)):
                 with self.assertRaisesRegex(ValueError, "requires --reuse-audio"):
@@ -322,7 +322,7 @@ class ListeningVideoTest(unittest.TestCase):
     def test_scene_render_uses_frozen_script_and_requested_profile(self):
         for profile in ("preview", "production"):
             with self.subTest(profile=profile), TemporaryDirectory() as directory:
-                root = Path(directory)
+                root = Path(directory).resolve()
                 data, files, _, source, answer, _ = reuse_fixture(root)
                 data["scene"] = {"cycle_frames": 5, "pose_frame": 447, "camera_prefix": "04",
                                  "playback_device": {"table_position": [-0.8, 0.075]}}
@@ -357,7 +357,7 @@ class ListeningVideoTest(unittest.TestCase):
 
     def test_export_rejects_input_changed_during_render(self):
         with TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data, files, _, _, answer, _ = reuse_fixture(root)
             data["scene"] = {"cycle_frames": 5, "pose_frame": 447, "camera_prefix": "04",
                              "playback_device": {"table_position": [-0.8, 0.075]}}
@@ -538,7 +538,7 @@ class ListeningVideoTest(unittest.TestCase):
 
     def test_build_synthesizes_the_visible_question_as_the_hook(self):
         with TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data, files, _, source, answer, _ = reuse_fixture(root)
             hook = source / "audio" / "hook-fixture.wav"
             with (patch.object(listening, "load_episode", return_value=(data, files)),
