@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "dtz_b1_listening_teil2_fahrradkurs",
+  "language": "de",
+  "exam": {"family": "dtz", "skill": "listening", "section": "2"},
+  "fps": 24,
+  "title": "DTZ B1: Wann beginnt der Fahrradkurs?",
+  "question": "Wann beginnt der kostenlose Fahrradkurs?",
+  "choices": ["am Dienstagabend", "am Mittwochmorgen", "am Samstagmittag"],
+  "correct_choice": "A",
+  "answer_text": "Richtig ist A. Der Kurs beginnt am Dienstag um 18 Uhr.",
+  "key_detail": "„am Dienstag um 18 Uhr“",
+  "audio": "../../../german_exam_books/b1/listening_dtz_v2/audio/qwen_sfx/wav/uebungsset_01_teil_02.wav",
+  "audio_excerpt": {"start_sample": 0, "end_sample": 642671},
+  "voice": {
+    "audio": "../../../shared-voices/qwen3-tts-german/female_middle_aged.wav",
+    "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+  },
+  "book_cover": "../../../german_exam_books/b1/listening_dtz_v2/covers/listening_v3.jpg",
+  "scene": {
+    "source": "../builds/teil1_vorstellung_v7_preview_r2/studio.blend",
+    "camera_prefix": "04",
+    "pose_frame": 447,
+    "cycle_frames": 96,
+    "playback_device": {
+      "model": "../assets/props/innerscene-boombox.glb",
+      "provenance": "../assets/props/innerscene-boombox.provenance.json",
+      "table_position": [-0.8, 0.075]
+    }
+  },
+  "timing": {"hook_seconds": 3, "reading_seconds": 7, "response_seconds": 6, "reveal_seconds": 8, "cta_seconds": 6},
+  "source": {
+    "book": "../../../german_exam_books/b1/listening_dtz_v2/book_no_toc.md",
+    "exercise": "Übungsset 1, Hören Teil 2, Aufgabe 5",
+    "duration_limit_seconds": 90,
+    "permission": "User confirmed the book content and audio may be used to create videos and the SFX licensing is OK.",
+    "scope": "One complete announcement from the final SFX-mastered book track, presented as independent practice, not an official exam."
+  }
+}

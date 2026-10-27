@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "id": "dtz_b1_listening_teil3_termin",
+  "language": "de",
+  "exam": {"family": "dtz", "skill": "listening", "section": "3"},
+  "fps": 24,
+  "title": "DTZ B1: Frau Aydins Termin",
+  "question": "Frau Aydins Termin",
+  "questions": [
+    {
+      "number": 10,
+      "prompt": "Frau Aydin kann am Donnerstag nicht kommen.",
+      "choices": ["richtig", "falsch"],
+      "correct_choice": "B"
+    },
+    {
+      "number": 11,
+      "prompt": "Was machen die beiden?",
+      "choices": ["Sie sagen den Termin ganz ab.", "Sie verschieben den Termin auf Freitag.", "Sie telefonieren nächste Woche noch einmal."],
+      "correct_choice": "B"
+    }
+  ],
+  "answer_text": "10: B, falsch. Sie kann nur kurz kommen. 11: B. Sie verschieben den Termin auf Freitag.",
+  "key_detail": "„Ich könnte zwar kommen, aber nur ganz kurz“",
+  "audio": "../../../german_exam_books/b1/listening_dtz_v2/audio/qwen_sfx/wav/uebungsset_01_teil_03.wav",
+  "audio_excerpt": {"start_sample": 0, "end_sample": 1208432},
+  "voice": {
+    "audio": "../../../shared-voices/qwen3-tts-german/female_middle_aged.wav",
+    "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+  },
+  "book_cover": "../../../german_exam_books/b1/listening_dtz_v2/covers/listening_v3.jpg",
+  "scene": {
+    "source": "../builds/teil1_vorstellung_v7_preview_r2/studio.blend",
+    "camera_prefix": "04",
+    "pose_frame": 447,
+    "cycle_frames": 96,
+    "playback_device": {
+      "model": "../assets/props/innerscene-boombox.glb",
+      "provenance": "../assets/props/innerscene-boombox.provenance.json",
+      "table_position": [-0.8, 0.075]
+    }
+  },
+  "timing": {"hook_seconds": 3, "reading_seconds": 12, "response_seconds": 6, "reveal_seconds": 11, "cta_seconds": 6},
+  "source": {
+    "book": "../../../german_exam_books/b1/listening_dtz_v2/book_no_toc.md",
+    "exercise": "Übungsset 1, Hören Teil 3, Gespräch 1, Aufgaben 10–11",
+    "duration_limit_seconds": 90,
+    "permission": "User confirmed the book content and audio may be used to create videos and the SFX licensing is OK.",
+    "scope": "One complete conversation from the final SFX-mastered book track and its two questions, presented as independent practice, not an official exam."
+  }
+}

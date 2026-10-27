@@ -56,6 +56,16 @@ and documentation; keep changes focused.
   Preserve the originals and record the source of reused material.
 - Check any separately sourced third-party components, such as sound effects,
   for the intended use and required attribution.
+- Open listening videos by speaking the displayed title or question; do not
+  leave the opening hook silent. Measure the narration and fit it into the
+  actual hook without truncation or speeding it up.
+- Show numbered answers with digits (for example, 10 and 11) and present each
+  answer once in the reveal. Do not duplicate the answer list by also
+  displaying a verbatim copy of the spoken explanation. Keep narration clear
+  and aligned with the visible solution.
+- Verify the rendered opening, answer display and audio placement, not merely
+  the script. Keep human listening and preview approval separate from
+  automated checks.
 
 ## 3D objects
 

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "dtz_b1_listening_teil4_online_termine",
+  "language": "de",
+  "exam": {"family": "dtz", "skill": "listening", "section": "4"},
+  "fps": 24,
+  "title": "DTZ B1: Termine online buchen",
+  "question": "Person 1: Termine online buchen",
+  "choices": ["lieber persönlich vorsprechen", "spart Zeit", "ohne Hilfe schwierig", "gut für Berufstätige", "Internet zu langsam", "lieber telefonisch"],
+  "correct_choice": "B",
+  "answer_text": "Richtig ist B. Online-Termine sparen ihr Zeit.",
+  "key_detail": "„Ich spare Zeit“",
+  "audio": "../../../german_exam_books/b1/listening_dtz_v2/audio/qwen_sfx/wav/uebungsset_01_teil_04.wav",
+  "audio_excerpt": {"start_sample": 0, "end_sample": 596130},
+  "voice": {
+    "audio": "../../../shared-voices/qwen3-tts-german/female_middle_aged.wav",
+    "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"
+  },
+  "book_cover": "../../../german_exam_books/b1/listening_dtz_v2/covers/listening_v3.jpg",
+  "scene": {
+    "source": "../builds/teil1_vorstellung_v7_preview_r2/studio.blend",
+    "camera_prefix": "04",
+    "pose_frame": 447,
+    "cycle_frames": 96,
+    "playback_device": {
+      "model": "../assets/props/innerscene-boombox.glb",
+      "provenance": "../assets/props/innerscene-boombox.provenance.json",
+      "table_position": [-0.8, 0.075]
+    }
+  },
+  "timing": {"hook_seconds": 3, "reading_seconds": 9, "response_seconds": 6, "reveal_seconds": 8, "cta_seconds": 6},
+  "source": {
+    "book": "../../../german_exam_books/b1/listening_dtz_v2/book_no_toc.md",
+    "exercise": "Übungsset 1, Hören Teil 4, Aufgabe 18, Person 1",
+    "duration_limit_seconds": 90,
+    "permission": "User confirmed the book content and audio may be used to create videos and the SFX licensing is OK.",
+    "scope": "One complete opinion from the final SFX-mastered book track and all six matching choices, presented as independent practice, not an official exam."
+  }
+}

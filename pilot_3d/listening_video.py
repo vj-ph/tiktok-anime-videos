@@ -4,6 +4,7 @@ import json
 import shutil
 import subprocess
 import sys
+import wave
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -35,20 +36,39 @@ def render_settings(profile):
 def load_episode(path):
     path = Path(path).resolve(strict=True)
     episode = json.loads(path.read_text(encoding="utf-8"))
+    exam = episode.get("exam")
     if (episode.get("schema_version") != 1 or episode.get("language") != "de"
-            or episode.get("exam") != {"family": "dtz", "skill": "listening", "section": "1"}):
-        raise ValueError("This listening template supports DTZ German Teil 1 only.")
+            or not isinstance(exam, dict) or set(exam) != {"family", "skill", "section"}
+            or exam["family"] != "dtz" or exam["skill"] != "listening"
+            or exam["section"] not in ("1", "2", "3", "4")):
+        raise ValueError("This listening template supports DTZ German Teile 1–4 only.")
     if episode.get("fps") != 24:
         raise ValueError("Listening video requires 24 fps.")
     for field in ("id", "title", "question", "answer_text", "key_detail"):
         if not isinstance(episode.get(field), str) or not episode[field].strip():
             raise ValueError(f"{field} must be nonempty text.")
-    choices = episode.get("choices")
-    if not isinstance(choices, list) or len(choices) != 3 or any(
-            not isinstance(choice, str) or not choice.strip() for choice in choices):
-        raise ValueError("choices must contain three nonempty answers.")
-    if episode.get("correct_choice") not in ("A", "B", "C"):
-        raise ValueError("correct_choice must be A, B or C.")
+    def validate_choices(item, count):
+        choices = item.get("choices")
+        if not isinstance(choices, list) or len(choices) != count or any(
+                not isinstance(choice, str) or not choice.strip() for choice in choices):
+            raise ValueError(f"choices must contain {count} nonempty answers.")
+        if item.get("correct_choice") not in tuple(chr(65 + i) for i in range(count)):
+            raise ValueError("correct_choice must identify an available answer.")
+
+    if exam["section"] == "3":
+        questions = episode.get("questions")
+        if not isinstance(questions, list) or len(questions) != 2:
+            raise ValueError("Teil 3 requires two questions.")
+        for item, count in zip(questions, (2, 3)):
+            if (not isinstance(item, dict) or not isinstance(item.get("prompt"), str)
+                    or not item["prompt"].strip() or type(item.get("number")) is not int
+                    or item["number"] < 1):
+                raise ValueError("Each Teil 3 question requires a number and prompt.")
+            validate_choices(item, count)
+        if questions[0]["number"] == questions[1]["number"]:
+            raise ValueError("Teil 3 question numbers must differ.")
+    else:
+        validate_choices(episode, 6 if exam["section"] == "4" else 3)
     timing = episode.get("timing")
     if not isinstance(timing, dict):
         raise ValueError("timing must be an object.")
@@ -99,14 +119,51 @@ def load_episode(path):
     provenance = json.loads(files["device.provenance.json"].read_text(encoding="utf-8"))
     if sha256_file(files["device.glb"]) != provenance["sha256"]:
         raise ValueError("Playback device model checksum mismatch.")
-    inspect_wav(files["book_audio.wav"])
+    info = inspect_wav(files["book_audio.wav"])
+    excerpt = episode.get("audio_excerpt")
+    if excerpt is not None:
+        if (not isinstance(excerpt, dict) or set(excerpt) != {"start_sample", "end_sample"}
+                or any(type(excerpt[k]) is not int for k in excerpt)
+                or not 0 <= excerpt["start_sample"] < excerpt["end_sample"] <= info["frames"]):
+            raise ValueError("audio_excerpt requires valid start_sample and end_sample within the source WAV.")
     inspect_wav(files["voice.wav"])
     with Image.open(files["book_cover.jpg"]) as image:
         image.verify()
     return episode, files
 
 
-def timeline_for(episode, book_info, answer_info):
+def book_audio_file(episode, build, *, create):
+    source = build / "inputs" / "book_audio.wav"
+    excerpt = episode.get("audio_excerpt")
+    if excerpt is None:
+        return source
+    target = build / "audio" / "book_excerpt.wav"
+    with wave.open(str(source), "rb") as original:
+        params = original.getparams()
+        start, end = excerpt["start_sample"], excerpt["end_sample"]
+        if not 0 <= start < end <= params.nframes:
+            raise ValueError("Listening excerpt exceeds the source audio.")
+        original.setpos(start)
+        samples = original.readframes(end - start)
+    if not target.exists() and create:
+        target.parent.mkdir(exist_ok=True)
+        partial = target.with_name(target.name + ".part")
+        with wave.open(str(partial), "wb") as output:
+            output.setparams(params)
+            output.writeframes(samples)
+        partial.replace(target)
+    if not target.is_file():
+        raise ValueError(f"Missing verified book excerpt: {target}")
+    with wave.open(str(target), "rb") as output:
+        actual = output.getparams()
+        if (actual.nchannels != params.nchannels or actual.sampwidth != params.sampwidth
+                or actual.framerate != params.framerate or actual.nframes != end - start
+                or output.readframes(actual.nframes) != samples):
+            raise ValueError("Book audio excerpt differs from the original sample range.")
+    return target
+
+
+def timeline_for(episode, book_info, answer_info, hook_info):
     fps = episode["fps"]
     timing = episode["timing"]
     cursor = 0
@@ -117,7 +174,8 @@ def timeline_for(episode, book_info, answer_info):
         phases.append({"name": name, "start_frame": cursor, "end_frame": cursor + frames})
         cursor += frames
 
-    add("hook", ceil_frames(timing["hook_seconds"], fps))
+    hook_frames = wav_frames_to_video_frames(hook_info["frames"], hook_info["sample_rate"], fps)
+    add("hook", max(ceil_frames(timing["hook_seconds"], fps), hook_frames))
     for remaining in range(timing["reading_seconds"], 0, -1):
         add(f"reading_{remaining}", fps)
     add("listening", wav_frames_to_video_frames(book_info["frames"], book_info["sample_rate"], fps))
@@ -165,7 +223,8 @@ def make_overlay(episode, phase, cover_path):
     dark = (10, 26, 35, 231)
     draw.rounded_rectangle((78, 105, 590, 185), radius=14, fill=dark)
     draw.text((96, 112), "DTZ B1 HÖREN", font=bold, fill=green)
-    draw.text((96, 151), "DEUTSCHKOMPASS · Teil 1", font=small, fill=white)
+    section = episode.get("exam", {}).get("section", "1")
+    draw.text((96, 151), f"DEUTSCHKOMPASS · Teil {section}", font=small, fill=white)
 
     if phase == "cta":
         draw.rounded_rectangle((78, 520, 590, 790), radius=18, fill=dark)
@@ -177,6 +236,47 @@ def make_overlay(episode, phase, cover_path):
                      bold, 320, white, max_lines=5)
         draw_wrapped(draw, "Amazon-Buchlink im Profil", 250, 688, small, 320, green)
         draw_wrapped(draw, "Unabhängiges Übungsmaterial", 250, 748, compact, 320, white)
+        return image
+
+    def draw_status():
+        if phase == "listening":
+            draw.rounded_rectangle((450, 842, 590, 922), radius=16, fill=dark)
+            draw_wrapped(draw, "Jetzt genau zuhören.", 464, 851, compact, 112, green, leading=1)
+        else:
+            status = "Lies zuerst die Antworten." if phase.startswith("reading_") else "Deine Antwort?"
+            remaining = phase.split("_")[1]
+            draw.rounded_rectangle((450, 810, 590, 1008), radius=16, fill=dark)
+            draw_wrapped(draw, status, 464, 820, compact, 112, green, leading=1)
+            draw.text((520, 928), remaining, font=countdown, fill=white, anchor="mm")
+            draw.text((520, 985), "SEK.", font=compact, fill=green, anchor="mm")
+
+    if section == "3" and phase != "hook":
+        draw.rounded_rectangle((78, 520, 590, 790), radius=18, fill=dark)
+        if phase == "reveal":
+            y = 532
+            for item in episode["questions"]:
+                answer = item["choices"][ord(item["correct_choice"]) - ord("A")]
+                y = draw_wrapped(draw, f"{item['number']}  {item['correct_choice']}  {answer}",
+                                 96, y, heading, 468, green, leading=2, max_lines=2) + 8
+            y = draw_wrapped(draw, episode["key_detail"], 96, y + 8, small, 468, white,
+                             leading=2, max_lines=2)
+            if y > 790:
+                raise ValueError("Teil 3 answer exceeds the reveal panel.")
+        else:
+            y = 532
+            for index, item in enumerate(episode["questions"]):
+                y = draw_wrapped(draw, f"{item['number']}. {item['prompt']}", 96, y, heading, 468, white,
+                                 leading=2, max_lines=2) + 4
+                if index == 0:
+                    y = draw_wrapped(draw, "A  " + item["choices"][0] + "      B  " + item["choices"][1],
+                                     96, y, small, 468, white, max_lines=1) + 9
+                else:
+                    for choice_index, choice in enumerate(item["choices"]):
+                        y = draw_wrapped(draw, f"{chr(65 + choice_index)}  {choice}", 96, y,
+                                         small, 468, white, leading=1, max_lines=2) + 4
+            if y > 790:
+                raise ValueError("Teil 3 questions exceed the listening panel.")
+            draw_status()
         return image
 
     draw.rounded_rectangle((78, 520, 590, 603), radius=18, fill=dark)
@@ -196,19 +296,16 @@ def make_overlay(episode, phase, cover_path):
         draw_wrapped(draw, episode["key_detail"], 96, detail_y, small, 468, green, max_lines=1)
     else:
         draw.rounded_rectangle((78, 615, 590, 790), radius=16, fill=dark)
-        for index, choice in enumerate(episode["choices"]):
-            draw_wrapped(draw, f"{chr(65 + index)}  {choice}", 96, 627 + index * 52,
-                         regular, 472, white, leading=0, max_lines=2)
-        if phase == "listening":
-            draw.rounded_rectangle((450, 842, 590, 922), radius=16, fill=dark)
-            draw_wrapped(draw, "Jetzt genau zuhören.", 464, 851, compact, 112, green, leading=1)
+        if section == "4":
+            for index, choice in enumerate(episode["choices"]):
+                draw_wrapped(draw, f"{chr(65 + index)}  {choice}",
+                             96 + (index % 2) * 241, 627 + (index // 2) * 50,
+                             small, 220, white, leading=1, max_lines=2)
         else:
-            status = "Lies zuerst die Antworten." if phase.startswith("reading_") else "Deine Antwort?"
-            remaining = phase.split("_")[1]
-            draw.rounded_rectangle((450, 810, 590, 1008), radius=16, fill=dark)
-            draw_wrapped(draw, status, 464, 820, compact, 112, green, leading=1)
-            draw.text((520, 928), remaining, font=countdown, fill=white, anchor="mm")
-            draw.text((520, 985), "SEK.", font=compact, fill=green, anchor="mm")
+            for index, choice in enumerate(episode["choices"]):
+                draw_wrapped(draw, f"{chr(65 + index)}  {choice}", 96, 627 + index * 52,
+                             regular, 472, white, leading=0, max_lines=2)
+        draw_status()
     return image
 
 
@@ -249,21 +346,22 @@ def video_filters(timeline, profile="preview"):
         previous = label
     listening = next(p for p in phases if p["name"] == "listening")["start_frame"]
     reveal = next(p for p in phases if p["name"] == "reveal")["start_frame"]
-    book_input, answer_input = len(phases) + 1, len(phases) + 2
+    book_input, answer_input, hook_input = len(phases) + 1, len(phases) + 2, len(phases) + 3
     samples_per_frame = 48000 // fps
     filters.extend([
         f"[{book_input}:a]aresample=48000,aformat=channel_layouts=mono,"
         f"adelay={listening * samples_per_frame}S:all=1[book]",
         f"[{answer_input}:a]aresample=48000,aformat=channel_layouts=mono,"
         f"adelay={reveal * samples_per_frame}S:all=1[answer]",
-        f"[book][answer]amix=inputs=2:normalize=0:duration=longest,"
+        f"[{hook_input}:a]aresample=48000,aformat=channel_layouts=mono[hook]",
+        f"[hook][book][answer]amix=inputs=3:normalize=0:duration=longest,"
         f"apad=whole_len={timeline['total_frames'] * samples_per_frame},"
         f"atrim=end_sample={timeline['total_frames'] * samples_per_frame}[audio]",
     ])
     return ";".join(filters), previous
 
 
-def encoding_command(build, episode, timeline, answer_audio, profile="preview"):
+def encoding_command(build, episode, timeline, answer_audio, hook_audio, profile="preview", book_audio=None):
     frames = build / "listener_frames"
     overlays = build / "overlays"
     inputs = build / "inputs"
@@ -273,7 +371,8 @@ def encoding_command(build, episode, timeline, answer_audio, profile="preview"):
                "-i", str(frames / "listener_%03d.png")]
     for phase in timeline["phases"]:
         command += ["-loop", "1", "-framerate", str(fps), "-i", str(overlays / f"{phase['name']}.png")]
-    command += ["-i", str(inputs / "book_audio.wav"), "-i", str(answer_audio)]
+    command += ["-i", str(book_audio or inputs / "book_audio.wav"), "-i", str(answer_audio),
+                "-i", str(hook_audio)]
     filters, video_label = video_filters(timeline, profile)
     command += ["-filter_complex", filters, "-map", f"[{video_label}]", "-map", "[audio]",
                 "-frames:v", str(timeline["total_frames"]), "-t", f"{timeline['duration']:.9f}",
@@ -283,7 +382,7 @@ def encoding_command(build, episode, timeline, answer_audio, profile="preview"):
     return command
 
 
-def audio_delivery_check(video, book, answer, timeline):
+def audio_delivery_check(video, book, answer, hook, timeline):
     import numpy as np
 
     def pcm(path):
@@ -292,11 +391,12 @@ def audio_delivery_check(video, book, answer, timeline):
              "-f", "s16le", "-"], check=True, capture_output=True)
         return np.frombuffer(result.stdout, dtype="<i2").astype(np.float64)
 
-    output, original, narration = pcm(video), pcm(book), pcm(answer)
+    output, original, narration, opening = pcm(video), pcm(book), pcm(answer), pcm(hook)
     phases = {phase["name"]: phase for phase in timeline["phases"]}
     sample_per_frame = 48000 // timeline["fps"]
     correlations = {}
-    for label, samples, phase in (("book", original, "listening"), ("answer", narration, "reveal")):
+    for label, samples, phase in (("hook", opening, "hook"), ("book", original, "listening"),
+                                  ("answer", narration, "reveal")):
         start = phases[phase]["start_frame"] * sample_per_frame
         decoded = output[start:start + len(samples)]
         if len(decoded) != len(samples) or np.std(decoded) == 0 or np.std(samples) == 0:
@@ -347,28 +447,39 @@ def audio_reuse_spec(source, build, episode, files, sources):
         video = source / "pilot.mp4"
         if sha256_file(video) != report["output_sha256"]:
             raise ValueError("Listening delivery video checksum mismatch.")
-        candidates = [p for p in (source / "audio").glob("answer-*.wav")
-                      if sha256_file(p) == report["answer_audio_sha256"]]
-        if len(candidates) != 1:
-            raise ValueError("Expected exactly one verified listening answer recording.")
-        answer = candidates[0]
-        metadata_path = answer.with_suffix(".cache.json")
-        metadata = read_json(metadata_path)
-        payload = make_cache_payload(
-            {"speaker": "narrator", "text": episode["answer_text"]},
-            files["voice.wav"], files["voice.txt"], metadata["payload"]["settings"])
-        if (metadata["payload"] != payload or metadata["cache_key"] != content_hash(payload)
-                or metadata["wav_sha256"] != report["answer_audio_sha256"]
-                or metadata["audio_info"] != inspect_wav(answer)):
-            raise ValueError("Listening answer recording cache does not match its inputs.")
-        measured = timeline_for(episode, inspect_wav(files["book_audio.wav"]), inspect_wav(answer))
+        if "hook_audio_sha256" not in report:
+            raise ValueError("Listening preview has no verified spoken hook; generate a new preview.")
+        recordings = {}
+        for name, text in (("answer", episode["answer_text"]), ("hook", episode["question"])):
+            digest = report[f"{name}_audio_sha256"]
+            candidates = [p for p in (source / "audio").glob(f"{name}-*.wav")
+                          if sha256_file(p) == digest]
+            if len(candidates) != 1:
+                raise ValueError(f"Expected exactly one verified listening {name} recording.")
+            audio = candidates[0]
+            metadata_path = audio.with_suffix(".cache.json")
+            metadata = read_json(metadata_path)
+            payload = make_cache_payload(
+                {"speaker": "narrator", "text": text},
+                files["voice.wav"], files["voice.txt"], metadata["payload"]["settings"])
+            if (metadata["payload"] != payload or metadata["cache_key"] != content_hash(payload)
+                    or metadata["wav_sha256"] != digest or metadata["audio_info"] != inspect_wav(audio)):
+                raise ValueError(f"Listening {name} recording cache does not match its inputs.")
+            recordings[name] = (audio, metadata_path, digest)
+        answer, answer_metadata, answer_digest = recordings["answer"]
+        hook, hook_metadata, hook_digest = recordings["hook"]
+        book_audio = book_audio_file(episode, source, create=False)
+        if episode.get("audio_excerpt") is not None and sha256_file(book_audio) != report["book_audio_sha256"]:
+            raise ValueError("Listening excerpt checksum differs from its delivery report.")
+        measured = timeline_for(episode, inspect_wav(book_audio), inspect_wav(answer), inspect_wav(hook))
         if measured != timeline:
             raise ValueError("Listening delivery timing differs from the measured audio.")
-        audio_delivery_check(video, source / "inputs" / "book_audio.wav", answer, timeline)
+        audio_delivery_check(video, book_audio, answer, hook, timeline)
         return {
             "source": str(source), "answer": str(answer),
-            "answer_sha256": report["answer_audio_sha256"],
-            "metadata_sha256": sha256_file(metadata_path),
+            "answer_sha256": answer_digest, "answer_metadata_sha256": sha256_file(answer_metadata),
+            "hook": str(hook), "hook_sha256": hook_digest,
+            "hook_metadata_sha256": sha256_file(hook_metadata),
             "output_sha256": report["output_sha256"],
             "report_sha256": sha256_file(report_path),
             "state_sha256": sha256_file(state_path),
@@ -420,26 +531,33 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
     atomic_json(build / "episode.json", episode)
     audio_dir = build / "audio"
     audio_dir.mkdir(exist_ok=True)
+    book_audio = book_audio_file(episode, build, create=True)
+    book_audio_sha256 = sha256_file(book_audio)
     narration = {
         "language": "de",
         "voices": {"narrator": {"audio": str(inputs / "voice.wav"), "transcript": str(inputs / "voice.txt")}},
-        "turns": [{"id": "answer", "speaker": "narrator", "text": episode["answer_text"]}],
+        "turns": [{"id": "hook", "speaker": "narrator", "text": episode["question"]},
+                  {"id": "answer", "speaker": "narrator", "text": episode["answer_text"]}],
     }
     if reuse:
-        original = Path(reuse["answer"])
-        answer_audio = audio_dir / original.name
-        verified_copy(original, answer_audio, reuse["answer_sha256"])
-        verified_copy(original.with_suffix(".cache.json"), answer_audio.with_suffix(".cache.json"),
-                      reuse["metadata_sha256"])
+        recordings = {}
+        for name in ("hook", "answer"):
+            original = Path(reuse[name])
+            recordings[name] = audio_dir / original.name
+            verified_copy(original, recordings[name], reuse[f"{name}_sha256"])
+            verified_copy(original.with_suffix(".cache.json"), recordings[name].with_suffix(".cache.json"),
+                          reuse[f"{name}_metadata_sha256"])
+        hook_audio, answer_audio = recordings["hook"], recordings["answer"]
     else:
         cache = Path(speech_cache_from).resolve() if speech_cache_from else None
         if cache and (cache / "audio").is_dir():
             cache = cache / "audio"
         if cache and not cache.is_dir():
             raise ValueError("speech cache directory does not exist.")
-        result = synthesize(narration, ROOT, audio_dir, MODEL, "cpu", 8, cache_from=cache)[0]
-        answer_audio = Path(result["audio"])
-    timeline = timeline_for(episode, inspect_wav(inputs / "book_audio.wav"), inspect_wav(answer_audio))
+        results = synthesize(narration, ROOT, audio_dir, MODEL, "cpu", 8, cache_from=cache)
+        hook_audio, answer_audio = (Path(result["audio"]) for result in results)
+    hook_sha256, answer_sha256 = sha256_file(hook_audio), sha256_file(answer_audio)
+    timeline = timeline_for(episode, inspect_wav(book_audio), inspect_wav(answer_audio), inspect_wav(hook_audio))
     if reuse and timeline != reuse_timeline:
         raise ValueError("Reused listening audio does not match the preview timeline.")
     for phase in timeline["phases"]:
@@ -489,15 +607,19 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
         if any(sha256_file(ROOT / name) != digest or sha256_file(source_export / name) != digest
                for name, digest in spec["code_sha256"].items()):
             raise ValueError("Listening pipeline code changed; use a fresh build.")
-        if reuse and sha256_file(answer_audio) != reuse["answer_sha256"]:
-            raise ValueError("Reused listening narration changed; use a fresh build.")
+        if sha256_file(answer_audio) != answer_sha256 or sha256_file(hook_audio) != hook_sha256:
+            raise ValueError("Listening narration changed; use a fresh build.")
+        if sha256_file(book_audio) != book_audio_sha256:
+            raise ValueError("Book audio excerpt changed; use a fresh build.")
+        book_audio_file(episode, build, create=False)
 
     verify_frozen_inputs()
     overlays = build / "overlays"
     overlays.mkdir(exist_ok=True)
     for phase in timeline["phases"]:
         make_overlay(episode, phase["name"], inputs / "book_cover.jpg").save(overlays / f"{phase['name']}.png")
-    run_logged(encoding_command(build, episode, timeline, answer_audio, profile), build / "encode.log")
+    run_logged(encoding_command(build, episode, timeline, answer_audio, hook_audio, profile, book_audio),
+               build / "encode.log")
     run_logged(["ffmpeg", "-v", "error", "-i", str(build / "pilot.mp4"), "-f", "null", "-"],
                build / "decode.log")
     probe = subprocess.run(["ffprobe", "-v", "error", "-count_frames", "-show_streams",
@@ -512,8 +634,8 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
             or video["display_aspect_ratio"] != "9:16" or audio["sample_rate"] != "48000"
             or float(media["format"]["duration"]) >= 90):
         raise ValueError("Encoded listening video does not match the checked timeline.")
-    audio_check = audio_delivery_check(build / "pilot.mp4", inputs / "book_audio.wav",
-                                       answer_audio, timeline)
+    audio_check = audio_delivery_check(build / "pilot.mp4", book_audio,
+                                       answer_audio, hook_audio, timeline)
     verify_frozen_inputs()
     review = build / "review"
     review.mkdir(exist_ok=True)
@@ -541,7 +663,8 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
     report = {"timeline": timeline, "media": media, "profile": profile, "render": render,
               "audio_reuse": reuse, "source_sha256": sources, "audio_check": audio_check,
               "output_sha256": sha256_file(build / "pilot.mp4"),
-              "answer_audio_sha256": sha256_file(answer_audio),
+              "answer_audio_sha256": answer_sha256, "hook_audio_sha256": hook_sha256,
+              "book_audio_sha256": book_audio_sha256,
               "listener_frames_sha256": {p.name: sha256_file(p) for p in expected},
               "loop_source_indices": indices,
               "device_checks": json.loads((build / "device_checks.json").read_text(encoding="utf-8")),

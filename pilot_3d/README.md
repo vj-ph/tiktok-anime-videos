@@ -534,14 +534,53 @@ Inline text is hashed into the cache and frozen episode; it is not a replacement
 for checking the actual recording. Existing `audio`/`transcript` pairs retain
 their original cache payload. Both forms require nonempty, matching text.
 
-The speaking pipeline supports German/French pair/interview scenes. A separate
-DTZ Teil 1 listening video uses an existing animated listener, a tabletop
+The speaking pipeline supports German/French pair/interview scenes. The separate
+DTZ listening template supports Teile 1–4 using an existing animated listener, a tabletop
 playback device, the book's original recording, visible choices, reading and
-response countdowns, a voiced and captioned answer, and the listening-book
-cover. It is an independent
-single-question exercise, not a full examination. Other listening exams and
-sections still need their own reviewed templates; changing the exam label does
-not implement them.
+response countdowns, a spoken opening question and answer, and the listening-book
+cover. Each video is independent practice, not a full examination. Teil 2
+uses one announcement and question; Teil 3 uses a complete conversation and
+both questions; Teil 4 uses one opinion and all six matching choices. Other
+listening exams still need their own reviewed templates; changing the exam label
+does not implement them.
+
+The Übungsset 1 configurations are
+`episodes/dtz_b1_listening_teil2_fahrradkurs.json`,
+`episodes/dtz_b1_listening_teil3_termin.json` and
+`episodes/dtz_b1_listening_teil4_online_termine.json`. In each, `audio_excerpt`
+specifies an inclusive start and exclusive end in PCM sample frames of the
+original 24 kHz final SFX-mastered WAV. The full source is snapshotted and
+hashed; the exact excerpt is created separately, checked against the source
+samples, and hashed in `delivery_checks.json`. No book audio is resynthesized,
+sped up or normalized. SFX reuse was confirmed by the user; any applicable
+third-party attribution still needs to be recorded before publication.
+
+Revised Übungsset 1 previews with spoken openings:
+
+- Teil 1, Arztpraxis: `builds/dtz_b1_listening_appointment_preview_r8/pilot.mp4` — 49.041667 s.
+- Teil 2, Fahrradkurs: `builds/dtz_b1_listening_teil2_fahrradkurs_preview_r2/pilot.mp4` — 56.791667 s.
+- Teil 3, Frau Aydins Termin: `builds/dtz_b1_listening_teil3_termin_preview_r2/pilot.mp4` — 88.375 s.
+- Teil 4, Online-Termine, Person 1: `builds/dtz_b1_listening_teil4_online_termine_preview_r2/pilot.mp4` — 57 s.
+
+The encoded hook, book and answer recordings were compared to their source
+waveforms; every phase boundary was checked. The original book recordings and
+previous videos remain unchanged. Independent ASR recognized the openings but
+transcribed “Aydins” as “Eidens”; spoken question numbers were recognized as
+words. Human listening and pronunciation review remain necessary.
+
+Earlier Übungsset 1 previews:
+
+- Teil 2, Fahrradkurs: `builds/dtz_b1_listening_teil2_fahrradkurs_preview_r1/pilot.mp4` — 56.791667 s.
+- Teil 3, Frau Aydins Termin: `builds/dtz_b1_listening_teil3_termin_preview_r1/pilot.mp4` — 88.375 s.
+- Teil 4, Online-Termine, Person 1: `builds/dtz_b1_listening_teil4_online_termine_preview_r1/pilot.mp4` — 56.875 s.
+
+These earlier previews predate the spoken opening and retain the original
+Teil 3 reveal. They are 720x1280, 24 fps and strictly under 90 seconds. Each build has
+`timeline.json`, source snapshots, an exact excerpt, `delivery_checks.json`,
+encoded review frames and a draft caption. The encoded source and answer audio
+were checked against their inputs, and the start and end frames of each phase
+were checked. Human listening, mobile/platform review, preview approval and
+publication approval remain separate.
 
 For the first listening exercise, from `pilot_3d/` with the configured Qwen
 Python and a fresh build directory:
@@ -549,7 +588,7 @@ Python and a fresh build directory:
 ```bash
 python pipeline.py validate --episode episodes/dtz_b1_listening_appointment.json
 python pipeline.py build --episode episodes/dtz_b1_listening_appointment.json \
-  --build builds/dtz_b1_listening_appointment_preview_r1 --profile preview --jobs 8
+  --build builds/dtz_b1_listening_appointment_preview_new --profile preview --jobs 8
 ```
 
 This special path supports **CPU preview and production**; GPU rendering, GPU
@@ -561,9 +600,11 @@ head-and-eye movement with brief blinks is animated separately. Frames play
 forward and backward to avoid a hard loop reset. The old scene's speech is not
 reused. The tabletop radio is Innerscene's CC0 boombox; its source, license and
 hash are recorded in `assets/props/innerscene-boombox.provenance.json`.
-The book recording is played
-without speech captions during the challenge, while the answer narration is
-captioned during the reveal. Audio timing is measured and the entire video must
+The visible opening question is also spoken. The hook grows to fit its measured
+speech if necessary, without speeding it up; this time counts toward the
+90-second limit. The book recording is played without speech captions during
+the challenge. Teil 3 displays each numbered solution once, alongside the key
+detail, while narrating both answers. Audio timing is measured and the entire video must
 be strictly shorter than 90 seconds. Pronunciation, platform/mobile placement,
 production approval and publication remain separate human reviews.
 
@@ -572,15 +613,17 @@ After human audio review and explicit preview approval, run production from
 
 ```bash
 python pipeline.py build --episode episodes/dtz_b1_listening_appointment.json \
-  --build builds/dtz_b1_listening_appointment_production_r1 \
+  --build builds/dtz_b1_listening_appointment_production_r2 \
   --profile production --jobs 8 \
-  --reuse-audio builds/dtz_b1_listening_appointment_preview_r7
+  --reuse-audio builds/dtz_b1_listening_appointment_preview_r8
 ```
 
 Production requires `--reuse-audio` from a completed, matching listening
-preview; it verifies the source video, episode, input snapshots, narration
-cache and measured timeline, then copies the exact narration rather than
-resynthesizing it. The source remains read-only. `--speech-cache-from` cannot
+preview; it verifies the source video, episode, input snapshots, both opening
+and answer narration caches and the measured timeline, then copies the exact
+recordings rather than resynthesizing them. Older silent-hook previews cannot
+be reused for the new format; generate and approve a fresh preview instead.
+The source remains read-only. `--speech-cache-from` cannot
 be combined with exact reuse. Preview renders at 360x640 with two Cycles
 samples; production renders at 792x1408 with 16 samples and crops to native
 720x1280 pixels, retaining the preview composition without upscaling. Both use
@@ -604,7 +647,7 @@ with a tabletop radio and the source head-lowering animation with an attentive
 pose. Both have encoded countdown-boundary and loop-seam checks under
 `review/`; human audio and preview approval remain pending.
 
-The latest `builds/dtz_b1_listening_appointment_preview_r7/pilot.mp4` puts
+The earlier `builds/dtz_b1_listening_appointment_preview_r7/pilot.mp4` puts
 the question below the listener's head, enlarges both countdowns beside the
 radio and uses `DTZ B1 HÖREN` as the main title. The audio and timeline are
 unchanged. Encoded countdown-boundary samples are in `review/`.
