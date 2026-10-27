@@ -49,6 +49,18 @@ repository root unless a command explicitly changes directory.
 Trace the affected path end-to-end before editing. Update directly related tests
 and documentation; keep changes focused.
 
+## Posts for every video
+
+- For every video, including a preview, prepare exercise-specific TikTok and
+  Instagram post drafts in `posts/<episode>/tiktok.txt` and `instagram.txt`.
+  A generic caption inside a build directory is not a substitute.
+- Match the video's content and language, include the book CTA, advertising
+  and AI disclosures, independent-practice disclaimer and applicable asset
+  credits. Verify any required third-party attribution before publication.
+- Update the drafts when the video content changes, preserving existing
+  approved materials. Treat drafts, preview approval and publication approval
+  as separate; never publish without explicit approval.
+
 ## DTZ listening book
 
 - The user has confirmed that the content and audio in
