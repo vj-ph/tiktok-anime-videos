@@ -1,0 +1,20 @@
+{
+  "asset": "Smartphone",
+  "author": "Brian MacIntosh (BMacZero)",
+  "source": "https://opengameart.org/content/smartphone-1",
+  "license": "CC0-1.0",
+  "license_source": "https://opengameart.org/content/smartphone-1",
+  "files": {
+    "model": {
+      "file": "samsung-sgh-i677.obj",
+      "download": "https://opengameart.org/sites/default/files/samsung-sgh-i677_0.obj",
+      "sha256": "72c6ffae8b02a7672d6bc8a24cf5e94faf65c915a9082f03fb24ca2df0e74d85"
+    },
+    "texture": {
+      "file": "samsung-sgh-i677-redacted.png",
+      "download": "https://opengameart.org/sites/default/files/samsung-sgh-i677-redacted.png",
+      "sha256": "6cf0471c9fe0f505d44d620920f767098418d27f7223926e3af2e23f8db5982e"
+    }
+  },
+  "adaptation": "Scale and place the model on the table. Adapt the creator's redacted texture by masking the remaining button logo and adding a generic playback symbol."
+}

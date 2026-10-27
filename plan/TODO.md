@@ -1,6 +1,6 @@
 # Publication TODO
 
-Status recorded: October 26, 2026. Paths below are relative to the repository root.
+Status recorded: October 27, 2026. Paths below are relative to the repository root.
 
 ## Agreed publishing approach
 
@@ -106,6 +106,13 @@ Leave running production jobs unchanged; keep heavy CPU builds sequential.
 - [x] Add opt-in Canadian room decor to TEF Canada Section A/B configurations: original 2:1 wall/desk flag geometry with pinned Wikimedia PNG/SVG artwork, separate provenance and packed offline texture. All 51 focused tests, real B1 asset validation, full native placement checks and three one-pose distortion/UV/texture rejection regressions pass. Inspect three actual-camera captioned before/after views and a labelled inspection-only flag detail in `pilot_3d/builds/tef_canada_b1_canada_decor_review_r2/`; the whole wall flag fits above the candidate header, with Austrian placement unchanged. Preserve seven earlier movies, 116 frozen files and byte-identical 72.833333-second audio/timeline/alignment. Review stills only; the earlier full B1 preview remains unchanged and no decorated full movie has been exported.
 - [ ] Add reviewed ÖIF/fide and TCF IRN speaking configurations.
 - [ ] Design and implement explicit DTZ/ÖIF/fide listening templates, including learner response time and answer reveal; listening is not implemented by relabelling a speaking episode.
+- [x] Build and check a DTZ B1 listening preview from Übungsset 1, Teil 1, Aufgabe 1: `pilot_3d/builds/dtz_b1_listening_appointment_preview_r4/pilot.mp4` is 49.041667 seconds / 1177 frames, with the original book audio, animated listener, six-second response countdown, voiced and captioned answer, and listening-book CTA. Both speech recordings correlate with the encoded audio, the response pause is silent, and actual encoded phase boundaries were inspected. The earlier interrupted r1 and intermediate r2/r3 remain unchanged. Human listening and approval are separate.
+- [x] Revise the listening preview in `pilot_3d/builds/dtz_b1_listening_appointment_preview_r5/pilot.mp4` with a visible CC0 tabletop playback device, a forward/reverse 24 fps listener loop, a seven-to-one reading countdown and the `listening_v3` cover. The 49.041667-second encoded preview preserves the original and narration audio, and the r4 master remains unchanged. Check all 63 source poses for device support and fingertip clearance, compare encoded loop seams against adjacent frames and verify every countdown boundary. Human audio review and preview approval remain pending.
+- [x] Replace the phone with Innerscene's CC0 radio and cassette player and use a separately animated alert listener in `pilot_3d/builds/dtz_b1_listening_appointment_preview_r6/pilot.mp4`. The head and gaze stay upright with subtle motion and brief blinks; all 96 poses pass native checks, radio support and fingertip clearance checks, and encoded loop-seam/countdown checks. Original audio and timing are unchanged, and r5 remains intact.
+- [x] Revise the listening layout in `pilot_3d/builds/dtz_b1_listening_appointment_preview_r7/pilot.mp4`: both countdowns use large digits beside the radio, the practice question sits below the listener's head, and the main title is `DTZ B1 HÖREN`. Verify actual encoded countdown boundaries and representative frames; preserve the audio, timing and r6 preview.
+- [x] Implement the CPU listening production profile: render 792x1408 at 16 Cycles samples and crop to native 720x1280, preserving r7 framing and 24 fps. Require verified exact preview audio/timeline reuse and reject changed inputs. Check both profiles and pipeline checkpoints, five native production-quality poses and a diagnostic 1177-frame export with real audio; preserve r7. The diagnostic uses a shortened motion loop and is not a production delivery.
+- [ ] Listen to the book recording and answer narration, review the ASR disagreements in the r4 preview's `review/asr_review.json` (r7 uses the same audio), and approve the r7 preview before any production render. Check the final video and disclosures in each platform's mobile preview before publication.
+- [ ] After that approval, render and quality-check the full listening production video using the documented fresh-build command; publication approval remains separate.
 
 ## Development workflow
 
@@ -143,9 +150,10 @@ Leave running production jobs unchanged; keep heavy CPU builds sequential.
 | Lerntreffen | `pilot_3d/builds/lerntreffen_v7_preview_r1/pilot.mp4` - preview only | `posts/dtz_b1_lerntreffen/` |
 | Teil 1: Vorstellung und Nachfragen | `pilot_3d/builds/teil1_vorstellung_v7_production/pilot.mp4` - production, 1:55.375 | `posts/dtz_b1_teil1_vorstellung/` |
 | Teil 2: Bildbeschreibung und Erfahrungen beim Einkaufen | `pilot_3d/builds/teil2_einkaufen_v7_production/pilot.mp4` - production, 2:33.167 | `posts/dtz_b1_teil2_einkaufen/` |
+| DTZ B1 Hören: Arzttermin | `pilot_3d/builds/dtz_b1_listening_appointment_preview_r7/pilot.mp4` - 0:49.04, preview only | `pilot_3d/builds/dtz_b1_listening_appointment_preview_r7/publishing_caption.txt` - draft |
 | ÖIF B2: Neutral? Nicht bei Feiertagen! | `pilot_3d/builds/oeif_b2_nationalfeiertag_v7_preview_r3/pilot.mp4` - 1:40.83, preview only | `posts/oeif_b2_nationalfeiertag/` |
 | TEF Canada: Section A, pratique A1 | `pilot_3d/builds/tef_canada_a1_preview_r3/pilot.mp4` - image/logo preview only, in the isolated TEF worktree | `posts/tef_canada_a1/` |
 | TEF Canada: Atelier informatique, short A1 excerpt | `pilot_3d/builds/tef_canada_a1_short_preview_r1/pilot.mp4` - 1:26.58, preview only, in the isolated TEF worktree | `posts/tef_canada_a1_short/` |
 
-Each caption folder contains `tiktok.txt` and `instagram.txt`.
+The episode caption folders contain `tiktok.txt` and `instagram.txt`; the listening preview has one draft publishing caption.
 The user confirmed on October 26, 2026 that Teil 1 and Teil 2 have been published; platforms, publication dates and post links were not supplied. Both existing production videos exceed the current under-90-second limit for new videos. Performance results have not been supplied.

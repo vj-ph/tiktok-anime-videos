@@ -534,12 +534,80 @@ Inline text is hashed into the cache and frozen episode; it is not a replacement
 for checking the actual recording. Existing `audio`/`transcript` pairs retain
 their original cache payload. Both forms require nonempty, matching text.
 
-Current implementations are German/French **speaking** in the pair/interview
-exam room. DTZ, ÖIF and fide listening need an explicit listening presentation,
-including prompt, response and answer-reveal behavior; they are **not**
-implemented by changing an exam label. Other speaking exams similarly require
-their own reviewed tasks/configurations. Unsupported languages, layouts and
-`exam.skill: "listening"` fail rather than quietly producing the wrong format.
+The speaking pipeline supports German/French pair/interview scenes. A separate
+DTZ Teil 1 listening video uses an existing animated listener, a tabletop
+playback device, the book's original recording, visible choices, reading and
+response countdowns, a voiced and captioned answer, and the listening-book
+cover. It is an independent
+single-question exercise, not a full examination. Other listening exams and
+sections still need their own reviewed templates; changing the exam label does
+not implement them.
+
+For the first listening exercise, from `pilot_3d/` with the configured Qwen
+Python and a fresh build directory:
+
+```bash
+python pipeline.py validate --episode episodes/dtz_b1_listening_appointment.json
+python pipeline.py build --episode episodes/dtz_b1_listening_appointment.json \
+  --build builds/dtz_b1_listening_appointment_preview_r1 --profile preview --jobs 8
+```
+
+This special path supports **CPU preview and production**; GPU rendering, GPU
+speech and `--promo` are not supported. It snapshots the original book audio,
+cover, narration references, source book, source scene and implementation. The
+listener is rendered at 24 fps using an alert reference pose from the frozen
+speaking scene. The original source animation is frozen; a subtle, smooth
+head-and-eye movement with brief blinks is animated separately. Frames play
+forward and backward to avoid a hard loop reset. The old scene's speech is not
+reused. The tabletop radio is Innerscene's CC0 boombox; its source, license and
+hash are recorded in `assets/props/innerscene-boombox.provenance.json`.
+The book recording is played
+without speech captions during the challenge, while the answer narration is
+captioned during the reveal. Audio timing is measured and the entire video must
+be strictly shorter than 90 seconds. Pronunciation, platform/mobile placement,
+production approval and publication remain separate human reviews.
+
+After human audio review and explicit preview approval, run production from
+`pilot_3d/` using a fresh build directory:
+
+```bash
+python pipeline.py build --episode episodes/dtz_b1_listening_appointment.json \
+  --build builds/dtz_b1_listening_appointment_production_r1 \
+  --profile production --jobs 8 \
+  --reuse-audio builds/dtz_b1_listening_appointment_preview_r7
+```
+
+Production requires `--reuse-audio` from a completed, matching listening
+preview; it verifies the source video, episode, input snapshots, narration
+cache and measured timeline, then copies the exact narration rather than
+resynthesizing it. The source remains read-only. `--speech-cache-from` cannot
+be combined with exact reuse. Preview renders at 360x640 with two Cycles
+samples; production renders at 792x1408 with 16 samples and crops to native
+720x1280 pixels, retaining the preview composition without upscaling. Both use
+the same 24-fps listener motion. The saved production video, `delivery_checks.json`
+and draft `publishing_caption.txt` are written under the new build directory.
+Production rendering does not itself approve publication or platform placement.
+
+The checked first preview is
+`builds/dtz_b1_listening_appointment_preview_r4/pilot.mp4` (49.041667 seconds,
+1177 frames, 720x1280 square pixels). The `review/` folder contains encoded
+phase samples, an exact-boundary contact sheet and the two local ASR reviews.
+The recognizers disagree on a few words in the original book recording;
+neither replaces human listening. `publishing_caption.txt` is a draft, not
+publication approval.
+
+The r5 preview is `builds/dtz_b1_listening_appointment_preview_r5/pilot.mp4`,
+with the same audio and duration, a phone, the `listening_v3` cover and a
+seven-second reading countdown. The newer
+`builds/dtz_b1_listening_appointment_preview_r6/pilot.mp4` replaces the phone
+with a tabletop radio and the source head-lowering animation with an attentive
+pose. Both have encoded countdown-boundary and loop-seam checks under
+`review/`; human audio and preview approval remain pending.
+
+The latest `builds/dtz_b1_listening_appointment_preview_r7/pilot.mp4` puts
+the question below the listener's head, enlarges both countdowns beside the
+radio and uses `DTZ B1 HÖREN` as the main title. The audio and timeline are
+unchanged. Encoded countdown-boundary samples are in `review/`.
 
 ### TEF Canada Section B: vegetarian cooking workshop
 

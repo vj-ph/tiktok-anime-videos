@@ -47,6 +47,13 @@ set never runs embedded scripts; continue using `--disable-autoexec`.
 CC0 attribution is not required; the source record is retained for provenance.
 Existing character-rig attribution requirements still apply.
 
+The DTZ listening preview uses `innerscene-boombox.glb`, Innerscene's CC0 radio
+and cassette player, with embedded materials.
+`innerscene-boombox.provenance.json` records its source, hash and adaptation.
+The earlier r5 preview used Brian MacIntosh's CC0 smartphone model and texture;
+its original files and `smartphone.provenance.json` remain for provenance.
+Neither is a `scene.dressing` option.
+
 Named anchors target the current `exam_room` geometry. The supported first
 set is deliberately small:
 

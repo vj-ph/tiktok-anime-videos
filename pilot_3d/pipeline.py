@@ -358,7 +358,22 @@ def main():
             raise SystemExit(result.returncode)
     os.environ.setdefault("LP_NUM_THREADS", "4")
     try:
-        if args.command == "validate":
+        raw_episode = json.loads(args.episode.read_text(encoding="utf-8"))
+        exam = raw_episode.get("exam") if isinstance(raw_episode, dict) else None
+        if isinstance(exam, dict) and exam.get("skill") == "listening":
+            from listening_video import build_listening, load_episode
+
+            episode, _ = load_episode(args.episode)
+            if args.render_device != "CPU" or args.speech_device != "cpu" or args.promo:
+                raise ValueError("Listening supports CPU rendering and speech only; promo is unavailable.")
+            if args.command == "validate":
+                print(f"Valid listening exercise: {episode['id']}.")
+            elif args.build is None:
+                parser.error("--build is required for build")
+            else:
+                build_listening(args.episode, args.build, args.jobs, args.until, args.speech_cache_from,
+                                profile=args.profile, reuse_audio=args.reuse_audio)
+        elif args.command == "validate":
             episode = preflight(args.episode)
             if args.render_device != "CPU":
                 check_render_device(args.render_device)
