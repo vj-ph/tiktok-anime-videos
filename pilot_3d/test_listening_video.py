@@ -12,6 +12,7 @@ from unittest.mock import patch
 
 import listening_video as listening
 import pipeline
+import prepare_listening_source
 from listener_motion import listener_offsets
 from PIL import Image, ImageDraw
 from prepare_audio import atomic_json, content_hash, inspect_wav, make_cache_payload, sha256_file
@@ -76,6 +77,112 @@ def reuse_fixture(root):
 
 
 class ListeningVideoTest(unittest.TestCase):
+    def test_authored_tef_bus_stop_uses_portable_paths_and_four_choices(self):
+        path = Path(__file__).parent / "episodes" / "tef_canada_listening_bus_stop.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(data["exam"], {"family": "tef_canada", "skill": "listening",
+                                        "section": "text_choice"})
+        self.assertEqual(data["language"], "fr")
+        self.assertEqual(len(data["choices"]), 4)
+        self.assertEqual(data["correct_choice"], "B")
+        self.assertIn("devant la pharmacie", data["source"]["audio_transcript"])
+        for value in (data["audio"], data["voice"]["audio"], data["voice"]["transcript"],
+                      data["source_voice"]["audio"], data["source_voice"]["transcript"],
+                      data["book_cover"], data["scene"]["source"], data["source"]["book"],
+                      data["source"]["audio_provenance"], data["scene"]["flag_artwork"],
+                      data["scene"]["flag_provenance"]):
+            self.assertNotIn("\\", value)
+        self.assertEqual(data["voice"]["voice_id"], "fr_ca_qc_narrator_f01")
+        self.assertEqual(data["source_voice"]["voice_id"], "fr_ca_qc_service_m01")
+        self.assertEqual(data["audio_effect"], "pa_chime_echo")
+        self.assertTrue(data["scene"]["rest_hands_on_table"])
+        self.assertTrue(data["book_cover"].endswith("/listening/listening.jpg"))
+
+    def test_authored_tef_bus_stop_matches_book_when_available(self):
+        path = Path(__file__).parent / "episodes" / "tef_canada_listening_bus_stop.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        book = (path.parent / data["source"]["book"]).resolve()
+        if not book.is_file():
+            self.skipTest("The sibling TEF listening book is not available.")
+        text = book.read_text(encoding="utf-8")
+        candidate, review = text.split("### 2. Public announcements", 2)[1:]
+        question = candidate.split("#### Question 17", 1)[1].split("#### Question 18", 1)[0]
+        solution = review.split("#### Question 17", 1)[1].split("#### Question 18", 1)[0]
+        self.assertIn(data["question"], question)
+        for choice in data["choices"]:
+            self.assertIn(choice, question)
+        self.assertIn(data["source"]["audio_transcript"], solution)
+        self.assertIn("**Correct answer:** B", solution)
+
+    def test_prepare_source_requires_exact_book_text_and_never_overwrites(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            builds = root / "builds"
+            for name in ("voice.wav",):
+                write_wav(root / name)
+            (root / "voice.txt").write_text("Reference text.", encoding="utf-8")
+            (root / "book.md").write_text("The original announcement.", encoding="utf-8")
+            target = builds / "exercise" / "announcement.wav"
+            data = {
+                "language": "fr", "audio": str(target),
+                "voice": {"audio": str(root / "voice.wav"), "transcript": str(root / "voice.txt")},
+                "source": {"book": str(root / "book.md"), "audio_transcript": "The original announcement.",
+                           "audio_provenance": str(target.with_suffix(".cache.json"))},
+            }
+            path = root / "episode.json"
+            registry = root / "audio" / "voices" / "voices.json"
+            registry.parent.mkdir(parents=True)
+            registry_data = {"voices": [{"voice_id": "test", "availability": False,
+                                         "reference_audio": "voice.wav",
+                                         "reference_text": "Reference text."}]}
+            atomic_json(registry, registry_data)
+            data["voice"]["voice_id"] = "test"
+            data["source"]["voice_registry"] = str(registry)
+            atomic_json(path, data)
+
+            def fake_synthesize(speech, _episode_dir, output, _model, _device, _threads):
+                self.assertEqual(speech["language"], "fr")
+                self.assertEqual(speech["turns"][0]["text"], data["source"]["audio_transcript"])
+                self.assertEqual(speech["voices"]["announcement"]["audio"], str(root / "voice.wav"))
+                recording = output / "announcement-generated.wav"
+                write_wav(recording)
+                payload = {"text": speech["turns"][0]["text"], "settings": {"language": "French"},
+                           "reference_audio_sha256": sha256_file(root / "voice.wav"),
+                           "reference_transcript_sha256": sha256_file(root / "voice.txt"),
+                           "reference_text": "Reference text."}
+                atomic_json(recording.with_suffix(".cache.json"), {
+                    "payload": payload, "cache_key": content_hash(payload),
+                    "wav_sha256": sha256_file(recording), "audio_info": inspect_wav(recording)})
+                return [{"audio": str(recording)}]
+
+            with (patch.object(prepare_listening_source, "BUILDS", builds),
+                  patch.object(prepare_listening_source, "synthesize", side_effect=fake_synthesize) as synth):
+                data["source"]["audio_transcript"] = "Not in the book."
+                atomic_json(path, data)
+                with self.assertRaisesRegex(ValueError, "not found"):
+                    prepare_listening_source.prepare(path, "model")
+                synth.assert_not_called()
+                data["source"]["audio_transcript"] = "The original announcement."
+                atomic_json(path, data)
+                with self.assertRaisesRegex(ValueError, "unavailable"):
+                    prepare_listening_source.prepare(path, "model")
+                registry_data["voices"][0]["availability"] = True
+                registry_data["voices"][0]["reference_text"] = "A different transcript."
+                atomic_json(registry, registry_data)
+                with self.assertRaisesRegex(ValueError, "does not match"):
+                    prepare_listening_source.prepare(path, "model")
+                registry_data["voices"][0]["reference_text"] = "Reference text."
+                atomic_json(registry, registry_data)
+                data["source_voice"] = data["voice"].copy()
+                data["voice"]["voice_id"] = "different-narrator"
+                atomic_json(path, data)
+                self.assertEqual(prepare_listening_source.prepare(path, "model"), target)
+                digest = sha256_file(target)
+                with self.assertRaisesRegex(ValueError, "already exists"):
+                    prepare_listening_source.prepare(path, "model")
+                self.assertEqual(sha256_file(target), digest)
+                self.assertEqual(synth.call_count, 1)
+
     def test_load_validates_section_choices_questions_and_excerpt_bounds(self):
         with TemporaryDirectory() as directory:
             root = Path(directory).resolve()
@@ -127,6 +234,215 @@ class ListeningVideoTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "correct_choice"):
                 validate()
 
+            data.update(language="fr", exam={"family": "tef_canada", "skill": "listening",
+                                            "section": "text_choice"},
+                        choices=["un", "deux", "trois", "quatre"], correct_choice="D")
+            validate()
+            payload = {"text": "Annonce originale.", "settings": {"language": "French"}}
+            data["source"].update(audio_provenance="book.cache.json", audio_transcript=payload["text"])
+            metadata = {"payload": payload, "cache_key": content_hash(payload),
+                        "wav_sha256": sha256_file(root / "book.wav"),
+                        "audio_info": inspect_wav(root / "book.wav")}
+            atomic_json(root / "book.cache.json", metadata)
+            self.assertIn("book_audio.cache.json", validate()[1])
+            metadata["wav_sha256"] = "0" * 64
+            atomic_json(root / "book.cache.json", metadata)
+            with self.assertRaisesRegex(ValueError, "provenance"):
+                validate()
+            metadata["wav_sha256"] = sha256_file(root / "book.wav")
+            atomic_json(root / "book.cache.json", metadata)
+            data["source"]["audio_transcript"] = "Une autre annonce."
+            with self.assertRaisesRegex(ValueError, "provenance"):
+                validate()
+            data["source"]["audio_transcript"] = payload["text"]
+            payload["settings"]["language"] = "German"
+            metadata["cache_key"] = content_hash(payload)
+            atomic_json(root / "book.cache.json", metadata)
+            with self.assertRaisesRegex(ValueError, "provenance"):
+                validate()
+            del data["source"]["audio_provenance"]
+            del data["source"]["audio_transcript"]
+            original_choice = data["choices"][0]
+            data["choices"][0] = " ".join(["option"] * 100)
+            with self.assertRaisesRegex(ValueError, "exceeds"):
+                validate()
+            data["choices"][0] = original_choice
+            data["choices"].pop()
+            with self.assertRaisesRegex(ValueError, "4 nonempty"):
+                validate()
+            data["choices"].append("quatre")
+            data["language"] = "de"
+            with self.assertRaisesRegex(ValueError, "TEF Canada French"):
+                validate()
+            data["language"] = "fr"
+            data["exam"]["section"] = "3"
+            with self.assertRaisesRegex(ValueError, "TEF Canada French"):
+                validate()
+
+    def test_tef_generated_source_uses_distinct_registered_quebec_voices(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name, frames in (("book.wav", 24000), ("voice.wav", 24000), ("source.wav", 12000)):
+                write_wav(root / name, frames)
+            for name in ("book.md", "scene.blend", "device.glb"):
+                (root / name).write_bytes(b"fixture")
+            (root / "voice.txt").write_text("Narrator reference.", encoding="utf-8")
+            (root / "source.txt").write_text("Announcement reference.", encoding="utf-8")
+            Image.new("RGB", (4, 6), "white").save(root / "cover.jpg")
+            atomic_json(root / "device.json", {"sha256": sha256_file(root / "device.glb")})
+            registry = root / "audio" / "voices" / "voices.json"
+            registry.parent.mkdir(parents=True)
+            entries = [
+                {"voice_id": "fr_ca_qc_narrator", "locale": "fr-CA", "availability": True,
+                 "reference_audio": "voice.wav", "reference_text": "Narrator reference."},
+                {"voice_id": "fr_ca_qc_service", "locale": "fr-CA", "availability": True,
+                 "reference_audio": "source.wav", "reference_text": "Announcement reference."},
+            ]
+            atomic_json(registry, {"voices": entries})
+            data = episode()
+            data.update(schema_version=1, id="fixture", language="fr", title="Fixture",
+                        exam={"family": "tef_canada", "skill": "listening", "section": "text_choice"},
+                        choices=["un", "deux", "trois", "quatre"], audio="book.wav",
+                        book_cover="cover.jpg",
+                        voice={"audio": "voice.wav", "transcript": "voice.txt",
+                               "voice_id": "fr_ca_qc_narrator"},
+                        source_voice={"audio": "source.wav", "transcript": "source.txt",
+                                      "voice_id": "fr_ca_qc_service"},
+                        scene={"source": "scene.blend", "camera_prefix": "04", "pose_frame": 1,
+                               "cycle_frames": 5, "framing": "full", "hide_objects": ["Task sheet"],
+                               "playback_device": {"model": "device.glb", "provenance": "device.json",
+                                                   "table_position": [0, 0]}})
+            data["source"].update(book="book.md", voice_registry="audio/voices/voices.json",
+                                  audio_provenance="book.cache.json", audio_transcript="Annonce.")
+            payload = {"text": "Annonce.", "settings": {"language": "French"},
+                       "reference_audio_sha256": sha256_file(root / "source.wav"),
+                       "reference_transcript_sha256": sha256_file(root / "source.txt")}
+            metadata = {"payload": payload, "cache_key": content_hash(payload),
+                        "wav_sha256": sha256_file(root / "book.wav"), "audio_info": inspect_wav(root / "book.wav")}
+            atomic_json(root / "book.cache.json", metadata)
+            path = root / "episode.json"
+
+            def validate():
+                atomic_json(path, data)
+                return listening.load_episode(path)
+
+            files = validate()[1]
+            self.assertTrue({"source_voice.wav", "source_voice.txt", "voice_registry.json"} <= files.keys())
+            payload["reference_audio_sha256"] = sha256_file(root / "voice.wav")
+            metadata["cache_key"] = content_hash(payload)
+            atomic_json(root / "book.cache.json", metadata)
+            with self.assertRaisesRegex(ValueError, "provenance"):
+                validate()
+            payload["reference_audio_sha256"] = sha256_file(root / "source.wav")
+            metadata["cache_key"] = content_hash(payload)
+            atomic_json(root / "book.cache.json", metadata)
+            entries[1]["locale"] = "fr-FR"
+            atomic_json(registry, {"voices": entries})
+            with self.assertRaisesRegex(ValueError, "Quebec French"):
+                validate()
+            entries[1]["locale"] = "fr-CA"
+            atomic_json(registry, {"voices": entries})
+            data["source_voice"] = data["voice"].copy()
+            with self.assertRaisesRegex(ValueError, "distinct"):
+                validate()
+            data["source_voice"] = {"audio": "source.wav", "transcript": "source.txt",
+                                    "voice_id": "fr_ca_qc_service"}
+            data["scene"]["hide_objects"] = ["Task sheet", "Task sheet"]
+            with self.assertRaisesRegex(ValueError, "unique"):
+                validate()
+            data["scene"]["hide_objects"] = ["Task sheet"]
+            data["scene"]["rest_hands_on_table"] = "yes"
+            with self.assertRaisesRegex(ValueError, "rest_hands_on_table"):
+                validate()
+            data["scene"]["rest_hands_on_table"] = True
+            data["scene"]["min_hair_drop_m"] = 0
+            with self.assertRaisesRegex(ValueError, "hair_drop"):
+                validate()
+            data["scene"]["min_hair_drop_m"] = 0.15
+            data["audio_effect"] = "unknown"
+            with self.assertRaisesRegex(ValueError, "audio_effect"):
+                validate()
+            data["audio_effect"] = "pa_chime_echo"
+            (root / "flag.png").write_bytes(b"fixture flag")
+            data["scene"].update(flag_artwork="flag.png", flag_provenance="flag.json")
+            flag = {"assets": {"canada_flag": {"sha256": sha256_file(root / "flag.png")}}}
+            atomic_json(root / "flag.json", flag)
+            self.assertIn("flag.png", validate()[1])
+            flag["assets"]["canada_flag"]["sha256"] = "0" * 64
+            atomic_json(root / "flag.json", flag)
+            with self.assertRaisesRegex(ValueError, "Flag artwork checksum"):
+                validate()
+
+    def test_tef_overlay_shows_four_choices_without_answer_until_reveal(self):
+        data = episode()
+        data.update(
+            language="fr", exam={"family": "tef_canada", "skill": "listening",
+                                 "section": "text_choice"},
+            question="Que doivent faire les voyageurs qui utilisent habituellement l’arrêt Rue-des-Érables ?",
+            choices=["Prendre le métro jusqu’au centre-ville.",
+                     "Attendre la ligne 18 devant la pharmacie.",
+                     "Attendre un autobus de remplacement sur le pont.",
+                     "Reporter tous leurs déplacements à demain."],
+            correct_choice="B",
+            answer_text="La bonne réponse est B. L’arrêt provisoire est devant la pharmacie.",
+            key_detail="« devant la pharmacie »",
+        )
+        with TemporaryDirectory() as directory:
+            cover = Path(directory) / "cover.jpg"
+            Image.new("RGB", (4, 6), "white").save(cover)
+            for phase in ("reading_7", "listening", "response_6"):
+                with self.subTest(phase=phase), patch.object(
+                        listening, "draw_wrapped", wraps=listening.draw_wrapped) as draw:
+                    image = listening.make_overlay(data, phase, cover)
+                    self.assertIsNone(image.getchannel("A").crop((250, 370, 440, 580)).getbbox())
+                    self.assertIsNone(image.getchannel("A").crop((164, 10, 480, 184)).getbbox())
+                    self.assertIsNone(image.getchannel("A").crop((347, 940, 657, 1178)).getbbox())
+                    text = " ".join(call.args[1] for call in draw.call_args_list)
+                    for choice in data["choices"]:
+                        self.assertIn(choice, text)
+                    self.assertNotIn(data["answer_text"], text)
+                    self.assertNotIn(data["key_detail"], text)
+            with patch.object(listening, "draw_wrapped", wraps=listening.draw_wrapped) as draw:
+                image = listening.make_overlay(data, "reveal", cover)
+                self.assertIsNone(image.getchannel("A").crop((250, 370, 440, 580)).getbbox())
+                self.assertIsNone(image.getchannel("A").crop((347, 940, 657, 1178)).getbbox())
+                text = " ".join(call.args[1] for call in draw.call_args_list)
+                self.assertIn(data["answer_text"], text)
+                self.assertIn(data["key_detail"], text)
+                self.assertIn("B  " + data["choices"][1], text)
+            with patch.object(listening, "draw_wrapped", wraps=listening.draw_wrapped) as draw:
+                image = listening.make_overlay(data, "cta", cover)
+                self.assertIsNone(image.getchannel("A").crop((250, 370, 440, 580)).getbbox())
+                self.assertIsNone(image.getchannel("A").crop((347, 940, 657, 1178)).getbbox())
+                text = " ".join(call.args[1] for call in draw.call_args_list)
+                self.assertIn("TEF Canada", text)
+                self.assertNotIn("DTZ", text)
+
+            data["choices"] = [" ".join(["option"] * 100)] * 4
+            with self.assertRaisesRegex(ValueError, "exceeds"):
+                listening.make_overlay(data, "listening", cover)
+
+    def test_tef_build_synthesizes_french_opening_and_answer(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            data, files, _, _, _, _ = reuse_fixture(root)
+            data.update(language="fr", exam={"family": "tef_canada", "skill": "listening",
+                                             "section": "text_choice"})
+            def fake_synthesize(narration, _, audio_dir, *args, **kwargs):
+                self.assertEqual(narration["language"], "fr")
+                self.assertEqual([turn["text"] for turn in narration["turns"]],
+                                 [data["question"], data["answer_text"]])
+                paths = [audio_dir / "hook-test.wav", audio_dir / "answer-test.wav"]
+                for path in paths:
+                    write_wav(path)
+                return [{"audio": str(path)} for path in paths]
+
+            with (patch.object(listening, "load_episode", return_value=(data, files)),
+                  patch.object(listening, "make_overlay"),
+                  patch.object(listening, "synthesize", side_effect=fake_synthesize)):
+                listening.build_listening.__wrapped__(Path("unused"), root / "tef-build",
+                                                     until="audio", profile="preview")
+
     def test_excerpt_copies_exact_samples_and_rejects_tampering(self):
         with TemporaryDirectory() as directory:
             build = Path(directory)
@@ -154,6 +470,67 @@ class ListeningVideoTest(unittest.TestCase):
             data["audio_excerpt"]["end_sample"] = 99999
             with self.assertRaisesRegex(ValueError, "exceeds"):
                 listening.book_audio_file(data, build, create=False)
+
+    def test_public_address_effect_preserves_source_and_validates_derived_audio(self):
+        with TemporaryDirectory() as directory:
+            build = Path(directory)
+            (build / "inputs").mkdir()
+            source = build / "inputs" / "book_audio.wav"
+            samples = [round(14000 * math.sin(2 * math.pi * 220 * i / 24000)) for i in range(24000)]
+            with wave.open(str(source), "wb") as wav:
+                wav.setnchannels(1)
+                wav.setsampwidth(2)
+                wav.setframerate(24000)
+                wav.writeframes(struct.pack("<24000h", *samples))
+            digest = sha256_file(source)
+            data = episode()
+            data["audio_effect"] = "pa_chime_echo"
+            result = listening.book_audio_file(data, build, create=True)
+            self.assertEqual(sha256_file(source), digest)
+            with wave.open(str(result), "rb") as wav:
+                rendered = struct.unpack(f"<{wav.getnframes()}h", wav.readframes(wav.getnframes()))
+            lead = round(24000 * 0.96)
+            delay = round(24000 * 0.05)
+            self.assertEqual(len(rendered), lead + len(samples) + delay)
+            self.assertGreater(max(rendered[:lead]), 3500)
+            self.assertTrue(all(value == 0 for value in rendered[19200:lead]))
+            for index in (100, 1200, 5000, 23999):
+                expected = (7 * samples[index] + (samples[index - delay] if index >= delay else 0)) // 8
+                self.assertEqual(rendered[lead + index], expected)
+            self.assertEqual(listening.book_audio_file(data, build, create=False), result)
+            with wave.open(str(result), "rb") as wav:
+                params, output = wav.getparams(), wav.readframes(wav.getnframes())
+            with wave.open(str(result), "wb") as wav:
+                wav.setparams(params)
+                wav.writeframes(bytes([output[0] ^ 1]) + output[1:])
+            with self.assertRaisesRegex(ValueError, "sound treatment differs"):
+                listening.book_audio_file(data, build, create=False)
+            data["audio_effect"] = "unknown"
+            with self.assertRaisesRegex(ValueError, "Unsupported"):
+                listening.book_audio_file(data, build, create=False)
+
+    def test_reuse_checks_treated_announcement_delivery_hash(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            data, files, sources, source, answer, _ = reuse_fixture(root)
+            data["audio_effect"] = "pa_chime_echo"
+            treated = listening.book_audio_file(data, source, create=True)
+            hook = source / "audio" / "hook-fixture.wav"
+            timeline = listening.timeline_for(data, inspect_wav(treated), inspect_wav(answer), inspect_wav(hook))
+            atomic_json(source / "episode.json", data)
+            atomic_json(source / "timeline.json", timeline)
+            atomic_json(source / "listening_state.json", {"episode": data, "profile": "preview", "sources": sources})
+            report_path = source / "delivery_checks.json"
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            report.update(timeline=timeline, book_audio_sha256=sha256_file(treated))
+            atomic_json(report_path, report)
+            with patch.object(listening, "audio_delivery_check") as check:
+                listening.audio_reuse_spec(source, root / "production", data, files, sources)
+                self.assertEqual(check.call_args.args[1], treated)
+                report["book_audio_sha256"] = "0" * 64
+                atomic_json(report_path, report)
+                with self.assertRaisesRegex(ValueError, "excerpt checksum"):
+                    listening.audio_reuse_spec(source, root / "production", data, files, sources)
 
     def test_reuse_checks_excerpt_against_master_and_delivery_hash(self):
         with TemporaryDirectory() as directory:
@@ -238,6 +615,12 @@ class ListeningVideoTest(unittest.TestCase):
         self.assertIn("scale=792:1408:flags=lanczos,crop=720:1280:36:120", preview)
         self.assertIn("fps=24,crop=720:1280:36:120", production)
         self.assertNotIn("scale=", production)
+        for profile in ("preview", "production"):
+            full, _ = listening.video_filters(timeline, profile, "full")
+            self.assertIn("scale=720:1280:flags=lanczos", full)
+            self.assertNotIn("crop=", full)
+        with self.assertRaisesRegex(ValueError, "framing"):
+            listening.video_filters(timeline, "preview", "invalid")
         self.assertEqual(preview.split("setsar=1", 1)[1], production.split("setsar=1", 1)[1])
         with self.assertRaisesRegex(ValueError, "Unknown"):
             listening.render_settings("unknown")

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "id": "tef_canada_listening_bus_stop",
+  "language": "fr",
+  "exam": {"family": "tef_canada", "skill": "listening", "section": "text_choice"},
+  "fps": 24,
+  "title": "TEF Canada : Compréhension orale",
+  "question": "Que doivent faire les voyageurs qui utilisent habituellement l’arrêt Rue-des-Érables ?",
+  "choices": [
+    "Prendre le métro jusqu’au centre-ville.",
+    "Attendre la ligne 18 devant la pharmacie.",
+    "Attendre un autobus de remplacement sur le pont.",
+    "Reporter tous leurs déplacements à demain."
+  ],
+  "correct_choice": "B",
+  "answer_text": "La bonne réponse est B. L’arrêt provisoire se trouve devant la pharmacie.",
+  "key_detail": "« l’arrêt provisoire devant la pharmacie »",
+  "audio": "../builds/tef_listening_bus_stop_source_qc_r1/announcement.wav",
+  "audio_effect": "pa_chime_echo",
+  "voice": {
+    "audio": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/references/fr_ca_qc_narrator_f01.wav",
+    "transcript": "../assets/voices/fr_ca_qc_narrator_f01_reference.txt",
+    "voice_id": "fr_ca_qc_narrator_f01",
+    "availability": true
+  },
+  "source_voice": {
+    "audio": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/references/fr_ca_qc_service_m01.wav",
+    "transcript": "../assets/voices/fr_ca_qc_service_m01_reference.txt",
+    "voice_id": "fr_ca_qc_service_m01",
+    "availability": true
+  },
+  "book_cover": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/listening.jpg",
+  "scene": {
+    "source": "../builds/tef_canada_b1_canada_decor_review_r2/studio.blend",
+    "camera_prefix": "04",
+    "pose_frame": 881,
+    "cycle_frames": 96,
+    "framing": "full",
+    "hide_objects": ["Task sheet", "Picture sheet cuisine_vegetarienne"],
+    "min_hair_drop_m": 0.15,
+    "rest_hands_on_table": true,
+    "flag_artwork": "../assets/props/canada-flag.png",
+    "flag_provenance": "../assets/props/canada.provenance.json",
+    "playback_device": {
+      "model": "../assets/props/innerscene-boombox.glb",
+      "provenance": "../assets/props/innerscene-boombox.provenance.json",
+      "table_position": [-0.55, -0.28]
+    }
+  },
+  "timing": {"hook_seconds": 3, "reading_seconds": 15, "response_seconds": 7, "reveal_seconds": 9, "cta_seconds": 6},
+  "source": {
+    "book": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/book.md",
+    "exercise": "Chapter 2: Short-message labs, 2. Public announcements, Question 17; transcript and answer in Transcripts, answers, and feedback.",
+    "audio_transcript": "En raison de travaux urgents sur le pont, la ligne 18 ne dessert pas l’arrêt Rue-des-Érables aujourd’hui. Pour monter dans l’autobus vers le centre-ville, utilisez l’arrêt provisoire devant la pharmacie, à une rue de là. Les autres arrêts de la ligne restent inchangés.",
+    "audio_provenance": "../builds/tef_listening_bus_stop_source_qc_r1/announcement.cache.json",
+    "voice_registry": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/voices.json",
+    "voice_reference_rights": "Registry marks reference available; commercial rights not independently verified.",
+    "generated_audio_rights": "Qwen-generated recording; output rights not independently verified.",
+    "book_rights": "User requested a book-based preview; book reuse rights have not been independently verified.",
+    "cover_provenance": "Listening-book cover supplied by the user for this preview on October 27, 2026.",
+    "effect_provenance": "Original procedural two-tone public-address cue and subtle delayed echo; no third-party sound asset.",
+    "duration_limit_seconds": 90,
+    "scope": "One book question and exact book transcript, newly synthesized and presented with a public-address effect as independent practice, not an official exam. Preview is not publication approval."
+  }
+}

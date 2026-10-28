@@ -49,6 +49,9 @@ repository root unless a command explicitly changes directory.
 Trace the affected path end-to-end before editing. Update directly related tests
 and documentation; keep changes focused.
 
+For TEF Canada videos, also follow `.github/skills/tef-canada-video-gen/SKILL.md`,
+including its Québec French listening-voice casting requirements.
+
 ## Posts for every video
 
 - For every video, including a preview, prepare exercise-specific TikTok and

@@ -1,4 +1,4 @@
-"""DTZ listening challenge: original audio, response time and voiced reveal."""
+"""Listening challenges with source audio, response time and a voiced reveal."""
 
 import json
 import shutil
@@ -14,6 +14,7 @@ from episode_config import PROFILES
 from generation_runtime import generation_job, run_process, stage_completed
 from prepare_audio import (MODEL, atomic_json, ceil_frames, content_hash, inspect_wav,
                            make_cache_payload, sha256_file, synthesize, wav_frames_to_video_frames)
+from prepare_listening_source import validate_registry_voice
 from runtime_config import font_path, tool_path
 
 ROOT = Path(__file__).resolve().parent
@@ -37,11 +38,15 @@ def load_episode(path):
     path = Path(path).resolve(strict=True)
     episode = json.loads(path.read_text(encoding="utf-8"))
     exam = episode.get("exam")
-    if (episode.get("schema_version") != 1 or episode.get("language") != "de"
-            or not isinstance(exam, dict) or set(exam) != {"family", "skill", "section"}
-            or exam["family"] != "dtz" or exam["skill"] != "listening"
-            or exam["section"] not in ("1", "2", "3", "4")):
-        raise ValueError("This listening template supports DTZ German Teile 1–4 only.")
+    if (episode.get("schema_version") != 1 or not isinstance(exam, dict)
+            or set(exam) != {"family", "skill", "section"} or exam["skill"] != "listening"):
+        raise ValueError("Expected a supported listening episode and exam identity.")
+    dtz = (episode.get("language") == "de" and exam["family"] == "dtz"
+           and exam["section"] in ("1", "2", "3", "4"))
+    tef = (episode.get("language") == "fr" and exam["family"] == "tef_canada"
+           and exam["section"] == "text_choice")
+    if not (dtz or tef):
+        raise ValueError("Listening supports DTZ German Teile 1–4 or TEF Canada French text choices.")
     if episode.get("fps") != 24:
         raise ValueError("Listening video requires 24 fps.")
     for field in ("id", "title", "question", "answer_text", "key_detail"):
@@ -55,7 +60,7 @@ def load_episode(path):
         if item.get("correct_choice") not in tuple(chr(65 + i) for i in range(count)):
             raise ValueError("correct_choice must identify an available answer.")
 
-    if exam["section"] == "3":
+    if dtz and exam["section"] == "3":
         questions = episode.get("questions")
         if not isinstance(questions, list) or len(questions) != 2:
             raise ValueError("Teil 3 requires two questions.")
@@ -68,7 +73,7 @@ def load_episode(path):
         if questions[0]["number"] == questions[1]["number"]:
             raise ValueError("Teil 3 question numbers must differ.")
     else:
-        validate_choices(episode, 6 if exam["section"] == "4" else 3)
+        validate_choices(episode, 4 if tef else 6 if exam["section"] == "4" else 3)
     timing = episode.get("timing")
     if not isinstance(timing, dict):
         raise ValueError("timing must be an object.")
@@ -85,6 +90,17 @@ def load_episode(path):
     scene = episode.get("scene")
     if not isinstance(scene, dict) or not isinstance(scene.get("camera_prefix"), str):
         raise ValueError("scene requires a source and camera prefix.")
+    if scene.get("framing", "crop") not in ("crop", "full"):
+        raise ValueError("scene.framing must be crop or full.")
+    hidden = scene.get("hide_objects", [])
+    if (not isinstance(hidden, list) or any(not isinstance(name, str) or not name.strip()
+                                           for name in hidden) or len(hidden) != len(set(hidden))):
+        raise ValueError("scene.hide_objects must be a list of unique object names.")
+    if "min_hair_drop_m" in scene and (type(scene["min_hair_drop_m"]) not in (int, float)
+                                        or not 0 < scene["min_hair_drop_m"] < 1):
+        raise ValueError("scene.min_hair_drop_m must be between zero and one meter.")
+    if "rest_hands_on_table" in scene and type(scene["rest_hands_on_table"]) is not bool:
+        raise ValueError("scene.rest_hands_on_table must be a boolean.")
     for name in ("pose_frame", "cycle_frames"):
         if type(scene.get(name)) is not int or scene[name] < 1:
             raise ValueError(f"scene.{name} must be a positive integer.")
@@ -116,35 +132,116 @@ def load_episode(path):
         "voice.wav": asset(episode["voice"].get("audio"), "voice.audio"),
         "voice.txt": asset(episode["voice"].get("transcript"), "voice.transcript"),
     }
+    if "flag_artwork" in scene or "flag_provenance" in scene:
+        files["flag.png"] = asset(scene.get("flag_artwork"), "scene.flag_artwork")
+        files["flag.provenance.json"] = asset(scene.get("flag_provenance"), "scene.flag_provenance")
+        flag = json.loads(files["flag.provenance.json"].read_text(encoding="utf-8"))
+        if sha256_file(files["flag.png"]) != flag["assets"]["canada_flag"]["sha256"]:
+            raise ValueError("Flag artwork checksum mismatch.")
+    if "source_voice" in episode:
+        source_voice = episode["source_voice"]
+        if not isinstance(source_voice, dict):
+            raise ValueError("source_voice must be an object.")
+        files.update({
+            "source_voice.wav": asset(source_voice.get("audio"), "source_voice.audio"),
+            "source_voice.txt": asset(source_voice.get("transcript"), "source_voice.transcript"),
+            "voice_registry.json": asset(source.get("voice_registry"), "source.voice_registry"),
+        })
+        narrator = validate_registry_voice(files["voice_registry.json"], episode["voice"],
+                                           files["voice.wav"], files["voice.txt"])
+        announcer = validate_registry_voice(files["voice_registry.json"], source_voice,
+                                            files["source_voice.wav"], files["source_voice.txt"])
+        if (narrator["voice_id"] == announcer["voice_id"]
+                or sha256_file(files["voice.wav"]) == sha256_file(files["source_voice.wav"])):
+            raise ValueError("Narration and announcement must use distinct voice references.")
+        if tef and (any(item.get("locale") != "fr-CA" or not item["voice_id"].startswith("fr_ca_qc_")
+                        for item in (narrator, announcer))):
+            raise ValueError("TEF narration and announcement require Quebec French registry voices.")
     provenance = json.loads(files["device.provenance.json"].read_text(encoding="utf-8"))
     if sha256_file(files["device.glb"]) != provenance["sha256"]:
         raise ValueError("Playback device model checksum mismatch.")
     info = inspect_wav(files["book_audio.wav"])
+    if "audio_provenance" in source:
+        files["book_audio.cache.json"] = asset(source["audio_provenance"], "source.audio_provenance")
+        metadata = json.loads(files["book_audio.cache.json"].read_text(encoding="utf-8"))
+        payload = metadata.get("payload") if isinstance(metadata, dict) else None
+        if (not isinstance(payload, dict) or not isinstance(source.get("audio_transcript"), str)
+                or not source["audio_transcript"].strip()
+                or payload.get("text") != source["audio_transcript"]
+                or metadata.get("wav_sha256") != sha256_file(files["book_audio.wav"])
+                or metadata.get("audio_info") != info
+                or metadata.get("cache_key") != content_hash(payload)
+                or not isinstance(payload.get("settings"), dict)
+                or (tef and payload["settings"].get("language") != "French")
+                or ("source_voice" in episode and
+                    (payload.get("reference_audio_sha256") != sha256_file(files["source_voice.wav"])
+                     or payload.get("reference_transcript_sha256") != sha256_file(files["source_voice.txt"])))):
+            raise ValueError("Source audio provenance does not match the recording, transcript or language.")
+    elif "source_voice" in episode:
+        raise ValueError("source_voice requires generated source audio provenance.")
     excerpt = episode.get("audio_excerpt")
     if excerpt is not None:
         if (not isinstance(excerpt, dict) or set(excerpt) != {"start_sample", "end_sample"}
                 or any(type(excerpt[k]) is not int for k in excerpt)
                 or not 0 <= excerpt["start_sample"] < excerpt["end_sample"] <= info["frames"]):
             raise ValueError("audio_excerpt requires valid start_sample and end_sample within the source WAV.")
+    if episode.get("audio_effect") not in (None, "pa_chime_echo"):
+        raise ValueError("Unsupported listening audio_effect.")
     inspect_wav(files["voice.wav"])
     with Image.open(files["book_cover.jpg"]) as image:
         image.verify()
+    if tef:
+        for phase in ("hook", "reading_1", "listening", "response_1", "reveal", "cta"):
+            make_overlay(episode, phase, files["book_cover.jpg"])
     return episode, files
+
+
+def public_address_effect(samples, rate):
+    import numpy as np
+
+    tone_length = round(rate * 0.4)
+    silence_length = round(rate * 0.16)
+    delay = round(rate * 0.05)
+    if min(tone_length, silence_length, delay) < 1:
+        raise ValueError("Invalid sample rate for public-address effect.")
+    positions = np.arange(tone_length, dtype=np.float64)
+    fade = max(1, round(rate * 0.02))
+    envelope = np.minimum(1, np.minimum((positions + 1) / fade, (tone_length - positions) / fade))
+    chime = np.concatenate([
+        np.rint(4096 * envelope * np.sin(2 * np.pi * frequency * positions / rate)).astype("<i2")
+        for frequency in (880, 660)
+    ])
+    voice = np.frombuffer(samples, dtype="<i2").astype(np.int32)
+    echoed = np.zeros(len(voice) + delay, dtype=np.int32)
+    echoed[:len(voice)] += 7 * voice
+    echoed[delay:] += voice
+    rendered = np.floor_divide(echoed, 8).astype("<i2")
+    return chime.tobytes() + bytes(silence_length * 2) + rendered.tobytes()
 
 
 def book_audio_file(episode, build, *, create):
     source = build / "inputs" / "book_audio.wav"
     excerpt = episode.get("audio_excerpt")
-    if excerpt is None:
+    effect = episode.get("audio_effect")
+    if effect not in (None, "pa_chime_echo"):
+        raise ValueError("Unsupported listening audio_effect.")
+    if excerpt is None and effect is None:
         return source
-    target = build / "audio" / "book_excerpt.wav"
+    target = build / "audio" / ("book_announcement.wav" if effect else "book_excerpt.wav")
     with wave.open(str(source), "rb") as original:
         params = original.getparams()
-        start, end = excerpt["start_sample"], excerpt["end_sample"]
+        if params.nchannels != 1 or params.sampwidth != 2 or params.comptype != "NONE":
+            raise ValueError("Listening source must be mono PCM16.")
+        start, end = ((excerpt["start_sample"], excerpt["end_sample"]) if excerpt
+                      else (0, params.nframes))
         if not 0 <= start < end <= params.nframes:
             raise ValueError("Listening excerpt exceeds the source audio.")
         original.setpos(start)
         samples = original.readframes(end - start)
+        if len(samples) != (end - start) * 2:
+            raise ValueError("Listening source WAV is truncated.")
+    if effect:
+        samples = public_address_effect(samples, params.framerate)
     if not target.exists() and create:
         target.parent.mkdir(exist_ok=True)
         partial = target.with_name(target.name + ".part")
@@ -157,9 +254,9 @@ def book_audio_file(episode, build, *, create):
     with wave.open(str(target), "rb") as output:
         actual = output.getparams()
         if (actual.nchannels != params.nchannels or actual.sampwidth != params.sampwidth
-                or actual.framerate != params.framerate or actual.nframes != end - start
+                or actual.framerate != params.framerate or actual.nframes != len(samples) // 2
                 or output.readframes(actual.nframes) != samples):
-            raise ValueError("Book audio excerpt differs from the original sample range.")
+            raise ValueError("Book audio excerpt or sound treatment differs from the verified source.")
     return target
 
 
@@ -221,21 +318,68 @@ def make_overlay(episode, phase, cover_path):
     countdown = ImageFont.truetype(str(font_path(True)), 84)
     white, green = (255, 255, 255, 255), (174, 242, 198, 255)
     dark = (10, 26, 35, 231)
-    draw.rounded_rectangle((78, 105, 590, 185), radius=14, fill=dark)
-    draw.text((96, 112), "DTZ B1 HÖREN", font=bold, fill=green)
+    tef = episode.get("exam", {}).get("family") == "tef_canada"
+    header_top = 205 if tef else 105
+    draw.rounded_rectangle((78, header_top, 590, header_top + 80), radius=14, fill=dark)
+    draw.text((96, header_top + 7), "TEF CANADA · ÉCOUTE" if tef else "DTZ B1 HÖREN", font=bold, fill=green)
     section = episode.get("exam", {}).get("section", "1")
-    draw.text((96, 151), f"DEUTSCHKOMPASS · Teil {section}", font=small, fill=white)
+    draw.text((96, header_top + 46), "FRENCH COMPASS · COMPRÉHENSION ORALE" if tef
+              else f"DEUTSCHKOMPASS · Teil {section}", font=small, fill=white)
 
     if phase == "cta":
-        draw.rounded_rectangle((78, 520, 590, 790), radius=18, fill=dark)
+        cta_top = 620 if tef else 520
+        draw.rounded_rectangle((78, cta_top, 590, cta_top + 270), radius=18, fill=dark)
         with Image.open(cover_path) as cover:
             cover = cover.convert("RGB")
             cover.thumbnail((135, 205))
-            image.paste(cover, (96, 538))
-        draw_wrapped(draw, "Mehr Hörübungen im DTZ B1 Übungsbuch", 250, 538,
+            image.paste(cover, (96, cta_top + 18))
+        draw_wrapped(draw, "Entraînez-vous avec notre livre TEF Canada" if tef
+                     else "Mehr Hörübungen im DTZ B1 Übungsbuch", 250, cta_top + 18,
                      bold, 320, white, max_lines=5)
-        draw_wrapped(draw, "Amazon-Buchlink im Profil", 250, 688, small, 320, green)
-        draw_wrapped(draw, "Unabhängiges Übungsmaterial", 250, 748, compact, 320, white)
+        draw_wrapped(draw, "Lien du livre dans le profil" if tef else "Amazon-Buchlink im Profil",
+                     250, cta_top + 168, small, 320, green)
+        draw_wrapped(draw, "Préparation indépendante" if tef else "Unabhängiges Übungsmaterial",
+                     250, cta_top + 228, compact, 320, white)
+        return image
+
+    if tef:
+        draw.rounded_rectangle((78, 600, 590, 690), radius=18, fill=dark)
+        question_end = draw_wrapped(draw, episode["question"], 96, 610, heading, 468, white,
+                                    leading=3, max_lines=3)
+        if question_end > 690:
+            raise ValueError("Question exceeds the TEF listening panel.")
+        if phase == "hook":
+            return image
+        if phase == "reveal":
+            draw.rounded_rectangle((78, 700, 590, 905), radius=18, fill=dark)
+            correct = ord(episode["correct_choice"]) - ord("A")
+            y = draw_wrapped(draw, f"{episode['correct_choice']}  {episode['choices'][correct]}",
+                             96, 710, heading, 468, green, leading=2, max_lines=3) + 10
+            y = draw_wrapped(draw, episode["answer_text"], 96, y, small, 468, white,
+                             leading=2, max_lines=3) + 10
+            y = draw_wrapped(draw, episode["key_detail"], 96, y, small, 468, green,
+                             leading=2, max_lines=3)
+            if y > 905:
+                raise ValueError("Answer exceeds the TEF listening reveal panel.")
+            return image
+        draw.rounded_rectangle((78, 700, 590, 905), radius=16, fill=dark)
+        choice_font = ImageFont.truetype(str(font_path()), 23)
+        y = 710
+        for index, choice in enumerate(episode["choices"]):
+            y = draw_wrapped(draw, f"{chr(65 + index)}  {choice}", 96, y,
+                             choice_font, 468, white, leading=1, max_lines=3) + 4
+        if y > 905:
+            raise ValueError("Choices exceed the TEF listening panel.")
+        if phase == "listening":
+            draw.rounded_rectangle((535, 310, 695, 390), radius=16, fill=dark)
+            draw_wrapped(draw, "Écoutez.", 549, 330, compact, 132, green, leading=1)
+        else:
+            status = "Lisez les réponses." if phase.startswith("reading_") else "Votre réponse ?"
+            remaining = phase.split("_")[1]
+            draw.rounded_rectangle((535, 310, 695, 508), radius=16, fill=dark)
+            draw_wrapped(draw, status, 549, 320, compact, 132, green, leading=1)
+            draw.text((615, 428), remaining, font=countdown, fill=white, anchor="mm")
+            draw.text((615, 485), "SEC.", font=compact, fill=green, anchor="mm")
         return image
 
     def draw_status():
@@ -330,12 +474,18 @@ def loop_indices(count):
     return list(range(count)) + list(range(count - 2, 0, -1))
 
 
-def video_filters(timeline, profile="preview"):
+def video_filters(timeline, profile="preview", framing="crop"):
     fps = timeline["fps"]
     phases = timeline["phases"]
     render_settings(profile)
-    scale = "scale=792:1408:flags=lanczos," if profile == "preview" else ""
-    filters = [f"[0:v]fps=24,{scale}crop=720:1280:36:120,"
+    if framing not in ("crop", "full"):
+        raise ValueError("Unknown listening framing.")
+    if framing == "full":
+        framing_filter = "scale=720:1280:flags=lanczos,"
+    else:
+        scale = "scale=792:1408:flags=lanczos," if profile == "preview" else ""
+        framing_filter = f"{scale}crop=720:1280:36:120,"
+    filters = [f"[0:v]fps=24,{framing_filter}"
                "setsar=1,setpts=PTS-STARTPTS[base]"]
     previous = "base"
     for index, phase in enumerate(phases, 1):
@@ -373,7 +523,7 @@ def encoding_command(build, episode, timeline, answer_audio, hook_audio, profile
         command += ["-loop", "1", "-framerate", str(fps), "-i", str(overlays / f"{phase['name']}.png")]
     command += ["-i", str(book_audio or inputs / "book_audio.wav"), "-i", str(answer_audio),
                 "-i", str(hook_audio)]
-    filters, video_label = video_filters(timeline, profile)
+    filters, video_label = video_filters(timeline, profile, episode["scene"].get("framing", "crop"))
     command += ["-filter_complex", filters, "-map", f"[{video_label}]", "-map", "[audio]",
                 "-frames:v", str(timeline["total_frames"]), "-t", f"{timeline['duration']:.9f}",
                 "-shortest", "-c:v", "libx264", "-preset", "medium", "-crf", "18",
@@ -469,7 +619,8 @@ def audio_reuse_spec(source, build, episode, files, sources):
         answer, answer_metadata, answer_digest = recordings["answer"]
         hook, hook_metadata, hook_digest = recordings["hook"]
         book_audio = book_audio_file(episode, source, create=False)
-        if episode.get("audio_excerpt") is not None and sha256_file(book_audio) != report["book_audio_sha256"]:
+        if ((episode.get("audio_excerpt") is not None or episode.get("audio_effect") is not None)
+                and sha256_file(book_audio) != report["book_audio_sha256"]):
             raise ValueError("Listening excerpt checksum differs from its delivery report.")
         measured = timeline_for(episode, inspect_wav(book_audio), inspect_wav(answer), inspect_wav(hook))
         if measured != timeline:
@@ -505,6 +656,7 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
     reuse, reuse_timeline = (audio_reuse_spec(reuse_audio, build, episode, files, sources)
                              if reuse_audio else (None, None))
     code_names = ("pipeline.py", "listening_video.py", "listening_scene.py", "listener_motion.py", "prepare_audio.py",
+                  "prepare_listening_source.py", "studio_characters.py",
                   "episode_config.py", "episode_profiles.py", "scene_direction.py", "picture_presentation.py",
                   "generation_runtime.py", "runtime_config.py", "build_paths.py")
     spec = {"episode": episode, "sources": sources,
@@ -534,7 +686,7 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
     book_audio = book_audio_file(episode, build, create=True)
     book_audio_sha256 = sha256_file(book_audio)
     narration = {
-        "language": "de",
+        "language": episode.get("language", "de"),
         "voices": {"narrator": {"audio": str(inputs / "voice.wav"), "transcript": str(inputs / "voice.txt")}},
         "turns": [{"id": "hook", "speaker": "narrator", "text": episode["question"]},
                   {"id": "answer", "speaker": "narrator", "text": episode["answer_text"]}],
@@ -585,7 +737,13 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
                     "--device", str(inputs / "device.glb"),
                     "--device-x", str(scene["playback_device"]["table_position"][0]),
                     "--device-y", str(scene["playback_device"]["table_position"][1]),
-                    "--device-report", str(build / "device_checks.json")], build / "render.log")
+                    "--device-report", str(build / "device_checks.json"),
+                    "--framing", scene.get("framing", "crop"),
+                    *(["--min-hair-drop", str(scene["min_hair_drop_m"])]
+                      if "min_hair_drop_m" in scene else []),
+                    *(["--rest-hands-on-table"] if scene.get("rest_hands_on_table") else []),
+                    *[arg for name in scene.get("hide_objects", []) for arg in ("--hide-object", name)]],
+                   build / "render.log")
         for index in range(count, len(indices)):
             shutil.copyfile(expected[indices[index]], expected[index])
         atomic_json(receipt_path, {p.name: sha256_file(p) for p in expected})
@@ -659,6 +817,24 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
         "Boombox model by Innerscene, CC0: "
         "https://www.innerscene.com/tools/library/3d-parts/boombox-e5bca8cf\n"
     )
+    if episode.get("exam", {}).get("family") == "tef_canada":
+        credits = (
+            "Publicité pour notre livre TEF Canada de compréhension orale. "
+            "Exercice indépendant, sans affiliation avec l'organisme du TEF ; ce n'est pas une épreuve officielle. "
+            "Voix de synthèse et personnage animé générés avec l'IA. Lien du livre dans le profil.\n\n"
+            "Snow Rig (CC) Blender Foundation | studio.blender.org\n"
+            "https://studio.blender.org/characters/snow/v4/\n"
+            "Rain Rig (CC) Blender Foundation | studio.blender.org\n"
+            "https://studio.blender.org/characters/rain/v3/\n"
+            "CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\n"
+            "Vêtements et cheveux recolorés, personnages redimensionnés, mis en pose et animés. "
+            "Aucun soutien ni recommandation de Blender Foundation/Blender Studio.\n"
+            "Boombox model by Innerscene, CC0: "
+            "https://www.innerscene.com/tools/library/3d-parts/boombox-e5bca8cf\n"
+        )
+    if "flag.provenance.json" in files:
+        credits += ("Drapeau canadien : George F. G. Stanley, SVG MapGrid, Wikimedia Commons ; "
+                    "domaine public : https://commons.wikimedia.org/wiki/File:Flag_of_Canada_(Pantone).svg\n")
     (build / "publishing_caption.txt").write_text(credits, encoding="utf-8")
     report = {"timeline": timeline, "media": media, "profile": profile, "render": render,
               "audio_reuse": reuse, "source_sha256": sources, "audio_check": audio_check,

@@ -8,10 +8,11 @@ from pathlib import Path
 
 import bpy
 from bpy_extras.object_utils import world_to_camera_view
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from listener_motion import listener_offsets
+from studio_characters import StudioCharacter
 
 
 def corners(obj):
@@ -65,7 +66,51 @@ def bake_listener_animation(scene, rig, count):
     return base
 
 
-def add_playback_device(scene, camera, model, x, y, rig, count, base):
+def rest_hands_on_table(actor):
+    for side, sign in (("L", 1), ("R", -1)):
+        hand = Vector((sign * 0.24, -0.52, 0.902 / actor.scale))
+        rotation = Matrix.Rotation(-sign * math.pi / 2, 4, "Z")
+        total_correction = 0.0
+        for _ in range(8):
+            actor.position(actor.hand_name + "." + side, hand, 1, rotation)
+            bpy.context.view_layer.update()
+            lowest = min((actor.rig.matrix_world @ actor.bones[f"FK-{finger}3.{side}"].tail).z
+                         for finger in ("Index", "Middle"))
+            correction = 0.889 - lowest
+            if abs(correction) < 0.001:
+                break
+            total_correction += correction
+            if abs(total_correction) > 0.1:
+                raise ValueError(f"{side} hand requires excessive tabletop adjustment: {total_correction:.4f}m.")
+            hand.z += correction / actor.scale
+        else:
+            raise ValueError(f"{side} hand could not reach the tabletop.")
+    bpy.context.view_layer.update()
+
+
+def verify_hand_contact(scene, rig, count):
+    table = corners(scene.objects["Exam table"])
+    low_x, high_x = min(p.x for p in table), max(p.x for p in table)
+    low_y, high_y = min(p.y for p in table), max(p.y for p in table)
+    top = max(p.z for p in table)
+    heights, edge_clearances = [], []
+    for frame in range(1, count + 1):
+        scene.frame_set(frame)
+        for side in ("L", "R"):
+            for finger in ("Index", "Middle"):
+                point = rig.matrix_world @ rig.pose.bones[f"FK-{finger}3.{side}"].tail
+                heights.append(point.z - top)
+                edge_clearances.append(min(point.x - low_x, high_x - point.x,
+                                           point.y - low_y, high_y - point.y))
+    if min(edge_clearances) < 0 or min(heights) < .004 or max(heights) > .023:
+        raise ValueError(f"Listener fingertips do not rest on the tabletop: "
+                         f"height={min(heights):.4f}..{max(heights):.4f}m, "
+                         f"edge clearance={min(edge_clearances):.4f}m.")
+    return {"fingertip_height_above_table_m": [min(heights), max(heights)],
+            "minimum_table_edge_clearance_m": min(edge_clearances)}
+
+
+def add_playback_device(scene, camera, model, x, y, rig, count, base, framing):
     before = set(bpy.data.objects)
     bpy.ops.import_scene.gltf(filepath=str(model))
     imported = set(bpy.data.objects) - before
@@ -91,10 +136,12 @@ def add_playback_device(scene, camera, model, x, y, rig, count, base):
             or low.y < min(p.y for p in table) or high.y > max(p.y for p in table)):
         raise ValueError("Playback device overhangs the tabletop.")
     projected = [world_to_camera_view(scene, camera, p) for p in points]
-    bounds = [min(p.x for p in projected) * 792 - 36,
-              min(1 - p.y for p in projected) * 1408 - 120,
-              max(p.x for p in projected) * 792 - 36,
-              max(1 - p.y for p in projected) * 1408 - 120]
+    width, height, left, top = ((720, 1280, 0, 0) if framing == "full"
+                                else (792, 1408, 36, 120))
+    bounds = [min(p.x for p in projected) * width - left,
+              min(1 - p.y for p in projected) * height - top,
+              max(p.x for p in projected) * width - left,
+              max(1 - p.y for p in projected) * height - top]
     if not (30 <= bounds[0] < bounds[2] <= 690 and 755 <= bounds[1] < bounds[3] <= 1230):
         raise ValueError(f"Playback device is not visible below the answer cards: {bounds}")
     names = [name for name in rig.pose.bones.keys()
@@ -142,6 +189,10 @@ def main():
     parser.add_argument("--device-x", type=float, required=True)
     parser.add_argument("--device-y", type=float, required=True)
     parser.add_argument("--device-report", type=Path, required=True)
+    parser.add_argument("--framing", choices=("crop", "full"), default="crop")
+    parser.add_argument("--hide-object", action="append", default=[])
+    parser.add_argument("--min-hair-drop", type=float)
+    parser.add_argument("--rest-hands-on-table", action="store_true")
     args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
     scene = bpy.context.scene
     cameras = [obj for obj in scene.objects
@@ -164,17 +215,41 @@ def main():
     scene.render.use_persistent_data = True
     scene.frame_set(args.pose_frame)
     frozen_objects = freeze_source_animation(scene)
+    for name in args.hide_object:
+        obj = scene.objects.get(name)
+        if obj is None:
+            raise ValueError(f"Listening scene object to hide does not exist: {name}")
+        obj.hide_render = True
     rigs = [obj for obj in scene.objects if obj.type == "ARMATURE" and obj.get("actor") == "candidate_a"]
     if len(rigs) != 1:
         raise ValueError("Expected one candidate rig.")
     rig = rigs[0]
+    if args.rest_hands_on_table:
+        actor = StudioCharacter.from_scene("candidate_a")
+        if actor.kind != "rain" or actor.rig != rig:
+            raise ValueError("The tabletop hand pose requires the Rain candidate rig.")
+        rest_hands_on_table(actor)
     base = bake_listener_animation(scene, rig, args.cycle_frames)
     checks = add_playback_device(scene, scene.camera, args.device, args.device_x, args.device_y,
-                                 rig, args.cycle_frames, base)
+                                 rig, args.cycle_frames, base, args.framing)
+    if args.rest_hands_on_table:
+        checks["hand_contact"] = verify_hand_contact(scene, rig, args.cycle_frames)
+    if args.min_hair_drop is not None:
+        drops = []
+        for index in range(args.cycle_frames):
+            scene.frame_set(index + 1)
+            root = rig.matrix_world @ rig.pose.bones["FK-Hair_Ponytail1"].head
+            tip = rig.matrix_world @ rig.pose.bones["FK-Hair_Ponytail4"].tail
+            drops.append(root.z - tip.z)
+        if min(drops) < args.min_hair_drop:
+            raise ValueError(f"Listener ponytail does not hang down: {min(drops):.4f}m.")
+        checks["minimum_hair_tip_drop_m"] = min(drops)
     checks["listener_pose_frame"] = args.pose_frame
     checks["head_pitch_radians"] = base["head"].x
     checks["eye_target_vertical"] = base["eyes"].z
     checks["frozen_source_objects"] = frozen_objects
+    checks["hidden_objects"] = args.hide_object
+    checks["framing"] = args.framing
     checks["render"] = {"width": args.width, "height": args.height, "samples": args.samples}
     args.device_report.write_text(json.dumps(checks, indent=2) + "\n", encoding="utf-8")
     for index in range(args.cycle_frames):

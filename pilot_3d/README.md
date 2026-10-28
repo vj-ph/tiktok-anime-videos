@@ -535,14 +535,78 @@ for checking the actual recording. Existing `audio`/`transcript` pairs retain
 their original cache payload. Both forms require nonempty, matching text.
 
 The speaking pipeline supports German/French pair/interview scenes. The separate
-DTZ listening template supports Teile 1–4 using an existing animated listener, a tabletop
-playback device, the book's original recording, visible choices, reading and
+listening template supports DTZ Teile 1–4 and French TEF Canada single-question,
+four-text-choice exercises, using an existing animated listener, a tabletop
+playback device, the exercise recording, visible choices, reading and
 response countdowns, a spoken opening question and answer, and the listening-book
 cover. Each video is independent practice, not a full examination. Teil 2
 uses one announcement and question; Teil 3 uses a complete conversation and
-both questions; Teil 4 uses one opinion and all six matching choices. Other
-listening exams still need their own reviewed templates; changing the exam label
-does not implement them.
+both questions; Teil 4 uses one opinion and all six matching choices. The TEF
+text-choice layout also fits announcements, voicemail and other suitable
+single-question recordings; picture choices and multiple TEF questions are not
+implemented. Longer recordings must fit the measured duration without cutting
+answer-critical content or accelerating the audio. Other listening formats
+still need their own reviewed templates; changing the exam label does not
+implement them.
+
+For TEF, author an episode with `language: "fr"` and
+`exam: {"family": "tef_canada", "skill": "listening", "section": "text_choice"}`.
+Provide exactly four choices, a correct letter, a French question and answer,
+an evidence detail, an appropriately licensed recording and voice reference,
+and sufficient reading/response/reveal time. The opening and answer narration
+use one Québec French (`fr_ca_qc`) voice and a generated announcement uses a
+different Québec French voice. The announcement itself is played once without showing its
+transcript before the reveal. A generated recording can include
+`source.audio_provenance` pointing to its Qwen cache JSON and
+`source.audio_transcript` containing the exact generated text; validation
+checks the recording, transcript, cache hash and French language, and freezes
+the sidecar with the other inputs. When `source_voice` is specified, both
+distinct Québec French references are checked against the voice registry and
+the recording's cache is checked against the announcement reference. These checks do not certify pronunciation,
+audio rights, the exercise answer, or preview/publication approval.
+For a public announcement, `audio_effect: "pa_chime_echo"` creates an original
+two-tone cue followed by a short silence and subtle echo on the source
+recording only. The clean recording is preserved, and the derived WAV is
+recomputed and checked; the opening and answer narration remain untreated.
+Choose effects appropriate to each exercise and review audibility manually.
+
+The first TEF example is `episodes/tef_canada_listening_bus_stop.json`, based on
+Chapter 2, public-announcement Question 17. Its spoken announcement is newly
+synthesized from the book transcript, not a pre-existing book recording. The
+episode casts `fr_ca_qc_narrator_f01` for the opening and answer and
+`fr_ca_qc_service_m01` for the announcement. Its cover is the listening-book
+image provided by the user.
+The source recording is stored in the ignored `builds/` directory. On a new
+checkout, generate it using the configured Qwen environment and an already
+cached model, then validate the episode:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 prepare_listening_source.py `
+  --episode episodes\tef_canada_listening_bus_stop.json
+.\.venv\Scripts\python.exe -X utf8 pipeline.py validate `
+  --episode episodes\tef_canada_listening_bus_stop.json
+```
+
+The source generator checks that the exact single-speaker transcript occurs in
+the book and that the announcement reference agrees with the registry. It refuses to
+overwrite the recording or its provenance; use a new episode and dedicated
+build directory when changing the content. The local model and required voice
+assets must already be available. The registry's availability flag does not
+establish commercial rights or replace human audio review.
+
+The revised preview is
+`builds/tef_canada_listening_bus_stop_preview_r4/pilot.mp4` (59.708333 seconds,
+1,433 frames). It uses the corrected Rain pose with both hands resting on the
+table, a front-facing camera, Canadian wall flag, visible radio and the
+user-supplied cover. The original clean Québec French speech is retained; the
+announcement has a procedural public-address chime and subtle echo. Its
+`review/` folder contains encoded samples, 25 boundary checks and integrity
+checks; `audio/effect_checks.json` contains the independent small ASR result.
+The recognizer transcribes the street name differently, so human listening,
+accent and effect review remain required. Voice/output rights remain
+unverified. This preview is not production or publication approval; earlier
+r1-r3 previews are preserved. Exercise-specific post drafts are in
+`../posts/tef_canada_listening_bus_stop/`.
 
 The Übungsset 1 configurations are
 `episodes/dtz_b1_listening_teil2_fahrradkurs.json`,
