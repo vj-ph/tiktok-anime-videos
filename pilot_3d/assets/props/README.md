@@ -54,6 +54,16 @@ The earlier r5 preview used Brian MacIntosh's CC0 smartphone model and texture;
 its original files and `smartphone.provenance.json` remain for provenance.
 Neither is a `scene.dressing` option.
 
+The optional Halloween dressing uses the downloaded pumpkin, witch hat, candy
+pail, sweets and bats in `halloween-*.glb`. They are AI-generated CC0 models
+from the Moonlit Mischief collection; `halloween.provenance.json` records the
+publisher, source URLs, hashes and adaptations. The assets are reused without
+downloading at render time. The pumpkin sits by candidate A and the sweets by
+candidate B; the witch hat follows its active actor's head. The existing
+candidate water cup is repositioned when the sweets are selected. The optional
+`placement: "caption_clear"` moves the sweets to the reviewed position clear
+of the dialogue caption, examiner clipboard and water cup.
+
 Named anchors target the current `exam_room` geometry. The supported first
 set is deliberately small:
 
@@ -62,17 +72,23 @@ set is deliberately small:
 | `flag` | `pattern: "austria"` or `"canada"`; `anchor: "back_wall_left"` or `"table_corner"` |
 | `coffee_set` | `anchor: "examiner_table_side"` |
 | `backpack` | `anchor: "candidate_b_chair_side"`; candidate B must be active |
-| `hat` (in `accessories`) | `style: "alpine"`; `actor`: an active actor slot |
+| `hat` (in `accessories`) | `style: "alpine"` or `"witch"`; `actor`: an active actor slot. Optional `fit: "natural_hair"` is supported for candidate B's witch hat |
+| `halloween_bats` | `anchor: "halloween_back_wall"` |
+| `halloween_pumpkin` | `anchor: "candidate_a_table_side"` |
+| `halloween_sweets` | `anchor: "candidate_b_table_side"`; optional `placement: "caption_clear"` |
 
 Hatted actors' normal close-up cameras are fitted to keep their complete head
 and hat between the existing header and subtitle panels. The original and
 adjusted lens/shift settings are recorded; native checks sample the actual
 speaking poses for clearance. Other actors' cameras and all undressed episodes
 retain their existing framing. Wide and picture-card cameras are not refitted.
-The brim sits below the actual head surface rather than perching on its bounding
-box. An owner-local, head-following lattice compresses only hair above the brim
-inside the crown; the hairline, source mesh/shape keys and other actors are
-unchanged. Omitting the hat adds no hair modifier.
+The default brim sits below the actual head surface rather than perching on
+its bounding box. An owner-local, head-following lattice fits hair inside the
+crown without changing the source mesh/shape keys or other actors. The
+explicit `natural_hair` witch-hat option instead keeps candidate B's hair
+unmodified and positions a wider hat over it; its native checks use the hair
+surface for seating and check crown clearance throughout the animation.
+Omitting the hat adds no hair modifier.
 
 The backpack is background dressing in the opening entrance/welcome wide
 shot, on the floor beside Samir's chair at the lower right of the image. It

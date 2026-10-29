@@ -1,0 +1,42 @@
+{
+  "checked": "2026-10-28",
+  "publisher": "3D Assets",
+  "collection": "https://3dassets.dev/packs/moonlit-mischief",
+  "license": "CC0-1.0",
+  "license_source": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "ai_generated": true,
+  "assets": {
+    "halloween_pumpkin": {
+      "file": "halloween-jackolantern.glb",
+      "sha256": "fad06340df589e2ec21d3a6e5e5f60b87c3687638831b430f5fd0bc5cb0ba10a",
+      "source": "https://3dassets.dev/assets/moonlit-mischief-jack-o-lantern-e4f56983",
+      "download": "https://cdn.3dassets.dev/assets/2113/v1/model.glb",
+      "adaptation": "Scaled as a tabletop decoration; face uses an emissive LED-style material."
+    },
+    "halloween_sweets": {
+      "file": "halloween-candy-pail.glb",
+      "sha256": "c2803839b3952bcc848197144f0d3b11da92fe3938aff7389b619ed5ff17527a",
+      "source_file": "halloween-sweets.glb",
+      "source_sha256": "c9cda1be00c692ac1e1def3524abf307ca4ee72104727739da2894e5734e468b",
+      "source": "https://3dassets.dev/assets/moonlit-mischief-candy-pail-2556455c",
+      "source_extra": "https://3dassets.dev/assets/moonlit-mischief-wrapped-sweets-d4f84da8",
+      "download": "https://cdn.3dassets.dev/assets/2174/v1/model.glb",
+      "download_extra": "https://cdn.3dassets.dev/assets/2183/v1/model.glb",
+      "adaptation": "Scale the pail and position the wrapped sweets inside."
+    },
+    "halloween_bats": {
+      "file": "halloween-bat.glb",
+      "sha256": "07aca08310bbea649cb385e4e5f2187715fae10845ac3cb975e5874e6dbf7235",
+      "source": "https://3dassets.dev/assets/moonlit-mischief-bat-ornament-eed4dbbc",
+      "download": "https://cdn.3dassets.dev/assets/2238/v1/model.glb",
+      "adaptation": "Four scaled wall ornaments."
+    },
+    "halloween_witch_hat": {
+      "file": "halloween-witch-hat.glb",
+      "sha256": "6f482b103c5f08ffaa69349597153e7de08e2e8bd59d2acc30c6a85ddc3b03d6",
+      "source": "https://3dassets.dev/assets/moonlit-mischief-witch-hat-3fe26447",
+      "download": "https://cdn.3dassets.dev/assets/2123/v1/model.glb",
+      "adaptation": "Scaled and head-attached; the native character's hair is fitted beneath the crown."
+    }
+  }
+}

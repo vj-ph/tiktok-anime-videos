@@ -11,6 +11,9 @@ ANCHORS = {
     "flag": {"back_wall_left", "table_corner"},
     "coffee_set": {"examiner_table_side"},
     "backpack": {"candidate_b_chair_side"},
+    "halloween_bats": {"halloween_back_wall"},
+    "halloween_pumpkin": {"candidate_a_table_side"},
+    "halloween_sweets": {"candidate_b_table_side"},
 }
 
 
@@ -36,19 +39,30 @@ def validate_dressing(episode, *, check_assets=False):
                 if not isinstance(anchor, str) or anchor not in ANCHORS[kind]:
                     raise ValueError(f"Unsupported anchor for {kind}.")
                 fields = {"type", "anchor"} | ({"pattern"} if kind == "flag" else set())
+                if kind == "halloween_sweets" and "placement" in item:
+                    fields.add("placement")
                 if (set(item) != fields or kind == "flag"
-                        and item["pattern"] not in ("austria", "canada")):
+                        and item["pattern"] not in ("austria", "canada")
+                        or kind == "halloween_sweets" and "placement" in item
+                        and item["placement"] != "caption_clear"):
                     raise ValueError(f"Unsupported options for {kind}.")
                 if anchor == "candidate_b_chair_side" and "candidate_b" not in actors:
                     raise ValueError("Backpack anchor requires active candidate_b.")
+                if anchor in {"candidate_a_table_side", "candidate_b_table_side"} and \
+                        anchor.split("_table_side")[0] not in actors:
+                    raise ValueError("Halloween table prop requires its active candidate.")
                 slot = ("anchor", anchor)
             else:
-                if (set(item) != {"type", "style", "actor"} or kind != "hat"
-                        or item["style"] != "alpine"):
-                    raise ValueError("Only type=hat, style=alpine is supported as an accessory.")
+                fields = {"type", "style", "actor"} | ({"fit"} if "fit" in item else set())
+                if (set(item) != fields or kind != "hat"
+                        or item["style"] not in ("alpine", "witch")):
+                    raise ValueError("Only alpine or witch hats are supported as accessories.")
                 actor = item["actor"]
                 if not isinstance(actor, str) or actor not in actors:
                     raise ValueError("Hat owner must be an active scene actor.")
+                if "fit" in item and (item["fit"] != "natural_hair"
+                                      or item["style"] != "witch" or actor != "candidate_b"):
+                    raise ValueError("Natural-hair fit is supported only for candidate_b's witch hat.")
                 slot = ("head", actor)
             if slot in occupied:
                 raise ValueError("Duplicate dressing anchor or head accessory.")
@@ -64,6 +78,12 @@ def asset_files(episode, *, verify=False):
     catalogs = [("provenance.json", selected)]
     if any(item.get("pattern") == "canada" and item["type"] == "flag" for item in props):
         catalogs.append(("canada.provenance.json", {"canada_flag"}))
+    halloween = {item["type"] for item in props} & {"halloween_pumpkin", "halloween_sweets", "halloween_bats"}
+    if any(item.get("style") == "witch" and item.get("type") == "hat"
+           for item in episode.get("scene", {}).get("dressing", {}).get("accessories", [])):
+        halloween.add("halloween_witch_hat")
+    if halloween:
+        catalogs.append(("halloween.provenance.json", halloween))
     result = []
     for filename, kinds in catalogs:
         if not kinds:
@@ -225,6 +245,10 @@ def apply_dressing(scene, episode, actors, fit_frame, timeline):
         texture.image = canada_image
         mats["canada"].node_tree.links.new(
             texture.outputs["Color"], mats["canada"].node_tree.nodes.get("Principled BSDF").inputs["Base Color"])
+    halloween = None
+    if any(item.get("type", "").startswith("halloween_") for item in config.get("props", [])) or any(
+            item.get("style") == "witch" for item in config.get("accessories", [])):
+        halloween = json.loads((ASSETS / "halloween.provenance.json").read_text(encoding="utf-8"))["assets"]
     glass = mats["glass"].node_tree.nodes.get("Principled BSDF")
     # Transparent/Fresnel glass keeps the existing four-bounce scene budget.
     nodes, links = mats["glass"].node_tree.nodes, mats["glass"].node_tree.links
@@ -285,6 +309,23 @@ def apply_dressing(scene, episode, actors, fit_frame, timeline):
             obj.matrix_world = Matrix.Identity(4)
         return high - low
 
+    def imported_asset(filename, parent, scale, offset=(0, 0, 0)):
+        before = set(bpy.data.objects)
+        bpy.ops.import_scene.gltf(filepath=str(ASSETS / filename))
+        imported = set(bpy.data.objects) - before
+        objects = [obj for obj in imported if obj.type == "MESH"]
+        if not objects:
+            raise ValueError(f"{filename} has no mesh geometry.")
+        bpy.context.view_layer.update()
+        normalize(objects)
+        transform = Matrix.Translation(Vector(offset)) @ Matrix.Scale(scale, 4)
+        for obj in objects:
+            obj.data.transform(transform)
+            adopt(obj, filename + " " + obj.name, parent)
+        for obj in imported - set(objects):
+            bpy.data.objects.remove(obj, do_unlink=True)
+        return objects
+
     table = scene.objects["Exam table"]
     bpy.context.view_layer.update()
     tabletop = max((table.matrix_world @ Vector(p)).z for p in table.bound_box)
@@ -296,10 +337,18 @@ def apply_dressing(scene, episode, actors, fit_frame, timeline):
             "table_corner": (.95, -.80, tabletop),
             "examiner_table_side": (-.90, -.80, tabletop),
             "candidate_b_chair_side": (1.70, -.27, 0),
+            "halloween_back_wall": (0, 3.24, 0),
+            "candidate_a_table_side": (-.75, -.48, tabletop + .001),
+            "candidate_b_table_side": (.80, -.48, tabletop + .001),
         }
         root = adopt(empty("Dressing prop"), f"{index} {kind}", None)
         root.location = locations[anchor]
+        if kind == "halloween_sweets" and item.get("placement") == "caption_clear":
+            root.location.x += .14
+            root.location.y -= .16
         entry = {"type": kind, "anchor": anchor, "root": root.name, "location_m": list(root.location)}
+        if "placement" in item:
+            entry["placement"] = item["placement"]
         if kind == "flag":
             wall = anchor == "back_wall_left"
             width, height = (.90, .60) if wall else (.24, .16)
@@ -377,7 +426,7 @@ def apply_dressing(scene, episode, actors, fit_frame, timeline):
                             mats["glass"], root)
             surface.location.x = .235
             entry["source"] = catalog["assets"][kind]
-        else:
+        elif kind == "backpack":
             before = set(bpy.data.objects)
             bpy.ops.import_scene.gltf(filepath=str(ASSETS / catalog["assets"][kind]["file"]))
             imported = set(bpy.data.objects) - before
@@ -392,6 +441,36 @@ def apply_dressing(scene, episode, actors, fit_frame, timeline):
                 bpy.data.objects.remove(obj, do_unlink=True)
             root.rotation_euler.z = -.25
             entry["source"] = catalog["assets"][kind]
+        elif kind == "halloween_bats":
+            for x, z, scale in ((-1.26, 1.97, .27), (-.87, 2.13, .22),
+                                (.42, 2.00, .24), (1.21, 2.15, .20)):
+                imported_asset(halloween[kind]["file"], root, scale, (x, 0, z))
+            entry["source"] = halloween[kind]
+        elif kind == "halloween_pumpkin":
+            objects = imported_asset(halloween[kind]["file"], root, .24)
+            face = next(obj for obj in objects if obj.name.endswith("_3"))
+            glow = material("Dressing Halloween pumpkin LED", (1.0, .35, .02), .5)
+            shader = glow.node_tree.nodes.get("Principled BSDF")
+            shader.inputs["Emission Color"].default_value = (1.0, .26, .01, 1)
+            shader.inputs["Emission Strength"].default_value = 1.4
+            face.data.materials.clear()
+            face.data.materials.append(glow)
+            entry["source"] = halloween[kind]
+            camera = next(obj for obj in scene.objects if obj.type == "CAMERA" and obj.name.startswith("04"))
+            original = {"lens": camera.data.lens, "shift_y": camera.data.shift_y}
+            camera.data.lens *= .65
+            camera.data.shift_y -= .065
+            entry["camera"] = {"object": camera.name, "before": original,
+                               "lens": camera.data.lens, "shift_y": camera.data.shift_y}
+        elif kind == "halloween_sweets":
+            imported_asset(halloween[kind]["file"], root, .30)
+            imported_asset(halloween[kind]["source_file"], root, .23, (0, 0, .091))
+            cup = scene.objects.get("Water cup.001")
+            if cup is None:
+                raise ValueError("Halloween sweets anchor requires the expected water cup.")
+            entry["relocated_cup"] = {"object": cup.name, "original_x": cup.location.x}
+            cup.location.x = 1.10
+            entry["source"] = halloween[kind]
         entry["objects"] = [obj.name for obj in root.children_recursive]
         roots.append(entry)
 
@@ -415,21 +494,33 @@ def apply_dressing(scene, episode, actors, fit_frame, timeline):
         upper = [p for p in points + [fit_inverse @ point for point in world_vertices(hairs)] if p.z >= seat]
         center = Vector(((min(p.x for p in upper) + max(p.x for p in upper)) / 2,
                          (min(p.y for p in upper) + max(p.y for p in upper)) / 2, seat))
-        root = adopt(empty("Dressing hat"), actor.name + " alpine hat")
+        root = adopt(empty("Dressing hat"), actor.name + " " + item["style"] + " hat")
         root.matrix_world = head_pose @ Matrix.Translation(center) @ Matrix.Rotation(actor.root.rotation_euler.z, 4, "Z")
         follow = root.constraints.new("CHILD_OF")
         follow.name, follow.target, follow.subtarget = "Native head attachment", actor.rig, actor.head.name
         follow.inverse_matrix = head_world.inverted()
-        lathe("hat brim", [(.145, .006), (.220, -.007), (.223, -.001), (.145, .014)],
-              mats["felt"], root, 1.05)
-        crown = lathe("hat crown", [(.151, .004), (.154, .04), (.138, .14), (.10, .178), (0, .172)],
-                      mats["felt"], root, 1.10)
-        for band, color in enumerate(("red", "white", "red")):
-            lathe(f"hat band {band}", [(.156 - band * .00192, .04 + band * .012),
-                                     (.15408 - band * .00192, .052 + band * .012)],
-                  mats[color], root, 1.10)
+        natural_hair = item.get("fit") == "natural_hair"
+        if natural_hair:
+            if not hairs:
+                raise ValueError(f"{actor.name}: natural-hair hat fit requires visible hair.")
+            root.matrix_basis = root.matrix_basis @ Matrix.Translation((0, 0, .1))
+        if item["style"] == "alpine":
+            lathe("hat brim", [(.145, .006), (.220, -.007), (.223, -.001), (.145, .014)],
+                  mats["felt"], root, 1.05)
+            crown = lathe("hat crown", [(.151, .004), (.154, .04), (.138, .14), (.10, .178), (0, .172)],
+                          mats["felt"], root, 1.10)
+            for band, color in enumerate(("red", "white", "red")):
+                lathe(f"hat band {band}", [(.156 - band * .00192, .04 + band * .012),
+                                         (.15408 - band * .00192, .052 + band * .012)],
+                      mats[color], root, 1.10)
+        else:
+            parts = imported_asset(halloween["halloween_witch_hat"]["file"], root, .44, (0, 0, .008))
+            if natural_hair:
+                for obj in parts:
+                    obj.data.transform(Matrix.Diagonal((1.4, 1.4, 1, 1)))
+            crown = next(obj for obj in parts if obj.name.endswith("_0"))
         hair_fit = None
-        if hairs:
+        if hairs and not natural_hair:
             # Preserve the hairline; compress only the hairstyle above the brim.
             cage = bpy.data.lattices.new("Dressing hat hair fit")
             cage.points_u, cage.points_v, cage.points_w = 2, 2, 3
@@ -439,6 +530,9 @@ def apply_dressing(scene, episode, actors, fit_frame, timeline):
                     point.co_deform.x *= .15
                     point.co_deform.y *= .15
                     point.co_deform.z *= .65
+                elif item["style"] == "witch" and abs(point.co_deform.z) < 1e-6:
+                    point.co_deform.x *= .6
+                    point.co_deform.y *= .6
             helper = bpy.data.objects.new("Dressing hat hair fit", cage)
             collection.objects.link(helper)
             adopt(helper, actor.name + " hat hair fit", root)
@@ -451,7 +545,8 @@ def apply_dressing(scene, episode, actors, fit_frame, timeline):
         bpy.context.view_layer.update()
         relative = head_world.inverted() @ root.matrix_world
         camera = fit_hat_camera(scene, actor, root, timeline, fit_frame)
-        roots.append({"type": "hat", "actor": actor.name, "root": root.name, "camera": camera,
+        roots.append({"type": "hat", "style": item["style"], "fit": item.get("fit"), "actor": actor.name,
+                      "root": root.name, "camera": camera, "hair_meshes": [obj.name for obj in hairs],
                       "attachment_bone": actor.head.name, "fit_frame": fit_frame,
                       "hair_fit": hair_fit, "crown_object": crown.name,
                       "head_relative_matrix": [list(row) for row in relative],
@@ -496,9 +591,26 @@ def check_dressing(scene, episode, receipt, timeline, entrance, motion_step, act
             head_points = [root.matrix_world.inverted() @ point for point in world_vertices(head_meshes(actor))]
             top, bottom = max(p.z for p in head_points), min(p.z for p in head_points)
             seat_depth = top
-            if not .12 <= seat_depth / (top - bottom) <= .18:
-                raise ValueError(f"Hat is perched above or too low on {actor.name}'s head.")
+            requested_hat = next(item for item in config.get("accessories", [])
+                                 if item["actor"] == entry["actor"])
+            natural_hair = requested_hat.get("fit") == "natural_hair"
+            if entry.get("fit") != requested_hat.get("fit"):
+                raise ValueError("Saved hat fit differs from the requested accessory.")
             hair_fit = entry.get("hair_fit")
+            hair_names = entry.get("hair_meshes", hair_fit["meshes"] if hair_fit else [])
+            hairs = [scene.objects[name] for name in hair_names]
+            if natural_hair:
+                visible_hairs = [obj for obj in actor.root.children_recursive if obj.type == "MESH"
+                                 and "hair" in obj.name.lower() and not obj.hide_render and obj.visible_get()]
+                if not hairs or set(hairs) != set(visible_hairs) or hair_fit:
+                    raise ValueError("Natural-hair hat must retain the owner's undeformed visible hair.")
+                if any(mod.name == "Dressing hat hair fit" for obj in hairs for mod in obj.modifiers):
+                    raise ValueError("Natural-hair hat must not compress the owner's hair.")
+                hair_top = max((root.matrix_world.inverted() @ point).z for point in world_vertices(hairs))
+                if not .015 <= hair_top <= .15:
+                    raise ValueError(f"Hat is not seated on {actor.name}'s hair: {hair_top:.4f}m.")
+            elif not .12 <= seat_depth / (top - bottom) <= .18:
+                raise ValueError(f"Hat is perched above or too low on {actor.name}'s head.")
             if hair_fit:
                 helper = scene.objects[hair_fit["object"]]
                 if helper.parent != root or helper.type != "LATTICE":
@@ -522,11 +634,10 @@ def check_dressing(scene, episode, receipt, timeline, entrance, motion_step, act
                 error = max(abs(actual[r][c] - expected[r][c]) for r in range(4) for c in range(4))
                 if error > 1e-4:
                     raise ValueError(f"Hat does not follow {actor.name}'s head at frame {frame}: {error}")
-                if hair_fit:
+                if hairs:
                     clearance, covered = hair_crown_clearance(
-                        scene.objects[entry["crown_object"]],
-                        [scene.objects[name] for name in hair_fit["meshes"]])
-                    if covered and clearance < .001:
+                        scene.objects[entry["crown_object"]], hairs)
+                    if not covered or clearance < .001:
                         raise ValueError(f"Hair protrudes through or touches the hat at frame {frame}: {clearance}")
                     hair_clearance = min(hair_clearance, clearance)
                     hair_samples += 1
@@ -550,13 +661,19 @@ def check_dressing(scene, episode, receipt, timeline, entrance, motion_step, act
             checks.append({"type": "hat", "actor": actor.name, "head_follow_samples": samples,
                            "brim_below_head_top_m": seat_depth,
                            "hair_fit_meshes": hair_fit["meshes"] if hair_fit else [],
+                           "hair_meshes_checked": [obj.name for obj in hairs],
                            "hair_crown_samples": hair_samples,
-                           "minimum_hair_crown_clearance_m": hair_clearance if hair_fit else None,
+                           "minimum_hair_crown_clearance_m": hair_clearance if hairs else None,
                            "portal_clearance_samples": portal_samples,
                            "caption_clear_head_and_hat_samples": camera_samples})
         else:
             scene.frame_set(1)
             contact_gap = None
+            if entry["type"] == "halloween_sweets":
+                requested = next(item for item in config.get("props", [])
+                                 if item["type"] == entry["type"] and item["anchor"] == entry["anchor"])
+                if entry.get("placement") != requested.get("placement"):
+                    raise ValueError("Saved sweets placement differs from the requested prop.")
             if entry["type"] == "flag" and any(
                     item.get("pattern") == "canada" and item["anchor"] == entry["anchor"]
                     for item in config.get("props", [])):
@@ -584,9 +701,10 @@ def check_dressing(scene, episode, receipt, timeline, entrance, motion_step, act
             points = [obj.matrix_world @ Vector(p) for obj in objects for p in obj.bound_box]
             bottom = min(p.z for p in points)
             target = 0 if entry["type"] == "backpack" else receipt["tabletop_z_m"]
-            if entry["anchor"] != "back_wall_left" and abs(bottom - target) > .003:
+            wall_anchor = entry["anchor"] in {"back_wall_left", "halloween_back_wall"}
+            if not wall_anchor and abs(bottom - target) > .003:
                 raise ValueError(f"{entry['type']} floats or intersects its support: {bottom}, {target}")
-            if entry["anchor"] != "back_wall_left":
+            if not wall_anchor:
                 low = Vector(tuple(min(p[i] for p in points) for i in range(3)))
                 high = Vector(tuple(max(p[i] for p in points) for i in range(3)))
             if entry["type"] == "backpack":
@@ -607,12 +725,20 @@ def check_dressing(scene, episode, receipt, timeline, entrance, motion_step, act
                                "minimum_route_clearance_m": minimum - .34})
             else:
                 hand_clearance = None
-                if entry["anchor"] != "back_wall_left":
+                if not wall_anchor:
                     table = scene.objects["Exam table"]
                     bounds = [table.matrix_world @ Vector(p) for p in table.bound_box]
                     if (low.x < min(p.x for p in bounds) or high.x > max(p.x for p in bounds)
                             or low.y < min(p.y for p in bounds) or high.y > max(p.y for p in bounds)):
                         raise ValueError(f"{entry['type']} overhangs the tabletop.")
+                    if entry["type"] == "halloween_sweets" and entry.get("placement") == "caption_clear":
+                        for name in ("Examiner clipboard", "Water cup.001"):
+                            other = scene.objects[name]
+                            corners = [other.matrix_world @ Vector(p) for p in other.bound_box]
+                            other_low = Vector(tuple(min(p[i] for p in corners) for i in range(3)))
+                            other_high = Vector(tuple(max(p[i] for p in corners) for i in range(3)))
+                            if all(low[i] < other_high[i] and high[i] > other_low[i] for i in range(3)):
+                                raise ValueError(f"Halloween sweets intersect {name}.")
                     hand_clearance = float("inf")
                     for frame in range(1, timeline["total_frames"] + 1, motion_step):
                         scene.frame_set(frame)
@@ -627,7 +753,7 @@ def check_dressing(scene, episode, receipt, timeline, entrance, motion_step, act
                     if hand_clearance < .012:
                         raise ValueError(f"{entry['type']} intersects a hand: {hand_clearance:.4f}m.")
                 checks.append({"type": entry["type"], "anchor": entry["anchor"],
-                               "support_error_m": None if entry["anchor"] == "back_wall_left" else abs(bottom - target),
+                               "support_error_m": None if wall_anchor else abs(bottom - target),
                                "minimum_fingertip_clearance_m": hand_clearance,
                                "cup_saucer_contact_gap_m": contact_gap})
     for image in bpy.data.images:

@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "id": "dtz_b1_halloween_fest",
+  "language": "de",
+  "exam": {"family": "dtz", "skill": "speaking", "section": "3"},
+  "presentation": "social",
+  "visual_version": 7,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "DTZ B1: Süßes oder Prüfungsangst?",
+  "label": "DTZ B1 · Sprechen · Teil 3 · Übungsausschnitt",
+  "disclaimer": "Unabhängige, verkürzte Übungssimulation; keine offizielle Aufgabe oder vollständige Prüfung.",
+  "branding": "DEUTSCHKOMPASS",
+  "scene": {
+    "template": "exam_room",
+    "base_scene": "../builds/v2/studio.blend",
+    "entrance": true,
+    "wall_logo": "../assets/deutschkompass-logo.png",
+    "dressing": {
+      "props": [
+        {"type": "halloween_bats", "anchor": "halloween_back_wall"},
+        {"type": "halloween_pumpkin", "anchor": "candidate_a_table_side"},
+        {"type": "halloween_sweets", "anchor": "candidate_b_table_side", "placement": "caption_clear"}
+      ],
+      "accessories": [{"type": "hat", "style": "witch", "actor": "candidate_b", "fit": "natural_hair"}]
+    }
+  },
+  "header": {
+    "brand": "DEUTSCHKOMPASS · B1 SPRECHEN",
+    "topic": "Teil 3 · Halloween planen"
+  },
+  "hook": "DTZ B1: Süßes oder Prüfungsangst?",
+  "task_title": "GEMEINSAM PLANEN",
+  "task_summary": "Halloween-Geburtstag im Park",
+  "task_hint": "Lernpause · Video bei Bedarf anhalten.",
+  "task_card": ["Wann und wie viele Gäste?", "Essen, Getränke und wer bringt was?", "Kostüme, Musik und Fotos?", "Was machen wir bei Regen?"],
+  "takeaway": [],
+  "takeaway_seconds": 0,
+  "cta": ["Mehr Aufgaben und Dialoge", "im DTZ-B1-Sprechbuch", "Amazon-Buchlink im Profil"],
+  "publication": {
+    "intro": "Wer plant Saras Halloween-Geburtstag? Erst selbst Vorschläge sammeln, dann Lea und Samir zuhören.",
+    "disclosure": "Unabhängige, verkürzte Übung nach Teil 3, Übung 3 unseres DTZ-B1-Sprechbuchs; keine offizielle Prüfungsaufgabe oder vollständige Prüfung. Das Comedy-Intro und die Lernpause sind frei gestaltet.",
+    "hashtags": ["#DTZ", "#B1Deutsch", "#DeutschLernen", "#Halloween", "#GemeinsamPlanen"]
+  },
+  "book_cover": "../assets/book-cover.jpg",
+  "source": {
+    "book": "../../../german_exam_books/b1/speaking_dtz_gpt_v1/book_no_toc.md",
+    "exercise": "Teil 3, Übung 3: Ein Geburtstagsfest im Park organisieren",
+    "duration_limit_seconds": 90,
+    "adaptation": "A Halloween birthday adaptation of the book's park celebration. Both candidates discuss invitations and costumes, negotiate ten guests and a modest budget, agree on the time and activities, divide food and drinks, and make a rain plan. Fictional comedy is separate from the independent exam practice.",
+    "coverage": {
+      "Datum und Uhrzeit": ["05", "10"],
+      "Teilnehmende und kleines Budget": ["05", "05a", "05b", "06", "06a", "06b"],
+      "Essen, Getränke und Beiträge": ["06", "06a", "06b", "07", "08"],
+      "Kostüme und Aktivitäten": ["05b", "06c", "06d", "06e", "06f"],
+      "Plan B bei Regen": ["08", "09", "10"]
+    }
+  },
+  "fps": 24,
+  "intro_seconds": 0,
+  "outro_seconds": 6.0,
+  "voices": {
+    "examiner": {"audio": "../../../shared-voices/qwen3-tts-german/male_middle_aged.wav", "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"},
+    "candidate_a": {"audio": "../../../shared-voices/qwen3-tts-german/female_young_adult.wav", "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"},
+    "candidate_b": {"audio": "../../../shared-voices/qwen3-tts-german/male_young_adult.wav", "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"}
+  },
+  "turns": [
+    {"id": "00", "speaker": "examiner", "name": "Prüfer", "text": "DTZ B1: Süßes oder Prüfungsangst?", "camera": "wide", "action": "welcome", "look_at": "candidate_a", "pause_after": 0.2},
+    {"id": "01", "speaker": "examiner", "name": "Prüfer", "text": "Guten Tag. Nehmen Sie bitte Platz.", "camera": "wide", "action": "welcome", "look_at": "candidate_a", "pause_after": 3.0},
+    {"id": "02", "speaker": "candidate_b", "name": "Samir", "text": "Süßes oder Saures?", "camera": "candidate_b", "action": "ask", "look_at": "examiner", "phase": "welcome", "pause_after": 0.8},
+    {"id": "03", "speaker": "examiner", "name": "Prüfer", "text": "Erst ein Vorschlag, dann die Süßigkeiten.", "camera": "examiner", "action": "answer", "look_at": "candidate_b", "phase": "welcome", "pause_after": 0.8},
+    {"id": "04", "speaker": "examiner", "name": "Prüfer", "text": "Planen Sie Saras Halloween-Geburtstag im Park. Besprechen Sie die Punkte.", "camera": "examiner", "action": "explain", "look_at": "candidate_a", "pause_after": 6.6, "task_card_delay_seconds": 1.0},
+    {"id": "05", "speaker": "candidate_a", "name": "Lea", "text": "Samstag um fünf? Ich möchte ungefähr zehn Leute einladen.", "camera": "candidate_a", "action": "propose", "look_at": "candidate_b", "pause_after": 0.8},
+    {"id": "05a", "speaker": "candidate_b", "name": "Samir", "text": "Samstag passt mir gut. Soll ich die Einladungen verschicken?", "camera": "candidate_b", "action": "ask", "look_at": "candidate_a", "pause_after": 0.8},
+    {"id": "05b", "speaker": "candidate_a", "name": "Lea", "text": "Ja, bitte! Frag auch, ob alle ein Kostüm haben.", "camera": "candidate_a", "action": "agree", "look_at": "candidate_b", "pause_after": 0.8},
+    {"id": "06", "speaker": "candidate_b", "name": "Samir", "text": "Gern, aber bitte günstig. Kuchen und Saft reichen.", "camera": "candidate_b", "action": "consider", "look_at": "candidate_a", "pause_after": 0.8},
+    {"id": "06a", "speaker": "candidate_a", "name": "Lea", "text": "Gute Idee. Wir können die Sachen im Supermarkt kaufen.", "camera": "candidate_a", "action": "propose", "look_at": "candidate_b", "pause_after": 0.8},
+    {"id": "06b", "speaker": "candidate_b", "name": "Samir", "text": "Ja, ich vergleiche vorher die Preise, dann sparen wir Geld.", "camera": "candidate_b", "action": "agree", "look_at": "candidate_a", "pause_after": 0.8},
+    {"id": "06c", "speaker": "candidate_a", "name": "Lea", "text": "Was können wir bei der Feier zusammen machen?", "camera": "candidate_a", "action": "ask", "look_at": "candidate_b", "pause_after": 0.8},
+    {"id": "06d", "speaker": "candidate_b", "name": "Samir", "text": "Wir können Musik hören und lustige Fotos machen.", "camera": "candidate_b", "action": "propose", "look_at": "candidate_a", "pause_after": 0.8},
+    {"id": "06e", "speaker": "candidate_a", "name": "Lea", "text": "Gute Idee! Welche Musik mag Sara denn besonders?", "camera": "candidate_a", "action": "ask", "look_at": "candidate_b", "pause_after": 0.8},
+    {"id": "06f", "speaker": "candidate_b", "name": "Samir", "text": "Ich frage sie und stelle dann eine Playlist zusammen.", "camera": "candidate_b", "action": "propose", "look_at": "candidate_a", "pause_after": 0.8},
+    {"id": "07", "speaker": "candidate_a", "name": "Lea", "text": "Ich backe den Kuchen und bringe Obst. Was übernimmst du?", "camera": "candidate_a", "action": "ask", "look_at": "candidate_b", "pause_after": 0.8},
+    {"id": "08", "speaker": "candidate_b", "name": "Samir", "text": "Ich bringe Saft und Becher mit. Bei Regen feiern wir bei dir?", "camera": "candidate_b", "action": "propose", "look_at": "candidate_a", "pause_after": 0.8},
+    {"id": "09", "speaker": "candidate_a", "name": "Lea", "text": "Ja, aber dann nur mit den engsten Freunden.", "camera": "candidate_a", "action": "agree", "look_at": "candidate_b", "pause_after": 0.8},
+    {"id": "10", "speaker": "candidate_b", "name": "Samir", "text": "Abgemacht: Samstag um fünf im Park, und bei Regen bei dir.", "camera": "candidate_b", "action": "agree", "look_at": "candidate_a", "pause_after": 0.8}
+  ]
+}

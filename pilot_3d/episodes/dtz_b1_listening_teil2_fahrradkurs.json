@@ -28,7 +28,7 @@
       "table_position": [-0.8, 0.075]
     }
   },
-  "timing": {"hook_seconds": 3, "reading_seconds": 7, "response_seconds": 6, "reveal_seconds": 8, "cta_seconds": 6},
+  "timing": {"hook_seconds": 3, "reading_seconds": 5, "response_seconds": 6, "reveal_seconds": 8, "cta_seconds": 6},
   "source": {
     "book": "../../../german_exam_books/b1/listening_dtz_v2/book_no_toc.md",
     "exercise": "Übungsset 1, Hören Teil 2, Aufgabe 5",

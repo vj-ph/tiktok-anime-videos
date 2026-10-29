@@ -30,6 +30,9 @@ class DressingTests(unittest.TestCase):
         episode["scene"]["dressing"] = json.loads((ASSETS / "canada.json").read_text(encoding="utf-8"))
         return episode
 
+    def halloween(self):
+        return read_episode(ROOT / "episodes/dtz_b1_halloween_fest.json")
+
     def test_legacy_episodes_need_no_dressing_assets_or_new_settings(self):
         for path in (ROOT / "episodes").glob("*.json"):
             episode = read_episode(path)
@@ -167,6 +170,57 @@ class DressingTests(unittest.TestCase):
 
     def test_canadian_assets_are_copied_and_hashed_in_frozen_delivery(self):
         self.assert_frozen_assets(self.canadian())
+
+    def test_halloween_assets_are_selected_verified_and_frozen(self):
+        episode = self.halloween()
+        validate_template(episode, check_assets=True)
+        expected = {"halloween.provenance.json", "halloween-jackolantern.glb",
+                    "halloween-candy-pail.glb", "halloween-sweets.glb",
+                    "halloween-bat.glb", "halloween-witch-hat.glb"}
+        self.assertEqual({path.name for path in asset_files(episode, verify=True)}, expected)
+        self.assert_frozen_assets(episode)
+
+    def test_halloween_rejects_missing_candidate_and_tampered_asset(self):
+        episode = self.halloween()
+        episode["scene"].update(layout="interview", observer=False)
+        with self.assertRaisesRegex(ValueError, "active candidate"):
+            validate_dressing(episode)
+        episode = self.halloween()
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            for path in asset_files(episode):
+                (root / path.name).write_bytes(path.read_bytes())
+            (root / "halloween-witch-hat.glb").write_bytes(b"damaged")
+            with patch("scene_dressing.ASSETS", root), self.assertRaisesRegex(ValueError, "checksum"):
+                asset_files(episode, verify=True)
+
+    def test_natural_hair_and_caption_clear_placement_are_explicit_and_scoped(self):
+        episode = self.halloween()
+        dressing = episode["scene"]["dressing"]
+        hat = dressing["accessories"][0]
+        sweets = next(item for item in dressing["props"] if item["type"] == "halloween_sweets")
+        validate_dressing(episode, check_assets=True)
+        legacy = copy.deepcopy(episode)
+        del legacy["scene"]["dressing"]["accessories"][0]["fit"]
+        del next(item for item in legacy["scene"]["dressing"]["props"]
+                 if item["type"] == "halloween_sweets")["placement"]
+        validate_dressing(legacy, check_assets=True)
+        for value in ("unknown", None, 1):
+            with self.subTest(fit=value):
+                hat["fit"] = value
+                with self.assertRaisesRegex(ValueError, "Natural-hair fit"):
+                    validate_dressing(episode)
+        hat["fit"] = "natural_hair"
+        for field, value in (("actor", "candidate_a"), ("style", "alpine")):
+            with self.subTest(field=field):
+                old = hat[field]
+                hat[field] = value
+                with self.assertRaisesRegex(ValueError, "Natural-hair fit"):
+                    validate_dressing(episode)
+                hat[field] = old
+        sweets["placement"] = "unknown"
+        with self.assertRaisesRegex(ValueError, "Unsupported options"):
+            validate_dressing(episode)
 
     def assert_frozen_assets(self, episode):
         with tempfile.TemporaryDirectory() as temp:

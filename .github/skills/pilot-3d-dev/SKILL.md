@@ -52,6 +52,23 @@ and documentation; keep changes focused.
 For TEF Canada videos, also follow `.github/skills/tef-canada-video-gen/SKILL.md`,
 including its Québec French listening-voice casting requirements.
 
+## Spoken opening title
+
+- For every future video, including previews and production, use TTS to speak
+  the displayed title at the start. This applies to speaking and listening
+  exercises alike, including titles phrased as questions.
+- Display the spoken title like a subtitle and highlight each word in sync
+  with its measured forced-alignment timing. Preserve the intended readable
+  title when abbreviations or numbers are spoken differently; map them only
+  to their actual aligned speech, never to estimated timestamps.
+- Fit the complete narration into the opening without truncating, speeding up
+  or overlapping other speech. Include it in the strict duration limit.
+  Verify the encoded opening, highlighted word boundaries, speech and
+  readability; independent ASR does not replace human listening.
+- For existing approved or frozen videos, create a fresh preview rather than
+  altering their audio or delivery. Obtain separate preview and publication
+  approval as usual.
+
 ## Posts for every video
 
 - For every video, including a preview, prepare exercise-specific TikTok and

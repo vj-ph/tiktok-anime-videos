@@ -619,6 +619,15 @@ samples, and hashed in `delivery_checks.json`. No book audio is resynthesized,
 sped up or normalized. SFX reuse was confirmed by the user; any applicable
 third-party attribution still needs to be recorded before publication.
 
+The current Teil 2–4 episode configurations set a five-second reading
+countdown; the earlier previews listed below retain their original longer
+countdowns. Generate fresh previews for the shorter timing, optionally using
+`--speech-cache-from` to reuse matching raw narration. Exact `--reuse-audio`
+requires a preview with the same episode and timing, so the older previews
+cannot be used directly for production with this change. Teil 1 and TEF
+listening retain their existing reading-time requirements. Five seconds can
+be short for two questions; viewers can pause the video to read.
+
 Revised Übungsset 1 previews with spoken openings:
 
 - Teil 1, Arztpraxis: `builds/dtz_b1_listening_appointment_preview_r8/pilot.mp4` — 49.041667 s.

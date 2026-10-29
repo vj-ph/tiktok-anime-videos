@@ -208,6 +208,20 @@ class ListeningVideoTest(unittest.TestCase):
                 atomic_json(path, data)
                 return listening.load_episode(path)
 
+            data["timing"]["reading_seconds"] = 5
+            validate()
+            data["exam"]["section"] = "1"
+            with self.assertRaisesRegex(ValueError, "at least 7 seconds"):
+                validate()
+            data["exam"]["section"] = "2"
+            data["timing"]["reading_seconds"] = 4
+            with self.assertRaisesRegex(ValueError, "at least 5 seconds"):
+                validate()
+            data["timing"]["reading_seconds"] = 5
+            data["timing"]["response_seconds"] = 5
+            with self.assertRaisesRegex(ValueError, "six seconds to respond"):
+                validate()
+            data["timing"]["response_seconds"] = 6
             data["audio_excerpt"] = {"start_sample": 3, "end_sample": 23999}
             validate()
             data["audio_excerpt"]["end_sample"] = 24001
@@ -237,6 +251,9 @@ class ListeningVideoTest(unittest.TestCase):
             data.update(language="fr", exam={"family": "tef_canada", "skill": "listening",
                                             "section": "text_choice"},
                         choices=["un", "deux", "trois", "quatre"], correct_choice="D")
+            with self.assertRaisesRegex(ValueError, "at least 7 seconds"):
+                validate()
+            data["timing"]["reading_seconds"] = 7
             validate()
             payload = {"text": "Annonce originale.", "settings": {"language": "French"}}
             data["source"].update(audio_provenance="book.cache.json", audio_transcript=payload["text"])
@@ -918,6 +935,19 @@ class ListeningVideoTest(unittest.TestCase):
         long["timing"]["hook_seconds"] = 62
         with self.assertRaisesRegex(ValueError, "strictly shorter"):
             listening.timeline_for(long, book, {"frames": 24000, "sample_rate": 24000}, book)
+
+    def test_five_second_reading_countdown_ends_at_listening(self):
+        data = episode()
+        data["timing"]["reading_seconds"] = 5
+        audio = {"frames": 24000, "sample_rate": 24000}
+        timeline = listening.timeline_for(data, audio, audio, audio)
+        phases = timeline["phases"]
+        reading = [phase for phase in phases if phase["name"].startswith("reading_")]
+        self.assertEqual([phase["name"] for phase in reading],
+                         [f"reading_{remaining}" for remaining in range(5, 0, -1)])
+        self.assertTrue(all(phase["end_frame"] - phase["start_frame"] == 24 for phase in reading))
+        listening_phase = next(phase for phase in phases if phase["name"] == "listening")
+        self.assertEqual(reading[-1]["end_frame"], listening_phase["start_frame"])
 
     def test_build_synthesizes_the_visible_question_as_the_hook(self):
         with TemporaryDirectory() as directory:

@@ -80,8 +80,9 @@ def load_episode(path):
     for name in ("hook_seconds", "reading_seconds", "response_seconds", "reveal_seconds", "cta_seconds"):
         if type(timing.get(name)) is not int or timing[name] < 1:
             raise ValueError(f"{name} must be a positive whole number of seconds.")
-    if timing["response_seconds"] < 6 or timing["reading_seconds"] < 7:
-        raise ValueError("Allow at least seven seconds to read and six seconds to respond.")
+    min_reading = 5 if dtz and exam["section"] in ("2", "3", "4") else 7
+    if timing["response_seconds"] < 6 or timing["reading_seconds"] < min_reading:
+        raise ValueError(f"Allow at least {min_reading} seconds to read and six seconds to respond.")
     if timing["reveal_seconds"] < 1.8 or len(episode["answer_text"]) / timing["reveal_seconds"] > 20:
         raise ValueError("The answer caption needs more reading time.")
     source = episode.get("source")
