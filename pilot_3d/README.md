@@ -628,6 +628,14 @@ cannot be used directly for production with this change. Teil 1 and TEF
 listening retain their existing reading-time requirements. Five seconds can
 be short for two questions; viewers can pause the video to read.
 
+New listening builds synthesize the full episode title as the opening, align
+every word to the actual recording and highlight it on the corresponding video
+frames. A new preview stores `hook_alignment.json` and encoded-word review
+frames; production requires the matching completed preview and its verified
+alignment. Older question-only previews cannot be reused for this title.
+The title narration may lengthen the hook and is included in the strict
+under-90-second limit. Review the new speech and highlights before production.
+
 Revised Übungsset 1 previews with spoken openings:
 
 - Teil 1, Arztpraxis: `builds/dtz_b1_listening_appointment_preview_r8/pilot.mp4` — 49.041667 s.
@@ -673,10 +681,10 @@ head-and-eye movement with brief blinks is animated separately. Frames play
 forward and backward to avoid a hard loop reset. The old scene's speech is not
 reused. The tabletop radio is Innerscene's CC0 boombox; its source, license and
 hash are recorded in `assets/props/innerscene-boombox.provenance.json`.
-The visible opening question is also spoken. The hook grows to fit its measured
-speech if necessary, without speeding it up; this time counts toward the
-90-second limit. The book recording is played without speech captions during
-the challenge. Teil 3 displays each numbered solution once, alongside the key
+The full opening title is spoken and displayed with measured word highlights.
+The hook grows to fit its measured speech if necessary, without speeding it up;
+this time counts toward the 90-second limit. The book recording is played
+without speech captions during the challenge. Teil 3 displays each numbered solution once, alongside the key
 detail, while narrating both answers. Audio timing is measured and the entire video must
 be strictly shorter than 90 seconds. Pronunciation, platform/mobile placement,
 production approval and publication remain separate human reviews.
@@ -688,14 +696,15 @@ After human audio review and explicit preview approval, run production from
 python pipeline.py build --episode episodes/dtz_b1_listening_appointment.json \
   --build builds/dtz_b1_listening_appointment_production_r2 \
   --profile production --jobs 8 \
-  --reuse-audio builds/dtz_b1_listening_appointment_preview_r8
+  --reuse-audio builds/dtz_b1_listening_appointment_preview_new
 ```
 
 Production requires `--reuse-audio` from a completed, matching listening
 preview; it verifies the source video, episode, input snapshots, both opening
-and answer narration caches and the measured timeline, then copies the exact
-recordings rather than resynthesizing them. Older silent-hook previews cannot
-be reused for the new format; generate and approve a fresh preview instead.
+and answer narration caches, title word alignment and measured timeline, then
+copies the exact recordings rather than resynthesizing them. Older silent-hook
+and question-only previews cannot be reused for the new format; generate and
+approve a fresh preview instead.
 The source remains read-only. `--speech-cache-from` cannot
 be combined with exact reuse. Preview renders at 360x640 with two Cycles
 samples; production renders at 792x1408 with 16 samples and crops to native

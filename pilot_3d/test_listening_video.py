@@ -22,6 +22,7 @@ def episode():
     return {
         "fps": 24,
         "scene": {},
+        "title": "DTZ B1: Arzttermin",
         "question": "Warum ruft die Arztpraxis an?",
         "choices": ["Eine Bewertung", "Der Termin wurde verschoben", "Eine Rechnung"],
         "correct_choice": "B",
@@ -41,6 +42,21 @@ def write_wav(path, frames=24000):
         audio.writeframes(b"\x01\x00" * frames)
 
 
+def fixture_alignment(data, audio):
+    words = []
+    for index, word in enumerate(listening.aligned_title(data["title"]).split()):
+        words.append({"word": word, "start": index * 0.2, "end": index * 0.2 + 0.15, "score": 0.9})
+    return {"title": data["title"], "aligned_text": listening.aligned_title(data["title"]),
+            "audio_sha256": sha256_file(audio), "provenance": {"language": data.get("language", "de")},
+            "words": words}
+
+
+def fake_hook_alignment(build, data, audio):
+    receipt = fixture_alignment(data, audio)
+    atomic_json(build / "hook_alignment.json", receipt)
+    return receipt
+
+
 def reuse_fixture(root):
     data = episode()
     files = {name: root / name for name in ("book_audio.wav", "voice.wav", "voice.txt", "book_cover.jpg")}
@@ -54,7 +70,7 @@ def reuse_fixture(root):
     (source / "audio").mkdir()
     for name, path in files.items():
         shutil.copyfile(path, source / "inputs" / name)
-    for name, text in (("answer", data["answer_text"]), ("hook", data["question"])):
+    for name, text in (("answer", data["answer_text"]), ("hook", data["title"])):
         recording = source / "audio" / f"{name}-fixture.wav"
         write_wav(recording)
         payload = make_cache_payload({"speaker": "narrator", "text": text},
@@ -63,6 +79,7 @@ def reuse_fixture(root):
                     {"payload": payload, "cache_key": content_hash(payload),
                      "wav_sha256": sha256_file(recording), "audio_info": inspect_wav(recording)})
     answer, hook = (source / "audio" / f"{name}-fixture.wav" for name in ("answer", "hook"))
+    atomic_json(source / "hook_alignment.json", fixture_alignment(data, hook))
     timeline = listening.timeline_for(data, inspect_wav(files["book_audio.wav"]), inspect_wav(answer),
                                       inspect_wav(hook))
     video = source / "pilot.mp4"
@@ -73,6 +90,10 @@ def reuse_fixture(root):
     atomic_json(source / "delivery_checks.json",
                 {"timeline": timeline, "source_sha256": sources, "output_sha256": sha256_file(video),
                  "answer_audio_sha256": sha256_file(answer), "hook_audio_sha256": sha256_file(hook)})
+    report_path = source / "delivery_checks.json"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    report["hook_alignment_sha256"] = sha256_file(source / "hook_alignment.json")
+    atomic_json(report_path, report)
     return data, files, sources, source, answer, timeline
 
 
@@ -448,7 +469,7 @@ class ListeningVideoTest(unittest.TestCase):
             def fake_synthesize(narration, _, audio_dir, *args, **kwargs):
                 self.assertEqual(narration["language"], "fr")
                 self.assertEqual([turn["text"] for turn in narration["turns"]],
-                                 [data["question"], data["answer_text"]])
+                                 [data["title"], data["answer_text"]])
                 paths = [audio_dir / "hook-test.wav", audio_dir / "answer-test.wav"]
                 for path in paths:
                     write_wav(path)
@@ -456,6 +477,7 @@ class ListeningVideoTest(unittest.TestCase):
 
             with (patch.object(listening, "load_episode", return_value=(data, files)),
                   patch.object(listening, "make_overlay"),
+                  patch.object(listening, "prepare_hook_alignment", side_effect=fake_hook_alignment),
                   patch.object(listening, "synthesize", side_effect=fake_synthesize)):
                 listening.build_listening.__wrapped__(Path("unused"), root / "tef-build",
                                                      until="audio", profile="preview")
@@ -665,8 +687,8 @@ class ListeningVideoTest(unittest.TestCase):
             self.assertEqual(state["audio_reuse"]["output_sha256"], sha256_file(source / "pilot.mp4"))
 
     def test_reuse_rejects_mismatched_or_damaged_preview(self):
-        for problem in ("episode", "video", "answer", "hook", "hook_metadata", "legacy", "timeline", "metadata", "source",
-                        "snapshot", "ambiguous", "nested"):
+        for problem in ("episode", "video", "answer", "hook", "hook_metadata", "legacy", "alignment",
+                        "alignment_content", "timeline", "metadata", "source", "snapshot", "ambiguous", "nested"):
             with self.subTest(problem=problem), TemporaryDirectory() as directory:
                 root = Path(directory).resolve()
                 data, files, sources, source, answer, _ = reuse_fixture(root)
@@ -687,8 +709,18 @@ class ListeningVideoTest(unittest.TestCase):
                 elif problem == "legacy":
                     report_path = source / "delivery_checks.json"
                     report = json.loads(report_path.read_text(encoding="utf-8"))
-                    del report["hook_audio_sha256"]
+                    del report["hook_alignment_sha256"]
                     atomic_json(report_path, report)
+                elif problem in ("alignment", "alignment_content"):
+                    alignment_path = source / "hook_alignment.json"
+                    alignment = json.loads(alignment_path.read_text(encoding="utf-8"))
+                    alignment["words"][0]["word"] = "changed"
+                    atomic_json(alignment_path, alignment)
+                    if problem == "alignment_content":
+                        report_path = source / "delivery_checks.json"
+                        report = json.loads(report_path.read_text(encoding="utf-8"))
+                        report["hook_alignment_sha256"] = sha256_file(alignment_path)
+                        atomic_json(report_path, report)
                 elif problem == "timeline":
                     atomic_json(source / "timeline.json", {"fps": 24})
                 elif problem == "metadata":
@@ -749,6 +781,7 @@ class ListeningVideoTest(unittest.TestCase):
                 with (patch.object(listening, "load_episode", return_value=(data, files)),
                       patch.object(listening, "audio_delivery_check"),
                       patch.object(listening, "make_overlay"),
+                      patch.object(listening, "prepare_hook_alignment", side_effect=fake_hook_alignment),
                       patch.object(listening, "synthesize", return_value=[{"audio": str(answer)}, {"audio": str(answer)}]),
                       patch.object(listening, "run_logged", side_effect=render)):
                     listening.build_listening.__wrapped__("unused", build, until="scene", profile=profile,
@@ -772,6 +805,7 @@ class ListeningVideoTest(unittest.TestCase):
 
             with (patch.object(listening, "load_episode", return_value=(data, files)),
                   patch.object(listening, "make_overlay"),
+                  patch.object(listening, "prepare_hook_alignment", side_effect=fake_hook_alignment),
                   patch.object(listening, "synthesize", return_value=[{"audio": str(answer)}, {"audio": str(answer)}]),
                   patch.object(listening, "run_logged", side_effect=render) as run):
                 with self.assertRaisesRegex(ValueError, "input snapshot changed"):
@@ -921,8 +955,92 @@ class ListeningVideoTest(unittest.TestCase):
         texts = [call.args[2] for call in draw.call_args_list]
         self.assertIn("DTZ B1 HÖREN", texts)
         self.assertNotIn("Kannst du die Frage lösen?", texts)
-        question = next(call for call in draw.call_args_list if call.args[2] == data["question"])
-        self.assertGreaterEqual(question.args[1][1], 520)
+        title = next(call for call in draw.call_args_list if call.args[2] == "DTZ")
+        self.assertGreaterEqual(title.args[1][1], 520)
+
+    def test_title_overlay_highlights_only_the_aligned_word(self):
+        data = episode()
+        data["title"] = "DTZ B1: Süßes oder Prüfungsangst?"
+        for index, expected in enumerate(listening.aligned_title(data["title"]).split()):
+            with self.subTest(word=expected), patch("PIL.ImageDraw.ImageDraw.text", autospec=True) as draw:
+                listening.make_overlay(data, "hook", Path("unused"), highlight_word=index)
+            tokens = [call for call in draw.call_args_list if call.args[2] in data["title"].split()]
+            self.assertEqual(len(tokens), 5)
+            highlighted = [call.args[2] for call in tokens if call.kwargs["fill"] == (174, 242, 198, 255)]
+            self.assertEqual(highlighted, [expected])
+        data.update(language="fr", exam={"family": "tef_canada", "section": "text_choice"},
+                    title="TEF Canada : Compréhension orale")
+        with patch("PIL.ImageDraw.ImageDraw.text", autospec=True) as draw:
+            listening.make_overlay(data, "hook", Path("unused"), highlight_word=1)
+        highlighted = [call.args[2] for call in draw.call_args_list
+                       if call.kwargs.get("fill") == (174, 242, 198, 255)]
+        self.assertIn("Canada:", highlighted)
+
+    def test_title_highlight_uses_measured_frame_boundaries(self):
+        timeline = {"fps": 24, "total_frames": 102, "duration": 4.25, "phases": [
+            {"name": "hook", "start_frame": 0, "end_frame": 30},
+            {"name": "reading_1", "start_frame": 30, "end_frame": 54},
+            {"name": "listening", "start_frame": 54, "end_frame": 78},
+            {"name": "reveal", "start_frame": 78, "end_frame": 102},
+        ]}
+        words = [{"word": "A", "start": 0.1, "end": 0.25},
+                 {"word": "B", "start": 0.4, "end": 0.5}]
+        windows = listening.hook_overlay_windows(timeline, words)
+        self.assertEqual([(w["name"], w["start_frame"], w["end_frame"]) for w in windows],
+                         [("hook", 0, 3), ("hook_word_0", 3, 6), ("hook", 6, 10),
+                          ("hook_word_1", 10, 12), ("hook", 12, 30)])
+        filters, _ = listening.video_filters(timeline, hook_words=words)
+        self.assertIn("enable='gte(n,3)*lt(n,6)'", filters)
+        self.assertIn("enable='gte(n,10)*lt(n,12)'", filters)
+        self.assertIn("[9:a]aresample=48000", filters)
+        command = listening.encoding_command(Path("build"), episode(), timeline,
+                                             Path("answer.wav"), Path("hook.wav"), hook_words=words)
+        self.assertIn("build/overlays/hook_word_0.png", command)
+        self.assertIn("build/overlays/hook_word_1.png", command)
+        self.assertEqual(command[command.index("-filter_complex") + 1], filters)
+        with self.assertRaisesRegex(ValueError, "no valid encoded highlight interval"):
+            listening.hook_overlay_windows(timeline, [{"word": "A", "start": 0.01, "end": 0.02}])
+
+    def test_title_alignment_is_measured_cached_and_validated(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            audio = root / "hook.wav"
+            write_wav(audio)
+            data = episode()
+            def fake_align(build):
+                timeline = json.loads((build / "timeline.json").read_text(encoding="utf-8"))
+                self.assertEqual(timeline["turns"][0]["text"], data["title"])
+                self.assertEqual(timeline["turns"][0]["audio"], str(audio))
+                receipt = fixture_alignment(data, audio)
+                atomic_json(build / "word_alignment.json", {
+                    "provenance": receipt["provenance"], "turns": [{"words": receipt["words"]}]})
+            with patch.object(listening, "align_build", side_effect=fake_align) as align:
+                receipt = listening.prepare_hook_alignment(root, data, audio)
+                self.assertEqual(len(receipt["words"]), 3)
+                self.assertEqual(listening.prepare_hook_alignment(root, data, audio), receipt)
+                align.assert_called_once()
+                receipt["words"][0]["word"] = "wrong"
+                atomic_json(root / "hook_alignment.json", receipt)
+                with self.assertRaisesRegex(ValueError, "changed transcript token"):
+                    listening.prepare_hook_alignment(root, data, audio)
+
+    def test_title_highlight_review_rejects_missing_encoded_color(self):
+        data = episode()
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            highlighted = listening.make_overlay(data, "hook", Path("unused"), highlight_word=1)
+            plain = listening.make_overlay(data, "hook", Path("unused"))
+            background = Image.new("RGBA", (720, 1280), (100, 100, 100, 255))
+            highlighted.save(root / "highlight.png")
+            Image.alpha_composite(background, highlighted).convert("RGB").save(root / "frame.png")
+            check = listening.check_hook_highlight(root / "frame.png", root / "highlight.png")
+            self.assertGreater(check["matching_fraction"], 0.99)
+            Image.alpha_composite(background, highlighted).convert("RGB").save(root / "frame.jpg", quality=80)
+            self.assertGreater(listening.check_hook_highlight(root / "frame.jpg",
+                                                             root / "highlight.png")["matching_fraction"], 0.4)
+            Image.alpha_composite(background, plain).convert("RGB").save(root / "frame.png")
+            with self.assertRaisesRegex(ValueError, "highlight is missing"):
+                listening.check_hook_highlight(root / "frame.png", root / "highlight.png")
 
     def test_narration_must_fit_and_exactly_90_seconds_is_rejected(self):
         book = {"frames": 24000, "sample_rate": 24000}
@@ -949,17 +1067,18 @@ class ListeningVideoTest(unittest.TestCase):
         listening_phase = next(phase for phase in phases if phase["name"] == "listening")
         self.assertEqual(reading[-1]["end_frame"], listening_phase["start_frame"])
 
-    def test_build_synthesizes_the_visible_question_as_the_hook(self):
+    def test_build_synthesizes_the_visible_title_as_the_hook(self):
         with TemporaryDirectory() as directory:
             root = Path(directory).resolve()
             data, files, _, source, answer, _ = reuse_fixture(root)
             hook = source / "audio" / "hook-fixture.wav"
             with (patch.object(listening, "load_episode", return_value=(data, files)),
                   patch.object(listening, "make_overlay"),
+                  patch.object(listening, "prepare_hook_alignment", side_effect=fake_hook_alignment),
                   patch.object(listening, "synthesize", return_value=[{"audio": str(hook)}, {"audio": str(answer)}]) as synth):
                 listening.build_listening.__wrapped__("unused", root / "new", until="audio")
             turns = synth.call_args.args[0]["turns"]
-            self.assertEqual(turns[0]["text"], data["question"])
+            self.assertEqual(turns[0]["text"], data["title"])
             self.assertEqual(turns[1]["text"], data["answer_text"])
 
     def test_answer_is_not_displayed_before_reveal(self):

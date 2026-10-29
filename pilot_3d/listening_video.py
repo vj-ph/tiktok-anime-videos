@@ -1,6 +1,8 @@
 """Listening challenges with source audio, response time and a voiced reveal."""
 
 import json
+import math
+import re
 import shutil
 import subprocess
 import sys
@@ -9,6 +11,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
+from align_words import align_build, validate_words
 from build_paths import build_directory, resolve_build_reference
 from episode_config import PROFILES
 from generation_runtime import generation_job, run_process, stage_completed
@@ -19,6 +22,94 @@ from runtime_config import font_path, tool_path
 
 ROOT = Path(__file__).resolve().parent
 WIDTH, HEIGHT = 720, 1280
+
+
+def aligned_title(title):
+    return re.sub(r"(?<=\S)\s+([:;!?])(?=\s|$)", r"\1", title.strip())
+
+
+def validate_hook_alignment(receipt, episode, hook_audio):
+    info = inspect_wav(hook_audio)
+    if (receipt.get("title") != episode["title"]
+            or receipt.get("aligned_text") != aligned_title(episode["title"])
+            or receipt.get("audio_sha256") != sha256_file(hook_audio)
+            or receipt.get("provenance", {}).get("language") != episode.get("language", "de")):
+        raise ValueError("Opening title alignment does not match the episode or audio.")
+    return validate_words(receipt.get("words"), receipt["aligned_text"], info["wav_duration"])
+
+
+def prepare_hook_alignment(build, episode, hook_audio):
+    receipt_path = build / "hook_alignment.json"
+    if receipt_path.is_file():
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+        validate_hook_alignment(receipt, episode, hook_audio)
+        return receipt
+    work = build / "hook_alignment"
+    work.mkdir(exist_ok=True)
+    language = episode.get("language", "de")
+    text = aligned_title(episode["title"])
+    info = inspect_wav(hook_audio)
+    atomic_json(work / "episode.json", {"language": language})
+    atomic_json(work / "timeline.json", {"language": language, "turns": [{
+        "id": "hook", "start": 0.0, "text": text,
+        "audio": str(hook_audio.resolve()), "wav_duration": info["wav_duration"],
+    }]})
+    align_build(work)
+    result = json.loads((work / "word_alignment.json").read_text(encoding="utf-8"))
+    receipt = {"title": episode["title"], "aligned_text": text, "audio_sha256": sha256_file(hook_audio),
+               "provenance": result["provenance"], "words": result["turns"][0]["words"]}
+    validate_hook_alignment(receipt, episode, hook_audio)
+    atomic_json(receipt_path, receipt)
+    return receipt
+
+
+def hook_overlay_windows(timeline, words):
+    hook = next(phase for phase in timeline["phases"] if phase["name"] == "hook")
+    if hook["start_frame"] != 0:
+        raise ValueError("Opening title must begin at frame zero.")
+    fps = timeline["fps"]
+    cursor, windows = 0, []
+    for index, word in enumerate(words):
+        start = math.ceil(word["start"] * fps - 1e-9)
+        end = math.ceil(word["end"] * fps - 1e-9)
+        if start < cursor or end <= start or end > hook["end_frame"]:
+            raise ValueError(f"Opening title word has no valid encoded highlight interval: {word['word']!r}")
+        if cursor < start:
+            windows.append({"name": "hook", "start_frame": cursor, "end_frame": start})
+        windows.append({"name": f"hook_word_{index}", "start_frame": start, "end_frame": end})
+        cursor = end
+    if cursor < hook["end_frame"]:
+        windows.append({"name": "hook", "start_frame": cursor, "end_frame": hook["end_frame"]})
+    return windows
+
+
+def overlay_windows(timeline, hook_words=None):
+    return [window for phase in timeline["phases"]
+            for window in (hook_overlay_windows(timeline, hook_words)
+                           if phase["name"] == "hook" and hook_words is not None else [phase])]
+
+
+def check_hook_highlight(encoded_frame, overlay):
+    import numpy as np
+
+    with Image.open(overlay) as source:
+        expected = np.asarray(source.convert("RGBA"), dtype=np.int16)
+    with Image.open(encoded_frame) as source:
+        actual = np.asarray(source.convert("RGB"), dtype=np.int16)
+    if expected.shape[:2] != (HEIGHT, WIDTH) or actual.shape != (HEIGHT, WIDTH, 3):
+        raise ValueError("Opening title review frame has unexpected dimensions.")
+    expected, actual = expected[520:690, 78:590], actual[520:690, 78:590]
+    mask = ((expected[:, :, 3] == 255) & (expected[:, :, 1] - expected[:, :, 0] >= 50)
+            & (expected[:, :, 1] - expected[:, :, 2] >= 30))
+    count = int(mask.sum())
+    if not count:
+        raise ValueError("Opening title overlay has no highlighted pixels.")
+    green = ((actual[:, :, 1] - actual[:, :, 0] >= 22)
+             & (actual[:, :, 1] - actual[:, :, 2] >= 16))
+    fraction = float(green[mask].mean())
+    if fraction < 0.4:
+        raise ValueError(f"Encoded opening title highlight is missing: {fraction:.3f}.")
+    return {"expected_highlight_pixels": count, "matching_fraction": fraction}
 
 
 def render_settings(profile):
@@ -308,7 +399,7 @@ def draw_wrapped(draw, text, x, y, font, width, fill, leading=5, max_lines=3):
     return y
 
 
-def make_overlay(episode, phase, cover_path):
+def make_overlay(episode, phase, cover_path, highlight_word=None):
     image = Image.new("RGBA", (WIDTH, HEIGHT))
     draw = ImageDraw.Draw(image)
     regular = ImageFont.truetype(str(font_path()), 24)
@@ -341,6 +432,38 @@ def make_overlay(episode, phase, cover_path):
                      250, cta_top + 168, small, 320, green)
         draw_wrapped(draw, "Préparation indépendante" if tef else "Unabhängiges Übungsmaterial",
                      250, cta_top + 228, compact, 320, white)
+        return image
+
+    if phase == "hook":
+        top = 600 if tef else 520
+        bottom = 690 if tef else 603
+        size = heading if tef else bold
+        draw.rounded_rectangle((78, top, 590, bottom), radius=18, fill=dark)
+        tokens = aligned_title(episode["title"]).split()
+        if highlight_word is not None and not 0 <= highlight_word < len(tokens):
+            raise ValueError("Invalid opening title word index.")
+        lines, current = [], []
+        width = 468 if tef else 475
+        for token in tokens:
+            if draw.textlength(token, font=size) > width:
+                raise ValueError(f"Word too wide for listening layout: {token}")
+            candidate = " ".join(current + [token])
+            if current and draw.textlength(candidate, font=size) > width:
+                lines.append(current)
+                current = []
+            current.append(token)
+        if current:
+            lines.append(current)
+        if len(lines) > (3 if tef else 2) or top + 10 + len(lines) * (size.size + 3) > bottom:
+            raise ValueError("Opening title exceeds the listening panel.")
+        index = 0
+        for row, line in enumerate(lines):
+            prefix = ""
+            for token in line:
+                draw.text((96 + draw.textlength(prefix, font=size), top + 10 + row * (size.size + 3)),
+                          token, font=size, fill=green if index == highlight_word else white)
+                prefix += token + " "
+                index += 1
         return image
 
     if tef:
@@ -475,9 +598,10 @@ def loop_indices(count):
     return list(range(count)) + list(range(count - 2, 0, -1))
 
 
-def video_filters(timeline, profile="preview", framing="crop"):
+def video_filters(timeline, profile="preview", framing="crop", hook_words=None):
     fps = timeline["fps"]
     phases = timeline["phases"]
+    windows = overlay_windows(timeline, hook_words)
     render_settings(profile)
     if framing not in ("crop", "full"):
         raise ValueError("Unknown listening framing.")
@@ -489,7 +613,7 @@ def video_filters(timeline, profile="preview", framing="crop"):
     filters = [f"[0:v]fps=24,{framing_filter}"
                "setsar=1,setpts=PTS-STARTPTS[base]"]
     previous = "base"
-    for index, phase in enumerate(phases, 1):
+    for index, phase in enumerate(windows, 1):
         label = f"v{index}"
         filters.append(
             f"[{previous}][{index}:v]overlay=0:0:enable='gte(n,{phase['start_frame']})"
@@ -497,7 +621,7 @@ def video_filters(timeline, profile="preview", framing="crop"):
         previous = label
     listening = next(p for p in phases if p["name"] == "listening")["start_frame"]
     reveal = next(p for p in phases if p["name"] == "reveal")["start_frame"]
-    book_input, answer_input, hook_input = len(phases) + 1, len(phases) + 2, len(phases) + 3
+    book_input, answer_input, hook_input = len(windows) + 1, len(windows) + 2, len(windows) + 3
     samples_per_frame = 48000 // fps
     filters.extend([
         f"[{book_input}:a]aresample=48000,aformat=channel_layouts=mono,"
@@ -512,7 +636,8 @@ def video_filters(timeline, profile="preview", framing="crop"):
     return ";".join(filters), previous
 
 
-def encoding_command(build, episode, timeline, answer_audio, hook_audio, profile="preview", book_audio=None):
+def encoding_command(build, episode, timeline, answer_audio, hook_audio, profile="preview", book_audio=None,
+                     hook_words=None):
     frames = build / "listener_frames"
     overlays = build / "overlays"
     inputs = build / "inputs"
@@ -520,11 +645,11 @@ def encoding_command(build, episode, timeline, answer_audio, hook_audio, profile
     command = ["ffmpeg", "-hide_banner", "-loglevel", "warning", "-filter_complex_threads", "1", "-y",
                "-framerate", str(fps), "-stream_loop", "-1",
                "-i", str(frames / "listener_%03d.png")]
-    for phase in timeline["phases"]:
+    for phase in overlay_windows(timeline, hook_words):
         command += ["-loop", "1", "-framerate", str(fps), "-i", str(overlays / f"{phase['name']}.png")]
     command += ["-i", str(book_audio or inputs / "book_audio.wav"), "-i", str(answer_audio),
                 "-i", str(hook_audio)]
-    filters, video_label = video_filters(timeline, profile, episode["scene"].get("framing", "crop"))
+    filters, video_label = video_filters(timeline, profile, episode["scene"].get("framing", "crop"), hook_words)
     command += ["-filter_complex", filters, "-map", f"[{video_label}]", "-map", "[audio]",
                 "-frames:v", str(timeline["total_frames"]), "-t", f"{timeline['duration']:.9f}",
                 "-shortest", "-c:v", "libx264", "-preset", "medium", "-crf", "18",
@@ -598,10 +723,10 @@ def audio_reuse_spec(source, build, episode, files, sources):
         video = source / "pilot.mp4"
         if sha256_file(video) != report["output_sha256"]:
             raise ValueError("Listening delivery video checksum mismatch.")
-        if "hook_audio_sha256" not in report:
-            raise ValueError("Listening preview has no verified spoken hook; generate a new preview.")
+        if "hook_audio_sha256" not in report or "hook_alignment_sha256" not in report:
+            raise ValueError("Listening preview has no verified word-aligned spoken title; generate a new preview.")
         recordings = {}
-        for name, text in (("answer", episode["answer_text"]), ("hook", episode["question"])):
+        for name, text in (("answer", episode["answer_text"]), ("hook", episode["title"])):
             digest = report[f"{name}_audio_sha256"]
             candidates = [p for p in (source / "audio").glob(f"{name}-*.wav")
                           if sha256_file(p) == digest]
@@ -619,6 +744,11 @@ def audio_reuse_spec(source, build, episode, files, sources):
             recordings[name] = (audio, metadata_path, digest)
         answer, answer_metadata, answer_digest = recordings["answer"]
         hook, hook_metadata, hook_digest = recordings["hook"]
+        alignment_path = source / "hook_alignment.json"
+        alignment = read_json(alignment_path)
+        if sha256_file(alignment_path) != report["hook_alignment_sha256"]:
+            raise ValueError("Listening title alignment checksum mismatch.")
+        validate_hook_alignment(alignment, episode, hook)
         book_audio = book_audio_file(episode, source, create=False)
         if ((episode.get("audio_excerpt") is not None or episode.get("audio_effect") is not None)
                 and sha256_file(book_audio) != report["book_audio_sha256"]):
@@ -632,6 +762,8 @@ def audio_reuse_spec(source, build, episode, files, sources):
             "answer_sha256": answer_digest, "answer_metadata_sha256": sha256_file(answer_metadata),
             "hook": str(hook), "hook_sha256": hook_digest,
             "hook_metadata_sha256": sha256_file(hook_metadata),
+            "hook_alignment": str(alignment_path),
+            "hook_alignment_sha256": report["hook_alignment_sha256"],
             "output_sha256": report["output_sha256"],
             "report_sha256": sha256_file(report_path),
             "state_sha256": sha256_file(state_path),
@@ -657,6 +789,7 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
     reuse, reuse_timeline = (audio_reuse_spec(reuse_audio, build, episode, files, sources)
                              if reuse_audio else (None, None))
     code_names = ("pipeline.py", "listening_video.py", "listening_scene.py", "listener_motion.py", "prepare_audio.py",
+                  "align_words.py",
                   "prepare_listening_source.py", "studio_characters.py",
                   "episode_config.py", "episode_profiles.py", "scene_direction.py", "picture_presentation.py",
                   "generation_runtime.py", "runtime_config.py", "build_paths.py")
@@ -689,7 +822,7 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
     narration = {
         "language": episode.get("language", "de"),
         "voices": {"narrator": {"audio": str(inputs / "voice.wav"), "transcript": str(inputs / "voice.txt")}},
-        "turns": [{"id": "hook", "speaker": "narrator", "text": episode["question"]},
+        "turns": [{"id": "hook", "speaker": "narrator", "text": episode["title"]},
                   {"id": "answer", "speaker": "narrator", "text": episode["answer_text"]}],
     }
     if reuse:
@@ -701,6 +834,8 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
             verified_copy(original.with_suffix(".cache.json"), recordings[name].with_suffix(".cache.json"),
                           reuse[f"{name}_metadata_sha256"])
         hook_audio, answer_audio = recordings["hook"], recordings["answer"]
+        verified_copy(Path(reuse["hook_alignment"]), build / "hook_alignment.json",
+                      reuse["hook_alignment_sha256"])
     else:
         cache = Path(speech_cache_from).resolve() if speech_cache_from else None
         if cache and (cache / "audio").is_dir():
@@ -713,8 +848,14 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
     timeline = timeline_for(episode, inspect_wav(book_audio), inspect_wav(answer_audio), inspect_wav(hook_audio))
     if reuse and timeline != reuse_timeline:
         raise ValueError("Reused listening audio does not match the preview timeline.")
+    alignment = prepare_hook_alignment(build, episode, hook_audio)
+    hook_words = validate_hook_alignment(alignment, episode, hook_audio)
+    hook_overlay_windows(timeline, hook_words)
+    alignment_sha256 = sha256_file(build / "hook_alignment.json")
     for phase in timeline["phases"]:
         make_overlay(episode, phase["name"], inputs / "book_cover.jpg")
+    for index in range(len(hook_words)):
+        make_overlay(episode, "hook", inputs / "book_cover.jpg", highlight_word=index)
     atomic_json(build / "timeline.json", timeline)
     stage_completed("audio")
     if until == "audio":
@@ -768,6 +909,8 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
             raise ValueError("Listening pipeline code changed; use a fresh build.")
         if sha256_file(answer_audio) != answer_sha256 or sha256_file(hook_audio) != hook_sha256:
             raise ValueError("Listening narration changed; use a fresh build.")
+        if sha256_file(build / "hook_alignment.json") != alignment_sha256:
+            raise ValueError("Listening title alignment changed; use a fresh build.")
         if sha256_file(book_audio) != book_audio_sha256:
             raise ValueError("Book audio excerpt changed; use a fresh build.")
         book_audio_file(episode, build, create=False)
@@ -777,7 +920,10 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
     overlays.mkdir(exist_ok=True)
     for phase in timeline["phases"]:
         make_overlay(episode, phase["name"], inputs / "book_cover.jpg").save(overlays / f"{phase['name']}.png")
-    run_logged(encoding_command(build, episode, timeline, answer_audio, hook_audio, profile, book_audio),
+    for index in range(len(hook_words)):
+        make_overlay(episode, "hook", inputs / "book_cover.jpg",
+                     highlight_word=index).save(overlays / f"hook_word_{index}.png")
+    run_logged(encoding_command(build, episode, timeline, answer_audio, hook_audio, profile, book_audio, hook_words),
                build / "encode.log")
     run_logged(["ffmpeg", "-v", "error", "-i", str(build / "pilot.mp4"), "-f", "null", "-"],
                build / "decode.log")
@@ -798,13 +944,24 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
     verify_frozen_inputs()
     review = build / "review"
     review.mkdir(exist_ok=True)
-    for phase in timeline["phases"]:
-        if phase["name"] not in ("hook", "reading_7", "reading_1", "listening", "response_6", "response_1", "reveal", "cta"):
+    first_reading = f"reading_{episode['timing']['reading_seconds']}"
+    highlight_checks = []
+    for phase in overlay_windows(timeline, hook_words):
+        if (phase["name"] not in ("hook", first_reading, "reading_1", "listening",
+                                  "response_6", "response_1", "reveal", "cta")
+                and not phase["name"].startswith("hook_word_")):
             continue
         sample_frame = phase["start_frame"] + min(12, phase["end_frame"] - phase["start_frame"] - 1)
         run_logged(["ffmpeg", "-v", "error", "-y", "-i", str(build / "pilot.mp4"),
                     "-vf", f"select=eq(n\\,{sample_frame})", "-frames:v", "1",
                     str(review / f"{phase['name']}.png")], review / f"{phase['name']}.log")
+        if phase["name"].startswith("hook_word_"):
+            index = int(phase["name"].removeprefix("hook_word_"))
+            highlight_checks.append({"word": hook_words[index]["word"], "frame": sample_frame,
+                                     **check_hook_highlight(review / f"{phase['name']}.png",
+                                                            overlays / f"{phase['name']}.png")})
+    if len(highlight_checks) != len(hook_words):
+        raise ValueError("Not every opening title word has an encoded highlight review.")
     credits = (
         "Werbung für unser DTZ-B1-Übungsbuch. Unabhängiges Übungsmaterial; keine offizielle Prüfung. "
         "KI-generierte Stimmen und animierte Figur. Amazon-Buchlink im Profil.\n\n"
@@ -841,6 +998,9 @@ def build_listening(path, build, jobs=4, until="export", speech_cache_from=None,
               "audio_reuse": reuse, "source_sha256": sources, "audio_check": audio_check,
               "output_sha256": sha256_file(build / "pilot.mp4"),
               "answer_audio_sha256": answer_sha256, "hook_audio_sha256": hook_sha256,
+              "hook_alignment_sha256": alignment_sha256,
+              "hook_highlight_checks": highlight_checks,
+              "hook_low_confidence_words": [word for word in hook_words if word["score"] < 0.4],
               "book_audio_sha256": book_audio_sha256,
               "listener_frames_sha256": {p.name: sha256_file(p) for p in expected},
               "loop_source_indices": indices,
