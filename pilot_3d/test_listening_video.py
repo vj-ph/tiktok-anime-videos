@@ -135,6 +135,22 @@ class ListeningVideoTest(unittest.TestCase):
         self.assertIn(data["source"]["audio_transcript"], solution)
         self.assertIn("**Correct answer:** B", solution)
 
+    def test_authored_tef_voicemail_matches_book_when_available(self):
+        path = Path(__file__).parent / "episodes" / "tef_canada_listening_voicemail_parcel.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        book = (path.parent / data["source"]["book"]).resolve()
+        if not book.is_file():
+            self.skipTest("The sibling TEF listening book is not available.")
+        candidate, review = book.read_text(encoding="utf-8").split("### 3. Voice and telephone messages", 2)[1:]
+        question = candidate.split("#### Question 37", 1)[1].split("#### Question 38", 1)[0]
+        solution = review.split("#### Question 37", 1)[1].split("#### Question 38", 1)[0]
+        self.assertIn(data["question"], question)
+        for choice in data["choices"]:
+            self.assertIn(choice, question)
+        self.assertIn(data["source"]["audio_transcript"], solution)
+        self.assertIn(f"**Correct answer:** {data['correct_choice']}", solution)
+        self.assertEqual(data["audio_effect"], "voicemail_notification")
+
     def test_prepare_source_requires_exact_book_text_and_never_overwrites(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
@@ -232,10 +248,11 @@ class ListeningVideoTest(unittest.TestCase):
             data["timing"]["reading_seconds"] = 5
             validate()
             data["exam"]["section"] = "1"
-            with self.assertRaisesRegex(ValueError, "at least 7 seconds"):
+            validate()
+            data["timing"]["reading_seconds"] = 4
+            with self.assertRaisesRegex(ValueError, "at least 5 seconds"):
                 validate()
             data["exam"]["section"] = "2"
-            data["timing"]["reading_seconds"] = 4
             with self.assertRaisesRegex(ValueError, "at least 5 seconds"):
                 validate()
             data["timing"]["reading_seconds"] = 5
@@ -272,10 +289,11 @@ class ListeningVideoTest(unittest.TestCase):
             data.update(language="fr", exam={"family": "tef_canada", "skill": "listening",
                                             "section": "text_choice"},
                         choices=["un", "deux", "trois", "quatre"], correct_choice="D")
-            with self.assertRaisesRegex(ValueError, "at least 7 seconds"):
-                validate()
-            data["timing"]["reading_seconds"] = 7
             validate()
+            data["timing"]["reading_seconds"] = 4
+            with self.assertRaisesRegex(ValueError, "at least 5 seconds"):
+                validate()
+            data["timing"]["reading_seconds"] = 5
             payload = {"text": "Annonce originale.", "settings": {"language": "French"}}
             data["source"].update(audio_provenance="book.cache.json", audio_transcript=payload["text"])
             metadata = {"payload": payload, "cache_key": content_hash(payload),
@@ -546,6 +564,33 @@ class ListeningVideoTest(unittest.TestCase):
                 listening.book_audio_file(data, build, create=False)
             data["audio_effect"] = "unknown"
             with self.assertRaisesRegex(ValueError, "Unsupported"):
+                listening.book_audio_file(data, build, create=False)
+
+    def test_voicemail_cue_preserves_speech_and_detects_tampering(self):
+        with TemporaryDirectory() as directory:
+            build = Path(directory)
+            (build / "inputs").mkdir()
+            source = build / "inputs" / "book_audio.wav"
+            write_wav(source)
+            digest = sha256_file(source)
+            data = {"audio_effect": "voicemail_notification"}
+            result = listening.book_audio_file(data, build, create=True)
+            self.assertEqual(sha256_file(source), digest)
+            with wave.open(str(source), "rb") as wav:
+                speech = wav.readframes(wav.getnframes())
+            with wave.open(str(result), "rb") as wav:
+                params, output = wav.getparams(), wav.readframes(wav.getnframes())
+            tone_frames = round(24000 * 0.18)
+            lead_frames = tone_frames + round(24000 * 0.12)
+            self.assertEqual(len(output), lead_frames * 2 + len(speech))
+            self.assertGreater(max(struct.unpack(f"<{tone_frames}h", output[:tone_frames * 2])), 3500)
+            self.assertEqual(output[tone_frames * 2:lead_frames * 2], bytes((lead_frames - tone_frames) * 2))
+            self.assertEqual(output[lead_frames * 2:], speech)
+            self.assertEqual(listening.book_audio_file(data, build, create=False), result)
+            with wave.open(str(result), "wb") as wav:
+                wav.setparams(params)
+                wav.writeframes(bytes([output[0] ^ 1]) + output[1:])
+            with self.assertRaisesRegex(ValueError, "sound treatment differs"):
                 listening.book_audio_file(data, build, create=False)
 
     def test_reuse_checks_treated_announcement_delivery_hash(self):
@@ -1066,6 +1111,42 @@ class ListeningVideoTest(unittest.TestCase):
         self.assertTrue(all(phase["end_frame"] - phase["start_frame"] == 24 for phase in reading))
         listening_phase = next(phase for phase in phases if phase["name"] == "listening")
         self.assertEqual(reading[-1]["end_frame"], listening_phase["start_frame"])
+
+    def test_tef_episodes_use_five_second_reading_and_keep_response_time(self):
+        root = Path(__file__).parent / "episodes"
+        audio = {"frames": 24000, "sample_rate": 24000}
+        for name in ("tef_canada_listening_bus_stop.json", "tef_canada_listening_voicemail_parcel.json"):
+            with self.subTest(episode=name):
+                data = json.loads((root / name).read_text(encoding="utf-8"))
+                timeline = listening.timeline_for(data, audio, audio, audio)
+                phases = timeline["phases"]
+                reading = [phase for phase in phases if phase["name"].startswith("reading_")]
+                self.assertEqual([phase["name"] for phase in reading],
+                                 [f"reading_{remaining}" for remaining in range(5, 0, -1)])
+                self.assertTrue(all(phase["end_frame"] - phase["start_frame"] == 24 for phase in reading))
+                listening_phase = next(phase for phase in phases if phase["name"] == "listening")
+                self.assertEqual(reading[-1]["end_frame"], listening_phase["start_frame"])
+                response = [phase for phase in phases if phase["name"].startswith("response_")]
+                self.assertEqual(len(response), 7)
+
+    def test_dtz_episodes_use_five_second_reading_and_keep_response_time(self):
+        root = Path(__file__).parent / "episodes"
+        audio = {"frames": 24000, "sample_rate": 24000}
+        names = ("dtz_b1_listening_appointment.json", "dtz_b1_listening_teil2_fahrradkurs.json",
+                 "dtz_b1_listening_teil3_termin.json", "dtz_b1_listening_teil4_online_termine.json")
+        for name in names:
+            with self.subTest(episode=name):
+                data = json.loads((root / name).read_text(encoding="utf-8"))
+                timeline = listening.timeline_for(data, audio, audio, audio)
+                phases = timeline["phases"]
+                reading = [phase for phase in phases if phase["name"].startswith("reading_")]
+                self.assertEqual([phase["name"] for phase in reading],
+                                 [f"reading_{remaining}" for remaining in range(5, 0, -1)])
+                self.assertTrue(all(phase["end_frame"] - phase["start_frame"] == 24 for phase in reading))
+                listening_phase = next(phase for phase in phases if phase["name"] == "listening")
+                self.assertEqual(reading[-1]["end_frame"], listening_phase["start_frame"])
+                response = [phase for phase in phases if phase["name"].startswith("response_")]
+                self.assertEqual(len(response), 6)
 
     def test_build_synthesizes_the_visible_title_as_the_hook(self):
         with TemporaryDirectory() as directory:

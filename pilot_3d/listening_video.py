@@ -22,6 +22,7 @@ from runtime_config import font_path, tool_path
 
 ROOT = Path(__file__).resolve().parent
 WIDTH, HEIGHT = 720, 1280
+AUDIO_EFFECTS = (None, "pa_chime_echo", "voicemail_notification")
 
 
 def aligned_title(title):
@@ -171,9 +172,8 @@ def load_episode(path):
     for name in ("hook_seconds", "reading_seconds", "response_seconds", "reveal_seconds", "cta_seconds"):
         if type(timing.get(name)) is not int or timing[name] < 1:
             raise ValueError(f"{name} must be a positive whole number of seconds.")
-    min_reading = 5 if dtz and exam["section"] in ("2", "3", "4") else 7
-    if timing["response_seconds"] < 6 or timing["reading_seconds"] < min_reading:
-        raise ValueError(f"Allow at least {min_reading} seconds to read and six seconds to respond.")
+    if timing["response_seconds"] < 6 or timing["reading_seconds"] < 5:
+        raise ValueError("Allow at least 5 seconds to read and six seconds to respond.")
     if timing["reveal_seconds"] < 1.8 or len(episode["answer_text"]) / timing["reveal_seconds"] > 20:
         raise ValueError("The answer caption needs more reading time.")
     source = episode.get("source")
@@ -277,7 +277,7 @@ def load_episode(path):
                 or any(type(excerpt[k]) is not int for k in excerpt)
                 or not 0 <= excerpt["start_sample"] < excerpt["end_sample"] <= info["frames"]):
             raise ValueError("audio_excerpt requires valid start_sample and end_sample within the source WAV.")
-    if episode.get("audio_effect") not in (None, "pa_chime_echo"):
+    if episode.get("audio_effect") not in AUDIO_EFFECTS:
         raise ValueError("Unsupported listening audio_effect.")
     inspect_wav(files["voice.wav"])
     with Image.open(files["book_cover.jpg"]) as image:
@@ -311,11 +311,25 @@ def public_address_effect(samples, rate):
     return chime.tobytes() + bytes(silence_length * 2) + rendered.tobytes()
 
 
+def voicemail_notification_effect(samples, rate):
+    import numpy as np
+
+    tone_length = round(rate * 0.18)
+    silence_length = round(rate * 0.12)
+    if min(tone_length, silence_length) < 1:
+        raise ValueError("Invalid sample rate for voicemail notification.")
+    positions = np.arange(tone_length, dtype=np.float64)
+    fade = max(1, round(rate * 0.02))
+    envelope = np.minimum(1, np.minimum((positions + 1) / fade, (tone_length - positions) / fade))
+    tone = np.rint(4096 * envelope * np.sin(2 * np.pi * 740 * positions / rate)).astype("<i2")
+    return tone.tobytes() + bytes(silence_length * 2) + samples
+
+
 def book_audio_file(episode, build, *, create):
     source = build / "inputs" / "book_audio.wav"
     excerpt = episode.get("audio_excerpt")
     effect = episode.get("audio_effect")
-    if effect not in (None, "pa_chime_echo"):
+    if effect not in AUDIO_EFFECTS:
         raise ValueError("Unsupported listening audio_effect.")
     if excerpt is None and effect is None:
         return source
@@ -332,8 +346,10 @@ def book_audio_file(episode, build, *, create):
         samples = original.readframes(end - start)
         if len(samples) != (end - start) * 2:
             raise ValueError("Listening source WAV is truncated.")
-    if effect:
+    if effect == "pa_chime_echo":
         samples = public_address_effect(samples, params.framerate)
+    elif effect == "voicemail_notification":
+        samples = voicemail_notification_effect(samples, params.framerate)
     if not target.exists() and create:
         target.parent.mkdir(exist_ok=True)
         partial = target.with_name(target.name + ".part")

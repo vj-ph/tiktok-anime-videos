@@ -47,7 +47,7 @@
       "table_position": [-0.55, -0.28]
     }
   },
-  "timing": {"hook_seconds": 3, "reading_seconds": 15, "response_seconds": 7, "reveal_seconds": 9, "cta_seconds": 6},
+  "timing": {"hook_seconds": 3, "reading_seconds": 5, "response_seconds": 7, "reveal_seconds": 9, "cta_seconds": 6},
   "source": {
     "book": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/book.md",
     "exercise": "Chapter 2: Short-message labs, 2. Public announcements, Question 17; transcript and answer in Transcripts, answers, and feedback.",

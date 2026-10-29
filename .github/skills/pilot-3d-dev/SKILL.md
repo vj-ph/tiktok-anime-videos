@@ -91,6 +91,10 @@ including its Québec French listening-voice casting requirements.
 - Open listening videos by speaking the displayed title or question; do not
   leave the opening hook silent. Measure the narration and fit it into the
   actual hook without truncation or speeding it up.
+- Set the pre-listening reading countdown to five seconds for every DTZ
+  listening section; keep the response countdown separate. Viewers can pause
+  to read. Generate a fresh preview for timing changes and verify its encoded
+  countdown boundaries.
 - Show numbered answers with digits (for example, 10 and 11) and present each
   answer once in the reveal. Do not duplicate the answer list by also
   displaying a verbatim copy of the spoken explanation. Keep narration clear

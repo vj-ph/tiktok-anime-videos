@@ -8,6 +8,11 @@ description: Generate and review TEF Canada practice videos, including book-base
 Follow the `pilot-3d-dev` skill for episode configuration, source preservation,
 duration, asset licensing, preview checks and publication approval.
 
+For TEF Canada listening videos, set the pre-listening "Lisez les réponses"
+countdown to five seconds. Viewers can pause to read; this practice timing is
+not a claim about the official exam. Keep the response countdown separate.
+Use a fresh preview when changing timing and verify its encoded boundaries.
+
 For TEF Canada listening videos, use a `fr_ca_qc` voice for the opening question
 and answer narration, and a different `fr_ca_qc` voice for the announcement.
 Select available references from the book's voice registry, verify each

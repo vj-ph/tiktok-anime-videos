@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "id": "tef_canada_listening_voicemail_parcel",
+  "language": "fr",
+  "exam": {"family": "tef_canada", "skill": "listening", "section": "text_choice"},
+  "fps": 24,
+  "title": "TEF Canada : Compréhension orale",
+  "question": "Comment récupérer le colis ?",
+  "choices": [
+    "Attendre une nouvelle livraison demain.",
+    "Envoyer le code par la poste.",
+    "Aller au point de collecte avec le code et une pièce d’identité.",
+    "Téléphoner à l’interphone de l’immeuble."
+  ],
+  "correct_choice": "C",
+  "answer_text": "La bonne réponse est C. Il faut présenter le code et une pièce d’identité au point de collecte.",
+  "key_detail": "« le code reçu par texto et une pièce d’identité »",
+  "audio": "../builds/tef_listening_voicemail_parcel_source_r1/voicemail.wav",
+  "audio_effect": "voicemail_notification",
+  "voice": {
+    "audio": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/references/fr_ca_qc_narrator_f01.wav",
+    "transcript": "../assets/voices/fr_ca_qc_narrator_f01_reference.txt",
+    "voice_id": "fr_ca_qc_narrator_f01",
+    "availability": true
+  },
+  "source_voice": {
+    "audio": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/references/fr_ca_qc_service_m01.wav",
+    "transcript": "../assets/voices/fr_ca_qc_service_m01_reference.txt",
+    "voice_id": "fr_ca_qc_service_m01",
+    "availability": true
+  },
+  "book_cover": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/listening.jpg",
+  "scene": {
+    "source": "../builds/tef_canada_b1_canada_decor_review_r2/studio.blend",
+    "camera_prefix": "04",
+    "pose_frame": 881,
+    "cycle_frames": 96,
+    "framing": "full",
+    "hide_objects": ["Task sheet", "Picture sheet cuisine_vegetarienne"],
+    "min_hair_drop_m": 0.15,
+    "rest_hands_on_table": true,
+    "flag_artwork": "../assets/props/canada-flag.png",
+    "flag_provenance": "../assets/props/canada.provenance.json",
+    "playback_device": {
+      "model": "../assets/props/innerscene-boombox.glb",
+      "provenance": "../assets/props/innerscene-boombox.provenance.json",
+      "table_position": [-0.55, -0.28]
+    }
+  },
+  "timing": {"hook_seconds": 3, "reading_seconds": 5, "response_seconds": 7, "reveal_seconds": 9, "cta_seconds": 6},
+  "source": {
+    "book": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/book.md",
+    "exercise": "Chapter 2: Short-message labs, 3. Voice and telephone messages, Question 37; transcript and answer in Transcripts, answers, and feedback.",
+    "audio_transcript": "Bonjour, votre colis n’a pas pu être remis aujourd’hui, car personne n’a répondu à l’interphone. Il est maintenant au point de collecte de la rue Caron. Apportez le code reçu par texto et une pièce d’identité avant lundi soir. Une nouvelle livraison n’est pas programmée automatiquement.",
+    "audio_provenance": "../builds/tef_listening_voicemail_parcel_source_r1/voicemail.cache.json",
+    "voice_registry": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/voices.json",
+    "voice_reference_rights": "Registry marks reference available; commercial rights not independently verified.",
+    "generated_audio_rights": "Qwen-generated recording; output rights not independently verified.",
+    "book_rights": "User requested a book-based video; book reuse rights have not been independently verified.",
+    "cover_provenance": "Listening-book cover supplied by the user for the earlier preview on October 27, 2026.",
+    "effect_provenance": "Original procedural voicemail notification tone followed by silence; no third-party sound asset.",
+    "duration_limit_seconds": 90,
+    "scope": "One book question and exact book transcript, newly synthesized with a voicemail notification as independent practice, not an official exam. Preview is not publication approval."
+  }
+}

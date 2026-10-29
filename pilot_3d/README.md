@@ -568,6 +568,8 @@ For a public announcement, `audio_effect: "pa_chime_echo"` creates an original
 two-tone cue followed by a short silence and subtle echo on the source
 recording only. The clean recording is preserved, and the derived WAV is
 recomputed and checked; the opening and answer narration remain untreated.
+For voicemail, `audio_effect: "voicemail_notification"` adds an original
+short notification tone and silence before the unchanged source speech.
 Choose effects appropriate to each exercise and review audibility manually.
 
 The first TEF example is `episodes/tef_canada_listening_bus_stop.json`, based on
@@ -594,6 +596,27 @@ build directory when changing the content. The local model and required voice
 assets must already be available. The registry's availability flag does not
 establish commercial rights or replace human audio review.
 
+The parcel voicemail episode uses Chapter 2, Question 37. From `pilot_3d/`,
+generate its source recording, validate the inputs and build a fresh preview:
+
+```powershell
+if (-not (Test-Path builds\tef_listening_voicemail_parcel_source_r1\voicemail.wav)) {
+  .\.venv\Scripts\python.exe -X utf8 prepare_listening_source.py `
+    --episode episodes\tef_canada_listening_voicemail_parcel.json
+  if ($LASTEXITCODE -ne 0) { throw "Source generation failed." }
+}
+.\.venv\Scripts\python.exe -X utf8 pipeline.py validate `
+  --episode episodes\tef_canada_listening_voicemail_parcel.json
+if ($LASTEXITCODE -ne 0) { throw "Episode validation failed." }
+.\.venv\Scripts\python.exe -X utf8 pipeline.py build `
+  --episode episodes\tef_canada_listening_voicemail_parcel.json `
+  --build builds\tef_canada_listening_voicemail_parcel_preview_r2 --profile preview --jobs 8
+```
+
+The source generator must not be rerun against an existing recording. A
+successful build enforces the measured duration limit; review the speech,
+notification, opening highlights, visuals and rights before approval.
+
 The revised preview is
 `builds/tef_canada_listening_bus_stop_preview_r4/pilot.mp4` (59.708333 seconds,
 1,433 frames). It uses the corrected Rain pose with both hands resting on the
@@ -619,14 +642,13 @@ samples, and hashed in `delivery_checks.json`. No book audio is resynthesized,
 sped up or normalized. SFX reuse was confirmed by the user; any applicable
 third-party attribution still needs to be recorded before publication.
 
-The current Teil 2–4 episode configurations set a five-second reading
-countdown; the earlier previews listed below retain their original longer
+The current DTZ and TEF listening episode configurations set a five-second
+reading countdown; the earlier previews retain their original longer
 countdowns. Generate fresh previews for the shorter timing, optionally using
 `--speech-cache-from` to reuse matching raw narration. Exact `--reuse-audio`
 requires a preview with the same episode and timing, so the older previews
-cannot be used directly for production with this change. Teil 1 and TEF
-listening retain their existing reading-time requirements. Five seconds can
-be short for two questions; viewers can pause the video to read.
+cannot be used directly for production with this change. Five seconds can be
+short for reading questions and choices; viewers can pause the video to read.
 
 New listening builds synthesize the full episode title as the opening, align
 every word to the actual recording and highlight it on the corresponding video

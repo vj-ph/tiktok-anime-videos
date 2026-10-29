@@ -33,7 +33,7 @@
   },
   "timing": {
     "hook_seconds": 3,
-    "reading_seconds": 7,
+    "reading_seconds": 5,
     "response_seconds": 6,
     "reveal_seconds": 8,
     "cta_seconds": 6
