@@ -393,6 +393,30 @@ pilot_3d/
 Each run keeps its audio, alignment, frames, scene, exports, logs and frozen
 manifests together. Existing runs were moved, not regenerated or deleted.
 There are no compatibility symlinks cluttering the project directory.
+Use `cleanup_builds.py` to inventory disk usage or explicitly remove only the
+rendered frames of a selected, completed delivery. From `pilot_3d/`:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 cleanup_builds.py
+.\.venv\Scripts\python.exe -X utf8 cleanup_builds.py --run RUN_NAME
+.\.venv\Scripts\python.exe -X utf8 cleanup_builds.py --run RUN_NAME --apply --confirm RUN_NAME
+.\.venv\Scripts\python.exe -X utf8 cleanup_builds.py --all
+.\.venv\Scripts\python.exe -X utf8 cleanup_builds.py --all --apply --confirm TOKEN
+```
+
+The inventory, `--run` without `--apply`, and `--all` without `--apply` are
+read-only. Replace `RUN_NAME` with one exact directory name. For bulk cleanup,
+review the eligible and skipped builds printed by `--all`, then replace
+`TOKEN` with the confirmation token it prints. A changed plan requires a new
+dry run and token. `--apply` permanently deletes only eligible rendered frame
+files after checking delivery-video hashes; incomplete or unsafe runs are
+reported and skipped. Stop all builds before cleanup and do not start a build
+concurrently; process checks are not a lock. **Removing frames prevents
+frame-level verification and may require rerendering or a fresh build for
+resume/re-export.** Back up a run first if that matters. Videos, audio, scenes,
+receipts and other artifacts are not removed; a size reported by the inventory
+is not an eligibility guarantee.
+
 Use explicit `builds/RUN` paths in commands. A project-level output name such as
 `--build new_preview` also goes to `builds/new_preview`; the old output spelling
 `--build build_new_preview` maps to the same location. Explicit nested or

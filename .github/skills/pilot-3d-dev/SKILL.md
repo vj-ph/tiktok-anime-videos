@@ -131,6 +131,11 @@ including its Québec French listening-voice casting requirements.
   `pilot_3d/builds/`. Never use `builds/` itself as an individual run.
 - Preserve existing deliveries, frozen manifests, source snapshots, cached
   recordings and saved scenes. Do not rewrite historical paths or hashes.
+- For disk cleanup, use `pilot_3d/cleanup_builds.py` to inventory first.
+  Remove rendered frames only from explicitly approved completed runs, after
+  explaining that resume and frame-level verification may require rerendering.
+  Review the bulk dry-run plan and token before applying it. Never prune active
+  runs or delete entire builds automatically.
 - Use a fresh, dedicated build directory when content, assets, code or quality
   changes. Resume only matching checkpoints; never bypass hash guards.
 - Use `--reuse-audio` only for exact reuse from a verified delivery, with
