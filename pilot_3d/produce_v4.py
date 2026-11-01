@@ -18,9 +18,9 @@ from build_paths import BUILDS, build_directory, resolve_build_reference
 from prepare_audio import atomic_json, ceil_frames, sha256_file, subtitles
 from episode_config import (ACTORS, CAMERA_PREFIXES, PROFILES, check_timeline, entrance_enabled,
                             promo_settings, read_episode, seating_deadline, task_window, turn_phase)
-from entrance import HINGE, door_angle, doorway_geometry, entrance_plan, path_at, walk_pose
+from entrance import HINGE, door_angle, doorway_geometry, entrance_plan, path_at, stride_period, walk_pose
 from picture_presentation import add_table_pictures, picture_windows
-from episode_profiles import active_actors, overview_camera
+from episode_profiles import active_actors, overview_camera, scene_layout, scene_perspective
 from generation_runtime import generation_job, stage_completed
 
 
@@ -39,7 +39,8 @@ def link_frame(source, target):
 
 
 def camera_shots(episode, timeline):
-    initial = "wide" if entrance_enabled({**episode, "turns": timeline["turns"]}) else timeline["turns"][0]["camera"]
+    initial = ("examiner_pov" if scene_perspective(episode) == "examiner_pov" else
+               "wide" if entrance_enabled({**episode, "turns": timeline["turns"]}) else timeline["turns"][0]["camera"])
     shots = [(0, initial)]
     shots += [(turn["start"], turn["camera"]) for turn in timeline["turns"]]
     window = task_window(timeline)
@@ -206,6 +207,21 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
 
     candidate = actor.name.startswith("candidate")
     rain = actor.kind == "rain"
+    pov_pair = scene_perspective(episode) == "examiner_pov" and scene_layout(episode) == "pair"
+    if candidate and rain and pov_pair and entrance_enabled(episode):
+        for side in ("L", "R"):
+            foot = actor.bones["IK-Foot." + side]
+            path = foot.path_from_id()
+            if actor.rig.animation_data and actor.rig.animation_data.action:
+                curves = actor.rig.animation_data.action.fcurves
+                for curve in list(curves):
+                    if curve.data_path in {path + ".location", path + ".rotation_euler",
+                                           path + ".rotation_quaternion", path + ".scale"}:
+                        curves.remove(curve)
+            foot.location = (0, 0, 0)
+            foot.rotation_mode = "XYZ"
+            foot.rotation_euler = (0, 0, 0)
+            foot.scale = (1, 1, 1)
     side_sign = 1 if actor.name in ("candidate_a", "examiner") else -1
     entrance = entrance_enabled(episode)
     window = task_window(timeline)
@@ -234,7 +250,7 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
         key(bone, frame)
 
     def walking_foot(t, side):
-        period = 0.90
+        period = stride_period(episode)
         shift = 0 if side == "L" else period / 2
         clock = max(0, min(t, walk_end) - walk_start) - shift
         cycle = math.floor(clock / period)
@@ -244,7 +260,8 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
             point, angle = walk_pose(blocking, moment)
             if moment >= walk_end:
                 angle = 0
-            offset_x = (0.115 if side == "L" else -0.115) * actor.scale
+            lateral = abs(actor.rest["IK-Foot." + side].translation.x) if pov_pair else .115
+            offset_x = (lateral if side == "L" else -lateral) * actor.scale
             return Vector((point[0] + math.cos(angle) * offset_x,
                            point[1] + math.sin(angle) * offset_x,
                            actor.rest["IK-Foot." + side].translation.z * actor.scale)), angle
@@ -282,9 +299,12 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
             actor.root.rotation_euler.z = actor.angle
         for prop in ("location", "rotation_euler"):
             actor.root.keyframe_insert(data_path=prop, frame=frame)
+        walking_drop = (.06 * smooth((t - walk_start) / .28) * (1 - smooth((t - walk_end + .28) / .28))
+                        if candidate and entrance and pov_pair else 0)
         actor.position(actor.torso_name, actor.rest[actor.torso_name].translation + Vector((
             0, -0.045 * math.sin(seated * math.pi) - 0.006 * gesture,
-            -(0.23 if rain else 0.25) * seated + 0.0012 * math.sin(t * 1.55 + index * 1.7),
+            -(0.23 if rain else 0.25) * seated - walking_drop / actor.scale
+            + 0.0012 * math.sin(t * 1.55 + index * 1.7),
         )), frame)
         attention = gaze_at(plan, actor.name, t)
         gaze = attention["head"]
@@ -344,12 +364,14 @@ def animate(actor, timeline, index, episode, motion_step, entrance_direction):
             hand_poses[side] = (hand.copy(), rotation.copy())
             if candidate and entrance:
                 world, angle = walking_foot(t, side)
+                lateral = abs(actor.rest["IK-Foot." + side].translation.x) if pov_pair else .115
                 if t >= seat_start:
-                    world = Vector((x + sign * 0.115 * actor.scale, front[1],
+                    world = Vector((x + sign * lateral * actor.scale, front[1],
                                     actor.rest["IK-Foot." + side].translation.z * actor.scale))
                     angle = 0
                 local = actor.rig.matrix_world.inverted() @ world
-                actor.position("IK-Foot." + side, local, frame,
+                control = "MSTR-Foot." if rain and pov_pair else "IK-Foot."
+                actor.position(control + side, local, frame,
                                Matrix.Rotation(angle - actor.root.rotation_euler.z, 4, "Z"))
             else:
                 foot = actor.rest["IK-Foot." + side].translation.copy()

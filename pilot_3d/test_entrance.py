@@ -1,7 +1,7 @@
 import math
 import unittest
 
-from entrance import BODY_RADIUS, HINGE, MAX_WALK_SPEED, PORTAL, door_angle, entrance_plan, path_at, walk_pose
+from entrance import BODY_RADIUS, HINGE, MAX_WALK_SPEED, PORTAL, door_angle, entrance_plan, path_at, stride_period, walk_pose
 
 
 def plan(deadline=8.0, enabled=True):
@@ -24,6 +24,22 @@ class EntranceTests(unittest.TestCase):
 
     def test_longer_welcome_does_not_slow_candidates_into_each_other(self):
         self.assertEqual(plan(15), plan(8))
+
+    def test_explicit_slower_entrance_remains_separated_and_inside_by_invitation(self):
+        turns = [{"action": "welcome", "start": 3.4167}, {"action": "explain", "start": 12.7}]
+        episode = {"scene": {"entrance": True, "perspective": "examiner_pov", "layout": "pair",
+                             "entrance_delay_seconds": .7, "entrance_duration_seconds": 11.5},
+                   "turns": turns}
+        result = entrance_plan(episode, {"turns": turns})
+        self.assertEqual(stride_period(episode), .55)
+        self.assertEqual(stride_period({"scene": {}}), .90)
+        for blocking in result["actors"].values():
+            self.assertLess(blocking["walk_speed_m_s"], 1.15)
+            self.assertLess(walk_pose(blocking, 4.648)[0][1], 3.26)
+            self.assertLess(blocking["seat_end"], turns[1]["start"])
+        for sample in range(1201):
+            points = [walk_pose(blocking, sample / 100)[0] for blocking in result["actors"].values()]
+            self.assertGreaterEqual(math.dist(*points), 2 * BODY_RADIUS)
 
     def test_insufficient_timing_fails_before_expensive_blender_baking(self):
         for deadline in (3, 5, 6.9, 7.2):

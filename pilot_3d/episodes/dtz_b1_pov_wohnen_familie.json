@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "id": "dtz_b1_pov_wohnen_familie",
+  "language": "de",
+  "exam": {"family": "dtz", "skill": "speaking", "section": "1"},
+  "presentation": "social",
+  "visual_version": 7,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "DTZ B1: Wohnen und Familie",
+  "label": "DTZ B1 · Sprechen · Teil 1 · Übungsausschnitt",
+  "disclaimer": "Unabhängige, verkürzte Übungssimulation; keine offizielle Aufgabe oder vollständige Prüfung.",
+  "branding": "DEUTSCHKOMPASS",
+  "scene": {
+    "template": "exam_room",
+    "layout": "pair",
+    "perspective": "examiner_pov",
+    "observer": false,
+    "entrance": true,
+    "entrance_delay_seconds": 0.7,
+    "entrance_duration_seconds": 11.5,
+    "base_scene": "../builds/v2/studio.blend",
+    "wall_logo": "../assets/deutschkompass-logo.png"
+  },
+  "header": {
+    "brand": "DEUTSCHKOMPASS · B1 SPRECHEN",
+    "topic": "Teil 1 · Wohnen und Familie"
+  },
+  "hook": "DTZ B1: Wohnen und Familie",
+  "task_card": [],
+  "takeaway": [],
+  "takeaway_seconds": 0,
+  "cta": ["Mehr Aufgaben und Dialoge", "im DTZ-B1-Sprechbuch", "Amazon-Buchlink im Profil"],
+  "publication": {
+    "intro": "POV: Du bist der Prüfer. Lea und Samir sprechen über ihre Wohnung, Familie und Nachbarschaft.",
+    "disclosure": "Unabhängige, verkürzte Übungssimulation zu Teil 1; keine offizielle Aufgabe und keine vollständige Prüfung.",
+    "hashtags": ["#DTZ", "#B1Deutsch", "#DeutschLernen", "#Sprechen", "#DeutschKompass"]
+  },
+  "book_cover": "../assets/book-cover.jpg",
+  "source": {
+    "book": "../../../german_exam_books/b1/speaking_dtz_gpt_v1/book_no_toc.md",
+    "exercise": "Teil 1, Übung 2: Wohnen und Familie in Deutschland",
+    "duration_limit_seconds": 90,
+    "adaptation": "An original, fictional two-candidate practice excerpt about housing, family and neighbourhood, inspired by the speaking book and seen from the examiner's seat. This is independent practice, not an official or complete exam."
+  },
+  "fps": 24,
+  "intro_seconds": 0,
+  "outro_seconds": 6,
+  "voices": {
+    "examiner": {"audio": "../../../shared-voices/qwen3-tts-german/male_middle_aged.wav", "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"},
+    "candidate_a": {"audio": "../../../shared-voices/qwen3-tts-german/female_young_adult.wav", "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"},
+    "candidate_b": {"audio": "../../../shared-voices/qwen3-tts-german/male_young_adult.wav", "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"}
+  },
+  "turns": [
+    {"id": "title", "speaker": "examiner", "name": "Prüfer", "text": "DTZ B1: Wohnen und Familie", "camera": "examiner_pov", "action": "answer", "phase": "welcome", "look_at": "candidate_a", "pause_after": 0.4},
+    {"id": "welcome", "speaker": "examiner", "name": "Prüfer", "text": "Guten Tag. Nehmen Sie bitte Platz.", "camera": "examiner_pov", "action": "welcome", "look_at": "candidate_a", "pause_after": 7.0, "caption_hold_seconds": 0.25},
+    {"id": "lea_question", "speaker": "examiner", "name": "Prüfer", "text": "Lea, erzählen Sie bitte, wie Sie in Deutschland wohnen.", "camera": "examiner_pov", "action": "ask", "look_at": "candidate_a", "pause_after": 0.6},
+    {"id": "lea_home", "speaker": "candidate_a", "name": "Lea", "text": "Ich wohne mit meiner Schwester in Köln. Unsere Wohnung hat drei Zimmer und liegt in der Nähe einer Bushaltestelle. Das ist sehr praktisch.", "camera": "examiner_pov", "action": "introduce", "look_at": "examiner", "pause_after": 0.6},
+    {"id": "lea_followup", "speaker": "examiner", "name": "Prüfer", "text": "Was gefällt Ihnen an Ihrer Nachbarschaft?", "camera": "examiner_pov", "action": "ask", "look_at": "candidate_a", "pause_after": 0.6},
+    {"id": "lea_response", "speaker": "candidate_a", "name": "Lea", "text": "Es gibt einen Park, und meine Nachbarin ist sehr freundlich. Aber am Wochenende ist es manchmal laut.", "camera": "examiner_pov", "action": "answer", "look_at": "examiner", "pause_after": 0.6},
+    {"id": "samir_question", "speaker": "examiner", "name": "Prüfer", "text": "Danke, Lea. Samir, wie wohnen Sie?", "camera": "examiner_pov", "action": "ask", "look_at": "candidate_b", "pause_after": 0.6},
+    {"id": "samir_home", "speaker": "candidate_b", "name": "Samir", "text": "Ich lebe mit meiner Frau und unseren zwei Kindern in Dortmund. Unsere Wohnung ist hell, aber für uns manchmal etwas klein.", "camera": "examiner_pov", "action": "introduce", "look_at": "examiner", "pause_after": 0.6},
+    {"id": "samir_followup", "speaker": "examiner", "name": "Prüfer", "text": "Was ist Ihnen bei einer Wohnung wichtig?", "camera": "examiner_pov", "action": "ask", "look_at": "candidate_b", "pause_after": 0.6},
+    {"id": "samir_response", "speaker": "candidate_b", "name": "Samir", "text": "Wir brauchen genug Platz für die Kinder. Auch eine Schule in der Nähe wäre für uns wichtig.", "camera": "examiner_pov", "action": "answer", "look_at": "examiner", "pause_after": 0.6},
+    {"id": "thanks", "speaker": "examiner", "name": "Prüfer", "text": "Vielen Dank, Lea und Samir.", "camera": "examiner_pov", "action": "answer", "look_at": "candidate_b", "pause_after": 1.5}
+  ]
+}

@@ -156,6 +156,8 @@ def caption_pages(episode, timeline):
             elif episode.get("social_kind") not in ("exchange", "promo") and instruction is turn:
                 window = task_window(timeline)
                 end = window[0] if window is not None else turn["end"]
+            if "caption_hold_seconds" in turn:
+                end = min(end, turn["end"] + turn["caption_hold_seconds"])
             try:
                 groups = readable_pages(words, turn["start"], end, timeline.get("fps", 24))
             except ValueError as error:

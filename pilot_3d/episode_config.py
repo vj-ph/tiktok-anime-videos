@@ -8,10 +8,11 @@ from build_paths import resolve_build_reference
 from prepare_audio import SAFE_ID, ceil_frames, inspect_wav, nonempty, number, validate_episode
 from scene_direction import GESTURE_LIMITS
 from picture_presentation import PICTURE_CAMERAS, validate_pictures
-from episode_profiles import ACTORS, active_actors, language_code, scene_layout
+from episode_profiles import ACTORS, active_actors, language_code, scene_layout, scene_perspective
 
 CAMERA_PREFIXES = {"wide": "01", "examiner": "02", "candidates": "03",
-                   "candidate_a": "04", "candidate_b": "05", "picture_a": "06", "picture_b": "07"}
+                   "candidate_a": "04", "candidate_b": "05", "picture_a": "06", "picture_b": "07",
+                   "examiner_pov": "08"}
 PROFILES = {
     "preview": {"width": 360, "height": 640, "samples": 2, "motion_step": 2},
     "production": {"width": 720, "height": 1280, "samples": 16, "motion_step": 1},
@@ -161,12 +162,28 @@ def validate_template(episode, *, check_assets=False):
     if not isinstance(scene, dict) or scene.get("template", "exam_room") != "exam_room":
         raise ValueError("Only the exam_room scene template is currently supported.")
     layout = scene_layout(episode)
+    perspective = scene_perspective(episode)
     actors = active_actors(episode)
     if "entrance" in scene and type(scene["entrance"]) is not bool:
         raise ValueError("scene.entrance must be a boolean.")
+    if "entrance_delay_seconds" in scene:
+        number(scene["entrance_delay_seconds"], "scene.entrance_delay_seconds")
+        if not scene.get("entrance"):
+            raise ValueError("scene.entrance_delay_seconds requires scene.entrance=true.")
+    if "entrance_duration_seconds" in scene:
+        number(scene["entrance_duration_seconds"], "scene.entrance_duration_seconds", positive=True)
+        if not scene.get("entrance"):
+            raise ValueError("scene.entrance_duration_seconds requires scene.entrance=true.")
     nonempty(scene.get("base_scene"), "scene.base_scene")
     if "wall_logo" in scene:
         nonempty(scene["wall_logo"], "scene.wall_logo")
+    if perspective == "examiner_pov":
+        if episode.get("pictures"):
+            raise ValueError("examiner_pov does not support picture presentation.")
+        if layout == "pair" and not scene.get("entrance"):
+            raise ValueError("A pair examiner_pov requires an entrance.")
+        if layout == "interview" and scene.get("entrance") is not False:
+            raise ValueError("An interview examiner_pov requires scene.entrance=false.")
     from scene_dressing import validate_dressing
     validate_dressing(episode, check_assets=check_assets)
     if set(episode["voices"]) - {"candidate_a", "candidate_b", "examiner"}:
@@ -174,12 +191,15 @@ def validate_template(episode, *, check_assets=False):
     if set(episode["voices"]) - set(actors):
         raise ValueError("A voice cannot be assigned to an inactive scene actor.")
     for turn in episode["turns"]:
+        if "caption_hold_seconds" in turn:
+            number(turn["caption_hold_seconds"], f"turn {turn['id']}.caption_hold_seconds")
         role, camera = turn["speaker"], turn.get("camera")
-        allowed = {"wide", role} | ({"candidates"} if role.startswith("candidate") else set())
-        if role in PICTURE_CAMERAS:
+        allowed = ({"examiner_pov"} if perspective == "examiner_pov" else
+                   {"wide", role} | ({"candidates"} if role.startswith("candidate") else set()))
+        if perspective != "examiner_pov" and role in PICTURE_CAMERAS:
             allowed.add(PICTURE_CAMERAS[role])
         if camera not in allowed:
-            raise ValueError(f"Turn {turn['id']}: camera must include its speaker; allowed: {sorted(allowed)}.")
+            raise ValueError(f"Turn {turn['id']}: invalid camera for perspective; allowed: {sorted(allowed)}.")
         if layout == "interview" and camera == "candidates":
             raise ValueError("The two-candidate camera is not supported by scene.layout=interview.")
         if turn.get("action") not in GESTURE_LIMITS:

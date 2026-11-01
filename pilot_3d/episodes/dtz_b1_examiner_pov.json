@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "dtz_b1_examiner_pov",
+  "language": "de",
+  "exam": {"family": "dtz", "skill": "speaking", "section": "1"},
+  "presentation": "social",
+  "visual_version": 7,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "DTZ B1: Du bist der Prüfer",
+  "label": "DTZ B1 · Sprechen · Teil 1 · Übungsausschnitt",
+  "disclaimer": "Unabhängige, verkürzte Übungssimulation; keine offizielle Aufgabe oder vollständige Prüfung.",
+  "branding": "DEUTSCHKOMPASS",
+  "scene": {
+    "template": "exam_room",
+    "layout": "interview",
+    "perspective": "examiner_pov",
+    "observer": false,
+    "entrance": false,
+    "base_scene": "../builds/v2/studio.blend",
+    "wall_logo": "../assets/deutschkompass-logo.png"
+  },
+  "header": {
+    "brand": "DEUTSCHKOMPASS · B1 SPRECHEN",
+    "topic": "Teil 1 · Prüfer-Perspektive"
+  },
+  "hook": "DTZ B1: Du bist der Prüfer",
+  "task_card": [],
+  "takeaway": [],
+  "takeaway_seconds": 0,
+  "cta": ["Mehr Aufgaben und Dialoge", "im DTZ-B1-Sprechbuch", "Amazon-Buchlink im Profil"],
+  "publication": {
+    "intro": "POV: Du sitzt auf dem Platz des Prüfers. Lea stellt sich vor und beantwortet eine Nachfrage.",
+    "disclosure": "Unabhängige, verkürzte Übungssimulation zu Teil 1; keine offizielle Aufgabe und keine vollständige Prüfung.",
+    "hashtags": ["#DTZ", "#B1Deutsch", "#DeutschLernen", "#Sprechen", "#DeutschKompass"]
+  },
+  "book_cover": "../assets/book-cover.jpg",
+  "source": {
+    "book": "../../../german_exam_books/b1/speaking_dtz_gpt_v1/book_no_toc.md",
+    "exercise": "Teil 1, Übung 1: Mein Basisprofil",
+    "duration_limit_seconds": 90,
+    "adaptation": "A fictional, shortened self-introduction and follow-up inspired by the speaking book, seen from the examiner's seat. This is independent practice, not an official exam."
+  },
+  "fps": 24,
+  "intro_seconds": 0,
+  "outro_seconds": 6,
+  "voices": {
+    "examiner": {"audio": "../../../shared-voices/qwen3-tts-german/male_middle_aged.wav", "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"},
+    "candidate_a": {"audio": "../../../shared-voices/qwen3-tts-german/female_young_adult.wav", "transcript": "../../../shared-voices/qwen3-tts-german/reference_text.txt"}
+  },
+  "turns": [
+    {"id": "title", "speaker": "examiner", "name": "Prüfer", "text": "DTZ B1: Du bist der Prüfer", "camera": "examiner_pov", "action": "answer", "look_at": "candidate_a", "pause_after": 0.4},
+    {"id": "question", "speaker": "examiner", "name": "Prüfer", "text": "Guten Tag, Lea. Stellen Sie sich bitte kurz vor.", "camera": "examiner_pov", "action": "ask", "look_at": "candidate_a", "pause_after": 0.6},
+    {"id": "introduction", "speaker": "candidate_a", "name": "Lea", "text": "Guten Tag. Ich heiße Lea und komme aus Polen. Seit einem Jahr wohne ich in Köln und besuche einen Deutschkurs.", "camera": "examiner_pov", "action": "introduce", "look_at": "examiner", "pause_after": 0.6},
+    {"id": "followup", "speaker": "examiner", "name": "Prüfer", "text": "Was machen Sie gern in Ihrer Freizeit?", "camera": "examiner_pov", "action": "ask", "look_at": "candidate_a", "pause_after": 0.6},
+    {"id": "response", "speaker": "candidate_a", "name": "Lea", "text": "Ich koche gern. Am Wochenende treffe ich meine Freunde und wir gehen zusammen spazieren.", "camera": "examiner_pov", "action": "answer", "look_at": "examiner", "pause_after": 0.6},
+    {"id": "thanks", "speaker": "examiner", "name": "Prüfer", "text": "Vielen Dank, Lea.", "camera": "examiner_pov", "action": "answer", "look_at": "candidate_a", "pause_after": 1.5}
+  ]
+}

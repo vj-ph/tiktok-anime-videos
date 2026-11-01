@@ -12,8 +12,8 @@ import bpy
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 from studio_characters import StudioCharacter
-from episode_config import seating_deadline
-from episode_profiles import ACTORS, active_actors
+from episode_config import seating_deadline, turn_phase
+from episode_profiles import ACTORS, active_actors, scene_layout, scene_perspective
 
 
 def check_entrance(scene, actors, manifest, timeline, build):
@@ -66,7 +66,8 @@ def check_entrance(scene, actors, manifest, timeline, build):
         hook = (96, int(match[1]), 504, int(match[2]))
     frame = scene.objects["Door frame"]
     doorway_bounds = project([frame.matrix_world @ Vector(corner) for corner in frame.bound_box])
-    if hook is not None and overlaps(doorway_bounds, hook):
+    pov = scene_perspective(manifest["episode"]) == "examiner_pov"
+    if not pov and hook is not None and overlaps(doorway_bounds, hook):
         raise ValueError(f"Opening title still covers the doorway: {doorway_bounds}, {hook}")
     # Excluded rig helpers stay unevaluated at the asset origin in this depsgraph.
     geometry = {name: [obj for obj in actor.root.children_recursive
@@ -84,6 +85,12 @@ def check_entrance(scene, actors, manifest, timeline, build):
         if outside[name] <= 3.44:
             raise ValueError(f"{name}: visible geometry starts inside the room/wall: y={outside[name]}")
     minimum_pair, minimum_door, portal_samples, head_samples = float("inf"), float("inf"), 0, 0
+    pov_camera = (next(obj for obj in scene.objects if obj.type == "CAMERA" and obj.name.startswith("08"))
+                  if pov else None)
+    pages = (json.loads((build / "preflight/subtitle_timing_report.json").read_text(encoding="utf-8"))["pages"]
+             if pov_camera else [])
+    pov_entrance_heads = {name: 0 for name in candidates}
+    pov_unobscured_heads = {name: 0 for name in candidates}
     last = max(blocking["seat_end"] for blocking in plan["actors"].values())
     for frame_number in range(1, math.ceil(last * timeline["fps"]) + 1, manifest["motion_step"]):
         scene.frame_set(frame_number)
@@ -112,7 +119,21 @@ def check_entrance(scene, actors, manifest, timeline, build):
                 if min(p.x for p in points) < left or max(p.x for p in points) > right or max(p.z for p in points) > top:
                     raise ValueError(f"{name}: visible mesh misses the clear portal at {t:.3f}s.")
                 portal_samples += 1
-            if hook is not None and t < timeline["turns"][0]["start"]:
+                if pov_camera:
+                    heads = [obj.evaluated_get(bpy.context.evaluated_depsgraph_get()) for obj in geometry[name]
+                             if "head" in obj.name.lower()]
+                    projected = [world_to_camera_view(scene, pov_camera, obj.matrix_world @ Vector(corner))
+                                 for obj in heads for corner in obj.bound_box]
+                    overlap = (projected and any(page["start"] <= t < page["end"] for page in pages)
+                               and min(p.x for p in projected) * 720 < 504
+                               and max(p.x for p in projected) * 720 > 96
+                               and (1 - max(p.y for p in projected)) * 1280 < 742
+                               and (1 - min(p.y for p in projected)) * 1280 > 578)
+                    if projected and all(p.z > 0 and 0 <= p.x <= 1 and 0 <= p.y <= 1 for p in projected):
+                        pov_entrance_heads[name] += 1
+                        if not overlap and not (hook is not None and t < timeline["turns"][0]["start"]):
+                            pov_unobscured_heads[name] += 1
+            if not pov and hook is not None and t < timeline["turns"][0]["start"]:
                 heads = [obj.evaluated_get(bpy.context.evaluated_depsgraph_get()) for obj in geometry[name]
                          if "head" in obj.name.lower()]
                 if not heads:
@@ -123,11 +144,16 @@ def check_entrance(scene, actors, manifest, timeline, build):
                 head_samples += 1
     if portal_samples < 2 * len(candidates):
         raise ValueError("Entrance check did not observe every candidate passing through the opening.")
+    if pov_camera and not all(pov_entrance_heads.values()):
+        raise ValueError(f"Examiner POV does not frame each entering candidate's head: {pov_entrance_heads}")
     report.update(outside_mesh_minimum_y_m=outside,
                   minimum_candidate_distance_m=minimum_pair if len(candidates) == 2 else None,
                   minimum_door_to_body_clearance_m=minimum_door, actual_portal_mesh_samples=portal_samples,
                   hook_bounds_px=hook, doorway_bounds_px=doorway_bounds,
                   unobscured_candidate_head_samples=head_samples)
+    if pov_camera:
+        report["pov_portal_head_samples"] = pov_entrance_heads
+        report["pov_unobscured_portal_head_samples"] = pov_unobscured_heads
     return report
 
 
@@ -136,6 +162,7 @@ def check(build):
     timeline = json.loads((build / "timeline.json").read_text(encoding="utf-8"))
     manifest = json.loads((build / "scene_manifest.json").read_text(encoding="utf-8"))
     episode = manifest["episode"]
+    pov_pair = scene_perspective(episode) == "examiner_pov" and scene_layout(episode) == "pair"
     step = manifest["motion_step"]
     if (scene.frame_start, scene.frame_end, scene.render.fps) != (1, timeline["total_frames"], timeline["fps"]):
         raise ValueError("Saved scene and final audio clock differ.")
@@ -157,6 +184,61 @@ def check(build):
     scene.frame_set(round((seating_deadline(episode, timeline) + 0.1) * timeline["fps"]) + 1)
     report = {"frames": timeline["total_frames"], "fps": timeline["fps"], "actors": {},
               "cast": {"active_actors": list(actors), "hidden_objects_checked": len(hidden)}}
+    if scene_perspective(episode) == "examiner_pov":
+        from bpy_extras.object_utils import world_to_camera_view
+        from mathutils import Vector
+
+        examiner_meshes = [obj for obj in actors["examiner"].root.children_recursive if obj.type == "MESH"]
+        if not examiner_meshes or not all(obj.hide_render for obj in examiner_meshes):
+            raise ValueError("Examiner geometry must not obstruct the POV camera.")
+        if any(not marker["camera"].startswith("08") for marker in manifest["camera_markers"]):
+            raise ValueError("Examiner POV must remain active throughout the episode.")
+        camera = next(obj for obj in scene.objects if obj.type == "CAMERA" and obj.name.startswith("08"))
+        checked = []
+        for turn in timeline["turns"]:
+            if scene_layout(episode) == "pair" and turn_phase(turn) == "welcome":
+                continue
+            target = turn["speaker"] if turn["speaker"].startswith("candidate") else turn.get("look_at")
+            target = target if target in ("candidate_a", "candidate_b") else "candidate_a"
+            head = next(obj for obj in actors[target].root.children_recursive
+                        if obj.type == "MESH" and obj.name.startswith("GEO-") and "head" in obj.name.lower())
+            frame = 1 + round((turn["start"] + turn["duration"] / 2) * timeline["fps"])
+            scene.frame_set(frame)
+            mesh = head.evaluated_get(bpy.context.evaluated_depsgraph_get())
+            points = [world_to_camera_view(scene, camera, mesh.matrix_world @ Vector(corner))
+                      for corner in mesh.bound_box]
+            bounds = (min(point.x for point in points), min(point.y for point in points),
+                      max(point.x for point in points), max(point.y for point in points))
+            if not (all(point.z > 0 for point in points)
+                    and 0 <= bounds[0] < bounds[2] <= 1 and 0 <= bounds[1] < bounds[3] <= 1):
+                raise ValueError(f"{target}'s head leaves the examiner POV at frame {frame}: {bounds}")
+            if (scene_layout(episode) == "pair" and bounds[0] * 720 < 504 and bounds[2] * 720 > 96
+                    and (1 - bounds[3]) * 1280 < 742 and (1 - bounds[1]) * 1280 > 578):
+                raise ValueError(f"{target}'s head overlaps the caption panel at frame {frame}: {bounds}")
+            if (scene_layout(episode) == "pair" and bounds[0] * 720 < 504 and bounds[2] * 720 > 96
+                    and (1 - bounds[3]) * 1280 < 271 and (1 - bounds[1]) * 1280 > 204):
+                raise ValueError(f"{target}'s head overlaps the header at frame {frame}: {bounds}")
+            checked.append({"frame": frame, "actor": target, "head_bounds_normalized": bounds})
+        report["examiner_pov"] = {"examiner_meshes_hidden": len(examiner_meshes),
+                                  "candidate_head_samples": checked}
+        if scene_layout(episode) == "pair":
+            previous = None
+            max_speed = movement = 0.0
+            for frame in range(1, timeline["total_frames"] + 1):
+                scene.frame_set(frame)
+                if (camera.location - Vector((-.82, -1.60, 1.62))).length > 1e-5:
+                    raise ValueError("Examiner POV camera moved away from the examiner's seat.")
+                rotation = camera.rotation_quaternion.copy()
+                if previous is not None:
+                    angle = previous.rotation_difference(rotation).angle
+                    max_speed = max(max_speed, angle * timeline["fps"])
+                    movement += angle
+                previous = rotation
+            if max_speed > 1.05 or movement < .4:
+                raise ValueError(f"Examiner POV motion is abrupt or missing: speed={max_speed}, movement={movement}")
+            report["examiner_pov"].update(maximum_angular_speed_rad_s=max_speed,
+                                          total_angular_movement_rad=movement)
+        scene.frame_set(round((seating_deadline(episode, timeline) + 0.1) * timeline["fps"]) + 1)
     for name, actor in actors.items():
         drivers = actor.rig.animation_data.drivers
         expected = 514 if actor.kind == "rain" else 1070
@@ -166,9 +248,14 @@ def check(build):
         prefix = "FK-" if actor.kind == "rain" else "FK-Finger_"
         fingers = [(actor.rig.matrix_world @ actor.bones[f"{prefix}{finger}3.{side}"].tail).z
                    for finger in ("Index", "Middle") for side in ("L", "R")]
-        if not all(0.884 < value < 0.903 for value in fingers):
+        off_camera_examiner = scene_perspective(episode) == "examiner_pov" and name == "examiner"
+        if not off_camera_examiner and not all(0.884 < value < 0.903 for value in fingers):
             raise ValueError(f"{name}: actual fingertips miss the tabletop: {fingers}")
-        entry = {"native_drivers": len(drivers), "resting_fingertip_heights_m": fingers}
+        entry = {"native_drivers": len(drivers)}
+        if off_camera_examiner:
+            entry["off_camera_fingertip_heights_m"] = fingers
+        else:
+            entry["resting_fingertip_heights_m"] = fingers
         if actor.kind == "rain":
             drop = (actor.rig.matrix_world @ actor.bones["FK-Hair_Ponytail1"].head).z - (
                 actor.rig.matrix_world @ actor.bones["FK-Hair_Ponytail4"].tail).z
@@ -193,6 +280,9 @@ def check(build):
         raise ValueError(f"Blinks fail to reach actual facial deformation: {blink_max}")
     report["actual_eyelid_closure_maxima"] = blink_max
     drift = {}
+    from entrance import stride_period
+
+    period = stride_period(episode)
     for index, name in enumerate(name for name in actors if name.startswith("candidate")):
         actor = actors[name]
         blocking = json.loads(actor.root["blocking"])
@@ -209,15 +299,21 @@ def check(build):
             continue
         previous = {}
         maximum = 0.0
+        max_foot_stretch = 0.0
         samples = 0
         walk_start = blocking.get("walk_start", 0 if index == 0 else .35)
         for frame in range(1, round(blocking["walk_end"] * timeline["fps"]) + 1, step):
             scene.frame_set(frame)
             t = (frame - 1) / timeline["fps"]
             for side in ("L", "R"):
-                clock = max(0, t - walk_start) + (0 if side == "L" else 0.45)
-                cycle, phase = math.floor(clock / 0.90), (clock / 0.90) % 1
+                clock = max(0, t - walk_start) + (0 if side == "L" else period / 2)
+                cycle, phase = math.floor(clock / period), (clock / period) % 1
                 point = actor.rig.matrix_world @ actor.bones["IK-Foot." + side].matrix.translation
+                if pov_pair and actor.kind == "rain":
+                    stretch = actor.bones["DEF-Foot." + side].matrix.to_scale().y
+                    max_foot_stretch = max(max_foot_stretch, abs(stretch - 1))
+                    if abs(stretch - 1) > .05:
+                        raise ValueError(f"{name}: deformed foot at frame {frame}: scale={stretch:.4f}.")
                 if phase >= 0.43 and side in previous and previous[side][0] == cycle:
                     maximum = max(maximum, (point - previous[side][1]).length)
                     samples += 1
@@ -239,6 +335,8 @@ def check(build):
                     raise ValueError(f"{name}: foot slides while sitting.")
                 settled[side] = point.copy()
         drift[name] = {"maximum_stance_drift_m": maximum, "checked_stance_samples": samples}
+        if pov_pair and actor.kind == "rain":
+            drift[name]["maximum_foot_scale_deviation"] = max_foot_stretch
     report["foot_contacts"] = drift
     if episode.get("pictures"):
         from bpy_extras.object_utils import world_to_camera_view

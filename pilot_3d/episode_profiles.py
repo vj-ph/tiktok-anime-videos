@@ -79,6 +79,16 @@ def scene_layout(episode):
     return layout
 
 
+def scene_perspective(episode):
+    scene = episode.get("scene", {})
+    if not isinstance(scene, dict):
+        raise ValueError("scene must be an object.")
+    perspective = scene.get("perspective", "standard")
+    if perspective not in ("standard", "examiner_pov"):
+        raise ValueError("scene.perspective must be standard or examiner_pov.")
+    return perspective
+
+
 def active_actors(episode):
     layout = scene_layout(episode)
     observer = episode.get("scene", {}).get("observer", layout == "pair")
@@ -87,4 +97,6 @@ def active_actors(episode):
 
 
 def overview_camera(episode):
+    if scene_perspective(episode) == "examiner_pov":
+        return "examiner_pov"
     return "wide" if scene_layout(episode) == "interview" else "candidates"

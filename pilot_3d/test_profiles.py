@@ -15,8 +15,8 @@ from entrance import entrance_plan
 from prepare_audio import (atomic_json, content_hash, make_cache_payload, synthesize,
                            synthesis_settings, validate_episode)
 from produce_v4 import camera_shots
-from scene_direction import configure_cast, performance_plan
-from social_captions import make_ass, write_publication
+from scene_direction import configure_cast, examiner_pov_target, performance_plan
+from social_captions import caption_pages, make_ass, write_publication
 from test_episode_config import clock, example
 
 ROOT = Path(__file__).resolve().parent
@@ -221,6 +221,61 @@ class AlignmentLanguageTests(unittest.TestCase):
 
 
 class SceneProfileTests(unittest.TestCase):
+    def test_examiner_pov_keeps_one_camera_for_every_turn_and_outro(self):
+        episode = read_episode(ROOT / "episodes/dtz_b1_examiner_pov.json")
+        validate_template(episode, check_assets=True)
+        timeline = clock(episode, seconds=3)
+        shots = camera_shots(episode, timeline)
+        self.assertTrue(all(camera == "examiner_pov" for _, camera in shots))
+        self.assertEqual(episode["turns"][0]["text"], episode["title"])
+        self.assertEqual(episode["source"]["duration_limit_seconds"], 90)
+
+    def test_examiner_pov_rejects_unsupported_scene_and_camera_combinations(self):
+        episode = read_episode(ROOT / "episodes/dtz_b1_examiner_pov.json")
+        for variant in ("pair", "entrance", "picture", "camera", "unknown"):
+            bad = copy.deepcopy(episode)
+            if variant == "pair":
+                bad["scene"]["layout"] = "pair"
+            elif variant == "entrance":
+                bad["scene"]["entrance"] = True
+            elif variant == "picture":
+                bad["pictures"] = {"x": {}}
+            elif variant == "camera":
+                bad["turns"][0]["camera"] = "examiner"
+            else:
+                bad["scene"]["perspective"] = "unknown"
+            with self.subTest(variant=variant), self.assertRaises(ValueError):
+                validate_template(bad)
+
+    def test_pair_examiner_pov_starts_early_and_tracks_both_candidates(self):
+        episode = read_episode(ROOT / "episodes/dtz_b1_examiner_pov_pair.json")
+        validate_template(episode, check_assets=True)
+        timeline = clock(episode, seconds=2.5)
+        plan = entrance_plan(episode, timeline)
+        shots = camera_shots(episode, timeline)
+        self.assertTrue(all(camera == "examiner_pov" for _, camera in shots))
+        self.assertAlmostEqual(plan["door"]["open_start"], .85)
+        self.assertAlmostEqual(plan["actors"]["candidate_a"]["walk_start"], 1.35)
+        self.assertAlmostEqual(plan["actors"]["candidate_b"]["walk_start"], 2.45)
+        self.assertEqual(examiner_pov_target(timeline, plan, 0), (-2.9, 3.05, 1.55))
+        lea = next(turn for turn in timeline["turns"] if turn["id"] == "lea_question")
+        samir = next(turn for turn in timeline["turns"] if turn["id"] == "samir_question")
+        self.assertEqual(examiner_pov_target(timeline, plan, lea["start"] + 1), (-.82, .65, 1.03))
+        self.assertEqual(examiner_pov_target(timeline, plan, samir["start"] + 1), (.82, .65, .93))
+        welcome = next(turn for turn in timeline["turns"] if turn["id"] == "welcome")
+        pages = caption_pages(episode, {**timeline, "turns": [welcome]})
+        self.assertAlmostEqual(pages[-1]["end"], welcome["end"] + .25, delta=.01)
+        self.assertGreater(pages[-1]["end"], plan["actors"]["candidate_a"]["walk_start"])
+        for value in (-1, float("nan"), True, "3"):
+            bad = copy.deepcopy(episode)
+            bad["scene"]["entrance_delay_seconds"] = value
+            with self.subTest(delay=value), self.assertRaises(ValueError):
+                validate_template(bad)
+            bad = copy.deepcopy(episode)
+            bad["turns"][1]["caption_hold_seconds"] = value
+            with self.subTest(caption_hold=value), self.assertRaises(ValueError):
+                validate_template(bad)
+
     def test_legacy_cast_and_performance_are_unchanged(self):
         episode = example()
         self.assertEqual(active_actors(episode), ACTORS)
@@ -279,7 +334,7 @@ class SceneProfileTests(unittest.TestCase):
     def test_inactive_rig_children_and_unused_furniture_are_hidden(self):
         objects = []
         for name in ACTORS:
-            mesh = SimpleNamespace(name=name + " mesh", hide_render=False, hide_set=Mock())
+            mesh = SimpleNamespace(name=name + " mesh", type="MESH", hide_render=False, hide_set=Mock())
             mesh.animation_data = SimpleNamespace(
                 drivers=[SimpleNamespace(data_path="hide_render", mute=False),
                          SimpleNamespace(data_path="unrelated_native_control", mute=False)])
@@ -290,6 +345,10 @@ class SceneProfileTests(unittest.TestCase):
                                        hide_set=Mock(), parent=None, location=SimpleNamespace(x=.82, y=.65)))
         objects.append(SimpleNamespace(name="Chair.003", children_recursive=[], hide_render=False,
                                        hide_set=Mock(), parent=None, location=SimpleNamespace(x=.82, y=-1.6)))
+        objects.append(SimpleNamespace(name="Plant pot", children_recursive=[], hide_render=False,
+                                       hide_set=Mock(), parent=None, location=SimpleNamespace(x=2.8, y=2.4)))
+        objects.append(SimpleNamespace(name="Leaf.001", children_recursive=[], hide_render=False,
+                                       hide_set=Mock(), parent=None, location=SimpleNamespace(x=2.8, y=2.4)))
 
         class Objects(list):
             def __getitem__(self, key):
@@ -314,6 +373,11 @@ class SceneProfileTests(unittest.TestCase):
         episode["scene"]["observer"] = True
         configure_cast(scene, episode)
         self.assertFalse(scene.objects["Chair.003"].hide_render)
+        self.assertFalse(scene.objects["Plant pot"].hide_render)
+        pair = read_episode(ROOT / "episodes/dtz_b1_examiner_pov_pair.json")
+        configure_cast(scene, pair)
+        self.assertTrue(scene.objects["Plant pot"].hide_render)
+        self.assertTrue(scene.objects["Leaf.001"].hide_render)
 
 
 class SpeechCheckTests(unittest.TestCase):

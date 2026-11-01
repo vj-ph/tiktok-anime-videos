@@ -8,6 +8,12 @@ BODY_RADIUS = .34
 MAX_WALK_SPEED = 1.85
 
 
+def stride_period(episode):
+    from episode_profiles import scene_layout, scene_perspective
+
+    return .55 if scene_perspective(episode) == "examiner_pov" and scene_layout(episode) == "pair" else .90
+
+
 def ease(value):
     value = min(1.0, max(0.0, value))
     return value * value * (3 - 2 * value)
@@ -40,18 +46,23 @@ def walk_pose(blocking, t):
 
 def entrance_plan(episode, timeline):
     from episode_config import entrance_enabled, seating_deadline
-    from episode_profiles import active_actors
+    from episode_profiles import active_actors, scene_layout, scene_perspective
 
     result = {"enabled": entrance_enabled(episode), "portal": PORTAL, "hinge": HINGE,
               "body_radius_m": BODY_RADIUS, "actors": {}}
     if not result["enabled"]:
         return result
     candidates = [name for name in active_actors(episode) if name.startswith("candidate")]
-    last_seat = min(seating_deadline(episode, timeline), 8.0) - .12
+    delay = episode.get("scene", {}).get("entrance_delay_seconds", 0)
+    duration = episode.get("scene", {}).get("entrance_duration_seconds", 8.0)
+    second_start = (1.75 if duration > 8 and scene_perspective(episode) == "examiner_pov"
+                    and scene_layout(episode) == "pair" else 1.20)
+    last_seat = min(seating_deadline(episode, timeline), delay + duration) - .12
     for name, x, start, outside_y in (
-            ("candidate_a", -.82, .65, 3.95), ("candidate_b", .82, 1.20, 4.8)):
+            ("candidate_a", -.82, .65, 3.95), ("candidate_b", .82, second_start, 4.8)):
         if name not in candidates:
             continue
+        start += delay
         seat_end = last_seat - (.8 if name == "candidate_a" and len(candidates) == 2 else 0)
         points = ([(-2.9, outside_y, 0), (-2.9, 2.85, 0), (-2.9, 1.35, 0),
                    (-1.38, 1.35, 0), (-1.38, .30, 0), (x, .30, 0)]
@@ -78,7 +89,7 @@ def entrance_plan(episode, timeline):
             break
         distance += length
     close_start = second["walk_start"] + distance / second["walk_speed_m_s"] + .20
-    result["door"] = {"open_start": .15, "open_end": .85,
+    result["door"] = {"open_start": delay + .15, "open_end": delay + .85,
                       "close_start": close_start, "close_end": close_start + .90}
     return result
 

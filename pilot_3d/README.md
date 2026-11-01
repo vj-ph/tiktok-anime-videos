@@ -544,6 +544,49 @@ are preserved. `scene.observer: true` optionally retains the observer and chair.
 The candidate can enter alone. Learning cards and the CTA use the wide camera,
 not the two-candidate shot; turn shots still retain the speaking actor.
 
+For a first-person examiner view, use `scene.perspective: "examiner_pov"`
+and `camera: "examiner_pov"` on every turn. The examiner speaks off camera and
+the examiner's geometry is hidden. A seated single-candidate view uses
+`scene.layout: "interview"` and `scene.entrance: false`. A two-candidate view
+uses `scene.layout: "pair"` and `scene.entrance: true`: the fixed-seat camera
+turns toward the doorway, follows the entrance and pans between the candidates
+as they are addressed. Optionally set `scene.entrance_delay_seconds` to keep
+the candidates outside until a spoken opening title finishes; allow enough
+welcome time for both to be seated. `scene.entrance_duration_seconds` optionally
+extends the default eight-second blocking to slow the entrance, provided the
+welcome pause also leaves enough time. The pair POV uses shorter steps, Rain's
+parent foot controls and examiner-directed gaze for the second candidate.
+For an extended silent entrance, a turn's
+optional `caption_hold_seconds` caps its subtitle's hold after its speech;
+readability and word coverage are still validated. Picture presentation is not supported.
+`episodes/dtz_b1_examiner_pov.json` and
+`episodes/dtz_b1_examiner_pov_pair.json` are short German examples. These
+settings do not alter default camera or entrance behavior for other episodes.
+Its preview is `builds/dtz_b1_examiner_pov_preview_r3/pilot.mp4` (31.25 s),
+with platform drafts in `../posts/dtz_b1_examiner_pov/`. The spoken title is
+word-highlighted; encoded word boundaries and scene framing were checked.
+“Prüfer” has low alignment confidence, and independent ASR produced
+“gerne” and “zusammenspazieren” where the script uses “gern” and “zusammen
+spazieren”. Human listening, mobile review and preview approval remain pending.
+The separate two-candidate preview is
+`builds/dtz_b1_examiner_pov_pair_preview_r3/pilot.mp4` (58.916667 s), with
+drafts in `../posts/dtz_b1_examiner_pov_pair/`. Its encoded view shows the
+entrance and camera pan; all 11 turns match independent ASR. Five alignment
+words, including “Prüfer”, remain low-confidence. Human listening, mobile review
+and preview approval are pending. The revised entrance/gaze preview is
+`builds/dtz_b1_examiner_pov_pair_preview_r5/pilot.mp4` (57.5 s): both candidates
+are visible by the measured invitation, with shorter steps, corrected Rain foot
+controls and Samir facing the examiner. Native checks and encoded samples were
+reviewed; human listening, motion review and preview approval remain pending.
+The housing and family exercise preview is
+`builds/dtz_b1_pov_wohnen_familie_preview_r1/pilot.mp4` (62.416667 s), with
+drafts in `../posts/dtz_b1_pov_wohnen_familie/`. Both candidates appear by the
+measured invitation; native checks and encoded entrance, gaze and five title
+highlight boundaries were reviewed. Independent ASR matched 10 of 11 turns,
+transcribing “drei” as “3”; five other words have alignment confidence below
+0.4. Human listening, motion/mobile review and preview approval are pending;
+production and publication require separate approvals.
+
 Voice references accept **exactly one** of a transcript-file path or inline
 reference text:
 
@@ -1472,7 +1515,8 @@ interrupted skirting and a lit corridor. Candidates start outside, enter
 single-file and take separate aisles. The inward-opening door waits until they
 clear its sweep before closing. Path speeds are checked before scene baking;
 short welcomes fail explicitly rather than speeding characters through walls.
-A longer welcome does not slow the entrance beyond its eight-second blocking.
+Without an explicit entrance duration, a longer welcome does not slow the
+entrance beyond its eight-second blocking.
 Native scene checks verify actual mesh starts/portal clearance, body/door
 separation, stance contacts and title visibility.
 

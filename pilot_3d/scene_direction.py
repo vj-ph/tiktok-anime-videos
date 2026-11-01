@@ -1,9 +1,11 @@
 """Speech-led acting and restrained art direction for the reusable exam room."""
 
 import math
-from episode_profiles import ACTORS, active_actors, language_code, language_profile, scene_layout
+from episode_profiles import ACTORS, active_actors, language_code, language_profile, scene_layout, scene_perspective
 
 VERSION = 7
+EXAMINER_POV_LOCATION = (-.82, -1.60, 1.62)
+EXAMINER_POV_SEATED_TARGETS = {"candidate_a": (-.82, .65, 1.03), "candidate_b": (.82, .65, .93)}
 GESTURE_LIMITS = {
     "welcome": 1, "explain": 2, "propose": 2, "consider": 1, "agree": 1,
     "introduce": 3, "describe": 3, "ask": 1, "answer": 2,
@@ -26,11 +28,17 @@ def conversation_turn(timeline, t):
     return next((turn for turn in reversed(timeline["turns"]) if turn["start"] <= t), None)
 
 
-def attention_yaw(actor, turn):
+def attention_yaw(actor, turn, episode=None):
     target = turn.get("look_at") if turn["speaker"] == actor else turn["speaker"]
     if actor.startswith("candidate"):
         if target in ("candidate_a", "candidate_b") and target != actor:
             return .48 if actor == "candidate_a" else -.48
+        if (actor == "candidate_b" and target == "examiner" and episode
+                and scene_perspective(episode) == "examiner_pov" and scene_layout(episode) == "pair"):
+            from episode_config import turn_phase
+            if turn_phase(turn) != "welcome":
+                seat = EXAMINER_POV_SEATED_TARGETS[actor]
+                return math.atan2(EXAMINER_POV_LOCATION[0] - seat[0], seat[1] - EXAMINER_POV_LOCATION[1])
     elif target in ("candidate_a", "candidate_b"):
         return .10 if target == "candidate_a" else -.10
     return 0.0
@@ -45,7 +53,8 @@ def gaze_at(plan, actor, t):
             if event["start"] > t:
                 break
             stop = min(t, events[index + 1]["start"]) if index + 1 < len(events) else t
-            value += (event["yaw"] - value) * ease((stop - event["start"] - delay) / duration)
+            value += (event["yaw"] - value) * ease(
+                (stop - event["start"] - delay) / (duration * event.get("transition_scale", 1)))
         return value
 
     head = track(.06, .60)
@@ -73,9 +82,12 @@ def performance_plan(timeline, episode=None):
         speaker, action = turn["speaker"], turn["action"]
         for actor in actors:
             events = attention[actor]
-            yaw = attention_yaw(actor, turn)
+            yaw = attention_yaw(actor, turn, episode)
             if yaw != (events[-1]["yaw"] if events else 0.0):
-                events.append({"start": turn["start"], "yaw": yaw})
+                event = {"start": turn["start"], "yaw": yaw}
+                if abs(yaw) > .48:
+                    event["transition_scale"] = abs(yaw) / .48
+                events.append(event)
         ordinal = counts.get(speaker, 0)
         counts[speaker] = ordinal + 1
         words = turn["words"]
@@ -184,6 +196,26 @@ def performance_at(plan, actor, t):
             "nod": min(.085, nod), "glance": glance}
 
 
+def examiner_pov_target(timeline, entrance, t):
+    from entrance import walk_pose
+    from episode_config import turn_phase
+
+    last = max(blocking["seat_end"] for blocking in entrance["actors"].values())
+    second = entrance["actors"]["candidate_b"]
+    if t < second["walk_start"] + 1.0:
+        return (-2.9, 3.05, 1.55)
+    if t < last:
+        point, _ = walk_pose(second, t)
+        seated = ease((t - second["seat_start"]) / (second["seat_end"] - second["seat_start"]))
+        return (point[0], point[1] + .35 * seated, 1.58 - .35 * seated)
+    turn = conversation_turn(timeline, t)
+    if turn and turn_phase(turn) != "welcome":
+        target = turn["speaker"] if turn["speaker"].startswith("candidate") else turn.get("look_at")
+        if target == "candidate_b":
+            return EXAMINER_POV_SEATED_TARGETS["candidate_b"]
+    return EXAMINER_POV_SEATED_TARGETS["candidate_a"]
+
+
 def configure_cameras(scene, episode=None, timeline=None):
     from mathutils import Vector
 
@@ -198,6 +230,35 @@ def configure_cameras(scene, episode=None, timeline=None):
         camera.location = location
         camera.rotation_euler = (Vector(target) - camera.location).to_track_quat("-Z", "Y").to_euler()
         camera.data.lens = 47
+    if episode and scene_perspective(episode) == "examiner_pov":
+        camera = cameras["candidate_a"].copy()
+        camera.data = camera.data.copy()
+        camera.name = "08 Examiner POV"
+        scene.collection.objects.link(camera)
+        camera.location = EXAMINER_POV_LOCATION
+        camera.rotation_euler = (Vector((-.82, .65, 1.17)) - camera.location).to_track_quat("-Z", "Y").to_euler()
+        if scene_layout(episode) == "pair":
+            from entrance import entrance_plan
+
+            entrance = entrance_plan(episode, timeline)
+            camera.data.lens = 40
+            camera.rotation_mode = "QUATERNION"
+            previous = (Vector(examiner_pov_target(timeline, entrance, 0)) - camera.location).to_track_quat("-Z", "Y")
+            for frame in range(1, timeline["total_frames"] + 1):
+                t = (frame - 1) / timeline["fps"]
+                desired = (Vector(examiner_pov_target(timeline, entrance, t)) - camera.location).to_track_quat("-Z", "Y")
+                angle = previous.rotation_difference(desired).angle
+                blend = 1 - math.exp(-1 / (.38 * timeline["fps"]))
+                if angle:
+                    blend = min(blend, 1 / (timeline["fps"] * angle))
+                previous = previous.slerp(desired, blend)
+                camera.rotation_quaternion = previous
+                camera.keyframe_insert(data_path="rotation_quaternion", frame=frame)
+            for curve in camera.animation_data.action.fcurves:
+                for point in curve.keyframe_points:
+                    point.interpolation = "LINEAR"
+            scene.frame_set(1)
+        cameras["examiner_pov"] = camera
     if episode and episode.get("pictures"):
         from bpy_extras.object_utils import world_to_camera_view
         from picture_presentation import FACE_BOX, PICTURE_CAMERAS
@@ -262,6 +323,14 @@ def configure_cast(scene, episode):
         root = scene.objects[name]
         for obj in (root, *root.children_recursive):
             hide(obj)
+    if scene_perspective(episode) == "examiner_pov":
+        for obj in scene.objects["examiner"].children_recursive:
+            if obj.type == "MESH":
+                hide(obj)
+        if scene_layout(episode) == "pair":
+            for obj in scene.objects:
+                if obj.name.startswith(("Plant ", "Leaf.")) or obj.name == "Leaf":
+                    hide(obj)
     if scene_layout(episode) == "interview":
         for obj in scene.objects:
             unused_chair = (obj.name.startswith("Chair") and obj.parent is None and obj.location.x > 0
@@ -271,7 +340,7 @@ def configure_cast(scene, episode):
             if unused_chair or unused_task or personal_item:
                 for item in (obj, *obj.children_recursive):
                     hide(item)
-    return {"layout": scene_layout(episode), "active_actors": list(active),
+    return {"layout": scene_layout(episode), "perspective": scene_perspective(episode), "active_actors": list(active),
             "hidden_objects": sorted(set(hidden))}
 
 

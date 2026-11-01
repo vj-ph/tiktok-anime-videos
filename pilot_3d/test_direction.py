@@ -1,7 +1,8 @@
 import copy
 import unittest
 
-from scene_direction import blink_at, conversation_turn, envelope, gaze_at, performance_at, performance_plan
+from scene_direction import (EXAMINER_POV_LOCATION, EXAMINER_POV_SEATED_TARGETS, attention_yaw,
+                             blink_at, conversation_turn, envelope, gaze_at, performance_at, performance_plan)
 from test_episode_config import clock, example
 
 
@@ -152,6 +153,33 @@ class DirectionTests(unittest.TestCase):
             after = gaze_at(plan, "candidate_a", event["start"] + .000001)
             self.assertLess(abs(before["eyes"] - after["eyes"]), .00001)
         self.assertAlmostEqual(gaze_at(plan, "candidate_a", last["end"])["head"], .48)
+
+    def test_pair_pov_samir_addresses_examiner_without_turning_during_welcome(self):
+        import math
+
+        episode = {"scene": {"layout": "pair", "perspective": "examiner_pov"}}
+        welcome = {"speaker": "examiner", "action": "welcome", "look_at": "candidate_a"}
+        speech = {"speaker": "candidate_b", "action": "explain", "look_at": "examiner"}
+        seat = EXAMINER_POV_SEATED_TARGETS["candidate_b"]
+        expected = math.atan2(EXAMINER_POV_LOCATION[0] - seat[0], seat[1] - EXAMINER_POV_LOCATION[1])
+        self.assertEqual(attention_yaw("candidate_b", welcome, episode), 0)
+        self.assertAlmostEqual(attention_yaw("candidate_b", speech, episode), expected)
+        self.assertEqual(attention_yaw("candidate_b", speech), 0)
+        speech["look_at"] = "candidate_a"
+        self.assertEqual(attention_yaw("candidate_b", speech, episode), -.48)
+
+    def test_pair_pov_examiner_gaze_transitions_without_snapping(self):
+        episode = {"scene": {"layout": "pair", "perspective": "examiner_pov"}}
+        timeline = copy.deepcopy(self.timeline)
+        timeline["turns"][0].update(speaker="examiner", action="welcome", look_at="candidate_a")
+        timeline["turns"][1].update(speaker="candidate_b", action="answer", look_at="examiner")
+        plan = performance_plan(timeline, episode)
+        previous = gaze_at(plan, "candidate_b", 0)
+        for frame in range(1, timeline["total_frames"]):
+            current = gaze_at(plan, "candidate_b", frame / timeline["fps"])
+            self.assertLess(abs(current["head"] - previous["head"]), .055)
+            self.assertLess(abs(current["eyes"] - previous["eyes"]), .085)
+            previous = current
 
     def test_gesture_spacing_and_variation_are_bounded_and_not_identical(self):
         self.assertGreater(len({event["reach"] for event in self.plan["gestures"]}), 1)

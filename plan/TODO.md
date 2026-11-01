@@ -24,6 +24,39 @@ The new Teil 1 format covers introductions and linked examiner follow-ups for bo
 Teil 2 now covers picture descriptions and linked personal-experience interviews
 for both candidates, using the book's weekly-market and supermarket pictures:
 
+### Proposed speaking rotation
+
+Rotate **Sprechen** Teil 1 → 2 → 3, then repeat. Within each part, take the
+next exercise in book order that has not had a dedicated video. The existing
+Teil 1 introduction combines ideas from Übungen 1–3, but Übungen 2 and 3 have
+not had their own videos, so start with Übung 2. The Teil 2 production separately
+uses the pictures from Übungen 1 and 7, and the Teil 3 productions draw on
+Übungen 2–4; skip those when their turn comes. The book is
+`speaking_dtz_gpt_v1/book_no_toc.md`. Hören has its own four-part sequence.
+This is a queue, not a dated schedule or approved previews. Use examiner POV for
+Teil 1 and 3; Teil 2 needs the existing picture format unless POV picture support
+is implemented. For each new video, fit the complete excerpt, spoken
+word-highlighted title and book CTA strictly under 90 seconds; prepare both
+platform drafts and obtain separate preview and publication approval.
+
+- [ ] **1 · Teil 1, Übung 2: Wohnen und Familie in Deutschland.** Review the new examiner-POV preview, especially walking, mobile placement, speech and the five low-confidence alignment words (“wohnen”, “Sie”, “klein” and both instances of “wichtig”). Independent ASR transcribed “drei” as “3”; confirm by listening. Approve the preview before production; publication requires separate approval.
+- [ ] **2 · Teil 2, Übung 2: Beim Arzt im Wartezimmer.** Describe a suitable picture and answer a linked personal-experience question; confirm image rights or use a licensed alternative.
+- [ ] **3 · Teil 3, Übung 1: Einen Termin im Bürgeramt vorbereiten.** Negotiate an appointment that fits both people's availability, then discuss documents and a fallback.
+- [ ] **4 · Teil 1, Übung 3: Arbeit, Beruf und Tagesablauf.** Candidates discuss work and their daily routines and answer a related examiner follow-up.
+- [ ] **5 · Teil 2, Übung 3: Eine Wohnung besichtigen.** Describe a suitable picture and discuss housing experience; confirm image rights or use a licensed alternative.
+- [ ] **6 · Teil 3, Übung 5: Einen Umzug organisieren.** Plan timing, helpers and transport around a partner who can help only until 14:00.
+- [ ] **7 · Teil 1, Übung 4: Deutschlernen und Kontakte.** Candidates discuss learning methods and using German with others, including a linked examiner follow-up.
+- [ ] **8 · Teil 2, Übung 4: Eltern und Schule.** Describe a suitable picture and discuss a related personal experience; confirm image rights or use a licensed alternative.
+- [ ] **9 · Teil 3, Übung 6: Ein Gespräch in der Kita vorbereiten.** Candidates jointly prepare for the conversation and negotiate a practical plan.
+
+### Existing speaking coverage
+
+- [x] Generate the Teil 1 Übung 2 housing/family examiner-POV preview at `pilot_3d/builds/dtz_b1_pov_wohnen_familie_preview_r1/pilot.mp4` (62.416667 seconds, 1,498 frames), preserving earlier previews. Verify the entrance and examiner-directed gaze, five encoded title-word highlight boundaries, both decoded exports, 17 delivery and 21 frozen-source hashes; prepare platform drafts in `posts/dtz_b1_pov_wohnen_familie/`. The preview has not been approved for production or publication.
+- [x] Create a short Teil 1 examiner-POV preview at `pilot_3d/builds/dtz_b1_examiner_pov_preview_r3/pilot.mp4` (31.25 seconds, 750 frames). Check native camera and candidate framing, all six encoded title-word highlight boundaries, delivery/source hashes and the under-90-second limit; prepare platform drafts in `posts/dtz_b1_examiner_pov/`.
+- [ ] Listen to and review the examiner-POV preview, especially the low-confidence title word “Prüfer” and the ASR differences “gern/gerne” and “zusammen spazieren/zusammenspazieren”; inspect mobile placement and approve the preview before production. Publication requires separate approval.
+- [x] Create the two-candidate examiner-POV preview at `pilot_3d/builds/dtz_b1_examiner_pov_pair_preview_r3/pilot.mp4` (58.916667 seconds, 1,414 frames), preserving the first preview. Both candidates enter after the spoken, word-highlighted title; the examiner's view follows the entrance and turns between their introductions and linked follow-ups. Check native entrance, face framing and continuous motion, encoded doorway/pan samples and all six title-word highlight boundaries. All 11 turns match independent ASR; 15 subtitle pages meet reading limits, both exports decode, and all 17 delivery and 21 frozen-source hashes match. Prepare drafts in `posts/dtz_b1_examiner_pov_pair/`.
+- [x] Revise the two-candidate POV preview at `pilot_3d/builds/dtz_b1_examiner_pov_pair_preview_r5/pilot.mp4` (57.5 seconds, 1,380 frames), preserving r3. Both candidates are in view when “Nehmen” begins at 4.648 seconds; shorter steps and Rain's correct foot controls avoid the stretched shoes, and Samir turns toward the examiner. Check native portal clearance, planted feet and foot deformation, eye direction, encoded entrance and camera movement, six title highlight boundaries, both decoded exports, 11/11 independent ASR matches, and all 17 delivery and 21 frozen-source hashes.
+- [ ] Listen to and review the revised two-candidate POV preview, walking motion and mobile placement, including the five alignment words below 0.4 confidence (“Prüfer”, two instances of “vor”, “bitte” and “Deutsch”). Obtain preview approval before production; publication requires separate approval.
 - [x] Create a Teil 1 practice-video format using the existing exam room and characters: examiner invitation, candidate introduction, examiner follow-up and candidate response.
 - [x] Cover Teil 1A, introducing oneself: background, birthplace, residence, work, family and languages.
 - [x] Cover Teil 1B, answering examiner follow-up questions connected to the introduction, with natural model responses rather than only a prepared monologue.

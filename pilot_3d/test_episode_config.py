@@ -231,6 +231,19 @@ class EpisodeConfigTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "overlaps"):
             validate_layout(data)
 
+    def test_entrance_duration_requires_a_positive_number_and_an_entrance(self):
+        episode = read_episode(ROOT / "episodes/dtz_b1_examiner_pov_pair.json")
+        validate_template(episode)
+        for bad in (0, -1, True, None, "11", float("nan"), float("inf")):
+            data = copy.deepcopy(episode)
+            data["scene"]["entrance_duration_seconds"] = bad
+            with self.subTest(bad=bad), self.assertRaisesRegex(ValueError, "entrance_duration_seconds"):
+                validate_template(data)
+        episode["scene"]["entrance"] = False
+        episode["scene"].pop("entrance_delay_seconds")
+        with self.assertRaisesRegex(ValueError, "entrance_duration_seconds"):
+            validate_template(episode)
+
     def test_promo_uses_custom_hook_id_lengths_and_contiguous_selection(self):
         episode = example()
         episode["promo"].update(turn_ids=["offer-place", "confirm-plan"],
