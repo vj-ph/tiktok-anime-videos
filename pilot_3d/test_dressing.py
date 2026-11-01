@@ -211,7 +211,10 @@ class DressingTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "Natural-hair fit"):
                     validate_dressing(episode)
         hat["fit"] = "natural_hair"
-        for field, value in (("actor", "candidate_a"), ("style", "alpine")):
+        hat["actor"] = "candidate_a"
+        validate_dressing(episode, check_assets=True)
+        hat["actor"] = "candidate_b"
+        for field, value in (("actor", "examiner"), ("style", "alpine")):
             with self.subTest(field=field):
                 old = hat[field]
                 hat[field] = value
@@ -220,6 +223,16 @@ class DressingTests(unittest.TestCase):
                 hat[field] = old
         sweets["placement"] = "unknown"
         with self.assertRaisesRegex(ValueError, "Unsupported options"):
+            validate_dressing(episode)
+
+    def test_interview_candidate_can_keep_natural_hair_under_witch_hat(self):
+        episode = self.canadian()
+        episode["scene"]["dressing"]["accessories"] = [
+            {"type": "hat", "style": "witch", "actor": "candidate_a", "fit": "natural_hair"}
+        ]
+        validate_dressing(episode, check_assets=True)
+        episode["scene"]["dressing"]["accessories"][0]["actor"] = "candidate_b"
+        with self.assertRaisesRegex(ValueError, "active scene actor"):
             validate_dressing(episode)
 
     def assert_frozen_assets(self, episode):

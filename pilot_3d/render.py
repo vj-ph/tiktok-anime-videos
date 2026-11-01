@@ -234,6 +234,8 @@ def mux(build, episode_path=None):
         "-t", str(timeline["duration"]), "-movflags", "+faststart",
     ]
     if social:
+        encoding += ["-color_range", "tv"]
+        final_video = f"fps={timeline['fps']},scale=in_range=auto:out_range=tv,format=yuv420p"
         video = (f"scale={output_size[0]}:{output_size[1]}:flags=lanczos,"
                  f"fps={timeline['fps']},ass=captions.ass:fontsdir=caption_fonts")
         if episode.get("pictures"):
@@ -254,7 +256,7 @@ def mux(build, episode_path=None):
                 filters += [f"[{cover_input}:v]scale={right-x}:{bottom-y}[cover]",
                             f"[{output}][cover]overlay=x={x}:y={y}:enable='gte(n,{cover_start})'[covered]"]
                 output = "covered"
-            filters.append(f"[{output}]fps={timeline['fps']}[video]")
+            filters.append(f"[{output}]{final_video}[video]")
             run(common + inputs + ["-filter_complex_threads", "1", "-filter_complex", ";".join(filters),
                                   "-map", "[video]", "-map", "1:a:0"] + encoding + ["pilot.mp4"], cwd=build)
             atomic_json(build / "picture_timing_report.json", {
@@ -274,7 +276,7 @@ def mux(build, episode_path=None):
                 report["book_cover"] = {"bounds": [x, y, right, bottom], "start": cover_start / timeline["fps"]}
             atomic_json(report_path, report)
         elif episode.get("social_kind") == "exchange" or episode["outro_seconds"] == 0:
-            run(common + ["-vf", video + f",fps={timeline['fps']}"] + encoding + ["pilot.mp4"], cwd=build)
+            run(common + ["-vf", video + "," + final_video] + encoding + ["pilot.mp4"], cwd=build)
         else:
             from social_captions import cover_bounds
             cover = (ROOT / episode["book_cover"]).resolve()
@@ -286,7 +288,7 @@ def mux(build, episode_path=None):
             filters = (
                 f"[2:v]scale={cover_width}:224[cover];[0:v]{video}[captioned];"
                 f"[captioned][cover]overlay=x={x}:y={y}:enable='gte(t,{cover_start})',"
-                f"fps={timeline['fps']}[video]"
+                f"{final_video}[video]"
             )
             run(common + ["-loop", "1", "-i", cover, "-filter_complex", filters,
                           "-map", "[video]", "-map", "1:a:0"] + encoding + ["pilot.mp4"], cwd=build)
@@ -312,7 +314,8 @@ def mux(build, episode_path=None):
         run(common + ["-loop", "1", "-i", cover, "-filter_complex", filters,
                       "-map", "[video]", "-map", "1:a:0"] + encoding + ["pilot.mp4"], cwd=build)
     clean_filter = (
-        f"scale={output_size[0]}:{output_size[1]}:flags=lanczos,fps={timeline['fps']}"
+        f"scale={output_size[0]}:{output_size[1]}:flags=lanczos,"
+        f"fps={timeline['fps']},scale=in_range=auto:out_range=tv,format=yuv420p"
         if social else f"fps={timeline['fps']},ass=credits.ass:fontsdir=caption_fonts"
     )
     run(common + ["-vf", clean_filter] + encoding + ["pilot_clean.mp4"], cwd=build)

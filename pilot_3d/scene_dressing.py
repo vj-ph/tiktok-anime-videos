@@ -61,8 +61,9 @@ def validate_dressing(episode, *, check_assets=False):
                 if not isinstance(actor, str) or actor not in actors:
                     raise ValueError("Hat owner must be an active scene actor.")
                 if "fit" in item and (item["fit"] != "natural_hair"
-                                      or item["style"] != "witch" or actor != "candidate_b"):
-                    raise ValueError("Natural-hair fit is supported only for candidate_b's witch hat.")
+                                      or item["style"] != "witch"
+                                      or actor not in ("candidate_a", "candidate_b")):
+                    raise ValueError("Natural-hair fit is supported only for a candidate's witch hat.")
                 slot = ("head", actor)
             if slot in occupied:
                 raise ValueError("Duplicate dressing anchor or head accessory.")
@@ -503,7 +504,8 @@ def apply_dressing(scene, episode, actors, fit_frame, timeline):
         if natural_hair:
             if not hairs:
                 raise ValueError(f"{actor.name}: natural-hair hat fit requires visible hair.")
-            root.matrix_basis = root.matrix_basis @ Matrix.Translation((0, 0, .1))
+            lift = .065 if actor.name == "candidate_a" else .1
+            root.matrix_basis = root.matrix_basis @ Matrix.Translation((0, 0, lift))
         if item["style"] == "alpine":
             lathe("hat brim", [(.145, .006), (.220, -.007), (.223, -.001), (.145, .014)],
                   mats["felt"], root, 1.05)
@@ -516,8 +518,9 @@ def apply_dressing(scene, episode, actors, fit_frame, timeline):
         else:
             parts = imported_asset(halloween["halloween_witch_hat"]["file"], root, .44, (0, 0, .008))
             if natural_hair:
+                width = 1.2 if actor.name == "candidate_a" else 1.4
                 for obj in parts:
-                    obj.data.transform(Matrix.Diagonal((1.4, 1.4, 1, 1)))
+                    obj.data.transform(Matrix.Diagonal((width, width, 1, 1)))
             crown = next(obj for obj in parts if obj.name.endswith("_0"))
         hair_fit = None
         if hairs and not natural_hair:

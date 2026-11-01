@@ -72,7 +72,7 @@ set is deliberately small:
 | `flag` | `pattern: "austria"` or `"canada"`; `anchor: "back_wall_left"` or `"table_corner"` |
 | `coffee_set` | `anchor: "examiner_table_side"` |
 | `backpack` | `anchor: "candidate_b_chair_side"`; candidate B must be active |
-| `hat` (in `accessories`) | `style: "alpine"` or `"witch"`; `actor`: an active actor slot. Optional `fit: "natural_hair"` is supported for candidate B's witch hat |
+| `hat` (in `accessories`) | `style: "alpine"` or `"witch"`; `actor`: an active actor slot. Optional `fit: "natural_hair"` is supported for a candidate's witch hat |
 | `halloween_bats` | `anchor: "halloween_back_wall"` |
 | `halloween_pumpkin` | `anchor: "candidate_a_table_side"` |
 | `halloween_sweets` | `anchor: "candidate_b_table_side"`; optional `placement: "caption_clear"` |
@@ -85,7 +85,7 @@ retain their existing framing. Wide and picture-card cameras are not refitted.
 The default brim sits below the actual head surface rather than perching on
 its bounding box. An owner-local, head-following lattice fits hair inside the
 crown without changing the source mesh/shape keys or other actors. The
-explicit `natural_hair` witch-hat option instead keeps candidate B's hair
+explicit `natural_hair` witch-hat option instead keeps the candidate's hair
 unmodified and positions a wider hat over it; its native checks use the hair
 surface for seating and check crown clearance throughout the animation.
 Omitting the hat adds no hair modifier.

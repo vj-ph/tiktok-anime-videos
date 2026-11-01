@@ -239,6 +239,51 @@ class SocialTests(unittest.TestCase):
             self.assertTrue((build / "frames" / "frame_0061.png").exists())
 
     @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "FFmpeg required")
+    def test_social_mux_with_jpeg_cover_outputs_limited_range(self):
+        from PIL import Image
+        from render import mux, scene_hash
+
+        with tempfile.TemporaryDirectory() as directory:
+            build = Path(directory)
+            (build / "frames").mkdir()
+            cover = build / "cover.jpg"
+            Image.new("RGB", (150, 224), (230, 170, 60)).save(cover)
+            turn = {"name": "Lea", "text": "Gute Idee."}
+            episode = {**self.episode, "social_kind": "practice", "fps": 24,
+                       "outro_seconds": .5, "book_cover": str(cover), "turns": [turn]}
+            timeline = {**self.timeline, "fps": 24, "total_frames": 30, "turns": [
+                {**self.timeline["turns"][0], "end": .25, "wav_duration": .25,
+                 "words": [{"word": "Gute", "start": .01, "end": .11, "score": .9},
+                           {"word": "Idee.", "start": .12, "end": .21, "score": .9}]}
+            ]}
+            manifest = {"episode": episode, "timeline": timeline,
+                        "width": 90, "height": 160, "motion_step": 2}
+            for name, value in (("episode.json", episode), ("timeline.json", timeline),
+                                ("scene_manifest.json", manifest)):
+                (build / name).write_text(json.dumps(value))
+            (build / "studio.blend").write_bytes(b"Synthetic social mux fixture")
+            (build / "frames_manifest.json").write_text(json.dumps(
+                {"scene": manifest, "blend_sha256": scene_hash(build)}))
+            image = build / "plate.png"
+            Image.new("RGB", (90, 160), (80, 120, 160)).save(image)
+            for frame in range(1, 31, 2):
+                os.link(image, build / "frames" / f"frame_{frame:04d}.png")
+            with wave.open(str(build / "dialogue.wav"), "wb") as output:
+                output.setnchannels(1)
+                output.setsampwidth(2)
+                output.setframerate(48000)
+                output.writeframes(b"".join(struct.pack("<h", round(2000 * math.sin(index / 30)))
+                                            for index in range(60000)))
+
+            mux(build, build / "episode.json")
+            for name in ("media_report.json", "media_report_clean.json"):
+                report = json.loads((build / name).read_text())
+                video = next(stream for stream in report["streams"] if stream["codec_type"] == "video")
+                self.assertEqual(video["pix_fmt"], "yuv420p")
+                self.assertIn(video.get("color_range"), ("tv", None))
+                self.assertEqual(int(video["nb_frames"]), 30)
+
+    @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "FFmpeg required")
     def test_low_resolution_social_mux_upscales_and_delivers_credits_separately(self):
         from PIL import Image
         from render import mux, scene_hash

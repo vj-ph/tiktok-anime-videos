@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "id": "tef_canada_halloween_speaking",
+  "language": "fr",
+  "exam": {"family": "tef_canada", "skill": "speaking", "section": "B"},
+  "presentation": "social",
+  "visual_version": 7,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "Halloween entre amis",
+  "label": "TEF Canada · Expression orale · Section B",
+  "disclaimer": "Exercice indépendant et fictif ; ni sujet officiel ni épreuve complète.",
+  "branding": "FRENCH COMPASS",
+  "scene": {
+    "template": "exam_room",
+    "layout": "interview",
+    "base_scene": "../builds/v2/studio.blend",
+    "wall_logo": "../assets/frenchcompass-logo.png",
+    "entrance": true,
+    "observer": false,
+    "dressing": {
+      "props": [
+        {"type": "flag", "pattern": "canada", "anchor": "back_wall_left"},
+        {"type": "flag", "pattern": "canada", "anchor": "table_corner"},
+        {"type": "halloween_bats", "anchor": "halloween_back_wall"},
+        {"type": "halloween_pumpkin", "anchor": "candidate_a_table_side"}
+      ],
+      "accessories": [
+        {"type": "hat", "style": "witch", "actor": "candidate_a", "fit": "natural_hair"}
+      ]
+    }
+  },
+  "header": {
+    "brand": "FRENCH COMPASS · TEF CANADA",
+    "topic": "Section B · Convaincre un ami"
+  },
+  "hook": "Halloween entre amis",
+  "task_title": "FÊTE DE QUARTIER",
+  "task_summary": "Invitez un ami à une soirée costumée.",
+  "task_hint": "Pause · Arrêtez la vidéo.",
+  "task_card": [
+    "Samedi · 18 h à 20 h",
+    "Centre communautaire · entrée gratuite",
+    "Costume facultatif"
+  ],
+  "takeaway": [],
+  "takeaway_seconds": 0,
+  "cta": ["Plus de pratique orale", "dans notre livre TEF Canada", "Lien Amazon dans le profil"],
+  "publication": {
+    "intro": "Comment convaincre un ami de participer à une fête d'Halloween en tenant compte de son budget, de ses réserves et de son horaire ?",
+    "disclosure": "Scénario fictif original et exercice indépendant de type Section B ; ni sujet officiel, ni extrait du livre, ni épreuve complète. La pause et la durée de la vidéo ne représentent pas celles de l'examen.",
+    "hashtags": ["#TEFCanada", "#ExpressionOrale", "#Halloween", "#FrenchCompass"]
+  },
+  "book_cover": "../../../french-exam-prep-book/french_exam_books/tef_canada/speaking/speaking.jpg",
+  "source": {
+    "book": "../../../french-exam-prep-book/french_exam_books/tef_canada/speaking/book.md",
+    "exercise": "Original fictional Halloween invitation; not an exercise from the book.",
+    "voice_registry": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/voices.json",
+    "duration_limit_seconds": 90,
+    "scope": "Independent short Section B-style practice, not an official question or a complete exam.",
+    "adaptation": "Original B1-B2-oriented interaction about a fictional free neighbourhood Halloween event from 18:00 to 20:00 on Saturday, with an optional costume. The candidate acknowledges concerns about expense and unfamiliar people, explains the remaining time after a 18:30 arrival, and proposes a conditional, low-pressure compromise.",
+    "voice_rights": "Registry marks both references available; commercial reference and generated-output rights have not been independently verified."
+  },
+  "fps": 24,
+  "intro_seconds": 0,
+  "outro_seconds": 6,
+  "voices": {
+    "candidate_a": {
+      "audio": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/references/fr_ca_qc_narrator_f01.wav",
+      "transcript": "../assets/voices/fr_ca_qc_narrator_f01_reference.txt",
+      "voice_id": "fr_ca_qc_narrator_f01"
+    },
+    "examiner": {
+      "audio": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/references/fr_ca_qc_service_m01.wav",
+      "transcript": "../assets/voices/fr_ca_qc_service_m01_reference.txt",
+      "voice_id": "fr_ca_qc_service_m01"
+    }
+  },
+  "turns": [
+    {
+      "id": "00", "speaker": "examiner", "name": "Examinateur",
+      "text": "Halloween entre amis", "camera": "wide", "action": "welcome",
+      "look_at": "candidate_a", "pause_after": 4.0
+    },
+    {
+      "id": "01", "speaker": "examiner", "name": "Examinateur",
+      "text": "Présentez cette fête à un ami et essayez de le convaincre de venir. Je joue votre ami.",
+      "camera": "examiner", "action": "explain", "look_at": "candidate_a",
+      "pause_after": 7.0, "task_card_delay_seconds": 1.0
+    },
+    {
+      "id": "02", "speaker": "candidate_a", "name": "Candidate",
+      "text": "Salut ! Samedi, une fête gratuite a lieu au centre communautaire, de dix-huit à vingt heures. Ça te dit ?",
+      "camera": "candidate_a", "action": "propose", "look_at": "examiner", "pause_after": 0.8
+    },
+    {
+      "id": "03", "speaker": "examiner", "name": "Ami",
+      "text": "Je n'ai pas de costume et je n'ai pas envie de dépenser pour une seule soirée.",
+      "camera": "examiner", "action": "consider", "look_at": "candidate_a", "pause_after": 0.8
+    },
+    {
+      "id": "04", "speaker": "candidate_a", "name": "Candidate",
+      "text": "Je comprends, mais l'entrée est gratuite et le costume facultatif. On peut venir comme on est, sans rien acheter.",
+      "camera": "candidate_a", "action": "answer", "look_at": "examiner", "pause_after": 0.8
+    },
+    {
+      "id": "05", "speaker": "examiner", "name": "Ami",
+      "text": "Le prix, ça va. Mais si je ne connais personne, je risque de me sentir à l'écart.",
+      "camera": "examiner", "action": "consider", "look_at": "candidate_a", "pause_after": 0.8
+    },
+    {
+      "id": "06", "speaker": "candidate_a", "name": "Candidate",
+      "text": "C'est vrai. On pourrait y aller ensemble et, si l'ambiance ne nous plaît pas, repartir au bout d'un moment.",
+      "camera": "candidate_a", "action": "answer", "look_at": "examiner", "pause_after": 0.8
+    },
+    {
+      "id": "07", "speaker": "examiner", "name": "Ami",
+      "text": "Je ne suis libre qu'après dix-huit heures trente. Est-ce que ça vaut encore la peine ?",
+      "camera": "examiner", "action": "consider", "look_at": "candidate_a", "pause_after": 0.8
+    },
+    {
+      "id": "08", "speaker": "candidate_a", "name": "Candidate",
+      "text": "À mon avis, oui. Il resterait une heure et demie pour profiter d'une sortie ensemble, sans y passer toute la soirée.",
+      "camera": "candidate_a", "action": "propose", "look_at": "examiner", "pause_after": 0.8
+    },
+    {
+      "id": "09", "speaker": "examiner", "name": "Ami",
+      "text": "D'accord pour essayer, mais je préfère partir si je suis mal à l'aise.",
+      "camera": "examiner", "action": "consider", "look_at": "candidate_a", "pause_after": 0.8
+    },
+    {
+      "id": "10", "speaker": "candidate_a", "name": "Candidate",
+      "text": "Bien sûr. L'important, c'est qu'on passe une bonne soirée, pas qu'on reste à tout prix.",
+      "camera": "candidate_a", "action": "agree", "look_at": "examiner", "pause_after": 0.6
+    }
+  ]
+}
