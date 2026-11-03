@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "id": "tef_canada_fetes_speaking",
+  "language": "fr",
+  "exam": {"family": "tef_canada", "skill": "speaking", "section": "B"},
+  "presentation": "social",
+  "visual_version": 7,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "Une activité pendant les Fêtes",
+  "label": "TEF Canada · Expression orale · Section B",
+  "disclaimer": "Exercice indépendant et fictif ; ni sujet officiel ni épreuve complète.",
+  "branding": "FRENCH COMPASS",
+  "scene": {
+    "template": "exam_room",
+    "layout": "interview",
+    "base_scene": "../builds/v2/studio.blend",
+    "wall_logo": "../assets/frenchcompass-logo.png",
+    "entrance": true,
+    "observer": false,
+    "dressing": {
+      "props": [
+        {"type": "flag", "pattern": "canada", "anchor": "back_wall_left"},
+        {"type": "flag", "pattern": "canada", "anchor": "table_corner"}
+      ],
+      "accessories": []
+    }
+  },
+  "header": {
+    "brand": "FRENCH COMPASS · TEF CANADA",
+    "topic": "Section B · Convaincre un ami"
+  },
+  "hook": "Une activité pendant les Fêtes",
+  "task_title": "ATELIER DES FÊTES",
+  "task_summary": "Invitez un ami à un atelier créatif.",
+  "task_hint": "Pause · Arrêtez la vidéo.",
+  "task_card": [
+    "Samedi · 14 h à 16 h",
+    "Centre communautaire · gratuit",
+    "À cinq minutes de l'arrêt de bus"
+  ],
+  "takeaway": [],
+  "takeaway_seconds": 0,
+  "cta": ["Plus de pratique orale", "dans notre livre TEF Canada", "Lien Amazon dans le profil"],
+  "publication": {
+    "intro": "Comment convaincre un ami de participer à un atelier créatif pendant les Fêtes malgré ses réserves sur le budget, le trajet et l'horaire ?",
+    "disclosure": "Scénario fictif original et exercice indépendant de type Section B ; ni sujet officiel, ni extrait du livre, ni épreuve complète. La pause et la durée de la vidéo ne représentent pas celles de l'examen.",
+    "hashtags": ["#TEFCanada", "#ExpressionOrale", "#TempsDesFetes", "#FrenchCompass"]
+  },
+  "book_cover": "../../../french-exam-prep-book/french_exam_books/tef_canada/speaking/speaking.jpg",
+  "source": {
+    "book": "../../../french-exam-prep-book/french_exam_books/tef_canada/speaking/book.md",
+    "exercise": "Original fictional holiday creative workshop; not an exercise from the book.",
+    "voice_registry": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/voices.json",
+    "duration_limit_seconds": 90,
+    "scope": "Independent short Section B-style practice, not an official question or a complete exam.",
+    "adaptation": "Original fictional indoor holiday creative workshop at a community centre on Saturday from 14:00 to 16:00, free with materials included and five minutes on foot from a bus stop. The candidate responds to concerns about budget and the winter walk, then proposes attending together after the friend becomes free at 15:00. No real event or bus service is advertised.",
+    "voice_rights": "Registry marks both references available; commercial reference and generated-output rights have not been independently verified."
+  },
+  "fps": 24,
+  "intro_seconds": 0,
+  "outro_seconds": 6,
+  "voices": {
+    "candidate_a": {
+      "audio": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/references/fr_ca_qc_narrator_f01.wav",
+      "transcript": "../assets/voices/fr_ca_qc_narrator_f01_reference.txt",
+      "voice_id": "fr_ca_qc_narrator_f01"
+    },
+    "examiner": {
+      "audio": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/references/fr_ca_qc_service_m01.wav",
+      "transcript": "../assets/voices/fr_ca_qc_service_m01_reference.txt",
+      "voice_id": "fr_ca_qc_service_m01"
+    }
+  },
+  "turns": [
+    {
+      "id": "00", "speaker": "examiner", "name": "Examinateur",
+      "text": "Une activité pendant les Fêtes", "camera": "wide", "action": "welcome",
+      "look_at": "candidate_a", "pause_after": 4.0
+    },
+    {
+      "id": "01", "speaker": "examiner", "name": "Examinateur",
+      "text": "Présentez cet atelier à un ami et essayez de le convaincre d'y participer. Je joue votre ami.",
+      "camera": "examiner", "action": "explain", "look_at": "candidate_a",
+      "pause_after": 7.0, "task_card_delay_seconds": 1.0
+    },
+    {
+      "id": "02", "speaker": "candidate_a", "name": "Candidate",
+      "text": "Salut ! Samedi, il y a un atelier créatif au centre communautaire, de quatorze à seize heures. Ça te dit ?",
+      "camera": "candidate_a", "action": "propose", "look_at": "examiner", "pause_after": 0.8
+    },
+    {
+      "id": "03", "speaker": "examiner", "name": "Ami",
+      "text": "J'ai déjà beaucoup dépensé pour les Fêtes. Je préfère éviter d'autres frais.",
+      "camera": "examiner", "action": "consider", "look_at": "candidate_a", "pause_after": 0.8
+    },
+    {
+      "id": "04", "speaker": "candidate_a", "name": "Candidate",
+      "text": "Je comprends. L'atelier est gratuit et le matériel est fourni. On n'a rien à acheter pour participer.",
+      "camera": "candidate_a", "action": "answer", "look_at": "examiner", "pause_after": 0.8
+    },
+    {
+      "id": "05", "speaker": "examiner", "name": "Ami",
+      "text": "D'accord, mais en hiver, je n'ai pas envie de marcher longtemps depuis l'arrêt de bus.",
+      "camera": "examiner", "action": "consider", "look_at": "candidate_a", "pause_after": 0.8
+    },
+    {
+      "id": "06", "speaker": "candidate_a", "name": "Candidate",
+      "text": "Le centre est à cinq minutes à pied. On pourrait se retrouver à l'arrêt et faire le trajet ensemble.",
+      "camera": "candidate_a", "action": "propose", "look_at": "examiner", "pause_after": 0.8
+    },
+    {
+      "id": "07", "speaker": "examiner", "name": "Ami",
+      "text": "Je ne suis libre qu'à quinze heures. Ce n'est pas trop tard ?",
+      "camera": "examiner", "action": "consider", "look_at": "candidate_a", "pause_after": 0.8
+    },
+    {
+      "id": "08", "speaker": "candidate_a", "name": "Candidate",
+      "text": "Même en arrivant après quinze heures, on aurait encore du temps. On pourrait essayer sans rester jusqu'à la fin.",
+      "camera": "candidate_a", "action": "propose", "look_at": "examiner", "pause_after": 0.8
+    },
+    {
+      "id": "09", "speaker": "examiner", "name": "Ami",
+      "text": "D'accord pour essayer, à condition de pouvoir partir quand je veux.",
+      "camera": "examiner", "action": "consider", "look_at": "candidate_a", "pause_after": 0.8
+    },
+    {
+      "id": "10", "speaker": "candidate_a", "name": "Candidate",
+      "text": "Bien sûr ! On y va ensemble et on décide sur place.",
+      "camera": "candidate_a", "action": "agree", "look_at": "examiner", "pause_after": 0.6
+    }
+  ]
+}
