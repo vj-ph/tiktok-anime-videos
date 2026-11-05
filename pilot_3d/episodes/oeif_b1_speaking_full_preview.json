@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "template": "long_speaking_full_preview",
+  "id": "oeif_b1_speaking_full_preview",
+  "language": "de",
+  "exam": {"family": "oeif", "skill": "speaking", "section": "all"},
+  "storyboard": "oeif_b1_speaking_long.json",
+  "review_script": "../builds/oeif_b1_speaking_long_text_review_r2/script.json",
+  "review_manifest": "../builds/oeif_b1_speaking_long_text_review_r2/export_manifest.json",
+  "review_script_sha256": "e1003ef1149b6e70d3fc7c74042258b08f9da0f5ffbca94b5cf6f49872c66d7b",
+  "title": "ÖIF B1 Sprechen mit Lea und Samir",
+  "source": {
+    "duration_limit_seconds": 900,
+    "duration_exception": "On 2026-11-03 the user approved the full 50-turn r2 text and requested its preview after discussing a 7-9 minute estimate. This separate long-form preview has a 15-minute safety ceiling; all short-preview limits remain unchanged.",
+    "adaptation": "Complete approved text-review r2, including both fictional self-presentations, all picture/planning material, soft transitions and CTA. Numbers/abbreviations are mapped to measured spoken words without changing their meaning.",
+    "speech_tempo_note": "User requested FFmpeg atempo=0.85 on 2026-11-03. Apply once to prepared speech before Rhubarb, forced alignment and animation. Preserve raw synthesis, reference voices and planned pauses."
+  },
+  "fps": 24,
+  "speech_tempo": 0.85,
+  "intro_seconds": 0,
+  "outro_seconds": 2,
+  "scene": {"base_scene": "../builds/v2/studio.blend", "entrance": false, "layout": "pair", "observer": true},
+  "render": {"motion_step": 3, "native_scale": 0.25, "samples": 2}
+}

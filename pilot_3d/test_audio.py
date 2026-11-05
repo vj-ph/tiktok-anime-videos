@@ -4,8 +4,10 @@ import copy
 import importlib.util
 import io
 import json
+import math
 from pathlib import Path
 import struct
+import shutil
 import sys
 import tempfile
 import unittest
@@ -448,6 +450,77 @@ class EdgeQuietTests(unittest.TestCase):
             self.assertEqual(turn["raw_wav_duration"], 2)
             self.assertEqual(turn["preprocessing"]["sample_bounds"]["start_sample"], 1000)
             self.assertEqual(turn["wav_duration"], 1)
+
+
+class SpeechTempoTests(unittest.TestCase):
+    def test_timeline_rejects_stale_tempo_in_both_directions_but_accepts_legacy_default(self):
+        from episode_config import check_timeline
+        data = episode()
+        infos = [{"audio": "fixture.wav", "frames": 24000, "sample_rate": 24000, "wav_duration": 1}] * 2
+        cues = [[{"start": 0, "end": .1, "value": "A"}]] * 2
+        timeline = audio.build_timeline(data, infos, cues)
+        check_timeline(data, timeline)
+        data["speech_tempo"] = .85
+        with self.assertRaisesRegex(ValueError, "Speech tempo"):
+            check_timeline(data, timeline)
+        for turn in timeline["turns"]:
+            turn["tempo_processing"] = {"tempo": .85}
+        check_timeline(data, timeline)
+        data["speech_tempo"] = 1
+        with self.assertRaisesRegex(ValueError, "Speech tempo"):
+            check_timeline(data, timeline)
+
+    def test_default_is_identity_and_invalid_tempo_is_rejected(self):
+        prepared = {"audio": "not_opened.wav"}
+        self.assertIs(prepared, audio.tempo_turn_audio("01", prepared, Path("."), 1))
+        for value in (0, .49, 1.01, True, float("nan")):
+            data = episode()
+            data["speech_tempo"] = value
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                audio.validate_episode(data)
+        for prepared in ({"audio": "raw.wav"}, {"tempo_processing": {}}):
+            with self.assertRaisesRegex(ValueError, "once-prepared"):
+                audio.tempo_turn_audio("01", prepared, Path("."), .85)
+
+    @unittest.skipUnless(shutil.which("ffmpeg"), "FFmpeg not installed.")
+    def test_real_atempo_preserves_pitch_sources_and_cache_but_changes_measured_duration(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source = root / "raw.wav"
+            rate = 24000
+            samples = [round(8000 * math.sin(2 * math.pi * 440 * i / rate)) for i in range(rate * 2)]
+            with wave.open(str(source), "wb") as wav:
+                wav.setnchannels(1)
+                wav.setsampwidth(2)
+                wav.setframerate(rate)
+                wav.writeframes(struct.pack("<" + "h" * len(samples), *samples))
+            original_hash = audio.sha256_file(source)
+            prepared = audio.prepare_turn_audio("01", {"audio": str(source), **audio.inspect_wav(source)}, root)
+            prepared_hash = audio.sha256_file(Path(prepared["audio"]))
+            slowed = audio.tempo_turn_audio("01", prepared, root, .85)
+            self.assertAlmostEqual(2 / .85, slowed["wav_duration"], delta=.05)
+            with wave.open(slowed["audio"], "rb") as wav:
+                values = struct.unpack("<" + "h" * wav.getnframes(), wav.readframes(wav.getnframes()))
+            middle = values[2400:-2400]
+            crossings = sum(a <= 0 < b for a, b in zip(middle, middle[1:]))
+            frequency = crossings * rate / len(middle)
+            self.assertAlmostEqual(440, frequency, delta=4)
+            self.assertEqual(original_hash, audio.sha256_file(source))
+            self.assertEqual(prepared_hash, audio.sha256_file(Path(prepared["audio"])))
+            with patch.object(audio.subprocess, "run", side_effect=AssertionError("cache should be reused")):
+                self.assertEqual(slowed, audio.tempo_turn_audio("01", prepared, root, .85))
+            other = audio.tempo_turn_audio("01", prepared, root, .9)
+            self.assertNotEqual(slowed["audio"], other["audio"])
+            self.assertGreater(slowed["frames"], other["frames"])
+            with self.assertRaisesRegex(ValueError, "once-prepared"):
+                audio.tempo_turn_audio("01", slowed, root, .85)
+            data = episode()
+            data["speech_tempo"] = .85
+            cues = [[{"start": 0, "end": slowed["wav_duration"], "value": "A"}]] * 2
+            timeline = audio.build_timeline(data, [slowed] * 2, cues)
+            self.assertEqual(.85, timeline["turns"][0]["tempo_processing"]["tempo"])
+            self.assertEqual(slowed["frames"], timeline["turns"][0]["sample_count"])
+            self.assertEqual(.125, timeline["turns"][0]["pause_after_seconds"])
 
 
 if __name__ == "__main__":

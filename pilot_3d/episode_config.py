@@ -302,6 +302,8 @@ def check_timeline(episode, timeline):
     for expected, actual in zip(episode["turns"], timeline["turns"]):
         if any(actual.get(key) != value for key, value in expected.items()):
             raise ValueError(f"Turn {expected['id']}: episode and prepared timeline differ; regenerate audio.")
+        if actual.get("tempo_processing", {}).get("tempo", 1.0) != episode.get("speech_tempo", 1.0):
+            raise ValueError("Speech tempo differs from the measured timeline; regenerate audio and alignment.")
     limit = duration_limit(episode)
     if limit is not None:
         encoded_seconds = timeline["total_frames"] / timeline["fps"]

@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "template": "long_speaking",
+  "id": "oeif_b1_speaking_long_01",
+  "language": "de",
+  "exam": {"family": "oeif", "skill": "speaking", "section": "all"},
+  "title": "ÖIF B1 Sprechen mit Lea und Samir",
+  "branding": "DEUTSCHKOMPASS",
+  "disclaimer": "Unabhängige Buchübung · keine offizielle Prüfung",
+  "source": {
+    "book": "../../../german/books/b1/speaking_oeif_gpt_v1/book.md",
+    "manifest": "../../../german/books/b1/speaking_oeif_gpt_v1/audio/manifest.jsonl",
+    "duration_exception": "User-requested long-form practice covering all three Teile; the short-video limit is not applicable to this separate template.",
+    "framework_checked": "2026-11-03",
+    "framework_references": [
+      "https://sprachportal.at/fileadmin/user_upload/meinsprachportal-at/Barrierefreies_Pruefungsangebot/Modelltests_Braillezeile/B1_Integrationspruefung/Pruefungsablauf_B1_Integrationspruefung.pdf",
+      "https://www.gast.de/de/forschung-entwicklung/entwicklung/auftraege/deutsch-test-fuer-zuwanderer-dtz/der-dtz-auf-einen-blick"
+    ],
+    "compatibility": "ÖIF B1 and DTZ share the broad speaking sequence. Reuse the layout, not the exam identity, source book, cover, link or an assertion of identical official tasks."
+  },
+  "scene": {
+    "base_scene": "../builds/v2/studio.blend",
+    "contact_pose_frame": 600,
+    "wall_logo": "../assets/deutschkompass-logo.png",
+    "hair_pose": "hanging_ponytail"
+  },
+  "promotion": {
+    "cover": "../../../german/books/b1/combined_oeif_gpt_v1/oeif_b1_combined.jpg",
+    "book_title": "ÖIF B1 Sprechen + Schreiben",
+    "amazon_url": "https://amzn.eu/d/0ctWX9v4",
+    "amazon_product_id": "B0H3NWBWKW",
+    "url_source": "User-supplied on 2026-11-03; redirect verified. User selected the matching combined-edition cover.",
+    "youtube": "Amazon: Link in der Beschreibung",
+    "social": "Amazon: Link in Bio",
+    "pointing_emoji": "../assets/emoji/point-down.png",
+    "cta": ["Jetzt selbst sprechen!", "Mehr Aufgaben und Modelldialoge", "im ÖIF-B1-Buch Sprechen + Schreiben"]
+  },
+  "subtitles": {
+    "highlight": "word",
+    "timing": "forced_alignment",
+    "contact_sample": "Illustrative active-word styling only, not a measured speech timestamp."
+  },
+  "thumbnail": {
+    "title": "ÖIF B1 Sprechen – Komplette Prüfungssimulation",
+    "subtitle": "Mit Lea und Samir",
+    "cast": ["examiner", "candidate_a", "candidate_b", "observer"]
+  },
+  "cast": {
+    "examiner": "Prüfer",
+    "candidate_a": "Lea",
+    "candidate_b": "Samir"
+  },
+  "opening": {
+    "text": "ÖIF B1 Sprechen mit Lea und Samir",
+    "speaker": "examiner",
+    "alignment_policy": "Speak the complete displayed title, then highlight words using measured forced alignment; no estimated word timing."
+  },
+  "parts": [
+    {
+      "number": 1,
+      "title": "Über sich sprechen",
+      "topic": "Alltag, Lernen und Freizeit",
+      "task": ["Erzählen Sie von Ihrem Alltag.", "Wann und wie lernen Sie Deutsch?", "Was machen Sie in Ihrer Freizeit?"],
+      "instruction": "Wir beginnen mit Teil eins. Samir, erzählen Sie bitte von Ihrem Alltag, vom Deutschlernen und von Ihrer Freizeit.",
+      "tracks": [
+        {"id": "oeif_b1_002_selbstvorstellung", "roles": {"Modellantwort": "candidate_b"}}
+      ],
+      "follow_up": [
+        {"speaker": "examiner", "text": "Sie hören gern Podcasts. Können Sie ein Beispiel nennen, wie Ihnen das beim Deutschlernen hilft?"},
+        {"speaker": "candidate_b", "text": "Ich höre zum Beispiel einen kurzen Podcast über das Kochen. Wenn ich ein neues Wort höre, schreibe ich es auf. Danach benutze ich es im Deutschkurs. So kann ich mir das Wort besser merken."}
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Bildbeschreibung",
+      "topic": "Familie beim Essen / in der Küche",
+      "picture": "../../../german/books/b1/speaking_oeif_gpt_v1/images/01.jpg",
+      "picture_credit": "Bildimpuls aus dem vom Nutzer bereitgestellten ÖIF-B1-Sprechbuch, images/01.jpg.",
+      "task": ["Beschreiben Sie das Bild.", "Wie ist das bei Ihnen zu Hause?", "Beantworten Sie die Nachfragen."],
+      "instruction": "In Teil zwei sprechen wir über ein Bild und Ihre Erfahrungen. Lea, beschreiben Sie bitte die Familie beim Essen. Wie ist das bei Ihnen zu Hause?",
+      "tracks": [
+        {"id": "oeif_b1_007_beispiel", "roles": {"Modellantwort": "candidate_a"}},
+        {"id": "oeif_b1_008_fragen", "roles": {"Frage": "examiner", "Modellantwort": "candidate_a"}}
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Gemeinsam etwas planen",
+      "topic": "Ein Treffen verabreden",
+      "task": ["Deutsch üben und danach etwas essen.", "Schichtdienst: Mittwochabend oder Samstag?", "Ruhiger Ort und kleines Budget.", "Zeit · Ort · Budget · Mitbringen · Plan B"],
+      "instruction": "Jetzt planen Sie gemeinsam ein Treffen zum Deutschüben. Lea hat nur an zwei Tagen Zeit. Samir möchte einen ruhigen Ort und wenig Geld ausgeben. Einigen Sie sich auch auf einen Plan B.",
+      "tracks": [
+        {"id": "oeif_b1_069_dialog", "roles": {"A": "candidate_a", "B": "candidate_b"}},
+        {"id": "oeif_b1_070_fragen", "roles": {"Frage": "examiner", "Modellantwort": "candidate_b"}}
+      ],
+      "result": ["Mittwoch · 18:15 Uhr", "Stadtbibliothek · am Eingang", "Maximal 8 Euro pro Person", "Lea: Notizbuch und Themenkarten", "Samir: Stifte und Obst", "Plan B: ruhiges Café oder Video-Call"]
+    }
+  ]
+}

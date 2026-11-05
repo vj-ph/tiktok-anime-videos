@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "template": "long_speaking_production",
+  "id": "oeif_b1_speaking_production",
+  "language": "de",
+  "exam": {"family": "oeif", "skill": "speaking", "section": "all"},
+  "storyboard": "oeif_b1_speaking_long.json",
+  "review_script": "../builds/oeif_b1_speaking_long_text_review_r2/script.json",
+  "review_manifest": "../builds/oeif_b1_speaking_long_text_review_r2/export_manifest.json",
+  "review_script_sha256": "e1003ef1149b6e70d3fc7c74042258b08f9da0f5ffbca94b5cf6f49872c66d7b",
+  "approved_preview": "../builds/oeif_b1_speaking_full_preview_notice_r6",
+  "approved_preview_manifest_sha256": "f69407123dbdb8ce62950275f4969578bba3a466ecaeb62884462d505bb42926",
+  "title": "ÖIF B1 Sprechen mit Lea und Samir",
+  "source": {
+    "duration_limit_seconds": 900,
+    "duration_exception": "Explicit long-form video requested by the user; production support requested on 2026-11-03 after reviewing the full 50-turn preview and silent notice. The 900-second ceiling applies only to this long-form template; short-video limits remain unchanged.",
+    "adaptation": "Approved full-review r2 and verified silent-notice preview r6. Preserve every measured 0.85x speech clip and local aligned word interval; insert only the approved six seconds of silence.",
+    "approval_note": "Production implementation requested, not an instruction to start the full render or publish. Existing auditory/reading flags remain for human review."
+  },
+  "fps": 24,
+  "speech_tempo": 0.85,
+  "intro_seconds": 0,
+  "outro_seconds": 2,
+  "scene": {"base_scene": "../builds/v2/studio.blend", "entrance": false, "layout": "pair", "observer": true},
+  "render": {"motion_step": 1, "native_scale": 1.0, "samples": 16},
+  "silent_notice": {
+    "before_turn": "teil3_instruction",
+    "seconds": 6,
+    "text": "Samirs Bildbeschreibung wird in diesem Video übersprungen."
+  }
+}

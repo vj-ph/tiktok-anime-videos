@@ -250,7 +250,7 @@ class RenderWorkerTests(unittest.TestCase):
             episode_file.write_text(json.dumps(episode), encoding="utf-8")
             from episode_config import read_episode
             resolved = read_episode(episode_file)
-            timeline = {"duration": 2 / 24, "fps": 24, "turns": []}
+            timeline = {"duration": 5 / 24, "fps": 24, "turns": []}
             manifest = {"episode": resolved, "timeline": timeline, "width": 32, "height": 32,
                         "motion_step": 1}
             (root / "timeline.json").write_text(json.dumps(timeline), encoding="utf-8")
@@ -267,9 +267,9 @@ class RenderWorkerTests(unittest.TestCase):
                                      + b"\x00\x00\x00\x00IEND\xaeB`\x82")
                 return SimpleNamespace(returncode=0)
 
-            def invoke(backend):
+            def invoke(backend, jobs=1):
                 argv = ["render.py", "frames", "--episode", str(episode_file), "--build", str(root),
-                        "--jobs", "1", "--render-device", backend]
+                        "--jobs", str(jobs), "--render-device", backend]
                 with patch.object(sys, "argv", argv), patch("render.run_process", side_effect=worker):
                     render.main()
 
@@ -284,6 +284,11 @@ class RenderWorkerTests(unittest.TestCase):
             self.assertEqual(len(commands), 2, "Backend change must rerender all frames")
             checkpoint = json.loads((root / "render_checkpoint.json").read_text(encoding="utf-8"))
             self.assertEqual(checkpoint["render_device"], "CPU")
+            invoke("HIP", jobs=3)
+            self.assertEqual(len(commands), 5, "Three workers must render the changed backend")
+            frames = [int(frame) for command in commands[-3:]
+                      for frame in command[command.index("-f") + 1].split(",")]
+            self.assertEqual(sorted(frames), [1, 2, 3, 4, 5])
 
 
 @unittest.skipUnless(os.environ.get("BLENDER_SMOKE_TEST"), "Set BLENDER_SMOKE_TEST=1 to render a test frame")

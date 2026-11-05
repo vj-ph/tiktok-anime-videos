@@ -8,7 +8,7 @@ from generation_runtime import run_process
 
 ROOT = Path(__file__).resolve().parent
 RENDER_DEVICES = ("CPU", "CUDA", "OPTIX", "HIP", "ONEAPI")
-RENDER_JOBS = (1, 2, 4, 8)
+RENDER_JOBS = (1, 2, 3, 4, 8)
 
 
 def tool_path(name):

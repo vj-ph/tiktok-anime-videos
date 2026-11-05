@@ -1,0 +1,25 @@
+ENTWURF · Produktionsvideo, nicht veröffentlicht.
+
+Titel: ÖIF B1 Sprechen – Komplette Prüfungssimulation | November 2026 · Episode 1
+
+Werbung | Deutsch Kompass
+
+Übe drei Teile mit Lea und Samir:
+1. Beide stellen sich vor und beantworten je eine Nachfrage.
+2. Lea beschreibt ein Bild und beantwortet Nachfragen.
+3. Beide planen ein Treffen zum Deutschüben.
+
+Samirs Bildbeschreibung wird in diesem Video übersprungen. Vor Teil 3 erscheint ein sechssekündiger Hinweis ohne Sprecherstimme.
+Sprich zuerst selbst und vergleiche mit den Modellantworten.
+Mehr Aufgaben und Modelldialoge im ÖIF-B1-Buch Sprechen + Schreiben.
+Amazon: https://amzn.eu/d/0ctWX9v4
+
+Unabhängige Buchübung, keine offizielle ÖIF-Aufgabe oder vollständige offizielle Prüfung. Die Lernkapitel und Pausen bilden nicht zwingend den offiziellen Ablauf ab.
+Die fiktiven Selbstvorstellungen wurden für das Video verfasst; Bild- und Planungsbeispiele stammen aus dem Buch.
+KI-generierte Stimmen und animierte Figuren. Vorhandene österreichische Referenzstimmen für Lea/Samir und einen Prüfer mittleren Alters. Sprechtempo 0,85-fach bei unveränderter Tonhöhe.
+
+Bildimpuls: bereitgestelltes ÖIF-B1-Sprechbuch, images/01.jpg.
+Snow Rig (CC) Blender Foundation | https://studio.blender.org/characters/snow/v4/
+Rain Rig (CC) Blender Foundation | https://studio.blender.org/characters/rain/v3/
+CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
+Bearbeitungen: Kleidung/Haare umgefärbt, Figuren skaliert, dupliziert und posiert; sprachgesteuerte Animation und nach unten posierte Pferdeschwänze. 8 Cycles-Samples, Figurenbilder auf jedem zweiten Frame; dieselben YouTube-Szenenbilder werden mittig zugeschnitten für Social verwendet. Vorhandene Stimmen unverändert übernommen. Keine Unterstützung oder Empfehlung durch Blender Foundation/Blender Studio.

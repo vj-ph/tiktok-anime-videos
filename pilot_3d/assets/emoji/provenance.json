@@ -1,0 +1,14 @@
+{
+  "asset": "point-down.png",
+  "unicode": "U+1F447",
+  "description": "Backhand index pointing down",
+  "author": "Twemoji (Twitter, Inc. and other contributors)",
+  "source": "https://github.com/jdecked/twemoji",
+  "source_commit": "b6b55fef1e8636b540a6d016a4729ca8cdf2e60b",
+  "download": "https://raw.githubusercontent.com/jdecked/twemoji/b6b55fef1e8636b540a6d016a4729ca8cdf2e60b/assets/72x72/1f447.png",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "sha256": "99a50b833fec96a9f274d707bb567cd242ec35db35d6bc26ac391c0619304b2e",
+  "modifications": "Resized for the Amazon CTA; artwork otherwise unchanged.",
+  "attribution": "Pointing-down emoji: Twemoji (Twitter, Inc. and other contributors), CC BY 4.0."
+}

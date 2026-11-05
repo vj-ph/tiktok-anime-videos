@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "template": "long_speaking_preview",
+  "id": "oeif_b1_speaking_long_preview",
+  "language": "de",
+  "exam": {"family": "oeif", "skill": "speaking", "section": "all"},
+  "storyboard": "oeif_b1_speaking_long.json",
+  "title": "ÖIF B1 Sprechen mit Lea und Samir",
+  "source": {
+    "duration_limit_seconds": 90,
+    "adaptation": "User-requested shortened visual/audio rehearsal of all three Teile, not the complete exam simulation.",
+    "voice_note": "User-supplied synthetic Austrian references. The copied voices.json filenames/model label do not match this directory; use the actual WAV filenames and phrase.txt without modifying originals."
+  },
+  "fps": 24,
+  "intro_seconds": 0,
+  "outro_seconds": 2,
+  "scene": {
+    "base_scene": "../builds/v2/studio.blend",
+    "entrance": false,
+    "layout": "pair",
+    "observer": true
+  },
+  "render": {"motion_step": 3, "native_scale": 0.25, "samples": 2},
+  "voices": {
+    "examiner": {
+      "audio": "../../../shared-voices/gemini_3.8_flash_tts/austrain/male_middle_adult_austrian.wav",
+      "transcript": "../../../shared-voices/gemini_3.8_flash_tts/austrain/phrase.txt"
+    },
+    "candidate_a": {
+      "audio": "../../../shared-voices/gemini_3.8_flash_tts/austrain/female_young_adult_austrian.wav",
+      "transcript": "../../../shared-voices/gemini_3.8_flash_tts/austrain/phrase.txt"
+    },
+    "candidate_b": {
+      "audio": "../../../shared-voices/gemini_3.8_flash_tts/austrain/male_young_adlut_austrian.wav",
+      "transcript": "../../../shared-voices/gemini_3.8_flash_tts/austrain/phrase.txt"
+    }
+  },
+  "turns": [
+    {
+      "id": "opening", "speaker": "examiner", "name": "Prüfer", "part": 0,
+      "kind": "opening", "panel_id": "01_opening", "action": "explain", "look_at": "candidate_b",
+      "text": "Ö I F B eins Sprechen mit Lea und Samir.",
+      "display_word_groups": [[0, 1, 2], [3, 4], [5], [6], [7], [8], [9]],
+      "pause_after": 0.5
+    },
+    {
+      "id": "teil1_task", "speaker": "examiner", "name": "Prüfer", "part": 1,
+      "kind": "task", "panel_id": "02_teil1_task", "action": "ask", "look_at": "candidate_b",
+      "text": "Teil eins. Samir, erzählen Sie bitte von Ihrem Alltag.", "pause_after": 0.7
+    },
+    {
+      "id": "teil1_model", "speaker": "candidate_b", "name": "Samir", "part": 1,
+      "kind": "model", "panel_id": "03_teil1_model", "action": "introduce", "look_at": "examiner",
+      "source_segment": "oeif_b1_002_selbstvorstellung_seg_001",
+      "text": "Ich arbeite unter der Woche und besuche zweimal am Abend einen Deutschkurs.", "pause_after": 0.8
+    },
+    {
+      "id": "teil2_task", "speaker": "examiner", "name": "Prüfer", "part": 2,
+      "kind": "task", "panel_id": "05_teil2_picture", "action": "ask", "look_at": "candidate_a",
+      "text": "Teil zwei. Lea, beschreiben Sie bitte das Bild.", "pause_after": 1.0
+    },
+    {
+      "id": "teil2_model", "speaker": "candidate_a", "name": "Lea", "part": 2,
+      "kind": "model", "panel_id": "06_teil2_model", "action": "describe", "look_at": "examiner",
+      "source_segment": "oeif_b1_007_beispiel_seg_001",
+      "text": "Auf dem Bild sehe ich eine Familie in der Küche. Sie sitzen an einem Tisch und essen zusammen.", "pause_after": 0.8
+    },
+    {
+      "id": "teil3_task", "speaker": "examiner", "name": "Prüfer", "part": 3,
+      "kind": "task", "panel_id": "08_teil3_task", "action": "ask", "look_at": "candidate_a",
+      "text": "Teil drei. Planen Sie gemeinsam ein Treffen.", "pause_after": 0.7
+    },
+    {
+      "id": "teil3_lea", "speaker": "candidate_a", "name": "Lea", "part": 3,
+      "kind": "model", "panel_id": "09_teil3_lea", "action": "propose", "look_at": "candidate_b",
+      "source_segment": "oeif_b1_069_dialog_seg_003",
+      "adaptation": "Shortened proposal; the original Wednesday 18:00 option is expressed as Wednesday evening.",
+      "text": "Ich kann am Mittwoch am Abend.", "pause_after": 0.4
+    },
+    {
+      "id": "teil3_samir", "speaker": "candidate_b", "name": "Samir", "part": 3,
+      "kind": "model", "panel_id": "10_teil3_samir", "action": "agree", "look_at": "candidate_a",
+      "source_segment": "oeif_b1_069_dialog_seg_004",
+      "text": "Mittwoch klingt gut.", "pause_after": 0.4
+    },
+    {
+      "id": "teil3_place", "speaker": "candidate_a", "name": "Lea", "part": 3,
+      "kind": "model", "panel_id": "09_teil3_lea", "action": "propose", "look_at": "candidate_b",
+      "source_segment": "oeif_b1_069_dialog_seg_005",
+      "text": "Wie wäre es mit der Stadtbibliothek?", "pause_after": 0.4
+    },
+    {
+      "id": "teil3_agreement", "speaker": "candidate_b", "name": "Samir", "part": 3,
+      "kind": "model", "panel_id": "10_teil3_samir", "action": "agree", "look_at": "candidate_a",
+      "source_segment": "oeif_b1_069_dialog_seg_014",
+      "text": "Abgemacht, ich freue mich!", "pause_after": 0.8
+    },
+    {
+      "id": "final_cta", "speaker": "examiner", "name": "Prüfer", "part": 0,
+      "kind": "cta", "panel_id": "12_final_cta", "action": "explain", "look_at": "candidate_a",
+      "text": "Mehr Aufgaben und Modelldialoge im Buch. Jetzt selbst sprechen!", "pause_after": 0
+    }
+  ]
+}

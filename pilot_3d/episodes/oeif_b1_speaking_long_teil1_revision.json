@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "status": "authored_text_review_only",
+  "base_review": "../builds/oeif_b1_speaking_long_text_review_r1/script.json",
+  "part": 1,
+  "title": "Über sich sprechen",
+  "topic": "Samir und Lea stellen sich vor",
+  "task": ["Name", "Geburtsort und Herkunft", "Wohnort", "Arbeit / Beruf", "Familie", "Sprachen", "Freizeit und Hobbys (zusätzlich)"],
+  "provenance": "User-requested replacement of the Samir-only Teil 1. Fictional biographies authored for this video, not quotations or recordings from the book. Each candidate introduces themselves and answers a linked follow-up.",
+  "replaced_book_track": "oeif_b1_002_selbstvorstellung",
+  "framework_checked": "2026-11-03",
+  "framework_references": [
+    "https://sprachportal.at/fileadmin/user_upload/meinsprachportal-at/Materialen_zur_Pruefungsvorbereitung/B1/B1_DTOE_Modelltest.pdf",
+    "https://sprachportal.at/fileadmin/user_upload/meinsprachportal-at/Barrierefreies_Pruefungsangebot/Modelltests_Lesegeraet/B1_Integrationspruefung/Pruefungsablauf_B1_Integrationspruefung.pdf"
+  ],
+  "framework_note": "The official paired model gives both candidates a self-introduction and an additional question. The six prompts are name, birthplace, residence, work, family and languages; hobbies are an additional practice topic, not a required seventh official prompt. This video remains independent chapter-based practice, not an exact official exam reproduction.",
+  "part2_transition": "Vielen Dank Ihnen beiden. Kommen wir nun zu Teil zwei. Lea, schauen Sie sich bitte dieses Bild an. Was sehen Sie?",
+  "turns": [
+    {
+      "id": "teil1_instruction",
+      "speaker": "examiner",
+      "kind": "instruction",
+      "text": "Wir beginnen mit Teil eins. Wir möchten Sie beide gern kennenlernen. Samir, stellen Sie sich bitte kurz vor."
+    },
+    {
+      "id": "teil1_samir_introduction",
+      "speaker": "candidate_b",
+      "kind": "model",
+      "text": "Ich heiße Samir und bin 28 Jahre alt. Ich komme aus Marokko und bin in Rabat geboren. Seit zwei Jahren wohne ich in Wien, zusammen mit meinem Bruder. Meine Eltern leben noch in Marokko. Ich arbeite in einem Supermarkt und besuche zweimal pro Woche am Abend einen Deutschkurs. Meine Muttersprache ist Arabisch. Außerdem spreche ich Französisch und lerne Deutsch. In meiner Freizeit koche ich gern und höre Podcasts. Ich möchte besser Deutsch sprechen, damit ich mich bei der Arbeit sicherer fühle."
+    },
+    {
+      "id": "teil1_followup_1",
+      "speaker": "examiner",
+      "kind": "question",
+      "text": "Sie hören gern Podcasts. Können Sie ein Beispiel nennen, wie Ihnen das beim Deutschlernen hilft?",
+      "provenance": "Retained authored examiner follow-up from r1; not a book recording."
+    },
+    {
+      "id": "teil1_followup_2",
+      "speaker": "candidate_b",
+      "kind": "model",
+      "text": "Ich höre zum Beispiel einen kurzen Podcast über das Kochen. Wenn ich ein neues Wort höre, schreibe ich es auf. Danach benutze ich es im Deutschkurs. So kann ich mir das Wort besser merken.",
+      "provenance": "Retained authored Samir follow-up from r1; not a book recording."
+    },
+    {
+      "id": "teil1_lea_invitation",
+      "speaker": "examiner",
+      "kind": "question",
+      "text": "Vielen Dank, Samir. Lea, jetzt sind Sie an der Reihe. Erzählen Sie uns bitte etwas über sich."
+    },
+    {
+      "id": "teil1_lea_introduction",
+      "speaker": "candidate_a",
+      "kind": "model",
+      "text": "Ich heiße Lea und bin 25 Jahre alt. Ich komme aus Spanien und bin in Valencia geboren. Seit einem Jahr wohne ich in Wien. Ich lebe mit einer Freundin in einer kleinen Wohnung. Meine Familie wohnt in Spanien, und wir telefonieren oft. Ich arbeite in einem Café. Meine Muttersprache ist Spanisch. Ich spreche auch Englisch und lerne seit einem Jahr Deutsch. In meiner Freizeit lese ich gern und treffe mich mit Freunden. Deutsch ist für mich wichtig, weil ich bei der Arbeit mit vielen Menschen spreche."
+    },
+    {
+      "id": "teil1_lea_followup_question",
+      "speaker": "examiner",
+      "kind": "question",
+      "text": "Sie lesen gern. Was lesen Sie am liebsten auf Deutsch?"
+    },
+    {
+      "id": "teil1_lea_followup_answer",
+      "speaker": "candidate_a",
+      "kind": "model",
+      "text": "Ich lese gern kurze Geschichten, weil ich dabei neue Wörter lerne. Wenn ich ein Wort nicht verstehe, schaue ich im Wörterbuch nach. Manchmal lese ich einen Text auch laut, damit ich die Aussprache übe."
+    }
+  ]
+}

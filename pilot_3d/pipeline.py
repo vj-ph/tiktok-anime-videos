@@ -334,7 +334,7 @@ def build_episode(path, build, profile="preview", jobs=4, with_promo=False, unti
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("validate", "build"))
+    parser.add_argument("command", choices=("validate", "build", "contacts"))
     parser.add_argument("--episode", type=Path, required=True)
     parser.add_argument("--build", type=Path,
                         help="Run directory; a project-level name is placed under builds/.")
@@ -345,6 +345,8 @@ def main():
     parser.add_argument("--promo", action="store_true")
     parser.add_argument("--until", choices=("audio", "scene", "export"), default="export")
     parser.add_argument("--reuse-audio", type=Path, help="Reuse exact audio/alignment from a verified prior delivery.")
+    parser.add_argument("--reuse-scene", type=Path,
+                        help="Reuse a verified full bake for shared-frame long-speaking production.")
     parser.add_argument("--speech-cache-from", type=Path,
                         help="Read-only previous build: reuse only matching, verified raw speech.")
     parser.add_argument("--qwen-python", type=Path, default=qwen_python())
@@ -360,7 +362,61 @@ def main():
     try:
         raw_episode = json.loads(args.episode.read_text(encoding="utf-8"))
         exam = raw_episode.get("exam") if isinstance(raw_episode, dict) else None
-        if isinstance(exam, dict) and exam.get("skill") == "listening":
+        if args.reuse_scene and (not isinstance(raw_episode, dict)
+                                or raw_episode.get("template") != "long_speaking_production"
+                                or raw_episode.get("render", {}).get("native_source") != "youtube"):
+            raise ValueError("--reuse-scene requires shared-frame long-speaking production.")
+        if isinstance(raw_episode, dict) and raw_episode.get("template") in (
+                "long_speaking_preview", "long_speaking_full_preview", "long_speaking_production"):
+            from long_speaking_preview import build_preview, load_preview
+
+            production = raw_episode["template"] == "long_speaking_production"
+            episode, storyboard = load_preview(args.episode, args.profile)
+            if production:
+                from long_speaking_production import production_reuse_spec
+                if args.speech_device != "cpu" or args.promo or args.speech_cache_from:
+                    raise ValueError("Production reuses approved audio exactly; speech generation/promo are unavailable.")
+                reuse = production_reuse_spec(episode, args.reuse_audio)
+                if args.reuse_scene:
+                    from long_speaking_production import production_scene_reuse_spec
+                    production_scene_reuse_spec(episode, storyboard, reuse, args.reuse_scene)
+                if args.render_device != "CPU":
+                    check_render_device(args.render_device)
+            elif (args.profile != "preview" or args.render_device != "CPU" or args.speech_device != "cpu"
+                  or args.promo or args.reuse_audio):
+                raise ValueError("The short long-layout rehearsal supports CPU preview only, without promo/exact audio reuse.")
+            if args.command == "validate":
+                print(f"Valid dual-format {'production' if production else 'preview'}: {episode['id']}; "
+                      f"strict duration <{episode['source']['duration_limit_seconds']} seconds.")
+            elif args.command != "build":
+                raise ValueError("Use build for this speaking video.")
+            elif args.build is None:
+                parser.error("--build is required for build")
+            else:
+                if production:
+                    build_preview(args.episode, args.build, args.jobs, args.until,
+                                  profile=args.profile, reuse_audio=args.reuse_audio,
+                                  reuse_scene=args.reuse_scene,
+                                  render_device=args.render_device)
+                else:
+                    build_preview(args.episode, args.build, args.jobs, args.until, args.speech_cache_from)
+        elif isinstance(raw_episode, dict) and raw_episode.get("template") == "long_speaking":
+            from long_speaking import build_contacts, load_episode
+
+            episode = load_episode(args.episode)
+            if args.promo or args.reuse_audio or args.speech_cache_from:
+                raise ValueError("Long-speaking contacts do not synthesize or reuse audio/video.")
+            if args.command == "validate":
+                print(f"Valid long speaking storyboard: {episode['id']}; three Teile; two aspect ratios.")
+            elif args.command != "contacts":
+                raise ValueError("Use contacts for this storyboard; video generation is not enabled.")
+            elif args.build is None:
+                parser.error("--build is required for contacts")
+            else:
+                build_contacts(args.episode, args.build)
+        elif args.command == "contacts":
+            raise ValueError("contacts currently requires template=long_speaking.")
+        elif isinstance(exam, dict) and exam.get("skill") == "listening":
             from listening_video import build_listening, load_episode
 
             episode, _ = load_episode(args.episode)

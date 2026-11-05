@@ -60,6 +60,9 @@ def nonempty(value: Any, label: str) -> str:
 def validate_episode(episode: Any) -> None:
     if not isinstance(episode, dict):
         raise ValueError("Episode must be a JSON object.")
+    tempo = number(episode.get("speech_tempo", 1.0), "speech_tempo", positive=True)
+    if not .5 <= tempo <= 1:
+        raise ValueError("speech_tempo must be between 0.5 and 1; default 1 leaves speech unchanged.")
     language_code(episode)
     fps = episode.get("fps")
     if isinstance(fps, bool) or not isinstance(fps, int) or not 1 <= fps <= 240:
@@ -463,6 +466,59 @@ def prepare_turn_audio(turn_id: str, raw: dict[str, Any], audio_dir: Path) -> di
     }
 
 
+def tempo_turn_audio(turn_id: str, prepared: dict[str, Any], audio_dir: Path,
+                     tempo: float) -> dict[str, Any]:
+    tempo = number(tempo, "speech_tempo", positive=True)
+    if not .5 <= tempo <= 1:
+        raise ValueError("speech_tempo must be between 0.5 and 1.")
+    if tempo == 1:
+        return prepared
+    if "tempo_processing" in prepared or "preprocessing" not in prepared:
+        raise ValueError("Tempo processing requires once-prepared audio, never raw or already slowed audio.")
+    binary = shutil.which("ffmpeg")
+    if binary is None:
+        raise FileNotFoundError("ffmpeg is required for pitch-preserving speech tempo processing.")
+    source = Path(prepared["audio"]).resolve(strict=True)
+    source_info = inspect_wav(source)
+    if any(source_info[field] != prepared[field] for field in source_info):
+        raise ValueError(f"Turn {turn_id}: prepared WAV measurements changed before tempo processing.")
+    payload = {
+        "schema": 1, "stage": "ffmpeg_atempo", "filter": f"atempo={tempo:g}",
+        "tempo": tempo, "ffmpeg_sha256": sha256_file(Path(binary)),
+        "input_sha256": sha256_file(source), "input_audio_info": source_info,
+        "preprocessing_key": prepared["preprocessing"]["cache_key"],
+    }
+    key = content_hash(payload)
+    target = audio_dir / f"{turn_id}-{key[:20]}.tempo.wav"
+    info = load_audio_cache(target, payload)
+
+    def valid_duration(info):
+        expected = source_info["wav_duration"] / tempo
+        return (info["sample_rate"] == source_info["sample_rate"]
+                and abs(info["wav_duration"] - expected) <= max(.1, expected * .005)
+                and info["frames"] > source_info["frames"])
+
+    if info is not None and not valid_duration(info):
+        info = None
+    if info is None:
+        partial = target.with_name(target.name + ".part")
+        subprocess.run([binary, "-nostdin", "-v", "error", "-y", "-i", str(source),
+                        "-map_metadata", "-1", "-af", payload["filter"], "-ac", "1",
+                        "-ar", str(source_info["sample_rate"]), "-c:a", "pcm_s16le",
+                        "-f", "wav", str(partial)], check=True)
+        info = inspect_wav(partial)
+        if not valid_duration(info):
+            raise ValueError(f"Turn {turn_id}: FFmpeg tempo output duration/sample rate differs.")
+        partial.replace(target)
+        atomic_json(target.with_suffix(".cache.json"), {
+            "cache_key": key, "payload": payload, "wav_sha256": sha256_file(target), "audio_info": info,
+        })
+    print(f"Tempo {turn_id}: {tempo:g}x; {source_info['wav_duration']:.3f}s -> "
+          f"{info['wav_duration']:.3f}s measured", flush=True)
+    return {**prepared, **info, "audio": str(target.resolve()),
+            "tempo_processing": {"cache_key": key, "input_audio": str(source), **payload}}
+
+
 def validate_cues(cues: Any, duration: float) -> list[dict[str, Any]]:
     number(duration, "WAV duration", positive=True)
     if not isinstance(cues, list) or not cues:
@@ -563,7 +619,7 @@ def build_timeline(episode: dict[str, Any], audio: list[dict[str, Any]],
         turns.append({
             **turn,
             **{field: info[field] for field in (
-                "raw_audio", "raw_sample_count", "raw_wav_duration", "preprocessing",
+                "raw_audio", "raw_sample_count", "raw_wav_duration", "preprocessing", "tempo_processing",
             ) if field in info},
             "start": cursor / fps,
             "end": (cursor + length) / fps,
@@ -722,6 +778,9 @@ def main() -> None:
         prepare_turn_audio(turn["id"], raw, audio_dir)
         for turn, raw in zip(episode["turns"], raw_audio)
     ]
+    if episode.get("speech_tempo", 1.0) != 1:
+        audio = [tempo_turn_audio(turn["id"], prepared, audio_dir, episode["speech_tempo"])
+                 for turn, prepared in zip(episode["turns"], audio)]
     binary = args.rhubarb.resolve(strict=True)
     binary_hash = sha256_file(binary)
     cues = [
