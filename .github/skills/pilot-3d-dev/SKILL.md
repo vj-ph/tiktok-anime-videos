@@ -125,6 +125,44 @@ including its Québec French listening-voice casting requirements.
   Confirm the final exported video's duration too. Do not rely on an older
   run's timing or silently relax the limit or accelerate speech to fit.
 
+## Default production rendering for all 3D videos
+
+Use the reduced-Cycles shared-frame preset established by the B1 and B2
+productions for every new 3D production video, including speaking and
+listening, unless the user explicitly requests different quality settings:
+
+```json
+{
+  "fps": 24,
+  "render": {
+    "motion_step": 2,
+    "native_scale": 1.0,
+    "samples": 8,
+    "native_source": "youtube"
+  }
+}
+```
+
+- Render scene motion on twos: one native Cycles image every two timeline
+  frames, reused at its original time in the 24-fps export. Keep approved
+  speech, duration and measured word highlights unchanged; composite captions
+  and other timed overlays on the full output frame clock.
+- Keep full native resolution, not preview scaling. Deliver requested
+  1920x1080 YouTube and/or 1080x1920 social layouts from the same lossless
+  YouTube scene images. Verify portrait-safe camera/head/hair bounds before
+  rendering. Do not crop a finished video's captions or book promotion.
+- Use `episodes/oeif_b1_speaking_production_shared.json` and
+  `episodes/oeif_b2_speaking_production.json` as render-setting examples, not
+  as interchangeable speech/content/approval configurations.
+- Confirm that the selected pipeline implements this preset end-to-end.
+  If it does not, add and test the required support before rendering; do not
+  silently ignore these keys or claim the policy changed runtime defaults.
+- This policy changes future production choices, not preview quality or
+  frozen deliveries. Use a fresh production build with approved exact audio;
+  never reuse a reduced-quality or opening-only preview scene as a full
+  production bake. Accelerator selection remains explicit and independently
+  validated.
+
 ## Build and compatibility invariants
 
 - Keep authored episodes/assets separate from ignored generated runs under

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "template": "long_speaking_full_preview",
+  "id": "oeif_b2_speaking_full_preview",
+  "language": "de",
+  "exam": {"family": "oeif", "level": "B2", "skill": "speaking", "section": "all"},
+  "storyboard": "oeif_b2_speaking_long.json",
+  "title": "ÖIF B2 Sprechen mit Lea und Samir",
+  "source": {
+    "duration_limit_seconds": 900,
+    "duration_exception": "Explicit user request on 2026-11-05 for an exam-paced YouTube master first, with one candidate presentation omitted. This separate long-form review is bounded below 900 seconds, not a change to ordinary under-90-second episodes.",
+    "adaptation": "First actual B2 book exercise in each speaking Teil, exact source models plus tracked contact/dialogue extensions and book partner questions. One clearly labelled reading summary refers viewers to the full book text. User requested a YouTube preview only on 2026-11-05; no production generation is authorized.",
+    "speech_tempo_note": "Use the B2 book manifest's 0.90 factor for initial speech review; do not inherit B1's 0.85 factor or accelerate speech to meet a target."
+  },
+  "fps": 24,
+  "speech_tempo": 0.9,
+  "intro_seconds": 0,
+  "outro_seconds": 2,
+  "output_formats": ["youtube"],
+  "scene": {"base_scene": "../builds/v2/studio.blend", "entrance": false, "layout": "pair", "observer": true},
+  "render": {"motion_step": 3, "native_scale": 0.25, "samples": 2},
+  "voices": {
+    "examiner": {
+      "audio": "../../../shared-voices/gemini_3.8_flash_tts/austrain/male_middle_adult_austrian.wav",
+      "transcript": "../../../shared-voices/gemini_3.8_flash_tts/austrain/phrase.txt"
+    },
+    "candidate_a": {
+      "audio": "../../../shared-voices/gemini_3.8_flash_tts/austrain/female_young_adult_austrian.wav",
+      "transcript": "../../../shared-voices/gemini_3.8_flash_tts/austrain/phrase.txt"
+    },
+    "candidate_b": {
+      "audio": "../../../shared-voices/gemini_3.8_flash_tts/austrain/male_young_adlut_austrian.wav",
+      "transcript": "../../../shared-voices/gemini_3.8_flash_tts/austrain/phrase.txt"
+    }
+  }
+}

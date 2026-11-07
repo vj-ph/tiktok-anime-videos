@@ -347,6 +347,10 @@ def main():
     parser.add_argument("--reuse-audio", type=Path, help="Reuse exact audio/alignment from a verified prior delivery.")
     parser.add_argument("--reuse-scene", type=Path,
                         help="Reuse a verified full bake for shared-frame long-speaking production.")
+    parser.add_argument("--reuse-preview-frames", type=Path,
+                        help="Reuse verified unchanged turn-local PNGs for B2 YouTube preview title/card revisions.")
+    parser.add_argument("--reuse-preview-audio", type=Path,
+                        help="Reuse an exact completed preview audio/alignment/speech-check checkpoint.")
     parser.add_argument("--speech-cache-from", type=Path,
                         help="Read-only previous build: reuse only matching, verified raw speech.")
     parser.add_argument("--qwen-python", type=Path, default=qwen_python())
@@ -362,6 +366,12 @@ def main():
     try:
         raw_episode = json.loads(args.episode.read_text(encoding="utf-8"))
         exam = raw_episode.get("exam") if isinstance(raw_episode, dict) else None
+        if args.reuse_preview_frames and (
+                raw_episode.get("template") != "long_speaking_full_preview"
+                or not isinstance(exam, dict) or exam.get("level") != "B2"):
+            raise ValueError("--reuse-preview-frames requires a B2 full speaking preview.")
+        if args.reuse_preview_audio and not args.reuse_preview_frames:
+            raise ValueError("--reuse-preview-audio requires --reuse-preview-frames.")
         if args.reuse_scene and (not isinstance(raw_episode, dict)
                                 or raw_episode.get("template") != "long_speaking_production"
                                 or raw_episode.get("render", {}).get("native_source") != "youtube"):
@@ -399,7 +409,9 @@ def main():
                                   reuse_scene=args.reuse_scene,
                                   render_device=args.render_device)
                 else:
-                    build_preview(args.episode, args.build, args.jobs, args.until, args.speech_cache_from)
+                    build_preview(args.episode, args.build, args.jobs, args.until, args.speech_cache_from,
+                                  reuse_preview_frames=args.reuse_preview_frames,
+                                  reuse_preview_audio=args.reuse_preview_audio)
         elif isinstance(raw_episode, dict) and raw_episode.get("template") == "long_speaking":
             from long_speaking import build_contacts, load_episode
 

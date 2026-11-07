@@ -53,6 +53,9 @@ def approved_preview(episode):
 
 
 def resolve_production(episode, path):
+    if episode.get("exam", {}).get("level") == "B2":
+        from b2_speaking import resolve_production as resolve_b2
+        return resolve_b2(episode, path)
     episode = resolve_full_episode(episode, path)
     episode["approved_preview"] = str(
         (path.parent / episode["approved_preview"]).resolve(strict=True))
@@ -68,6 +71,9 @@ def resolve_production(episode, path):
 
 
 def production_reuse_spec(episode, source):
+    if episode.get("exam", {}).get("level") == "B2":
+        from b2_speaking import production_reuse_spec as b2_reuse
+        return b2_reuse(episode, source)
     from pipeline import audio_reuse_spec
 
     if source is None:
@@ -131,6 +137,15 @@ def production_reuse_spec(episode, source):
 
 
 def production_inputs(episode, receipt):
+    if episode.get("exam", {}).get("level") == "B2":
+        source = Path(receipt["source"])
+        timeline = json.loads(read_json(source / "timeline.json"))
+        paths = [source / name for name in receipt["files_sha256"]]
+        paths += [Path(name) for name in receipt["voice_cache_sha256"]]
+        for turn in timeline["turns"]:
+            paths += [Path(turn["raw_audio"]), Path(turn["audio"]),
+                      Path(turn["tempo_processing"]["input_audio"])]
+        return paths
     approved, source = Path(episode["approved_preview"]), Path(receipt["source"])
     paths = [approved / "export_manifest.json", source / "export_manifest.json"]
     paths += [approved / name for name in APPROVED_FILES]
@@ -145,6 +160,11 @@ def production_inputs(episode, receipt):
 
 
 def production_timeline(episode, receipt):
+    if episode.get("exam", {}).get("level") == "B2":
+        from episode_config import check_timeline
+        timeline = json.loads(read_json(Path(receipt["source"]) / "timeline.json"))
+        check_timeline(episode, timeline)
+        return timeline
     timeline = json.loads(read_json(Path(receipt["approved_preview"]) / "playback_timeline.json"))
     edit = receipt["notice"]
     timeline["silent_notices"] = [{
@@ -252,6 +272,18 @@ def prepare_reused_scene(build, receipt):
 
 
 def prepare_production_audio(build, episode, receipt):
+    if episode.get("exam", {}).get("level") == "B2":
+        source = Path(receipt["source"])
+        for name in ("dialogue.wav", "timeline.json", "word_alignment.json",
+                     "speech_asr_check.json", "subtitles.srt", "b2_timing_checks.json"):
+            shutil.copy2(source / name, build / name)
+        atomic_json(build / "audio_reuse.json", receipt)
+        atomic_json(build / "auditory_review_flags.json", {
+            "inherited_speech_checks": json.loads(read_json(source / "speech_asr_check.json")),
+            "preview_approval": episode["preview_approval"],
+            "human_listening_performed_by_generator": False,
+        })
+        return
     source, approved = Path(receipt["source"]), Path(receipt["approved_preview"])
     timeline = production_timeline(episode, receipt)
     shutil.copy2(approved / "dialogue_with_notice.wav", build / "dialogue.wav")
@@ -276,6 +308,14 @@ def notice_at(timeline, frame):
 
 
 def notice_overlay(storyboard, mode, notice):
+    if notice.get("panel_id"):
+        from long_speaking import compile_script, panels
+        panel = next(p for p in panels(storyboard, compile_script(storyboard)) if p["id"] == notice["panel_id"])
+        box = FORMATS[mode]["scene"]
+        native = Image.new("RGB", (box[2] - box[0], box[3] - box[1]), PANEL)
+        image, check = compose(storyboard, panel, mode, native, sample_highlights=False)
+        check.update(silent=True, spoken_text=None, notice_text=panel.get("card_text", panel["body"]))
+        return image, check
     layout = FORMATS[mode]
     x0, y0, x1, y1 = layout["scene"]
     width, height = x1 - x0, y1 - y0

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "template": "long_speaking_production",
+  "id": "oeif_b2_speaking_production",
+  "language": "de",
+  "exam": {"family": "oeif", "level": "B2", "skill": "speaking", "section": "all"},
+  "storyboard": "oeif_b2_speaking_long.json",
+  "title": "ÖIF B2 Sprechen mit Lea und Samir",
+  "approved_preview": "../builds/oeif_b2_speaking_approved_r6",
+  "approved_preview_manifest_sha256": "a471007572c3b33415da303250eaa276ade97a06c75690a2787ada2599d7268b",
+  "preview_approval": {
+    "approved_by": "user",
+    "approved_on": "2026-11-06",
+    "scope": "User explicitly approved the r6 YouTube preview, including its audio, as the production source. The approved_r6 bundle preserves byte-identical media and the exact historical audio checkpoint; approval_source_provenance.json records verification against the original r6 manifest. Prepare and validate the production command only; do not start rendering. This supersedes the historical preview-only source note below. No publication approval."
+  },
+  "source": {
+    "duration_limit_seconds": 900,
+    "duration_exception": "Explicit user request on 2026-11-05 for an exam-paced YouTube master first, with one candidate presentation omitted. This separate long-form review is bounded below 900 seconds, not a change to ordinary under-90-second episodes.",
+    "adaptation": "First actual B2 book exercise in each speaking Teil, exact source models plus tracked contact/dialogue extensions and book partner questions. One clearly labelled reading summary refers viewers to the full book text. User requested a YouTube preview only on 2026-11-05; no production generation is authorized.",
+    "speech_tempo_note": "Use the B2 book manifest's 0.90 factor for initial speech review; do not inherit B1's 0.85 factor or accelerate speech to meet a target."
+  },
+  "fps": 24,
+  "speech_tempo": 0.9,
+  "intro_seconds": 0,
+  "outro_seconds": 2,
+  "output_formats": ["youtube"],
+  "scene": {"base_scene": "../builds/v2/studio.blend", "entrance": false, "layout": "pair", "observer": true},
+  "render": {"motion_step": 2, "native_scale": 1.0, "samples": 8, "native_source": "youtube"},
+  "voices": {
+    "examiner": {
+      "audio": "../../../shared-voices/gemini_3.8_flash_tts/austrain/male_middle_adult_austrian.wav",
+      "transcript": "../../../shared-voices/gemini_3.8_flash_tts/austrain/phrase.txt"
+    },
+    "candidate_a": {
+      "audio": "../../../shared-voices/gemini_3.8_flash_tts/austrain/female_young_adult_austrian.wav",
+      "transcript": "../../../shared-voices/gemini_3.8_flash_tts/austrain/phrase.txt"
+    },
+    "candidate_b": {
+      "audio": "../../../shared-voices/gemini_3.8_flash_tts/austrain/male_young_adlut_austrian.wav",
+      "transcript": "../../../shared-voices/gemini_3.8_flash_tts/austrain/phrase.txt"
+    }
+  }
+}

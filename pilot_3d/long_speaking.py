@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 from build_paths import build_directory
 from generation_runtime import run_process
-from prepare_audio import atomic_json, sha256_file
+from prepare_audio import atomic_json, atomic_text, sha256_file
 from runtime_config import font_path, tool_path
 
 FORMATS = {
@@ -49,7 +49,10 @@ def load_episode(path):
     exam = episode.get("exam", {})
     if (exam.get("family") not in ("oeif", "dtz") or exam.get("skill") != "speaking"
             or exam.get("section") != "all"):
-        raise ValueError("Long speaking supports ÖIF B1 or DTZ with all three Teile.")
+        raise ValueError("Long speaking requires an ÖIF or DTZ speaking episode with all three Teile.")
+    level = exam.get("level", "B1")
+    if level not in ("B1", "B2") or (level == "B2" and exam["family"] != "oeif"):
+        raise ValueError("Supported long-speaking profiles are ÖIF/DTZ B1 and ÖIF B2.")
     for field in ("title", "branding", "disclaimer"):
         if not isinstance(episode.get(field), str) or not episode[field].strip():
             raise ValueError(f"Missing {field}.")
@@ -59,6 +62,9 @@ def load_episode(path):
                        (episode["scene"], "base_scene"), (episode["scene"], "wall_logo"),
                        (episode["promotion"], "cover"), (episode["promotion"], "pointing_emoji")):
         obj[field] = str((path.parent / obj[field]).resolve(strict=True))
+    if "combined_edition" in episode["source"]:
+        episode["source"]["combined_edition"] = str(
+            (path.parent / episode["source"]["combined_edition"]).resolve(strict=True))
     if episode["opening"]["text"] != episode["title"]:
         raise ValueError("The opening must speak the complete displayed title.")
     if episode["opening"]["speaker"] not in episode["cast"]:
@@ -85,12 +91,18 @@ def load_episode(path):
             raise ValueError("Each Teil needs a task, instruction and source tracks.")
         if part.get("picture"):
             part["picture"] = str((path.parent / part["picture"]).resolve(strict=True))
-    if not episode["parts"][1].get("picture") or not episode["parts"][2].get("result"):
-        raise ValueError("Teil 2 needs its book picture; Teil 3 needs the agreed result.")
+    if not episode["parts"][2].get("result"):
+        raise ValueError("Teil 3 needs the agreed result.")
+    if level == "B1" and not episode["parts"][1].get("picture"):
+        raise ValueError("Teil 2 needs its book picture.")
+    if level == "B2" and episode["parts"][1].get("picture"):
+        raise ValueError("B2 discussion uses a reading stimulus, not a B1 picture task.")
     pose = episode["scene"].get("contact_pose_frame")
     if type(pose) is not int or pose < 1:
         raise ValueError("A positive native contact-pose frame is required.")
-    for image in (promo["cover"], promo["pointing_emoji"], episode["parts"][1]["picture"], episode["scene"]["wall_logo"]):
+    images = [promo["cover"], promo["pointing_emoji"], episode["scene"]["wall_logo"]]
+    images += [part["picture"] for part in episode["parts"] if part.get("picture")]
+    for image in images:
         with Image.open(image) as source:
             source.verify()
     compile_script(episode)
@@ -105,6 +117,9 @@ def compile_script(episode):
             if track["track_id"] in tracks:
                 raise ValueError(f"Duplicate manifest track: {track['track_id']}")
             tracks[track["track_id"]] = track
+    if episode.get("exam", {}).get("level") == "B2":
+        from b2_speaking import compile_script as compile_b2
+        return compile_b2(episode, tracks)
     turns = [{"id": "opening", **episode["opening"], "kind": "opening"}]
     for part in episode["parts"]:
         number = part["number"]
@@ -141,6 +156,9 @@ def compile_script(episode):
 
 
 def panels(episode, script):
+    if episode.get("exam", {}).get("level") == "B2":
+        from b2_speaking import panels as b2_panels
+        return b2_panels(episode, script)
     first, second, third = episode["parts"]
     turns = script["turns"]
 
@@ -274,8 +292,16 @@ def compose_thumbnail(episode, mode, native):
         text_box(draw, episode["thumbnail"]["title"], layout["title"],
                  size=105 if mode == "youtube" else 86, minimum=65, bold=True),
     ]
+    flag = None
+    if episode["exam"].get("level") == "B2":
+        flag = (1460, 45, 1550, 105) if mode == "youtube" else (760, 385, 820, 425)
+        x0, y0, x1, y1 = flag
+        draw.rectangle(flag, fill="#ed2939")
+        draw.rectangle((x0, y0 + round((y1 - y0) / 3), x1,
+                        y0 + round(2 * (y1 - y0) / 3)), fill="#ffffff")
     return image, {"format": mode, "size": list(image.size), "scene_box": box,
-                   "logo_box": layout["logo"], "cast": episode["thumbnail"]["cast"], "text": text}
+                   "logo_box": layout["logo"], "cast": episode["thumbnail"]["cast"], "text": text,
+                   **({"austrian_flag_box": flag} if flag else {})}
 
 
 def compose(episode, panel, mode, native, *, sample_highlights=True, active_word=None):
@@ -286,6 +312,7 @@ def compose(episode, panel, mode, native, *, sample_highlights=True, active_word
     draw = ImageDraw.Draw(image)
     portrait = mode == "social"
     exam_label = "ÖIF" if episode["exam"]["family"] == "oeif" else "DTZ"
+    level = episode["exam"].get("level", "B1")
     texts = []
 
     def text(value, box, **options):
@@ -295,16 +322,18 @@ def compose(episode, panel, mode, native, *, sample_highlights=True, active_word
         texts.append(result)
 
     if portrait:
-        text(f"{episode['branding']} · {exam_label} B1",
+        text(f"{episode['branding']} · {exam_label} {level}",
              (72, 175, 908, 222), size=31, bold=True, color=ACCENT)
         text(panel["heading"], (72, 238, 908, 348), size=43, minimum=32, bold=True,
-             highlight_word=(2 if sample_highlights else active_word) if panel["id"] == "01_opening" else None)
+             highlight_word=(2 if sample_highlights else active_word) if panel["id"] == "01_opening"
+             else panel.get("heading_active_word"))
         navigation = (72, 1240, 908, 1275)
     else:
-        text(f"{episode['branding']} · {exam_label} B1 SPRECHEN",
+        text(f"{episode['branding']} · {exam_label} {level} SPRECHEN",
              (64, 40, 1856, 90), size=35, bold=True, color=ACCENT)
         text(panel["heading"], (64, 105, 1856, 183), size=49, minimum=36, bold=True,
-             highlight_word=(2 if sample_highlights else active_word) if panel["id"] == "01_opening" else None)
+             highlight_word=(2 if sample_highlights else active_word) if panel["id"] == "01_opening"
+             else panel.get("heading_active_word"))
         navigation = (1410, 810, 1820, 855)
     if panel["id"] == "12_final_cta":
         cover = (310, 380, 690, 950) if portrait else (160, 280, 600, 940)
@@ -344,6 +373,11 @@ def compose(episode, panel, mode, native, *, sample_highlights=True, active_word
         else:
             picture_box, content = (64, 812, 360, 1018), (390, 818, 1260, 1012)
         paste_contained(image, episode["parts"][1]["picture"], picture_box)
+    if panel.get("card_text"):
+        draw.rectangle(scene_box, fill=PANEL)
+        x0, y0, x1, y1 = scene_box
+        text(panel["card_text"], (x0 + 30, y0 + 25, x1 - 30, y1 - 25),
+             size=34 if portrait else 40, minimum=30, highlight_word=panel.get("card_active_word"))
     body = panel["body"]
     if portrait and (not panel["picture"] or panel["id"] == "05_teil2_picture"):
         content = (90, 920, 890, 1220)
@@ -372,7 +406,7 @@ def native_stills(request_path):
 
 
 def build_contacts(episode_path, output):
-    from PIL import Image, ImageDraw, ImageFont
+    from PIL import Image, ImageDraw, ImageFont, ImageOps
 
     episode = load_episode(episode_path)
     build = build_directory(output)
@@ -394,17 +428,46 @@ def build_contacts(episode_path, output):
               ROOT / "listener_motion.py", font_path(), font_path(True), Path(episode["source"]["book"]),
               Path(episode["source"]["manifest"]), Path(episode["scene"]["base_scene"]),
               Path(episode["scene"]["wall_logo"]), Path(episode["promotion"]["cover"]),
-              Path(episode["promotion"]["pointing_emoji"]),
-              Path(episode["parts"][1]["picture"])]
+              Path(episode["promotion"]["pointing_emoji"])]
+    inputs += [Path(part["picture"]) for part in episode["parts"] if part.get("picture")]
+    if episode["source"].get("combined_edition"):
+        inputs.append(Path(episode["source"]["combined_edition"]))
+    if episode["exam"].get("level") == "B2":
+        inputs.append(ROOT / "b2_speaking.py")
     hashes = {str(path): sha256_file(path) for path in inputs}
     atomic_json(build / "episode.json", episode)
     atomic_json(build / "script.json", script)
+    if episode["exam"].get("level") == "B2":
+        atomic_text(build / "full_script.txt", "\n\n".join(
+            f"{turn['id']} | {episode['cast'][turn['speaker']]}\n{turn['text']}"
+            for turn in script["turns"]) + "\n")
+        atomic_text(build / "CREDITS.txt", "\n\n".join(episode["credits"]) + "\n")
     atomic_json(build / "native_request.json", {"episode": episode, "build": str(build)})
     with (build / "native.log").open("w", encoding="utf-8") as log:
         run_process([str(tool_path("blender")), "-b", episode["scene"]["base_scene"], "--disable-autoexec",
                      "-t", "4", "--python-exit-code", "1", "--python", str(Path(__file__).resolve()),
                      "--", "--native", str(build / "native_request.json")],
                     stdout=log, stderr=log, check=True)
+    if episode["exam"].get("level") == "B2":
+        receipts = json.loads((build / "native_checks.json").read_text(encoding="utf-8"))
+        box = FORMATS["social"]["scene"]
+        size = box[2] - box[0], box[3] - box[1]
+        for receipt in list(receipts):
+            source = Path(receipt["file"])
+            target = source.with_name("social_" + source.name.removeprefix("youtube_"))
+            with Image.open(source) as image:
+                ratio = (size[0] / size[1]) / (image.width / image.height)
+                cropped = ImageOps.fit(image.convert("RGB"), size, Image.Resampling.LANCZOS, centering=(.5, .5))
+            cropped.save(target)
+            margin = (1 - ratio) / 2
+            heads = [{**head, "bounds": [(head["bounds"][0] - margin) / ratio, head["bounds"][1],
+                                         (head["bounds"][2] - margin) / ratio, head["bounds"][3]]}
+                     for head in receipt["head_bounds"]]
+            receipts.append({**receipt, "format": "social", "file": str(target), "size": list(size),
+                             "head_bounds": heads, "sha256": sha256_file(target),
+                             "source_file": str(source), "source_sha256": sha256_file(source),
+                             "transform": "fixed_center_crop"})
+        atomic_json(build / "native_checks.json", receipts)
     checks, thumbnail_checks = [], []
     for mode in FORMATS:
         folder = build / mode

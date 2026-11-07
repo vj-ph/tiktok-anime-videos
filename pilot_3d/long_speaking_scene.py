@@ -54,14 +54,19 @@ def head_bounds(scene, camera, actors):
     return result
 
 
-def render_still(scene, camera, actors, size, output):
+def render_still(scene, camera, actors, size, output, *, shared_social=False):
     scene.camera = camera
     scene.render.resolution_x, scene.render.resolution_y = size
     bpy.context.view_layer.update()
     lens = camera.data.lens
     for _ in range(50):
         heads = head_bounds(scene, camera, actors)
-        if all(h["in_front"] and min(h["bounds"]) > .05 and max(h["bounds"]) < .95 for h in heads):
+        if shared_social:
+            from b2_speaking import shared_head_fits
+            fits = all(shared_head_fits(h) for h in heads)
+        else:
+            fits = all(h["in_front"] and min(h["bounds"]) > .05 and max(h["bounds"]) < .95 for h in heads)
+        if fits:
             break
         camera.data.lens *= .95
     else:
@@ -183,14 +188,17 @@ def render_contacts(request, formats, thumbnail_formats):
     scene.render.use_sequencer = False
     scene.render.use_persistent_data = True
     receipt = []
+    shared = episode.get("exam", {}).get("level") == "B2"
     for mode, layout in formats.items():
+        if shared and mode == "social":
+            continue
         box = layout["scene"]
         size = box[2] - box[0], box[3] - box[1]
         for name in ("wide", "candidate_a", "candidate_b", "examiner", "candidates"):
             roles = (list(actors) if name == "wide" else
                      ["candidate_a", "candidate_b"] if name == "candidates" else [name])
             check = render_still(scene, cameras[name], [actors[role] for role in roles], size,
-                                 build / "native" / f"{mode}_{name}.png")
+                                 build / "native" / f"{mode}_{name}.png", shared_social=shared)
             receipt.append({"format": mode, "camera": name, **check})
     freeze_source_animation(scene)
     camera, pose = group_pose(scene, actors)

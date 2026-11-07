@@ -1,5 +1,228 @@
 # Reusable 3D exam-practice generator
 
+## ÖIF B2 speaking: YouTube-first long simulation
+
+`episodes/oeif_b2_speaking_long.json` selects the first actual exercise from
+each speaking chapter of the combined v2 book: a book presentation, discussion
+of daylight-saving time, and planning a company outing. The 21 source-model
+segments remain unchanged; book partner questions, original contact dialogue
+and tracked continuations complete the script. Lea presents and Samir asks
+questions; a silent card explicitly omits his own presentation. Both candidates
+participate in contact, discussion and planning. Before contact, the examiner
+voices the Teil 1 and Teil 3 task cards and one labelled reading summary.
+The full reading remains in the book; its location is visible and spoken.
+Measured highlights follow the words directly across each card's heading,
+main text and footer, without duplicate scrolling subtitles.
+
+The user selected the existing combined-book cover dated October 6, 2026,
+despite the newer third-edition source, and supplied the B2 Amazon short link.
+Its GET redirect reaches product `B0GX37V8F5`; the destination returned 503,
+so product metadata is not independently certified. Do not substitute B1 or
+standalone-speaking promotion.
+
+From `pilot_3d`, validate and generate the requested YouTube preview only:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 pipeline.py validate --episode episodes\oeif_b2_speaking_full_preview.json
+.\.venv\Scripts\python.exe -X utf8 pipeline.py build `
+  --episode episodes\oeif_b2_speaking_full_preview.json `
+  --build builds\oeif_b2_speaking_full_preview_r6 `
+  --reuse-preview-audio builds\oeif_b2_speaking_full_preview_r5 `
+  --reuse-preview-frames builds\oeif_b2_speaking_full_preview_r3
+```
+
+Use fresh directories; matching checkpoints can resume. Add `--until audio`
+to stop before scene baking. November 6 title/label revision: the displayed
+and spoken title is "ÖIF B2 Sprechen mit Lea und Samir"; preparation headings
+and their TTS explicitly identify Teil 1, Teil 2 and Teil 3. Use a fresh
+build, reusing compatible speech; do not resume r3 against revised inputs.
+Only the opening and three preparation-card recordings change from r3.
+`--reuse-preview-frames` is restricted to this B2 YouTube title/card revision:
+verify the source audio/alignment/scene/frame checkpoints, unchanged scene code
+and assets, identical other turn instructions, PCM, mouth cues and local frame
+clocks. Copy compatible measured alignment caches, preserving original measured
+lip cues after exact text/PCM verification, and rebase unchanged native
+PNGs by turn-local frame offset, preserving hashes and crop-bound receipts.
+Bake and render only the new opening; cards are static overlays. The original
+measured lip cues remain tied to the reused dialogue images. Recompose/re-encode the complete preview
+and run the normal encoded audio/highlight/duration checks. The old build
+remains unchanged. Evidence: `preview_frame_reuse.json` and
+`reused_native_checks.json`. This does not confer production/publication approval.
+R4 synthesized the four revised clips, then its strict reuse guard exposed
+small nondeterministic Rhubarb differences on unchanged speech. It was stopped
+before native rendering and preserved. R5 reads all speech from r4, retains
+the r3 lip cues for identical unchanged PCM and uses r3's verified scene PNGs.
+The original full-scene bake took about 85 minutes. R5 was stopped during
+that unnecessary bake, preserving its completed audio/alignment/ASR stages.
+R6 uses `--reuse-preview-audio` for the exact matching r5 checkpoint, including
+unchanged ASR flags, and bakes only the opening's short timeline. Verify the
+saved episode, stage outputs, ASR episode/timeline hashes and all checked WAV
+hashes before copying. The final timeline stays full length; only the internal
+Blender bake timeline is shortened. `scene_checks.json` records its scope.
+This option requires B2 preview frame reuse and cannot generate speech or
+approve a production delivery.
+
+Verified r6 delivery: `builds\oeif_b2_speaking_full_preview_r6\preview_youtube.mp4`,
+960x540 at 24 fps, 17,429 frames / 726.208 seconds. Exactly 5,273 native
+images were reused and 28 opening images rendered from an 83-frame bake.
+All 94 targeted tests, full decode, encoded audio correlation, 466 encoded
+review samples and 518 manifest hashes passed. The encoded title, numbered
+preparation cards and final CTA were visually inspected. See
+`delivery_checks.json`, `preview_frame_reuse.json`, `preview_audio_reuse.json`
+and `preview_contact_youtube.jpg`. Independent ASR disagreements remain
+flagged; generator human listening was not performed. On November 6 the user
+explicitly approved this r6 preview, including its audio, as the production source.
+Historical r2 contact sheets retain the earlier
+seven-page full reading; do not present them as the revised preview. Its
+interrupted audio build retains 24 complete raw recordings for verified,
+compatible cache reuse. Only the preparation introduction changes among the
+original 64 turns; three new card narrations are added. The audio configuration uses
+the actual original Austrian WAVs/`phrase.txt`, 0.90× tempo, the complete
+spoken/highlighted title and a separate strict 900-second ceiling. Only the
+YouTube review is selected; full portrait and under-three-minute edits follow
+the approved master. No unrelated short-episode guard is changed.
+
+`b2_timing_checks.json` verifies the measured presentation/reaction limits and
+budgets a complete-turn social selection plus nine seconds for cards under
+180 seconds before scene baking. It is not proof of an encoded social export.
+Voiced preparation cards remain visible for their measured speech and a brief
+pause; they require no native room frames. Their encoded word boundaries and
+highlights are checked. The omission hold still occupies verified reserved
+silence on the on-threes review/on-twos master grids. Production requires
+explicit user preview approval, pinned preview artifacts and unchanged source
+inputs/code, then exact audio/alignment reuse. Native-frame production uses
+the existing shared YouTube strategy; derivative layouts must not crop the
+finished video's captions/promotion.
+
+The validated production configuration is
+`episodes\oeif_b2_speaking_production.json`: full-resolution shared YouTube
+scene frames, animation on twos, eight samples, exact approved audio and
+1920x1080 output. From `pilot_3d`, run:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 pipeline.py build `
+  --episode episodes\oeif_b2_speaking_production.json `
+  --profile production `
+  --build builds\oeif_b2_speaking_production_r1 `
+  --reuse-audio builds\oeif_b2_speaking_approved_r6 `
+  --render-device HIP `
+  --jobs 1
+```
+
+Production validation, exact audio reuse and 276 input-file checks pass;
+local Blender device discovery confirms HIP on the AMD Radeon 860M.
+All 43 focused B2/production regressions and the final diff check pass.
+This is not a GPU render benchmark. The command has not been started.
+Do not pass preview-reuse flags or reuse r6's opening-only `preview.blend`:
+production requires a fresh full performance bake and production-resolution
+scene images. Portrait and short derivatives remain later work.
+
+The pinned `builds\oeif_b2_speaking_approved_r6` approval-source bundle
+contains byte-identical r6 media, with all 518 original export hashes verified.
+R5's mutable checkpoint subsequently gained scene/frame completion entries.
+Removing only those two entries reproduces its exact historical checkpoint
+SHA256. The bundle freezes those exact original bytes locally and changes
+only its derived delivery's metadata dependency to that snapshot; original
+r5/r6 files and generator source hashes are untouched. Its provenance receipt,
+original reports/manifests and 522 verified file hashes preserve the audit trail.
+Keep this bundle and original referenced audio/asset files for production and
+resume. Approval does not authorize publication.
+
+### B2 social derivatives from the finished master
+
+`derive_long_speaking.py` verifies the completed B2 production export manifest,
+all lossless native PNG hashes and portrait crop bounds, then composes the
+requested full portrait delivery and the measured under-three-minute selection.
+It does not call Blender, TTS or alignment. This separate composition entry
+point preserves the frozen production generation sources and checkpoints.
+
+From `pilot_3d`, use a fresh derivative directory:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 derive_long_speaking.py `
+  --source builds\oeif_b2_speaking_production_r1 `
+  --build builds\oeif_b2_speaking_social_derivatives_new
+```
+
+The full portrait version has the original 17,429-frame clock and exact WAV.
+The short edit uses `b2_timing_checks.json`'s complete-turn selection:
+spoken opening, book presentation and partner question/answer, both text
+reactions plus concluding discussion positions, both planning conclusions
+and the original final CTA. Three silent three-second numbered preparation
+cards add context, including the reading abstract and full-text book reference.
+The planned clock is 3,497 frames / 145.708 seconds; the short branding
+explicitly says `Kurzfassung`. Only absolute turn starts are rebased; local
+word intervals and speech PCM remain unchanged, with exact cut/silence checks.
+Portrait overlays are composed at 1080x1920 on the full 24-fps clock;
+only the scene panel is cropped from native YouTube images.
+
+Each subdirectory (`full_social`, `social_under3`) contains
+`production_social.mp4`, encoded contact/review images, timeline, WAV, SRT,
+native reuse receipts, checks and export manifest. Source speech/ASR reports
+are retained explicitly at original source times; short turns record
+`source_start_frame` for lookup. Full post drafts remain in
+`posts/oeif_b2_speaking_long_01/`; short drafts are in
+`posts/oeif_b2_speaking_social_under3/`. Generation and encoded delivery
+verification are tracked in `plan/TODO.md`; no publication is implied.
+
+Verified November 7 deliveries are packaged together in
+`builds\oeif_b2_speaking_social_delivery_r1`:
+
+- `full_social.mp4`: 1080x1920, 17,429 frames / 726.208 seconds.
+- `social_under3.mp4`: 1080x1920, 3,497 frames / 145.708 seconds.
+
+Both are 24-fps exports from the existing native scene images and speech,
+with full-resolution portrait overlays, the correct book promotion, measured
+word highlights and the original final CTA. No new 3D rendering, TTS,
+realignment or speech acceleration. Full decode and audio correlation
+(0.999840 full / 0.999851 short) pass. Verify 557 full and 85 short export
+hashes, 544 full and 71 short standard encoded review samples, plus 363
+additional short word/edit samples covering 335 highlighted words (minimum
+fraction 0.918, unchanged 0.6 threshold). Visually inspect the encoded key
+sections and short edit boundaries; original master exports remain unchanged.
+`additional_delivery_verification.json`, `verification_manifest.json`,
+`source_preservation.json` and both per-format evidence/post folders accompany
+the byte-identical final MP4 copies. Generator human listening and publication
+are not claimed.
+
+The full composition source is `oeif_b2_speaking_social_derivatives_r2`;
+the final short source is `oeif_b2_speaking_social_derivatives_r3`, generated
+with `--short-only` after replacing generic task panels with the master's
+numbered preparation layouts. R2's earlier short version and r1's partial
+attempt are preserved, not the current short delivery. Three focused edit/PCM
+tests pass after that layout change; the preceding combined B2/production
+regression run passed 46 tests.
+
+November 7 publication assets:
+`builds\oeif_b2_speaking_publication_2026_11_ep01_r1` contains
+`thumbnail_full_youtube.png`, `thumbnail_full_social.png`,
+`thumbnail_short_social.png`, `thumbnail_full_instagram.png` and
+`thumbnail_short_instagram.png`, plus five platform post drafts in
+`posts\full` and `posts\short`. The user confirmed B2. Covers show the
+requested full title or `Prüfungssimulation · Kurzfassung`, Lea/Samir,
+`November 2026 · Episode 1`, the Austrian flag and Deutsch Kompass logo.
+Use the separate Instagram cover files for crop-safe full/short posting:
+all title/date/flag/logo regions and four faces survive tested centered
+square, 4:5 and 3:4 crops. Both crop-comparison sheets are included.
+All five covers were visually inspected, glyph bounds and 20 bundle hashes
+verified, and 1,053 source/video files preserved. No new scene rendering,
+video/audio changes, Instagram app test or publication. Post drafts retain
+the shortened Teil 1 disclosure despite the requested full cover title;
+YouTube includes the measured chapter times.
+
+The initial r1 stills exposed a conservative head/hair-bound failure in the
+planned portrait crop for two YouTube cameras. Both r1 runs are retained with
+retirement notes, not resumed against changed code. R2 reads compatible raw
+speech from r1. The B2 camera fitter now reserves five-percent head/hair
+clearance inside the shared portrait crop, both before baking and during every
+native render. B2 portrait review scene panels derive from the same YouTube
+stills rather than separate portrait renders; group thumbnails are separate
+posed stills. `CREDITS.txt` accompanies the contact review.
+
+Plan/status: `..\plan\oeif_b2_speaking_simulation.md` and `..\plan\TODO.md`.
+Drafts: `..\posts\oeif_b2_speaking_long_01\`. Generation, human review and
+publication approval are separate stages.
+
 ## Long ÖIF B1 speaking contact sheets
 
 `episodes/oeif_b1_speaking_long.json` is a separate **long-form storyboard**

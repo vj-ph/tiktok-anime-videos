@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "template": "long_speaking",
+  "id": "oeif_b2_speaking_long_01",
+  "language": "de",
+  "exam": {"family": "oeif", "level": "B2", "skill": "speaking", "section": "all"},
+  "title": "ÖIF B2 Sprechen mit Lea und Samir",
+  "branding": "DEUTSCHKOMPASS",
+  "disclaimer": "Unabhängige Buchübung; keine offizielle Aufgabe. Samirs Präsentation wird ausgelassen.",
+  "source": {
+    "book": "../../../german/books/b2/speaking_oeif_gpt_v2/book_no_toc.md",
+    "manifest": "../../../german/books/b2/speaking_oeif_gpt_v2/audio/manifest.jsonl",
+    "combined_edition": "../../../german/books/b2/combined_oeif_gpt_v2/book_no_toc.md",
+    "duration_exception": "User approved an exam-paced YouTube master on 2026-11-05, followed by full social and under-three-minute derivatives. Omit only the second solo presentation and its follow-ups; retain paired interactions.",
+    "framework_checked": "2026-11-05",
+    "framework_references": [
+      "https://sprachportal.at/fileadmin/user_upload/meinsprachportal-at/Materialen_zur_Pruefungsvorbereitung/B2/B2_OEIF-Test_Modelltest_ab_15.10.2026_15102026.pdf"
+    ],
+    "adaptation": "All 21 selected book-model segments remain unchanged. Contact, examiner transitions and dialogue continuations are authored fictional practice. Presentation partner questions and example answers come from the same first exercise. The reading is represented by one explicitly labelled authored summary, with the full text referenced in the book. The novel discussed is fictional, not the promoted workbook. Venue prices and accessibility are hypothetical, not verified offers."
+  },
+  "scene": {
+    "base_scene": "../builds/v2/studio.blend",
+    "contact_pose_frame": 600,
+    "wall_logo": "../assets/deutschkompass-logo.png",
+    "hair_pose": "hanging_ponytail"
+  },
+  "promotion": {
+    "cover": "../../../german/books/b2/combined_oeif_gpt_v1/oeif_b2_combined.jpg",
+    "book_title": "ÖIF B2 Sprechen + Schreiben",
+    "amazon_url": "https://amzn.eu/d/06Ob92VW",
+    "amazon_product_id": "B0GX37V8F5",
+    "url_source": "User supplied the B2 combined-book link and selected the displayed October 6 cover on 2026-11-05. GET redirect resolves to amazon.de/dp/B0GX37V8F5; destination returns HTTP 503, so product metadata was not independently verified. HEAD alone returns 404.",
+    "youtube": "Amazon: Link in der Beschreibung",
+    "social": "Amazon: Link in der Bio",
+    "pointing_emoji": "../assets/emoji/point-down.png",
+    "cta": ["Jetzt selbst sprechen!", "Mehr Aufgaben und Modelldialoge", "im ÖIF-B2-Buch Sprechen + Schreiben."]
+  },
+  "subtitles": {
+    "highlight": "word",
+    "timing": "forced_alignment",
+    "contact_sample": "Illustrative active-word styling only, not a measured speech timestamp."
+  },
+  "thumbnail": {
+    "title": "ÖIF B2 Sprechen: Bist du bereit?",
+    "subtitle": "3 Teile · Mit Lea und Samir",
+    "cast": ["examiner", "candidate_a", "candidate_b", "observer"]
+  },
+  "cast": {"examiner": "Prüfer", "candidate_a": "Lea", "candidate_b": "Samir"},
+  "credits": [
+    "Snow Rig (CC), Blender Foundation: https://studio.blender.org/characters/snow/v4/",
+    "Rain Rig (CC), Blender Foundation: https://studio.blender.org/characters/rain/v3/",
+    "Rigs: CC BY 4.0, https://creativecommons.org/licenses/by/4.0/. Modifications: recoloring, scaling, duplication, posing and speech-led animation. No endorsement by Blender Foundation or Blender Studio.",
+    "Pointing-down emoji: Twemoji (Twitter, Inc. and other contributors), CC BY 4.0. https://github.com/jdecked/twemoji . Resized; artwork otherwise unchanged.",
+    "Book content, cover and Austrian synthetic voice references supplied/selected by the user. No new external 3D assets."
+  ],
+  "opening": {
+    "text": "ÖIF B2 Sprechen mit Lea und Samir",
+    "speaker": "examiner",
+    "alignment_policy": "Map displayed abbreviations only to their actual forced-aligned spoken words. No estimated timestamps."
+  },
+  "preparation": "Vor dem Gespräch haben Sie zwanzig Minuten Einzelvorbereitung. Hier sehen Sie die Aufgaben und eine Kurzfassung des Lesetexts. Den vollständigen Lesetext finden Sie im Buch. Halten Sie das Video bei Bedarf an. Danach beginnen Lea und Samir mit der Kontaktphase.",
+  "narrate_preparation_cards": true,
+  "contact": [
+    {"speaker": "candidate_a", "text": "Hallo, ich bin Lea. Ich lerne seit ungefähr zwei Jahren Deutsch. Im Alltag komme ich schon gut zurecht, aber vor einer Präsentation bin ich immer noch ziemlich nervös. Wie geht es dir damit?"},
+    {"speaker": "candidate_b", "text": "Ich bin Samir. Mir geht es ähnlich. Im Beruf spreche ich viel Deutsch, aber in einer Prüfung suche ich manchmal zu lange nach dem passenden Wort. Übst du meistens allein?"},
+    {"speaker": "candidate_a", "text": "Früher ja. Inzwischen treffe ich mich einmal pro Woche mit einer Lernpartnerin. Wir stellen uns gegenseitig Fragen, statt nur fertige Antworten auswendig zu lernen. Das hilft mir besonders beim spontanen Sprechen."},
+    {"speaker": "candidate_b", "text": "Das klingt sinnvoll. Ich nehme mich manchmal mit dem Handy auf. Dann merke ich, ob meine Erklärung verständlich ist. Eine echte Rückfrage fehlt dabei natürlich. Vielleicht können wir nach der Prüfung gemeinsam weiterüben."},
+    {"speaker": "candidate_a", "text": "Gern. Mir hilft es schon, wenn mein Gegenüber aufmerksam zuhört. Dann fühlt sich das Gespräch weniger wie ein Vortrag an."},
+    {"speaker": "candidate_b", "text": "Dann hören wir einander heute gut zu. Und wenn etwas unklar ist, fragen wir einfach nach."}
+  ],
+  "parts": [
+    {
+      "number": 1,
+      "title": "Präsentation",
+      "topic": "Ein Buch, das Sie beeindruckt hat",
+      "task": ["Stellen Sie ein gelesenes Buch vor.", "Thema und Autorin oder Autor.", "Was hat Sie besonders beeindruckt?", "Würden Sie es weiterempfehlen?", "Danach: Rückfragen des Partners."],
+      "instruction": "Wir beginnen mit Teil eins. Lea, stellen Sie bitte das Buch vor, das Sie vorbereitet haben. Samir hört zu und stellt anschließend Rückfragen.",
+      "tracks": [{"id": "oeif_b2_v2_001_praesentation", "roles": {"Modellantwort": "candidate_a"}}],
+      "follow_up": [
+        {"speaker": "candidate_b", "text": "Warum hat Sie gerade dieses Buch emotional angesprochen?", "source_line": 179},
+        {"speaker": "candidate_a", "text": "Die Figuren müssen zwischen Loyalität und eigenen Chancen wählen. Solche Entscheidungen kenne ich aus meinem Umfeld; deshalb fand ich den Konflikt berührend.", "source_line": 185},
+        {"speaker": "candidate_b", "text": "Lesen Sie lieber Romane oder Sachbücher?", "source_line": 179},
+        {"speaker": "candidate_a", "text": "Meist Romane, weil ich andere Perspektiven durch Figuren leichter verstehe. Sachbücher lese ich, wenn ich gezielt etwas lernen möchte.", "source_line": 185},
+        {"speaker": "candidate_b", "text": "Würden Sie das Buch auch Jugendlichen empfehlen?", "source_line": 179},
+        {"speaker": "candidate_a", "text": "Ja, besonders älteren Jugendlichen. Über soziale Unterschiede lässt sich danach gut sprechen, ohne dass es nur eine richtige Meinung gibt.", "source_line": 185}
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Diskussion",
+      "topic": "Soll die Sommerzeit abgeschafft werden?",
+      "reading_summary": "Helle Abende oder hellere Morgen? Familien, Berufstätige und Schichtarbeitende haben unterschiedliche Bedürfnisse. Eine gemeinsame europäische Lösung ist wichtig.",
+      "task": ["Reagieren Sie beide auf den vorbereiteten Text.", "Sommerzeit, Normalzeit oder bisheriges System?", "Begründen Sie Ihren Standpunkt.", "Gehen Sie auf Argumente und Rückfragen ein."],
+      "instruction": "Kommen wir zu Teil zwei. Sie haben den Text zur Zeitumstellung gelesen. Reagieren Sie zunächst kurz darauf und diskutieren Sie anschließend miteinander.",
+      "tracks": [{"id": "oeif_b2_v2_026_diskussion", "roles": {"Kandidatin A": "candidate_a", "Kandidat B": "candidate_b"}}],
+      "extension": [
+        {"speaker": "candidate_a", "text": "Ich würde besonders Menschen mit Schichtarbeit und Familien mit kleinen Kindern einbeziehen. Allerdings sollten nicht nur diejenigen gehört werden, die ohnehin sehr laut für eine bestimmte Lösung eintreten. Wie könnte eine faire Befragung aussehen?"},
+        {"speaker": "candidate_b", "text": "Man könnte gezielt unterschiedliche Berufsgruppen und Altersgruppen ansprechen. Dabei würde ich nicht nur nach der bevorzugten Uhrzeit fragen, sondern nach Arbeitsbeginn, Betreuung und Arbeitsweg. So versteht man besser, warum jemand eine Lösung bevorzugt."},
+        {"speaker": "candidate_a", "text": "Das finde ich gut. Bei meiner Schwester beginnt die Arbeit früh, während ich oft später nach Hause komme. Wir hätten vermutlich verschiedene Antworten, obwohl wir beide mehr Tageslicht im Alltag möchten."},
+        {"speaker": "candidate_b", "text": "Genau deshalb reicht ein einfaches Dafür oder Dagegen nicht. Im Text steht auch, dass eine feste Zeit die kurzen Wintertage nicht verlängert. Diesen Unterschied müsste man vor einer Befragung verständlich erklären."},
+        {"speaker": "candidate_a", "text": "Dann würdest du also zuerst informieren und erst danach abstimmen lassen? Ich frage mich, ob am Ende trotzdem die Bedürfnisse der größeren Gruppe gewinnen und andere Menschen kaum berücksichtigt werden."},
+        {"speaker": "candidate_b", "text": "Das kann passieren. Deshalb sollte eine Entscheidung auch begründen, welche Nachteile bleiben und wie man sie abfedern könnte. Eine Mehrheit allein macht zum Beispiel einen schwierigen Arbeitsweg noch nicht einfacher."},
+        {"speaker": "candidate_a", "text": "Könnten flexiblere Anfangszeiten helfen? Wenn ich später anfangen dürfte, wäre ein dunkler Morgen für mich weniger problematisch. Für ein Geschäft mit festen Öffnungszeiten lässt sich das aber nicht so leicht organisieren."},
+        {"speaker": "candidate_b", "text": "Und für die Schule oder die Kinderbetreuung müsste es ebenfalls passen. Sonst verschiebt man das Problem nur. Ich würde flexible Zeiten deshalb als mögliche Ergänzung sehen, nicht als Lösung für alle."},
+        {"speaker": "candidate_a", "text": "Ein weiterer Punkt sind Menschen, die über eine Grenze zur Arbeit fahren. Wenn dort eine andere Zeit gelten würde, müssten sie jeden Termin genau prüfen. Diese zusätzliche Unsicherheit würde ich vermeiden wollen."},
+        {"speaker": "candidate_b", "text": "Da sind wir einer Meinung. Außerdem brauchen Verkehrsunternehmen genügend Vorlauf für Fahrpläne und Buchungssysteme. Bei einer Änderung wäre mir ein gemeinsamer, gut angekündigter Termin wichtiger als eine besonders schnelle Entscheidung."},
+        {"speaker": "candidate_a", "text": "Ich würde dauerhaft die Sommerzeit wählen, weil mir helle Abende wichtig sind. Die Nachteile am Morgen müssen aber berücksichtigt werden. Dafür brauchen wir verständliche Informationen und Erfahrungen verschiedener betroffener Gruppen."},
+        {"speaker": "candidate_b", "text": "Ich bevorzuge die Normalzeit, weil morgens viele Wege beginnen. Einig sind wir uns aber bei der europäischen Abstimmung und einer sorgfältigen Vorbereitung. Unsere unterschiedlichen Wünsche lassen sich nicht allein mit einer anderen Uhrzeit lösen."}
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Gemeinsam planen",
+      "topic": "Betriebsausflug organisieren",
+      "task": ["Linz · September · 32 Personen.", "Zwei Kolleginnen brauchen stufenlosen Zugang.", "Höchstens 55 Euro pro Person für Fahrt und Programm.", "Ziel, Anreise und passende Verpflegung.", "Umfrage, Angebote, Aufgaben und Entscheidungstermin."],
+      "instruction": "Jetzt lösen Sie gemeinsam eine Aufgabe. Planen Sie den Betriebsausflug aus Ihrer Vorbereitung. Berücksichtigen Sie den Zugang, das Budget und die unterschiedlichen Bedürfnisse. Vereinbaren Sie auch, wer was bis wann übernimmt.",
+      "tracks": [{"id": "oeif_b2_v2_047_planung", "roles": {"Person A": "candidate_a", "Person B": "candidate_b"}}],
+      "extension": [
+        {"speaker": "candidate_a", "text": "Genau. Die Rechnung ist zunächst nur ein Plan, kein bestätigtes Angebot. Ich würde deshalb in beiden Busangeboten nachfragen, ob wirklich alle Kosten enthalten sind und wie ein Einstieg ohne Stufen möglich wäre."},
+        {"speaker": "candidate_b", "text": "Frag bitte auch, was bei einer Absage passiert. Wenn ein Angebot nur kurz gilt, müssen wir das vor der Umfrage wissen. Sonst wählen alle ein Ziel, das wir später gar nicht mehr buchen können."},
+        {"speaker": "candidate_a", "text": "Guter Hinweis. Welche Informationen brauchst du für die Umfrage? Ich möchte sie nicht mit zu vielen Fragen überladen, aber die wichtigen Bedürfnisse dürfen nicht fehlen."},
+        {"speaker": "candidate_b", "text": "Ich frage nach der Teilnahme, notwendigen Zugängen und dem Essen. Wer etwas nicht in der Gruppe schreiben möchte, kann sich direkt bei mir melden. Namen und persönliche Angaben gehören nicht in die gemeinsame Ergebnisübersicht."},
+        {"speaker": "candidate_a", "text": "Dann reicht für unsere Entscheidung eine Zusammenfassung. Bei den Lunchpaketen sollten die Varianten klar beschriftet sein. Die genauen Wünsche würde ich erst abfragen, wenn wir wissen, welche passenden Optionen angeboten werden."},
+        {"speaker": "candidate_b", "text": "Einverstanden. Beim Zeitplan würde ich genügend Pausen vorsehen. Eine Verbindung kann auf dem Papier günstig aussehen und trotzdem unpraktisch sein, wenn wir beim Umsteigen unter Zeitdruck geraten. Das spricht für den gemeinsamen Bus."},
+        {"speaker": "candidate_a", "text": "Für einen Vergleich würde ich die Bahn trotzdem kurz prüfen. Wenn der Weg vom Bahnhof nicht stufenlos möglich ist, fällt diese Variante aber aus. Wir dürfen nicht nur auf den Fahrpreis schauen."},
+        {"speaker": "candidate_b", "text": "Dann vergleichen wir den ganzen Weg und nicht bloß die Fahrkarte. Für die Schifffahrt brauchen wir außerdem eine bestätigte Lösung bei schlechtem Wetter. Ohne eine passende Alternative würde ich sie nicht zur Abstimmung stellen."},
+        {"speaker": "candidate_a", "text": "Ich würde vorläufig die Stahlwelt bevorzugen, sofern der Zugang bestätigt wird. Das Wetter wäre dort weniger entscheidend. Wir versprechen dem Team aber noch kein bestimmtes Ziel, bevor die Rückmeldungen vorliegen."},
+        {"speaker": "candidate_b", "text": "Gut. Falls kein Angebot passt, verschieben wir nicht einfach die Kosten auf die Teilnehmenden. Wir suchen zuerst ein näheres Ziel. Den Kostenrahmen und den stufenlosen Zugang behandeln wir als feste Bedingungen."},
+        {"speaker": "candidate_a", "text": "Wir planen also für zweiunddreißig Personen und wählen nur ein bestätigtes, stufenlos zugängliches Angebot. Unsere vorläufige Rechnung liegt bei dreiundfünfzig Euro pro Person einschließlich Lunchpaket. Ich hole bis Mittwoch die Angebote und prüfe den gesamten Zugang."},
+        {"speaker": "candidate_b", "text": "Ich sammle bis Mittwoch die Rückmeldungen und Ernährungswünsche. Am Donnerstag vergleichen wir alles. Gebucht wird erst mit Zustimmung des Teams, passendem Zugang und bestätigtem Budget. Sonst suchen wir eine nähere Alternative innerhalb der fünfundfünfzig Euro pro Person."}
+      ],
+      "result": ["32 Personen · September · Linz", "Nur bestätigter stufenloser Zugang", "Vorläufig 1.696 Euro · 53 Euro pro Person", "Lea: Angebote und Zugang bis Mittwoch", "Samir: Rückmeldungen bis Mittwoch", "Donnerstag vergleichen · nur bestätigt buchen"]
+    }
+  ],
+  "social_selection": {
+    "status": "Candidate spans only; choose and validate after measured alignment.",
+    "duration_limit_seconds": 180,
+    "turns": ["opening", "oeif_b2_v2_001_praesentation_seg_001", "teil1_followup_01", "teil1_followup_02", "oeif_b2_v2_026_diskussion_seg_001", "oeif_b2_v2_026_diskussion_seg_002", "teil2_extension_11", "teil2_extension_12", "teil3_extension_11", "teil3_extension_12", "final_cta"],
+    "policy": "Retain complete selected turns when timing permits. Reuse measured audio/native frames, add clear shortened-section labels, and include every card and CTA in the strict final frame clock. No acceleration or invented alignment."
+  }
+}

@@ -26,6 +26,8 @@ ROOT = Path(__file__).resolve().parent
 OUTPUTS = {"youtube": (960, 540), "social": (540, 960)}
 SOURCES = ("pipeline.py", "long_speaking.py", "long_speaking_scene.py", "long_speaking_preview.py",
            "long_speaking_full_preview.py",
+           "b2_speaking.py",
+           "preview_frame_reuse.py",
            "long_speaking_production.py",
            "long_speaking_preview_scene.py", "prepare_audio.py", "align_words.py", "check_speech.py",
            "episode_config.py", "episode_profiles.py", "scene_direction.py", "studio_characters.py",
@@ -51,7 +53,10 @@ def native_panel(episode, mode, image):
 
 
 def output_sizes(episode):
-    return {mode: FORMATS[mode]["size"] for mode in OUTPUTS} if is_production(episode) else OUTPUTS
+    modes = episode.get("output_formats", list(OUTPUTS))
+    if not modes or len(set(modes)) != len(modes) or any(mode not in OUTPUTS for mode in modes):
+        raise ValueError("Select unique supported output formats.")
+    return {mode: FORMATS[mode]["size"] if is_production(episode) else OUTPUTS[mode] for mode in modes}
 
 
 def output_name(episode, mode):
@@ -91,7 +96,7 @@ def load_preview(path, profile="preview"):
                          "Use the bounded CPU preview quality; this is not a production path.")
     episode["storyboard"] = str((path.parent / episode["storyboard"]).resolve(strict=True))
     storyboard = load_storyboard(episode["storyboard"])
-    if full:
+    if full and episode.get("exam", {}).get("level") != "B2":
         storyboard["parts"][0].update({key: episode["review_part1"][key] for key in ("title", "topic", "task")})
     if episode["title"] != storyboard["title"]:
         raise ValueError("Preview and approved storyboard titles differ.")
@@ -126,6 +131,8 @@ def load_preview(path, profile="preview"):
 
 def caption_pages(turn):
     tokens = turn.get("display_text", turn["text"]).split()
+    if turn.get("kind") == "preparation_card":
+        return [(0, len(tokens))]
     result, start = [], 0
     while start < len(tokens):
         end = min(start + 12, len(tokens))
@@ -179,14 +186,15 @@ def native_sample(turn, frame, step):
 def native_plan(episode, storyboard, timeline):
     lookup = {panel["id"]: panel for panel in panels(storyboard, compile_script(storyboard))}
     result = []
-    modes = ("youtube",) if shared_native(episode) else FORMATS
+    modes = ("youtube",) if shared_native(episode) else output_sizes(episode)
     for mode in modes:
         layout = FORMATS[mode]
         box = layout["scene"]
         width, height = (max(2, round((box[i + 2] - box[i]) * episode["render"]["native_scale"]))
                          for i in (0, 1))
         for index, turn in enumerate(timeline["turns"]):
-            if turn["panel_id"] in ("05_teil2_picture", "12_final_cta"):
+            if (turn["panel_id"] in ("05_teil2_picture", "12_final_cta")
+                    or lookup[turn["panel_id"]].get("card_text")):
                 continue
             end = timeline["turns"][index + 1]["start_frame"] if index + 1 < len(timeline["turns"]) else timeline["total_frames"]
             for frame in range(turn["start_frame"], end, episode["render"]["motion_step"]):
@@ -210,7 +218,15 @@ def overlay(episode, storyboard, timeline, mode, frame):
     panel["part"] = turn["part"]
     if "heading" in turn:
         panel["heading"] = turn["heading"]
-    if turn["kind"] not in ("opening", "cta"):
+    body_active = active
+    if turn["kind"] == "preparation_card":
+        heading_words = len(panel["heading"].split())
+        card_end = heading_words + len(panel["card_text"].split())
+        panel["heading_active_word"] = active if active is not None and active < heading_words else None
+        panel["card_active_word"] = (active - heading_words
+                                     if active is not None and heading_words <= active < card_end else None)
+        body_active = active - card_end if active is not None and active >= card_end else None
+    elif turn["kind"] not in ("opening", "cta"):
         panel["body"] = " ".join(turn.get("display_text", turn["text"]).split()[start:end])
     if turn["kind"] == "task":
         panel["heading"] = f"Teil {turn['part']} · {storyboard['parts'][turn['part'] - 1]['title']}"
@@ -219,7 +235,7 @@ def overlay(episode, storyboard, timeline, mode, frame):
         visual["branding"] += " · VORSCHAU"
     box = FORMATS[mode]["scene"]
     blank = Image.new("RGB", (box[2] - box[0], box[3] - box[1]), PANEL)
-    image, check = compose(visual, panel, mode, blank, sample_highlights=False, active_word=active)
+    image, check = compose(visual, panel, mode, blank, sample_highlights=False, active_word=body_active)
     if turn["kind"] == "cta":
         box = (700, 900, 1780, 1030) if mode == "youtube" else (90, 1518, 900, 1650)
         caption = text_box(ImageDraw.Draw(image), " ".join(turn.get("display_text", turn["text"]).split()[start:end]), box,
@@ -253,7 +269,7 @@ def caption_preflight(build, episode, storyboard, timeline):
                           "end": page_end, "characters_per_second": len(text) / (page_end - page_start)})
         for word in turn["words"]:
             frame = turn["start_frame"] + math.ceil((word["start"] + word["end"]) * timeline["fps"] / 2)
-            for mode in OUTPUTS:
+            for mode in output_sizes(episode):
                 _, check = overlay(episode, storyboard, timeline, mode, frame)
                 checks.append(check)
     atomic_json(build / "caption_preflight.json", {
@@ -275,6 +291,8 @@ def encode(build, episode, storyboard, timeline, mode):
                str(timeline["total_frames"] / timeline["fps"]), "-movflags", "+faststart", str(path)]
     last_key = last_native = None
     cached = native_image = None
+    static_panels = {"05_teil2_picture", "12_final_cta"} | {
+        p["id"] for p in panels(storyboard, compile_script(storyboard)) if p.get("card_text")}
     with (build / f"encode_{mode}.log").open("w") as log:
         process = start_process(command, stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=log)
         try:
@@ -294,7 +312,7 @@ def encode(build, episode, storyboard, timeline, mode):
                     cached, _ = overlay(episode, storyboard, timeline, mode, frame)
                     last_key = key
                 image = cached.copy()
-                if turn["panel_id"] not in ("05_teil2_picture", "12_final_cta"):
+                if turn["panel_id"] not in static_panels:
                     sample = native_sample(turn, frame, episode["render"]["motion_step"])
                     if sample != last_native:
                         native_mode = "youtube" if shared_native(episode) else mode
@@ -375,6 +393,16 @@ def review_export(build, episode, storyboard, timeline, mode):
     offset = math.ceil(opening["words"][first_group[-1]]["end"] * timeline["fps"])
     samples.update(f for f in (max(0, onset - 1), onset, offset - 1, offset) if f < timeline["total_frames"])
     samples.add(timeline["total_frames"] - 1)
+    for turn in timeline["turns"]:
+        if turn["kind"] != "preparation_card":
+            continue
+        for word in caption_words(turn):
+            first = turn["start_frame"] + math.ceil(word["start"] * timeline["fps"])
+            last = turn["start_frame"] + math.ceil(word["end"] * timeline["fps"]) - 1
+            if first > last:
+                raise ValueError("An aligned preparation word has no encoded highlight frame.")
+            samples.update(f for f in (max(0, first - 1), first, (first + last) // 2, last, last + 1)
+                           if f < timeline["total_frames"])
     if is_production(episode):
         for turn in timeline["turns"]:
             for word in caption_words(turn):
@@ -429,7 +457,8 @@ def review_export(build, episode, storyboard, timeline, mode):
 
 @generation_job
 def build_preview(path, output, jobs=4, until="export", speech_cache_from=None, *,
-                  profile="preview", reuse_audio=None, reuse_scene=None, render_device="CPU"):
+                  profile="preview", reuse_audio=None, reuse_scene=None, render_device="CPU",
+                  reuse_preview_frames=None, reuse_preview_audio=None):
     from pipeline import run_command
 
     episode, storyboard = load_preview(path, profile)
@@ -438,15 +467,22 @@ def build_preview(path, output, jobs=4, until="export", speech_cache_from=None, 
         raise ValueError("Previews support CPU rendering without exact audio reuse.")
     if production and speech_cache_from:
         raise ValueError("Production requires exact --reuse-audio, not --speech-cache-from.")
+    if production and reuse_preview_frames:
+        raise ValueError("Preview frame reuse is not a production path.")
+    if reuse_preview_audio and (production or not reuse_preview_frames or speech_cache_from):
+        raise ValueError("Exact preview audio checkpoints require frame reuse, without speech generation.")
     episode["render_device"] = render_device
     build = build_directory(output)
     assets = [Path(path).resolve(), Path(episode["storyboard"]), Path(episode["scene"]["base_scene"]),
               Path(storyboard["source"]["book"]), Path(storyboard["source"]["manifest"]),
-              Path(storyboard["parts"][1]["picture"]), Path(storyboard["promotion"]["cover"]),
+              Path(storyboard["promotion"]["cover"]),
               Path(storyboard["promotion"]["pointing_emoji"]), Path(storyboard["scene"]["wall_logo"]),
               font_path(), font_path(True)]
     assets += [Path(v[k]) for v in episode["voices"].values() for k in ("audio", "transcript")]
-    if production or episode.get("template") == "long_speaking_full_preview":
+    assets += [Path(part["picture"]) for part in storyboard["parts"] if part.get("picture")]
+    if storyboard["source"].get("combined_edition"):
+        assets.append(Path(storyboard["source"]["combined_edition"]))
+    if (production or episode.get("template") == "long_speaking_full_preview") and episode.get("exam", {}).get("level") != "B2":
         assets += [Path(episode["review_script"]), Path(episode["review_manifest"]),
                    Path(episode["review_manifest"]).parent / "teil1_revision.json"]
     reuse = scene_reuse = None
@@ -465,8 +501,22 @@ def build_preview(path, output, jobs=4, until="export", speech_cache_from=None, 
             scene_reuse = production_scene_reuse_spec(episode, storyboard, reuse, source)
             assets += [Path(scene_reuse["source"]) / name for name in scene_reuse["files_sha256"]]
             assets += [Path(name) for name in scene_reuse["assets_sha256"]]
+    frame_reuse = None
+    if reuse_preview_frames:
+        from preview_frame_reuse import source_spec
+        frame_reuse = source_spec(build_directory(reuse_preview_frames), build, episode, storyboard)
+        assets += [Path(frame_reuse["source"]) / name for name in frame_reuse["files_sha256"]]
+    preview_audio = None
+    if reuse_preview_audio:
+        from preview_frame_reuse import audio_spec
+        preview_audio = audio_spec(build_directory(reuse_preview_audio), build, episode)
+        assets += [Path(preview_audio["source"]) / name for name in preview_audio["files_sha256"]]
     spec = {"episode": episode, "code_sha256": {name: sha256_file(ROOT / name) for name in SOURCES},
             "asset_sha256": {str(p): sha256_file(p) for p in assets}}
+    if frame_reuse:
+        spec["preview_frame_reuse"] = frame_reuse
+    if preview_audio:
+        spec["preview_audio_reuse"] = preview_audio
     if production:
         spec["audio_reuse"] = reuse
     if scene_reuse:
@@ -512,6 +562,11 @@ def build_preview(path, output, jobs=4, until="export", speech_cache_from=None, 
         stage("audio_reuse", lambda: prepare_production_audio(build, episode, reuse),
               ["dialogue.wav", "timeline.json", "word_alignment.json", "audio_reuse.json",
                "speech_asr_check.json", "auditory_review_flags.json", "subtitles.srt"])
+    elif preview_audio:
+        from preview_frame_reuse import reuse_audio as prepare_preview_audio
+        stage("preview_audio_reuse", lambda: prepare_preview_audio(build, preview_audio),
+              ["episode.json", "dialogue.wav", "audio_timeline.json", "subtitles.srt",
+               "timeline.json", "word_alignment.json", "speech_asr_check.json", "preview_audio_reuse.json"])
     else:
         command = [python, ROOT / "prepare_audio.py", "--episode", build / "episode.json",
                    "--output-dir", build, "--threads", "8", "--device", "cpu"]
@@ -519,17 +574,33 @@ def build_preview(path, output, jobs=4, until="export", speech_cache_from=None, 
             command += ["--speech-cache-from", build_directory(speech_cache_from)]
         stage("audio", lambda: run_command(command, build / "audio.log"),
               ["episode.json", "dialogue.wav", "audio_timeline.json", "subtitles.srt"])
-        stage("alignment", lambda: run_command([python, ROOT / "align_words.py", "--build", build],
-                                               build / "alignment.log"), ["timeline.json", "word_alignment.json"])
+        def alignment():
+            if frame_reuse:
+                from preview_frame_reuse import reuse_alignment
+                reuse_alignment(build, frame_reuse)
+            run_command([python, ROOT / "align_words.py", "--build", build], build / "alignment.log")
+            if episode.get("exam", {}).get("level") == "B2":
+                from b2_speaking import attach_cards
+                attach_cards(build, episode)
+        stage("alignment", alignment, ["timeline.json", "word_alignment.json"])
     timeline = json.loads((build / "timeline.json").read_text(encoding="utf-8"))
     check_timeline(episode, timeline)
     for turn in timeline["turns"]:
         validate_words(turn["words"], turn["text"], turn["wav_duration"])
     caption_preflight(build, episode, storyboard, timeline)
-    if not production:
+    if episode.get("exam", {}).get("level") == "B2":
+        from b2_speaking import timing_checks
+        atomic_json(build / "b2_timing_checks.json", timing_checks(episode, storyboard, timeline))
+    if not production and not preview_audio:
         from check_speech import check_speech
         stage("speech_check", lambda: check_speech(build), ["speech_asr_check.json"])
     atomic_json(build / "native_plan.json", native_plan(episode, storyboard, timeline))
+    reused_frames = []
+    if frame_reuse:
+        from preview_frame_reuse import reuse_frames
+        reused_frames = reuse_frames(build, episode, timeline,
+                                     json.loads((build / "native_plan.json").read_text(encoding="utf-8")),
+                                     frame_reuse)
     if until == "audio":
         return build
     native_command = [blender, "-b", episode["scene"]["base_scene"], "--disable-autoexec", "-t", "4",
@@ -557,7 +628,7 @@ def build_preview(path, output, jobs=4, until="export", speech_cache_from=None, 
         with ThreadPoolExecutor(max_workers=jobs) as pool:
             list(pool.map(worker, range(jobs)))
         plan = json.loads((build / "native_plan.json").read_text(encoding="utf-8"))
-        receipts = [record for index in range(jobs)
+        receipts = reused_frames + [record for index in range(jobs)
                     for record in json.loads((build / f"native_checks_{index}.json").read_text(encoding="utf-8"))]
         if len(receipts) != len(plan) or any(sha256_file(build / r["file"]) != r["sha256"] for r in receipts):
             raise ValueError("Native frame receipts are incomplete.")
@@ -571,10 +642,10 @@ def build_preview(path, output, jobs=4, until="export", speech_cache_from=None, 
     for name, digest in spec["asset_sha256"].items():
         if sha256_file(Path(name)) != digest:
             raise ValueError("A preview source changed during generation.")
-    for mode in OUTPUTS:
+    for mode in output_sizes(episode):
         stage("encode_" + mode, lambda mode=mode: encode(build, episode, storyboard, timeline, mode),
               [output_name(episode, mode)])
-    report = {mode: review_export(build, episode, storyboard, timeline, mode) for mode in OUTPUTS}
+    report = {mode: review_export(build, episode, storyboard, timeline, mode) for mode in output_sizes(episode)}
     speech = json.loads((build / "speech_asr_check.json").read_text(encoding="utf-8"))
     if (any(sha256_file(ROOT / name) != digest for name, digest in spec["code_sha256"].items())
             or any(sha256_file(Path(name)) != digest for name, digest in spec["asset_sha256"].items())):
@@ -583,10 +654,12 @@ def build_preview(path, output, jobs=4, until="export", speech_cache_from=None, 
         "status": "production" if production else "preview_only",
         "exports": report, "speech_asr_all_match": speech["all_match"],
         "render": episode["render"],
-        "native_formats": ["youtube"] if shared_native(episode) else list(OUTPUTS),
+        "native_formats": ["youtube"] if shared_native(episode) else list(output_sizes(episode)),
         "social_scene_transform": "fixed_center_crop" if shared_native(episode) else "native_render",
         "voice_cast": episode["voices"], "source_sha256": spec,
         "audio_reuse": reuse, "scene_reuse": scene_reuse, "human_listening_performed": False,
+        "preview_frame_reuse": frame_reuse,
+        "preview_audio_reuse": preview_audio,
         "limitations": ("Full-resolution output from approved 8-sample YouTube scene images on twos; "
                         "social uses a fixed center crop, without a second speaker-centering guard. "
                         "Inherited speech and reading flags remain for human review; no publication approval."

@@ -27,6 +27,9 @@ def pronunciation(display):
 
 
 def resolve_full_episode(episode, path):
+    if episode.get("exam", {}).get("level") == "B2":
+        from b2_speaking import resolve_episode
+        return resolve_episode(episode, path)
     episode = copy.deepcopy(episode)
     if (episode["source"].get("duration_limit_seconds") != 900
             or not episode["source"].get("duration_exception")):

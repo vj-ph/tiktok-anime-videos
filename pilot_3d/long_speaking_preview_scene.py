@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT))
 import bpy
 
 from entrance import entrance_plan
+from b2_speaking import shared_head_fits
 from listening_scene import freeze_source_animation
 from long_speaking_scene import correct_hair, head_bounds, hair_drop
 from prepare_audio import atomic_json, sha256_file
@@ -72,7 +73,10 @@ def bake(build, episode, storyboard, timeline, plan):
         visible = [actors[name] for name in roles(item["camera"])]
         for attempt in range(50):
             bounds = head_bounds(scene, camera, visible)
-            if all(h["in_front"] and min(h["bounds"]) > .05 and max(h["bounds"]) < .95 for h in bounds):
+            shared = episode.get("exam", {}).get("level") == "B2" and item["format"] == "youtube"
+            fits = (all(shared_head_fits(h) for h in bounds) if shared else
+                    all(h["in_front"] and min(h["bounds"]) > .05 and max(h["bounds"]) < .95 for h in bounds))
+            if fits:
                 break
             camera.data.lens *= .95
             bpy.context.view_layer.update()
@@ -88,7 +92,9 @@ def bake(build, episode, storyboard, timeline, plan):
             if actor.kind == "rain" and hair_drop(actor) < .15:
                 raise ValueError(f"{name}: animated ponytail rises.")
         motion[name] = {"jaw_range": max(jaws) - min(jaws), "head_yaw_range": max(heads) - min(heads)}
-        if name != "observer" and motion[name]["jaw_range"] < .01:
+        needs_speech = (name != "observer" if not timeline.get("partial_opening_bake") else
+                        any(t["speaker"] == name for t in timeline["turns"]))
+        if needs_speech and motion[name]["jaw_range"] < .01:
             raise ValueError(f"{name}: no measured lip-sync animation.")
     scene.frame_set(1)
     bpy.ops.wm.save_as_mainfile(filepath=str(build / "preview.blend"), compress=True)
@@ -97,6 +103,8 @@ def bake(build, episode, storyboard, timeline, plan):
         "all_planned_head_and_hair_bounds_fit": True,
         "camera_lenses": {name: camera.data.lens for name, camera in cameras.items()},
         "source_scene_saved": False, "preview_scene_sha256": sha256_file(build / "preview.blend"),
+        "partial_opening_bake": timeline.get("partial_opening_bake", False),
+        "checked_native_frames": len(plan), "baked_frames": timeline["total_frames"],
     })
 
 
@@ -113,7 +121,10 @@ def render(build, episode, plan, worker, jobs):
         scene.render.resolution_x, scene.render.resolution_y = item["size"]
         bpy.context.view_layer.update()
         heads = head_bounds(scene, scene.camera, [actors[name] for name in roles(item["camera"])])
-        if any(not h["in_front"] or min(h["bounds"]) <= .05 or max(h["bounds"]) >= .95 for h in heads):
+        shared = episode.get("exam", {}).get("level") == "B2" and item["format"] == "youtube"
+        fits = (all(shared_head_fits(h) for h in heads) if shared else
+                all(h["in_front"] and min(h["bounds"]) > .05 and max(h["bounds"]) < .95 for h in heads))
+        if not fits:
             raise ValueError("Rendered frame fails head/hair clearance.")
         path = build / item["file"]
         path.parent.mkdir(exist_ok=True)
@@ -138,6 +149,18 @@ if __name__ == "__main__":
     timeline = json.loads((build / "timeline.json").read_text(encoding="utf-8"))
     plan = json.loads((build / "native_plan.json").read_text(encoding="utf-8"))
     if args.bake:
+        reused = build / "reused_native_checks.json"
+        if reused.is_file():
+            from preview_frame_reuse import opening_bake_timeline
+            timeline, plan = opening_bake_timeline(
+                timeline, plan, json.loads(reused.read_text(encoding="utf-8")))
         bake(build, episode, storyboard, timeline, plan)
     else:
+        reused = build / "reused_native_checks.json"
+        if reused.is_file():
+            verified = {r["file"]: r for r in json.loads(reused.read_text(encoding="utf-8"))}
+            for name, receipt in verified.items():
+                if sha256_file(build / name) != receipt["sha256"]:
+                    raise ValueError("Reused native frame changed before rendering.")
+            plan = [item for item in plan if item["file"] not in verified]
         render(build, episode, plan, args.worker, args.jobs)
