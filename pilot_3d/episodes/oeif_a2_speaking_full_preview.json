@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "template": "a2_speaking_full_preview",
+  "id": "oeif_a2_speaking_full_preview",
+  "language": "de",
+  "exam": {"family": "oeif", "level": "A2", "skill": "speaking", "section": "all"},
+  "title": "ÖIF A2 Sprechen mit Lea",
+  "contact_build": "../builds/oeif_a2_speaking_contacts_r11",
+  "contact_manifest_sha256": "c5aaddd79484584f5f20511eb6eb85897f2997651458a8525fd12d8e3f082187",
+  "review_script": "../../plan/oeif_a2_speaking_transcript_review.md",
+  "review_script_sha256": "e1954a57fe0c8b8cbe3e9c369b371c603b20de2c2a4501a497a33ea922419cd7",
+  "source": {
+    "duration_limit_seconds": 900,
+    "duration_exception": "User explicitly requested the full A2 individual speaking preview on November 8, 2026 after revising the contact sheets. S1, S2A and S2B are complete; no twenty-minute preparation or pair-candidate structure. The measured learning video must remain strictly below 900 seconds.",
+    "adaptation": "The 55 reviewed turns retain the first contact/doctor-dialogue models, matching third picture and tracked examiner extensions. Lea comes from Warsaw, Poland. User selected opposite examiner seating and the combined Sprechen + Schreiben promotion."
+  },
+  "fps": 24,
+  "speech_tempo": 0.8,
+  "intro_seconds": 0,
+  "outro_seconds": 2,
+  "output_formats": ["youtube"],
+  "render": {"motion_step": 3, "native_scale": 0.25, "samples": 2},
+  "voices": {
+    "examiner": {
+      "audio": "../../../shared-voices/gemini_3.8_flash_tts/austrain/male_middle_adult_austrian.wav",
+      "transcript": "../../../shared-voices/gemini_3.8_flash_tts/austrain/phrase.txt"
+    },
+    "candidate_a": {
+      "audio": "../../../shared-voices/gemini_3.8_flash_tts/austrain/female_young_adult_austrian.wav",
+      "transcript": "../../../shared-voices/gemini_3.8_flash_tts/austrain/phrase.txt"
+    }
+  }
+}

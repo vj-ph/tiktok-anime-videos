@@ -37,7 +37,7 @@ SOURCES = ("pipeline.py", "long_speaking.py", "long_speaking_scene.py", "long_sp
 
 
 def is_production(episode):
-    return episode.get("template") == "long_speaking_production"
+    return episode.get("template") in ("long_speaking_production", "a2_speaking_production")
 
 
 def shared_native(episode):
@@ -252,7 +252,8 @@ def run_logged(command, log):
         run_process(command, stdout=output, stderr=subprocess.STDOUT, check=True)
 
 
-def caption_preflight(build, episode, storyboard, timeline):
+def caption_preflight(build, episode, storyboard, timeline, *, overlay_fn=None):
+    render_overlay = overlay_fn or overlay
     checks, pages = [], []
     for index, turn in enumerate(timeline["turns"]):
         words = caption_words(turn)
@@ -270,7 +271,7 @@ def caption_preflight(build, episode, storyboard, timeline):
         for word in turn["words"]:
             frame = turn["start_frame"] + math.ceil((word["start"] + word["end"]) * timeline["fps"] / 2)
             for mode in output_sizes(episode):
-                _, check = overlay(episode, storyboard, timeline, mode, frame)
+                _, check = render_overlay(episode, storyboard, timeline, mode, frame)
                 checks.append(check)
     atomic_json(build / "caption_preflight.json", {
         "all_aligned_word_layouts_fit": True, "pages": pages, "checks": checks,
@@ -280,7 +281,8 @@ def caption_preflight(build, episode, storyboard, timeline):
     })
 
 
-def encode(build, episode, storyboard, timeline, mode):
+def encode(build, episode, storyboard, timeline, mode, *, overlay_fn=None, static_panels=None):
+    render_overlay = overlay_fn or overlay
     width, height = output_sizes(episode)[mode]
     path = build / output_name(episode, mode)
     command = [shutil.which("ffmpeg"), "-nostdin", "-v", "error", "-y", "-f", "rawvideo",
@@ -291,8 +293,9 @@ def encode(build, episode, storyboard, timeline, mode):
                str(timeline["total_frames"] / timeline["fps"]), "-movflags", "+faststart", str(path)]
     last_key = last_native = None
     cached = native_image = None
-    static_panels = {"05_teil2_picture", "12_final_cta"} | {
-        p["id"] for p in panels(storyboard, compile_script(storyboard)) if p.get("card_text")}
+    if static_panels is None:
+        static_panels = {"05_teil2_picture", "12_final_cta"} | {
+            p["id"] for p in panels(storyboard, compile_script(storyboard)) if p.get("card_text")}
     with (build / f"encode_{mode}.log").open("w") as log:
         process = start_process(command, stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=log)
         try:
@@ -301,7 +304,7 @@ def encode(build, episode, storyboard, timeline, mode):
                 if notice:
                     key = ("silent_notice", notice["id"])
                     if key != last_key:
-                        cached, _ = overlay(episode, storyboard, timeline, mode, frame)
+                        cached, _ = render_overlay(episode, storyboard, timeline, mode, frame)
                         last_key = key
                     process.stdin.write(cached.resize(
                         (width, height), Image.Resampling.LANCZOS).tobytes())
@@ -309,7 +312,7 @@ def encode(build, episode, storyboard, timeline, mode):
                 turn, start, end, active = display_state(episode, timeline, frame)
                 key = (turn["id"], start, end, active)
                 if key != last_key:
-                    cached, _ = overlay(episode, storyboard, timeline, mode, frame)
+                    cached, _ = render_overlay(episode, storyboard, timeline, mode, frame)
                     last_key = key
                 image = cached.copy()
                 if turn["panel_id"] not in static_panels:
@@ -343,7 +346,8 @@ def encoded_highlight_fraction(expected, encoded):
     return float(gold[mask].mean()) if mask.any() else 0
 
 
-def review_export(build, episode, storyboard, timeline, mode):
+def review_export(build, episode, storyboard, timeline, mode, *, overlay_fn=None):
+    render_overlay = overlay_fn or overlay
     import numpy as np
     import wave
 
@@ -424,7 +428,7 @@ def review_export(build, episode, storyboard, timeline, mode):
                build / f"review_{mode}.log")
     checks = []
     for index, frame in enumerate(samples, 1):
-        expected, check = overlay(episode, storyboard, timeline, mode, frame)
+        expected, check = render_overlay(episode, storyboard, timeline, mode, frame)
         with Image.open(folder / f"frame_{index:03d}.png") as encoded:
             check["encoded_file"] = str((folder / f"frame_{index:03d}.png").resolve())
             expected = expected.resize(size, Image.Resampling.LANCZOS)

@@ -1,0 +1,33 @@
+ÖIF A2 Sprechen – Komplette Prüfungssimulation
+Mit Lea · November 2026 · Episode 1
+
+Werbung | Deutsch Kompass
+
+Lea übt das Kontaktgespräch, wählt ein Bild aus und beschreibt kurz die Situation in einer Arztpraxis. Danach spielt sie mit dem Prüfer ein Gespräch über einen Arzttermin und spricht über ihre eigenen Erfahrungen.
+Eine Kandidatin, ein aktiver Prüfer und eine zweite Prüferin: Die drei zusammenhängenden Bereiche sind S1, S2A und S2B. Samir nimmt nicht teil. Im Rollenspiel stellt Lea mindestens zwei Fragen.
+
+Mehr Aufgaben und Modelldialoge im ÖIF-A2-Buch Sprechen + Schreiben.
+Amazon: https://amzn.eu/d/0eC3q7T3
+
+Unabhängige Buchübung nach dem Ablauf des ÖIF-Test Neu A2; keine offizielle Prüfungsaufgabe, Bewertung oder Erfolgsgarantie. Grundlage: Kontaktgespräch 1, erster Arzttermin-Dialog und die passende dritte Bildaufgabe aus dem ÖIF-A2-Sprechbuch GPT v1. Die Bildkarten sind Buchmaterial, nicht die offiziellen Modelltestkarten. Name, Herkunft und Sprache sind für die fiktive Lea aus Warschau in Polen angepasst; Prüferübergänge und zusätzliche Fragen sind für die Simulation verfasst. Die Arztpraxis-Situation dient nur der Sprachübung.
+
+Kapitel:
+00:00 ÖIF A2 Sprechen mit Lea
+00:29 S1 – Kontaktgespräch
+01:50 S2A – Bild auswählen und beschreiben
+02:28 S2A – Einen Arzttermin vereinbaren
+03:18 S2B – Eigene Erfahrungen
+04:40 Jetzt selbst sprechen!
+
+KI-generierte Stimmen mit österreichischen Referenzen und animierte Figuren. Zum Mitüben langsamer gesprochen (0,8×), mit synchronen Wortmarkierungen. Pausiere nach den Fragen, antworte selbst und vergleiche mit dem Modell.
+
+Snow Rig: Blender Foundation, CC BY 4.0.
+https://studio.blender.org/characters/snow/v4/
+Rain Rig: Blender Foundation, CC BY 4.0.
+https://studio.blender.org/characters/rain/v3/
+https://creativecommons.org/licenses/by/4.0/
+Bearbeitungen: Umfärbung, Skalierung, Duplizierung, Posen, sprachgesteuerte Animation und Zuschnitt. Keine Unterstützung oder Empfehlung durch Blender Foundation oder Blender Studio.
+Bildmaterial: Arztpraxis/Wartezimmer, Familie beim Essen und Einkaufen aus dem verwendeten Übungsbuch.
+Falls das Zeigefinger-Emoji verwendet wird: Twemoji, Twitter und weitere Mitwirkende, CC BY 4.0, nur skaliert.
+
+#ÖIFA2 #A2Sprechen #DeutschLernen #Österreich #DeutschKompass

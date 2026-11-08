@@ -1,5 +1,140 @@
 # Reusable 3D exam-practice generator
 
+## ÖIF A2 speaking: still-only contact review
+
+`a2_speaking_contacts.py` reads the 55-turn transcript in
+`plan\oeif_a2_speaking_transcript_review.md`. Lea is the sole candidate,
+with the older male examiner directly opposite her and the older female examiner
+observing; Samir is hidden. It uses the first contact/doctor-dialogue models
+and the matching third book picture, with neutral choices before topic
+identification. Social choices are vertically stacked without numbers, each
+490x267 pixels inside the taller board; YouTube retains horizontal numbered
+choices. S1/S2A/S2B labels, the user-selected combined A2 cover, platform
+Amazon cues and final CTA appear in both layouts.
+
+Verified revised contact delivery: `builds\oeif_a2_speaking_contacts_r11\`.
+Open `contact_sheet_youtube.jpg` or `contact_sheet_social.jpg`; the `panels`
+directory contains 19 full-size PNGs per format. Three shared native stills
+use CPU Cycles/eight samples and the existing room/rig assets. The still-only
+scene clears source camera markers, excludes non-camera rig helpers from
+head/hair bounds, and adjusts examiner seating and static conversation gaze.
+It does not modify the base scene or frozen B1/B2 generators.
+
+From `pilot_3d`, generate another contact review into a fresh directory:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 a2_speaking_contacts.py `
+  --build builds\oeif_a2_speaking_contacts_r12
+```
+
+Sixteen focused A2/long-speaking tests pass. `contact_verification.json`
+records 50 verified export hashes, 19 unchanged source inputs, all projected
+visible head/hair bounds, three pixel-exact fully contained choice images and
+13 pixel-exact portrait scene crops. All 50 original r9 export hashes are
+preserved. Both sheets
+and representative full-size panels were visually inspected. No TTS, audio,
+video or simulated word highlights were generated; `atempo=0.8` is recorded
+for future speech only. The new promotion uses `oeif_a2_combined.jpg` and
+`https://amzn.eu/d/0eC3q7T3`; the final CTA and all post links now name the
+Sprechen + Schreiben book. Animation/timing, Amazon product-title verification
+and user contact/preview approval remain separate. The episode-driven A2
+long-video route is not implemented by this still-only entry point.
+
+### Authorized full A2 YouTube preview
+
+On November 8 the user authorized the complete voiced preview after the r11
+contact revision. `episodes\oeif_a2_speaking_full_preview.json` uses a separate
+individual-exam route, all 55 reviewed turns, established Austrian examiner/Lea
+references and `atempo=0.8` for every voice. It pins the reviewed transcript and
+contact exports. Titles, subtitles and CTA use actual forced-alignment word
+groups, including ÖIF/A2, appointment times and E-Card.
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 pipeline.py build `
+  --episode episodes\oeif_a2_speaking_full_preview.json `
+  --build builds\oeif_a2_speaking_full_preview_r1 --jobs 2
+```
+
+This preview exports 960x540 at 24 fps, two CPU Cycles samples and quarter-scale
+native scene images every three frames. It is not the full-resolution production
+preset. All measured speech/pauses must fit strictly below 900 seconds.
+`--until audio` or `--until scene` pauses at verified checkpoints; repeating the
+same build command resumes matching inputs. Interrupted render workers retain
+per-frame receipts and reuse only verified PNGs from the same saved scene.
+Changed speech/assets/generation code require a fresh build.
+
+Forty-nine focused content, timing, dispatch, pair-preview, checkpoint and
+interview tests pass. A four-second native diagnostic using previously measured
+B2 mouth cues verified A2 opposite seating, silent observer, moving speaking
+jaws, downward hair and portrait-safe heads; four rendered poses were visually
+inspected. That diagnostic does not validate new A2 speech. Actual alignment,
+full encoded review, user listening and preview approval remain separate;
+production, social delivery and publication are not authorized by this preview.
+
+Completed preview: `builds\oeif_a2_speaking_full_preview_r1\preview_youtube.mp4`,
+**294.458 seconds** (7067 frames), all 55 processed speech turns, 1789 native
+images and final CTA. Full decode, exact frame clock, caption/head/hair bounds,
+encoded audio correlation (0.99964) and 65 initial word-highlight samples pass.
+The separate `builds\oeif_a2_speaking_full_preview_review_r1` bundle verifies
+95 additional encoded transition/number/E-Card/abbreviation boundary frames
+covering 13 mapped words, with its own manifest and contact sheet.
+Both encoded sheets and representative full-size frames were visually reviewed.
+All 115 delivery exports, 1789 native PNGs, 30 generator sources, 19 source
+assets and 50 r11 contact exports retain their recorded hashes.
+
+Independent ASR flags remain unchanged on ten turns (01, 02, 25, 34, 35, 37,
+41, 47, 48 and 55); several involve spelling/numerals/abbreviations, while
+possible speech differences still require listening. See the original
+`speech_asr_check.json` and the separate `auditory_review_flags.json`.
+Human listening was not performed. The user subsequently approved this exact
+preview/audio as the production source on November 8; all ten flags remain
+recorded. Platform drafts contain measured preview chapter times.
+
+### A2 production command
+
+Run from `pilot_3d`:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 pipeline.py build `
+  --episode episodes\oeif_a2_speaking_production.json `
+  --build builds\oeif_a2_speaking_production_r1 `
+  --profile production `
+  --reuse-audio builds\oeif_a2_speaking_full_preview_r1 `
+  --render-device HIP --jobs 2
+```
+
+The result is `builds\oeif_a2_speaking_production_r1\production_youtube.mp4`,
+1920x1080 at 24 fps. The shared-frame preset renders 2673 lossless 1216x580
+scene images on twos at eight Cycles samples/full native scale. Measured
+0.8-tempo speech, pauses, lip cues, word intervals and the 294.458-second
+clock are copied exactly: no synthesis, realignment, time stretching or
+preview-resolution scene/frame reuse. Production removes the VORSCHAU label.
+The approved manifest, source snapshots, reference caches, processed clips,
+transcript, pictures, cover and other source assets are verified.
+
+HIP discovery was verified on the AMD Radeon 860M. Use `--render-device CPU`
+in a fresh build to select CPU explicitly. `--until audio` checks exact audio
+reuse/caption fit without baking; `--until scene` stops after the new complete
+bake. Repeat the same command to resume verified stages and completed PNGs.
+Changed inputs/device/code require a fresh build.
+
+The episode currently selects YouTube only. A fresh production episode can
+select `output_formats: ["youtube", "social"]`; the 1080x1920 social layout
+uses the same native YouTube PNGs, with separately composed captions/cards,
+vertical picture choices, promotion and CTA rather than a crop of the finished
+YouTube video.
+
+Validation: 83 focused A2/B1/B2/checkpoint/interview tests; actual production
+configuration/HIP discovery; six byte-identical copied speech/timing files;
+full-dialogue caption preflight for both layouts. An isolated 3.416-second
+opening diagnostic rendered 41 full-resolution/eight-sample HIP poses,
+verified native bounds/hair and 26 encoded word-boundary frames per layout,
+full decode/audio correlation, and unchanged PNG timestamps/hashes on resume.
+Representative encoded YouTube/social frames were visually inspected.
+This is command validation, not a completed full production render or
+publication approval. The existing 115 preview and 50 contact exports remain
+unchanged.
+
 ## ÖIF B2 speaking: YouTube-first long simulation
 
 `episodes/oeif_b2_speaking_long.json` selects the first actual exercise from
@@ -127,6 +262,63 @@ r5/r6 files and generator source hashes are untouched. Its provenance receipt,
 original reports/manifests and 522 verified file hashes preserve the audit trail.
 Keep this bundle and original referenced audio/asset files for production and
 resume. Approval does not authorize publication.
+
+### A2 social derivatives
+
+`derive_a2_speaking.py` verifies the completed A2 production, original source
+snapshots/assets and native PNG hashes/portrait bounds, then recomposes both
+portrait videos without TTS, alignment or Blender:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 derive_a2_speaking.py `
+  --source builds\oeif_a2_speaking_production_r1 `
+  --build builds\oeif_a2_speaking_social_delivery_r1
+```
+
+The full social export preserves all 55 turns and the exact 294.458-second WAV.
+The visibly labelled Kurzfassung preserves 32 complete turns and their pauses,
+including contact questions, all picture-choice/doctor-role-play turns, one
+personal-experience model and CTA: 178 seconds at unchanged 0.8 speech tempo.
+The social overlays are recomposed at 1080x1920 from the same lossless scene
+PNGs, not a crop of the completed YouTube captions. Both outputs retain source
+ASR/listening flags, mapped original frame offsets, credits and export manifests.
+This entry point requires a fresh delivery directory and does not publish.
+
+Verified delivery: `builds\oeif_a2_speaking_social_delivery_r1`.
+`full_social\production_social.mp4` is 7067 frames/294.458 seconds;
+`social_under3\production_social.mp4` is 4272 frames/178 seconds. Both are
+1080x1920 at 24 fps and preserve the combined cover/Amazon bio cue and CTA.
+The full version copies the exact WAV and reuses 2673 PNGs; the short uses
+byte-exact complete-turn PCM spans and 1270 reused PNGs with unchanged local
+word/lip cues. Twenty focused tests pass. Full decode, frame clocks,
+audio correlations 0.99964/0.99951, 100/77 encoded review samples and
+119/97 export hashes pass. An additional 95 short cut-boundary frames are
+verified in `cut_boundary_review`, with their own manifest/contact sheet.
+Representative encoded opening/choice/dialogue/CTA frames and the boundary
+sheet were visually inspected. All 153 original production exports and the
+master manifest remain unchanged. Original ASR flags remain recorded; no new
+human listening or publication approval is claimed.
+
+### A2 platform thumbnails and descriptions
+
+`builds\oeif_a2_speaking_publication_2026_11_ep01_r1` contains
+`thumbnail_full_youtube.png`, `thumbnail_full_tiktok.png`,
+`thumbnail_full_instagram.png`, `thumbnail_short_tiktok.png` and
+`thumbnail_short_instagram.png`. All show the actual three-person room,
+Austrian flag, Deutsch Kompass logo, Lea and November 2026/Episode 1.
+Full covers say Komplette Prüfungssimulation; short covers say Kurzfassung.
+All portrait title/episode/flag/logo/head regions survive the included centered
+square, 4:5 and 3:4 crop checks. Crop previews/comparison sheets and exact
+text-glyph/native-image/source-preservation checks are recorded. Representative
+covers/crop comparisons were visually inspected; no app upload test is claimed.
+
+Full descriptions: `posts\oeif_a2_speaking_long_01\{youtube,tiktok,instagram}.txt`.
+Short descriptions: `posts\oeif_a2_speaking_social_under3\{tiktok,instagram}.txt`.
+These are ready-to-copy drafts with the combined-book link, practice/advertising/
+AI disclosures and asset credits; no internal ASR status is copied into the
+public caption. Original ASR flags stay in delivery reports. Exact post copies
+and the cover generator are frozen in the asset bundle. Publication remains
+unapproved; videos/source manifests are unchanged.
 
 ### B2 social derivatives from the finished master
 

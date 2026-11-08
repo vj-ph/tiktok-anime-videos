@@ -377,6 +377,35 @@ def main():
                                 or raw_episode.get("render", {}).get("native_source") != "youtube"):
             raise ValueError("--reuse-scene requires shared-frame long-speaking production.")
         if isinstance(raw_episode, dict) and raw_episode.get("template") in (
+                "a2_speaking_full_preview", "a2_speaking_production"):
+            from a2_speaking_preview import build_preview, load_preview
+
+            production = raw_episode["template"] == "a2_speaking_production"
+            if production:
+                from a2_speaking_production import production_reuse_spec
+                if (args.speech_device != "cpu" or args.promo or args.speech_cache_from
+                        or args.reuse_scene or args.reuse_preview_frames or args.reuse_preview_audio):
+                    raise ValueError("A2 production reuses exact approved audio and needs a fresh full-quality bake.")
+            elif (args.profile != "preview" or args.render_device != "CPU" or args.speech_device != "cpu"
+                  or args.promo or args.reuse_audio or args.reuse_scene
+                  or args.reuse_preview_frames or args.reuse_preview_audio):
+                raise ValueError("A2 supports its authorized CPU full preview, without production or exact reuse.")
+            episode, _ = load_preview(args.episode, args.profile)
+            if production:
+                production_reuse_spec(episode, args.reuse_audio)
+                if args.render_device != "CPU":
+                    check_render_device(args.render_device)
+            if args.command == "validate":
+                print(f"Valid A2 individual-exam {'production' if production else 'preview'}: {episode['id']}; "
+                      f"{len(episode['turns'])} turns, tempo 0.8, duration strictly below 900 seconds.")
+            elif args.command != "build":
+                raise ValueError("Use build for the A2 video preview.")
+            elif args.build is None:
+                parser.error("--build is required for build")
+            else:
+                build_preview(args.episode, args.build, args.jobs, args.until, args.speech_cache_from,
+                              profile=args.profile, reuse_audio=args.reuse_audio, render_device=args.render_device)
+        elif isinstance(raw_episode, dict) and raw_episode.get("template") in (
                 "long_speaking_preview", "long_speaking_full_preview", "long_speaking_production"):
             from long_speaking_preview import build_preview, load_preview
 
