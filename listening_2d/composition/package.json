@@ -1,0 +1,9 @@
+{
+  "name": "composition",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "python -X utf8 ..\\hyperframes_local.py check --json",
+    "render": "python -X utf8 ..\\hyperframes_local.py render"
+  }
+}

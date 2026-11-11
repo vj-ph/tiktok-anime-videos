@@ -1,0 +1,270 @@
+{
+  "id": "oeif_b1_listening_01",
+  "status": "Revised script approved on 2026-11-09 by user 'ok, carry on'; short sample preparation authorized. Audio/preview and publication approval remain separate.",
+  "revision": {
+    "date": "2026-11-09",
+    "intent": "Fix supported ambiguity and wording issues; increase listening challenge through paraphrases, plausible distractors, conditions and changed plans rather than faster speech or obscure vocabulary.",
+    "difficulty_status": "B1-targeted practice draft, not a formally calibrated exam."
+  },
+  "title": "ÖIF B1 Hören – Unabhängige Prüfungssimulation",
+  "instruction_template": "..\\instruction_templates.json",
+  "source": {
+    "book": "..\\..\\..\\german\\books\\b1\\listening_oeif\\book_no_toc.md",
+    "reference_section": "Übungstest 1",
+    "reference_lines": [1070, 1223],
+    "use": "Four-part task structure and everyday listening skills only. New scenarios, questions, distractors, answers and recordings; not a reproduction of the book test.",
+    "exam_version": "Not yet pinned; do not claim independently verified official timing or certification."
+  },
+  "promotion": {
+    "amazon_url": "https://amzn.eu/d/09gWva0w",
+    "cover_source": "..\\..\\..\\german\\books\\b1\\listening_oeif\\oeif_b1_hoeren.jpg",
+    "youtube_label": "Amazon: Link in der Beschreibung 👇",
+    "social_label": "Amazon: Link in der Bio 👇",
+    "cta": "Mehr Hörübungen, Transkripte und Erklärungen finden Sie im Buch. Den Amazon-Link finden Sie in der Beschreibung oder in der Bio."
+  },
+  "audio": {
+    "atempo": 0.8,
+    "apply_atempo_to": "Synthesized speech only: opening, instructions, spoken cues, examples, task recordings, review and CTA.",
+    "background_music": false,
+    "background_ambience": false,
+    "sfx": {
+      "end_file": "..\\assets\\sfx\\mixkit-software-interface-back-2575.wav",
+      "start_file": "..\\assets\\sfx\\mixkit-software-interface-start-2574.wav",
+      "reveal_file": "..\\assets\\sfx\\mixkit-software-interface-remove-2576.wav",
+      "atempo": 0.8,
+      "effect": "Subtle reverberant tail; render derived files without modifying originals.",
+      "placement": "Start before the initial example cue. Remove begins exactly when the correct answer is revealed, after the completed response silence; fit its full effect tail inside the three-second reveal. Back follows the reveal, immediately before the next exercise number. Keep chimes outside the reading and answer silences."
+    },
+    "voices": {
+      "locale": "de-AT",
+      "reference_status": "Use existing speaker references after verifying file availability and exact reference transcripts; concrete reference paths are not yet bound.",
+      "roles": ["narrator", "service_female", "announcement_male", "radio_female", "dialogue_female", "dialogue_male", "opinion_female", "opinion_male", "opinion_mature"],
+      "constraints": "Distinct voices within each conversation; three different voices for scored Teil 4 opinions. No speaker labels sent to TTS."
+    }
+  },
+  "timing": {
+    "reference": "..\\..\\.github\\skills\\oeif-b1-listening-video-gen\\SKILL.md",
+    "approximate_12_second_pauses": "Use 12 seconds in this draft; retain user-supplied approximate provenance.",
+    "duration_seconds": null,
+    "note": "Measure all processed speech before building the timeline. Do not pad or accelerate to claim an official 25-minute duration."
+  },
+  "mode": "Guided listening practice: keep transcripts and answers hidden during reading, playback and the complete answer pause. Then reveal the correct answer for three seconds, followed by the back chime immediately before the next task number. Keep optional transcript replay separate.",
+  "answer_reveal_seconds": 3,
+  "sections": [
+    {
+      "part": 1,
+      "example": {
+        "question": "Wo bekommt man heute Hilfe bei der Anmeldung?",
+        "options": {"a": "Am Schalter im Erdgeschoss.", "b": "Im Büro im ersten Stock.", "c": "Nur telefonisch."},
+        "answer": "b",
+        "recording": [{"speaker": "service_female", "text": "Willkommen im Nachbarschaftszentrum. Unser Schalter im Erdgeschoss bleibt heute wegen eines Wasserschadens geschlossen. Wenn Sie sich für einen Kurs anmelden möchten, kommen Sie bitte in das Büro im ersten Stock. Eine Mitarbeiterin hilft Ihnen dort bis zwölf Uhr. Morgen können Sie wieder den Schalter im Erdgeschoss benutzen."}]
+      },
+      "tasks": [
+        {
+          "number": 1,
+          "question": "Was soll Frau Nowak zum Termin mitbringen?",
+          "options": {"a": "Einen bereits ausgefüllten Fragebogen.", "b": "Alle bisher benutzten Brillen.", "c": "Die Unterlagen ihres letzten Augenarztbesuchs."},
+          "answer": "b",
+          "explanation": "Neben der aktuellen Brille soll sie auch die früher benutzten Brillen mitbringen. Den Fragebogen bekommt sie vor Ort; der Arztbericht wird erst bei einer späteren Untersuchung benötigt.",
+          "recording": [{"speaker": "service_female", "text": "Guten Tag, Frau Nowak. Hier ist das Augenoptikgeschäft am Stadtpark. Ihr Termin zur Kontrolle Ihrer Sehstärke ist am Donnerstag um halb elf. Für den Vergleich brauchen wir neben Ihrer aktuellen Brille auch die Modelle, die Sie früher getragen haben. Den Fragebogen geben wir Ihnen bei Ihrer Ankunft; kommen Sie deshalb bitte zehn Minuten früher. Sie hatten auch nach dem Bericht Ihres Augenarztes gefragt. Den brauchen wir erst, falls später eine besondere Untersuchung notwendig wird. Für Donnerstag reichen die Brillen. Vielen Dank und auf Wiederhören."}]
+        },
+        {
+          "number": 2,
+          "question": "Was ist beim nächsten Unterricht anders?",
+          "options": {"a": "Er beginnt eine halbe Stunde später.", "b": "Er endet zur gewohnten Zeit.", "c": "Er wird auf einen anderen Tag verlegt."},
+          "answer": "a",
+          "explanation": "Der Beginn verschiebt sich von sechs auf halb sieben. Bei unveränderter Dauer endet der Kurs auch später. Es bleibt beim Dienstag.",
+          "recording": [{"speaker": "announcement_male", "text": "Eine Information für unseren Computerkurs: Die Besprechung der Kursleiterin am Dienstag dauert länger als erwartet. Wir hatten zunächst überlegt, den Unterricht auf Mittwoch zu verschieben. Inzwischen haben wir aber eine Lösung gefunden: Es bleibt beim Dienstag, nur beginnen wir um halb sieben statt um sechs. Die zwei Unterrichtsstunden werden vollständig gehalten. Bitte informieren Sie auch Personen, die Sie nach dem Kurs abholen. Der Raum bleibt derselbe. Bringen Sie Ihren Laptop mit, falls Sie einen haben; diesmal arbeiten wir mit Tabellen."}]
+        },
+        {
+          "number": 3,
+          "question": "Was müssen Fahrgäste zum Krankenhaus heute tun?",
+          "options": {"a": "Schon am Bahnhof in einen Bus umsteigen.", "b": "Bis zur Endstation am Krankenhaus sitzen bleiben.", "c": "Am Rathaus eine andere Straßenbahn nehmen."},
+          "answer": "c",
+          "explanation": "Die Straßenbahn fährt heute nur bis zum Rathaus. Dort bringt die Linie sieben die Fahrgäste weiter zum Krankenhaus.",
+          "recording": [{"speaker": "announcement_male", "text": "Liebe Fahrgäste, normalerweise fährt diese Straßenbahn bis zum Krankenhaus. Heute endet sie wegen einer Baustelle bereits am Rathaus. Der Bahnhof wird davor noch wie gewohnt angefahren. Für die Weiterfahrt zum Krankenhaus steht Ihnen am Rathaus die Linie sieben zur Verfügung. Ihre Haltestelle liegt auf der anderen Straßenseite, und der bisherige Fahrschein gilt auch dort. Ein Bus am Bahnhof fährt zum Einkaufszentrum; für das Krankenhaus benutzen Sie bitte die Straßenbahnverbindung am Rathaus. Planen Sie wegen des Umsteigens einige zusätzliche Minuten ein."}]
+        },
+        {
+          "number": 4,
+          "question": "Was müssen die Bewohner vor Beginn der Arbeiten tun?",
+          "options": {"a": "Den Fahrradraum bis Freitagabend frei machen.", "b": "Die Fahrräder bis Montag im Hof stehen lassen.", "c": "Am Freitag einen Ersatzschlüssel abholen."},
+          "answer": "a",
+          "explanation": "Vor den Arbeiten am Samstag muss der Fahrradraum leer sein. Der Hof darf nur tagsüber genutzt werden; Montag bezeichnet die voraussichtliche Wiederöffnung.",
+          "recording": [{"speaker": "service_female", "text": "Guten Tag, hier ist Ihre Hausbetreuung. Am Samstag wird der Boden im Fahrradraum erneuert. Damit die Firma früh beginnen kann, muss der Raum bereits am Freitagabend leer sein. Im Hof dürfen Fahrräder während der Arbeiten tagsüber abgestellt werden. Für die Nacht nehmen Sie sie bitte in Ihre Wohnung oder auf Ihren eigenen Kellerplatz. Der Raum bleibt voraussichtlich bis Montag geschlossen. Falls es länger dauert, erhalten Sie eine E-Mail. Der vorhandene Schlüssel passt auch nach den Arbeiten; das Schloss wird nicht verändert."}]
+        }
+      ]
+    },
+    {
+      "part": 2,
+      "example": null,
+      "tasks": [
+        {
+          "number": 5,
+          "question": "Wann ist morgen mit Regen zu rechnen?",
+          "options": {"a": "Den ganzen Vormittag.", "b": "Erst in der Nacht.", "c": "Ab dem späten Nachmittag."},
+          "answer": "c",
+          "explanation": "Der Regen setzt gegen fünf Uhr ein, also am späten Nachmittag. Nebel am Morgen bedeutet hier noch keinen Regen.",
+          "recording": [{"speaker": "radio_female", "text": "Hier ist das Wetter für morgen. Der Tag beginnt mit Nebel, der sich im Laufe des Vormittags auflöst. Anschließend kommt die Sonne heraus, und die Temperaturen steigen auf achtzehn Grad. Wer unterwegs sein möchte, kann bis zum frühen Nachmittag mit trockenem Wetter rechnen. Gegen fünf Uhr zieht von Westen eine Regenfront auf. Für Veranstaltungen am Abend sollten deshalb überdachte Plätze eingeplant werden. Auch in der Nacht bleibt es zunächst nass. Erst am nächsten Morgen wird es wieder freundlicher."}]
+        },
+        {
+          "number": 6,
+          "question": "Wer muss sich für die Museumsführung anmelden?",
+          "options": {"a": "Jede Person, die am Nachmittag teilnehmen will.", "b": "Besuchergruppen mit mindestens sechs Personen.", "c": "Alle Erwachsenen, die Kinder mitbringen."},
+          "answer": "b",
+          "explanation": "Die Anmeldepflicht gilt für Gruppen ab sechs Personen. Die Uhrzeit und die Begleitung von Kindern begründen keine allgemeine Anmeldepflicht.",
+          "recording": [{"speaker": "announcement_male", "text": "Unser Kulturtipp: Im Technikmuseum gibt es ab Samstag eine neue Führung über die Geschichte des Radios. Sie beginnt jeweils um elf und um drei Uhr und ist im normalen Eintrittspreis enthalten. Einzelpersonen können einfach an der Kasse nachfragen. Gruppen ab sechs Personen müssen sich vorher anmelden, damit genügend Plätze frei sind. Auch Kinder sind willkommen. Für sie gibt es am Ende eine kleine Aufgabe zum Ausprobieren. Das Museum ist täglich außer Montag geöffnet."}]
+        },
+        {
+          "number": 7,
+          "question": "Welche Strecke dürfen Autofahrer während der Sperre benutzen?",
+          "options": {"a": "Die Bahnhofstraße, die für Busse offen bleibt.", "b": "Die Brücke beim Park, die Fußgänger nutzen.", "c": "Die ausgeschilderte Strecke um das Zentrum herum."},
+          "answer": "c",
+          "explanation": "Die Ringstraße führt um das Zentrum und ist die Umleitung für Autos. Die beiden anderen Wege sind nur für Busse beziehungsweise Fußgänger offen.",
+          "recording": [{"speaker": "radio_female", "text": "Eine Verkehrsinformation aus dem Stadtgebiet: Die Brücke am Fluss ist wegen Reparaturarbeiten in beiden Richtungen gesperrt. Für Autos ist eine Umleitung über die Ringstraße eingerichtet, die um das Zentrum führt. Folgen Sie dort den gelben Hinweistafeln. Die Bahnhofstraße bleibt offen, ist während der Arbeiten allerdings dem Busverkehr vorbehalten. Wer zu Fuß unterwegs ist, kann die kleine Brücke beim Park benutzen. Die Sperre dauert voraussichtlich bis acht Uhr am Abend. Für die Fahrt durch die Stadt müssen Sie heute etwas mehr Zeit einplanen."}]
+        },
+        {
+          "number": 8,
+          "question": "Was bietet die Bibliothek donnerstags kostenlos an?",
+          "options": {"a": "Hilfe beim Bedienen des eigenen Handys.", "b": "Die Reparatur beschädigter Geräte.", "c": "Das Ausleihen eines Handys für zu Hause."},
+          "answer": "a",
+          "explanation": "Die Beratung betrifft die Bedienung des mitgebrachten Handys. Defekte Geräte müssen zum Fachgeschäft; das Ausleihangebot bezieht sich auf Bücher.",
+          "recording": [{"speaker": "announcement_male", "text": "In der Stadtbibliothek gibt es jeden Donnerstag von zwei bis vier Uhr eine kostenlose Beratung zu digitalen Alltagsfragen. Ehrenamtliche zeigen Ihnen auf Ihrem mitgebrachten Handy, wie Sie etwa Fotos verschicken oder einen Fahrplan aufrufen. Das Angebot richtet sich an Menschen, deren Gerät funktioniert, die sich bei der Bedienung aber unsicher fühlen. Bei technischen Defekten wenden Sie sich bitte an ein Fachgeschäft. Für die Beratung genügt es, vorbeizukommen. Die Ausleihe von Büchern läuft daneben wie gewohnt weiter."}]
+        },
+        {
+          "number": 9,
+          "question": "Wie können Interessierte das Kursangebot kennenlernen, bevor sie sich anmelden?",
+          "options": {"a": "Indem sie zuerst eine Nähmaschine bestellen.", "b": "Indem sie unverbindlich an einem Informationsabend teilnehmen.", "c": "Indem sie vorab einen kostenpflichtigen Probekurs buchen."},
+          "answer": "b",
+          "explanation": "Der kostenlose Abend dient dazu, das Programm kennenzulernen. Eine Anmeldung zum Kurs ist dafür noch nicht erforderlich.",
+          "recording": [{"speaker": "radio_female", "text": "Das Familienzentrum stellt seinen neuen Nähkurs am kommenden Mittwoch um sechs Uhr vor. An diesem Abend erklärt die Kursleiterin, welche Arbeiten im Kurs geübt werden, und beantwortet Ihre Fragen. Sie können ohne Anmeldung kommen und zahlen für den Abend nichts. Erst wenn Sie sich danach für den eigentlichen Kurs entscheiden, wird die Gebühr fällig. Nähmaschinen stehen im Zentrum bereit. Wer später auch zu Hause nähen möchte, bekommt im Kurs Tipps zur Auswahl einer Maschine. Anfängerinnen und Anfänger sind willkommen."}]
+        }
+      ]
+    },
+    {
+      "part": 3,
+      "example": {
+        "questions": [
+          {"label": "Beispiel richtig/falsch", "statement": "Die Frau hat ihren Ausweis verloren.", "answer": "falsch"},
+          {"label": "Beispiel Auswahl", "question": "Was macht die Frau als Nächstes?", "options": {"a": "Sie ruft ihre Schwester an.", "b": "Sie lässt einen neuen Ausweis machen.", "c": "Sie geht zur Polizei."}, "answer": "a"}
+        ],
+        "recording": [
+          {"speaker": "dialogue_female", "text": "Ich wollte gerade ein Paket abholen, aber mein Ausweis ist nicht in meiner Tasche."},
+          {"speaker": "dialogue_male", "text": "Hast du ihn vielleicht zu Hause liegen lassen?"},
+          {"speaker": "dialogue_female", "text": "Ja, gestern habe ich ihn zum Ausfüllen eines Formulars gebraucht. Er liegt bestimmt noch auf dem Tisch."},
+          {"speaker": "dialogue_male", "text": "Dann ruf doch kurz deine Schwester an. Vielleicht kann sie ihn dir bringen."},
+          {"speaker": "dialogue_female", "text": "Das mache ich. Dann muss ich nicht noch einmal den ganzen Weg fahren."}
+        ]
+      },
+      "conversations": [
+        {
+          "numbers": [10, 11],
+          "questions": [
+            {"number": 10, "statement": "Die beiden wollen das kaputte Gerät selbst reparieren.", "answer": "falsch", "explanation": "Sie wollen nicht selbst reparieren und vereinbaren eine Abholung durch den Reparaturdienst."},
+            {"number": 11, "question": "Was wird vereinbart?", "options": {"a": "Das Geschäft tauscht das Gerät am Freitag aus.", "b": "Ein Dienst bringt das Gerät zur Untersuchung in die Werkstatt.", "c": "Die Besitzer transportieren das Gerät selbst."}, "answer": "b", "explanation": "Der Reparaturdienst holt das Gerät zur Fehlersuche ab. Ein Austausch ist noch nicht vereinbart."}
+          ],
+          "recording": [
+            {"speaker": "dialogue_female", "text": "Die Waschmaschine ist beim letzten Waschgang plötzlich stehen geblieben. Jetzt lässt sich die Tür nicht öffnen."},
+            {"speaker": "dialogue_male", "text": "Sollen wir versuchen, die Rückseite abzuschrauben?"},
+            {"speaker": "dialogue_female", "text": "Lieber nicht. Das Gerät hat noch Garantie. Ich habe schon beim Geschäft angerufen."},
+            {"speaker": "dialogue_male", "text": "Was haben sie gesagt? Müssen wir die Maschine selbst hinbringen?"},
+            {"speaker": "dialogue_female", "text": "Nein, der Reparaturdienst holt sie am Freitag ab. Zwischen neun und elf sollen wir zu Hause sein."},
+            {"speaker": "dialogue_male", "text": "Gut, ich kann an dem Vormittag zu Hause arbeiten. Haben sie auch gesagt, wann wir sie zurückbekommen?"},
+            {"speaker": "dialogue_female", "text": "Zuerst suchen sie in der Werkstatt nach dem Fehler. Wenn eine Reparatur möglich ist, bekommen wir unsere Maschine zurück. Über einen Austausch entscheiden sie erst danach."},
+            {"speaker": "dialogue_male", "text": "Dann wasche ich die wichtigsten Sachen bis dahin bei meiner Schwester."}
+          ]
+        },
+        {
+          "numbers": [12, 13],
+          "questions": [
+            {"number": 12, "statement": "Der Mann kann das Fahrrad ausprobieren, bevor er sich für den Kauf entscheidet.", "answer": "richtig", "explanation": "Er darf eine Runde im Hof fahren und anschließend über den Kauf entscheiden."},
+            {"number": 13, "question": "Warum kommt das erste Fahrrad für ihn nicht infrage?", "options": {"a": "Es ist für die Mitnahme seines Kindes ungeeignet.", "b": "Es ist teurer als das zweite Modell.", "c": "Er kann damit nicht zur Arbeit fahren."}, "answer": "a", "explanation": "Am ersten Modell lässt sich sein Kindersitz nicht sicher befestigen. Das zweite ist teurer, bietet aber eine passende Befestigung."}
+          ],
+          "recording": [
+            {"speaker": "dialogue_male", "text": "Das blaue Fahrrad gefällt mir. Ich würde damit zur Arbeit fahren und vorher meinen Sohn zum Kindergarten bringen."},
+            {"speaker": "dialogue_female", "text": "Für den Arbeitsweg ist es gut geeignet. Allerdings lässt sich Ihr Kindersitz an diesem Modell nicht sicher befestigen."},
+            {"speaker": "dialogue_male", "text": "Dann hilft es mir wenig. Haben Sie ein anderes Modell?"},
+            {"speaker": "dialogue_female", "text": "Das graue hier hat die passende Befestigung. Es kostet etwas mehr, aber Sie können Ihren bisherigen Sitz weiterverwenden."},
+            {"speaker": "dialogue_male", "text": "Bevor ich so viel ausgebe, würde ich gern wissen, wie es sich fährt."},
+            {"speaker": "dialogue_female", "text": "Sie können damit eine Runde im Hof drehen. Lassen Sie für die Probefahrt bitte Ihren Ausweis bei mir."},
+            {"speaker": "dialogue_male", "text": "Gern. Den Kauf entscheide ich danach. Können Sie inzwischen prüfen, ob der Kindersitz wirklich passt?"}
+          ]
+        },
+        {
+          "numbers": [14, 15],
+          "questions": [
+            {"number": 14, "statement": "Die beiden müssen noch einen Teil ihrer Sachen einpacken.", "answer": "richtig", "explanation": "Sie müssen heute noch die restlichen Bücher einpacken."},
+            {"number": 15, "question": "Wann wollen sie mit dem Transport beginnen?", "options": {"a": "Am Freitagabend.", "b": "Am Samstag nach dem Mittagessen.", "c": "Am Samstagvormittag."}, "answer": "c", "explanation": "Sie wollen am Samstag um neun losfahren. Freitag dient zum Packen; Mittag war der zuerst vorgeschlagene, dann verworfene Termin."}
+          ],
+          "recording": [
+            {"speaker": "dialogue_female", "text": "Für den Umzug müssen wir heute noch die restlichen Bücher einpacken. Hast du den Transporter schon reserviert?"},
+            {"speaker": "dialogue_male", "text": "Ja. Wir können ihn am Samstag um acht abholen. Ich dachte, wir fangen nach dem Mittagessen an."},
+            {"speaker": "dialogue_female", "text": "Das wird knapp. Bis vier muss der Wagen zurück sein, und wir werden mehrmals fahren müssen."},
+            {"speaker": "dialogue_male", "text": "Dann fahren wir gleich um neun mit der ersten Ladung los."},
+            {"speaker": "dialogue_female", "text": "Gut. Am Freitagabend kommen meine Eltern und helfen uns beim Packen."},
+            {"speaker": "dialogue_male", "text": "Können sie am Samstag auch mitfahren?"},
+            {"speaker": "dialogue_female", "text": "Da haben sie keine Zeit. Aber Nora hilft uns beim Tragen, wenn wir sie früh genug abholen."},
+            {"speaker": "dialogue_male", "text": "Ich hole sie direkt mit dem Transporter ab. Dann sind wir rechtzeitig hier."}
+          ]
+        },
+        {
+          "numbers": [16, 17],
+          "questions": [
+            {"number": 16, "statement": "Das Training beginnt heute später als sonst.", "answer": "falsch", "explanation": "Geändert wird nur der Ort. Der Vater bestätigt, dass die Uhrzeit gleich bleibt."},
+            {"number": 17, "question": "Welche Schuhe braucht die Tochter für das heutige Training?", "options": {"a": "Saubere Sportschuhe für drinnen.", "b": "Ihre üblichen Schuhe für den Sportplatz.", "c": "Neue Schuhe aus dem Vereinsgeschäft."}, "answer": "a", "explanation": "Sie soll das vorhandene saubere Paar mit heller Sohle mitnehmen. Die Schuhe vom Sportplatz bleiben zu Hause; ein Neukauf ist nicht erforderlich."}
+          ],
+          "recording": [
+            {"speaker": "dialogue_male", "text": "Der Fußballtrainer hat geschrieben. Auf dem Sportplatz wird gerade neuer Rasen verlegt. Heute trifft sich die Gruppe deshalb in der Turnhalle."},
+            {"speaker": "dialogue_female", "text": "Die Halle liegt weiter weg. Müssen wir dann auch erst später dort sein?"},
+            {"speaker": "dialogue_male", "text": "An der Uhrzeit ändert sich nichts. Wir sollten nur etwas früher von zu Hause losfahren."},
+            {"speaker": "dialogue_female", "text": "Dann packe ich ihre Sportsachen. Kann sie die Schuhe vom Sportplatz benutzen, wenn ich sie abbürste?"},
+            {"speaker": "dialogue_male", "text": "Der Trainer bittet um das saubere Paar mit heller Sohle. Das steht noch im Schrank. Die Schuhe vom Platz bleiben hier."},
+            {"speaker": "dialogue_female", "text": "Gut, dann brauche ich heute nicht mehr ins Vereinsgeschäft. Ich dachte schon, wir müssten etwas Neues kaufen."},
+            {"speaker": "dialogue_male", "text": "Nein, wir haben alles da. Ich bringe sie hin. Kannst du sie danach abholen?"},
+            {"speaker": "dialogue_female", "text": "Ja. Ich schaue nach, wo der Eingang zur Halle ist, damit sie nicht auf mich warten muss."}
+          ]
+        }
+      ]
+    },
+    {
+      "part": 4,
+      "topic": "Neue Fähigkeiten lernen",
+      "options": {
+        "a": "Lernt am liebsten allein mit Anleitungen im Internet.",
+        "b": "Findet einen festen wöchentlichen Termin wichtig.",
+        "c": "Möchte zuerst ein teures Gerät kaufen.",
+        "d": "Lernt durch gemeinsames praktisches Ausprobieren.",
+        "e": "Will mit einem neuen Hobby später Geld verdienen.",
+        "f": "Übt lieber kurz, dafür regelmäßig."
+      },
+      "example": {
+        "answer": "a",
+        "recording": [{"speaker": "service_female", "text": "Ich wollte lernen, meine Zimmerpflanzen besser zu pflegen. Einen Kurs habe ich dafür nicht besucht. Wenn ich etwas nicht weiß, suche ich zu Hause nach einem kurzen Video oder einer Anleitung. Dann probiere ich es in Ruhe selbst aus. In einer Gruppe wäre mir das zu unruhig. Ich muss auch nicht jede Woche zu einer bestimmten Zeit lernen. Für mich ist es angenehm, dass ich selbst entscheiden kann, wann ich mich mit meinen Pflanzen beschäftige."}]
+      },
+      "tasks": [
+        {
+          "number": 18,
+          "answer": "f",
+          "explanation": "Sie übt täglich etwa zehn Minuten und bevorzugt kurze regelmäßige Einheiten statt langer Wochenendübungen.",
+          "recording": [{"speaker": "opinion_female", "text": "Seit einigen Monaten lerne ich Gitarre. Am Anfang habe ich am Sonntag zwei Stunden gespielt und danach die ganze Woche nichts gemacht. So kam ich kaum weiter. Jetzt nehme ich mir jeden Tag ungefähr zehn Minuten Zeit. Ich wiederhole ein paar Griffe oder übe einen kleinen Teil von einem Lied. Das passt sogar nach einem langen Arbeitstag. Einen festen Kursabend habe ich nicht. Entscheidend ist für mich, dass die Pausen zwischen dem Üben nicht zu lang werden. Beruflich brauche ich die Musik nicht, ich spiele einfach gern."}]
+        },
+        {
+          "number": 19,
+          "answer": "d",
+          "explanation": "Er lernt in der Werkstatt gemeinsam mit anderen, indem er selbst praktisch arbeitet und Hilfe bekommt.",
+          "recording": [{"speaker": "opinion_male", "text": "Ich möchte kleinere Reparaturen an meinem Fahrrad selbst machen können. Zu Hause habe ich mir zwar Anleitungen angesehen, aber ich war unsicher, ob ich alles richtig verstanden hatte. Deshalb bin ich in eine offene Werkstatt gegangen. Dort zeigen mir andere, wie es geht, und ich kann gleich selbst am Fahrrad arbeiten. Wenn etwas nicht klappt, schauen wir gemeinsam nach der Ursache. Das hilft mir viel mehr als nur zuzusehen. Werkzeug kann ich dort benutzen. Ich muss also keine teure Ausrüstung kaufen, bevor ich überhaupt angefangen habe."}]
+        },
+        {
+          "number": 20,
+          "answer": "b",
+          "explanation": "Der feste Dienstagstermin hilft ihr, das Malen nicht immer zu verschieben.",
+          "recording": [{"speaker": "opinion_mature", "text": "Ich habe mir schon oft vorgenommen, wieder zu malen. Aber zu Hause kam immer etwas dazwischen: einkaufen, aufräumen oder ein Anruf. Seit ich jeden Dienstag um sechs Uhr einen Malkurs besuche, funktioniert es endlich. Dort arbeitet jeder für sich an seinem Bild. Mir hilft vor allem, dass dieser Abend fest in meinem Kalender steht. Auch meine Familie weiß, dass ich dann nicht zu Hause bin. Ich will keine Bilder verkaufen, sondern mir regelmäßig Zeit nehmen. Zu Hause male ich nur gelegentlich. Ohne diesen Termin würde ich es wahrscheinlich wieder verschieben."}]
+        }
+      ]
+    }
+  ],
+  "review": {
+    "answer_key": {"1": "b", "2": "a", "3": "c", "4": "a", "5": "c", "6": "b", "7": "c", "8": "a", "9": "b", "10": "falsch", "11": "b", "12": "richtig", "13": "a", "14": "richtig", "15": "c", "16": "falsch", "17": "a", "18": "f", "19": "d", "20": "b"},
+    "score_label": "Richtige Antworten: … von 20. Das ist ein Übungsergebnis, keine Zertifizierungsentscheidung.",
+    "transcript_replay": "Not included in the initial draft; any later replay belongs after the uninterrupted test."
+  }
+}

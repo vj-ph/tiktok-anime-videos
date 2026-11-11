@@ -1,0 +1,73 @@
+{
+  "downloaded_on": "2026-11-08",
+  "publisher": "Mixkit",
+  "source_page": "https://mixkit.co/free-sound-effects/notification/",
+  "license": "Mixkit Sound Effects Free License",
+  "license_url": "https://mixkit.co/license/#sfxFree",
+  "usage_reference": "https://mixkit.co/free-sound-effects/",
+  "usage_note": "Mixkit states that its free sound effects can be used in commercial and personal projects without attribution. Do not redistribute as standalone stock assets.",
+  "selection_status": "User confirmed start/back and slower reverberant chimes on 2026-11-09; subsequently selected Software interface remove at correct-answer reveals. Originals remain unchanged; processed audio requires listening review.",
+  "selected_cues": {
+    "start": "mixkit-software-interface-start-2574.wav",
+    "end": "mixkit-software-interface-back-2575.wav",
+    "reveal": "mixkit-software-interface-remove-2576.wav"
+  },
+  "processing": {
+    "atempo": 0.8,
+    "effect": "Subtle reverberant tail from multiple short, decaying FFmpeg aecho reflections.",
+    "placement": "Start before the initial example cue. Remove at the exact start of each correct-answer reveal, after the complete response silence. Back after the reveal, immediately before the next exercise number. Full chime tails stay outside the prescribed reading/answer silences.",
+    "preserve_originals": true
+  },
+  "assets": [
+    {
+      "title": "Elevator tone",
+      "item_id": 2863,
+      "file": "mixkit-elevator-tone-2863.wav",
+      "download_url": "https://assets.mixkit.co/active_storage/sfx/2863/2863.wav",
+      "sha256": "57051b9ef3c58a3df2e8c3679a80420e4020481ad551e8726a83d29faaa7852b",
+      "duration_seconds": 1.375918,
+      "sample_rate": 44100,
+      "channels": 2,
+      "codec": "pcm_s16le",
+      "modified": false
+    },
+    {
+      "title": "Software interface start",
+      "item_id": 2574,
+      "file": "mixkit-software-interface-start-2574.wav",
+      "download_url": "https://assets.mixkit.co/active_storage/sfx/2574/2574.wav",
+      "sha256": "7323c6ced9605a9b8a406cd088550d06d1a39dc8d37c9abfe52b536482468ad5",
+      "duration_seconds": 2.347120,
+      "sample_rate": 44100,
+      "channels": 2,
+      "codec": "pcm_s16le",
+      "modified": false
+    },
+    {
+      "title": "Software interface back",
+      "item_id": 2575,
+      "file": "mixkit-software-interface-back-2575.wav",
+      "source_page": "https://mixkit.co/free-sound-effects/interface/",
+      "download_url": "https://assets.mixkit.co/active_storage/sfx/2575/2575.wav",
+      "sha256": "2ef811b3c3466fbf27a2769d08012c4f72f699d611cbbd9ba89af136c6e10786",
+      "duration_seconds": 1.329433,
+      "sample_rate": 44100,
+      "channels": 2,
+      "codec": "pcm_s16le",
+      "modified": false
+    },
+    {
+      "title": "Software interface remove",
+      "item_id": 2576,
+      "file": "mixkit-software-interface-remove-2576.wav",
+      "source_page": "https://mixkit.co/free-sound-effects/interface/",
+      "download_url": "https://assets.mixkit.co/active_storage/sfx/2576/2576.wav",
+      "sha256": "708f4b07d687e997956e1f970d97a51b4dda7b5de3e4d01a96c4dd4af80fb8e5",
+      "duration_seconds": 2.155646,
+      "sample_rate": 44100,
+      "channels": 2,
+      "codec": "pcm_s16le",
+      "modified": false
+    }
+  ]
+}

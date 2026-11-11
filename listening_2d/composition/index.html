@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="de" data-resolution="{{LAYOUT}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width={{WIDTH}}, height={{HEIGHT}}">
+  <script src="assets/gsap.min.js"></script>
+  <style>
+    @font-face { font-family: LocalArial; src: url("assets/arial.ttf"); }
+    @font-face { font-family: LocalArial; src: url("assets/arialbd.ttf"); font-weight: 700; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: {{WIDTH}}px; height: {{HEIGHT}}px; overflow: hidden; }
+    body { font-family: LocalArial, sans-serif; background: #f2f6f1; color: #283e3c; }
+    #root { width: {{WIDTH}}px; height: {{HEIGHT}}px; position: relative; }
+    header { position: absolute; top: 52px; left: 72px; right: 72px; height: 90px;
+      display: flex; align-items: center; justify-content: space-between; }
+    .brand { background: white; border-radius: 14px; padding: 10px 18px; width: 330px;
+      display: flex; align-items: center; gap: 14px; color: #283e3c; }
+    .brand img { width: 70px; height: 70px; object-fit: contain; }
+    .brand-name { font-size: 26px; font-weight: 700; line-height: 1.15; }
+    .series { display: flex; align-items: center; gap: 22px; font-size: 32px; font-weight: 700; }
+    .flag { width: 64px; height: 42px; background: linear-gradient(#e73945 0 33.33%,
+      white 33.33% 66.67%, #e73945 66.67%); border-radius: 4px; }
+    .clip.scene { position: absolute; left: 72px; top: 196px; width: 1300px; height: 780px;
+      padding: 54px; background: #fffefb; border: 2px solid #d1dfd7; border-radius: 30px; }
+    .eyebrow { color: #3f685b; font-size: 28px; font-weight: 700; margin-bottom: 20px; }
+    h1 { margin: 0 0 22px; font-size: 78px; line-height: 1.15; }
+    h2 { margin: 0 0 26px; font-size: 48px; line-height: 1.2; }
+    p { margin: 0 0 24px; font-size: 38px; line-height: 1.38; }
+    .intro-title { max-width: 1100px; }
+    .title-word, .instruction-word { display: inline-block; border-radius: 4px; }
+    .instruction { font-size: 37px; line-height: 1.42; }
+    .option { display: flex; gap: 24px; align-items: center; padding: 23px 28px;
+      margin-bottom: 17px; border: 2px solid #b8cbc3; border-radius: 18px;
+      font-size: 36px; line-height: 1.22; }
+    .letter { color: #376a5b; font-weight: 700; min-width: 30px; }
+    .option.correct { border-color: #44806d; background: #e0f1e7; color: #215640; }
+    .solution { color: #215640; font-size: 31px; font-weight: 700; margin-top: 22px; }
+    .phase { display: flex; justify-content: space-between; align-items: center;
+      border-top: 2px solid #b8cbc3; padding-top: 20px; margin-top: 24px; font-size: 30px; }
+    .phase-label { color: #875a3b; font-weight: 700; }
+    .countdown { font-size: 40px; font-weight: 700; color: #376a5b; }
+    .progress { height: 9px; margin-top: 14px; border-radius: 6px; background: #dce7df; overflow: hidden; }
+    .progress-fill { height: 100%; background: #609e89; transform-origin: left; }
+    aside { position: absolute; right: 72px; top: 232px; width: 404px; height: 700px;
+      padding: 30px; text-align: center; background: #e8f0e8;
+      border: 2px solid #ccd9cf; border-radius: 28px; }
+    .cover { width: 220px; height: 330px; object-fit: contain; margin-bottom: 22px; }
+    aside h2 { font-size: 34px; margin-bottom: 18px; }
+    aside p { font-size: 28px; line-height: 1.35; }
+    .amazon { color: #305f51; font-weight: 700; }
+    footer { position: absolute; bottom: 35px; left: 72px; right: 72px;
+      font-size: 22px; color: #536861; display: flex; justify-content: space-between; }
+    footer span:last-child { margin-left: auto; }
+    html[data-resolution="portrait"] header { top: 140px; left: 80px; right: 80px; height: 110px; }
+    html[data-resolution="portrait"] .brand { width: 320px; }
+    html[data-resolution="portrait"] .series { font-size: 29px; gap: 13px; }
+    html[data-resolution="portrait"] .flag { width: 52px; height: 35px; }
+    html[data-resolution="portrait"] .clip.scene { top: 302px; left: 80px; width: 920px;
+      height: 1080px; padding: 44px; }
+    html[data-resolution="portrait"] h1 { font-size: 76px; }
+    html[data-resolution="portrait"] h2 { font-size: 51px; }
+    html[data-resolution="portrait"] p { font-size: 42px; }
+    html[data-resolution="portrait"] .instruction { font-size: 42px; line-height: 1.4; }
+    html[data-resolution="portrait"] .option { font-size: 40px; padding: 28px 24px; margin-bottom: 24px; }
+    html[data-resolution="portrait"] .eyebrow { font-size: 32px; margin-bottom: 30px; }
+    html[data-resolution="portrait"] .phase { margin-top: 34px; font-size: 33px; }
+    html[data-resolution="portrait"] aside { top: 1420px; left: 80px; right: auto;
+      width: 920px; height: 276px; text-align: left; padding: 20px 32px; }
+    html[data-resolution="portrait"] .cover { float: left; width: 146px; height: 230px;
+      margin-right: 34px; margin-bottom: 0; }
+    html[data-resolution="portrait"] aside h2 { font-size: 34px; margin: 18px 0; }
+    html[data-resolution="portrait"] aside p { font-size: 30px; }
+    html[data-resolution="portrait"] footer { bottom: 162px; left: 80px; right: 80px;
+      font-size: 23px; display: block; line-height: 1.35; }
+    html[data-resolution="portrait"] footer span { display: block; }
+    {{EXTRA_STYLES}}
+  </style>
+</head>
+<body>
+  <div id="root" data-composition-id="main" data-start="0" data-duration="{{DURATION}}"
+       data-width="{{WIDTH}}" data-height="{{HEIGHT}}" data-fps="24">
+    <header>
+      <div class="brand"><img src="assets/logo.png" alt=""><span class="brand-name">Deutsch<br>Kompass</span></div>
+      <div class="series"><span class="flag" aria-label="Österreich"></span>ÖIF B1 Hören</div>
+    </header>
+    {{SCENES}}
+    <aside>
+      <img class="cover" src="assets/book.jpg" alt="ÖIF B1 Hören – Übungsbuch mit Audio">
+      <h2>Mehr üben mit dem Buch</h2>
+      <p>Hörübungen, Transkripte<br>und Erklärungen</p>
+      <p class="amazon">{{AMAZON}}</p>
+    </aside>
+    <footer>{{FOOTER_NOTE}}<span>{{SCOPE_LABEL}}</span></footer>
+    <audio id="sample-audio" src="assets/dialogue.wav" data-start="0" data-duration="{{DURATION}}"
+           data-track-index="1" data-volume="1"></audio>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const clock = { value: 0 };
+    tl.to(clock, { value: {{DURATION}}, duration: {{DURATION}}, ease: "none" }, 0);
+    const pauses = {{PAUSES}};
+    for (const pause of pauses) {
+      tl.fromTo(`#fill-${pause.index}`, { scaleX: 1 }, { scaleX: 0,
+        duration: pause.duration, ease: "none", immediateRender: false }, pause.start);
+    }
+    const words = {{TITLE_WORDS}}.map(word => ({ ...word, selector: `#title-word-${word.index}` }))
+      .concat({{INSTRUCTION_WORDS}}.map(word => ({ ...word,
+        selector: word.selector || `#instruction-word-${word.index}` })));
+    for (const word of words) {
+      tl.set(word.selector, { color: "#214f43", backgroundColor: "#d2e9df",
+        boxShadow: "0 0 0 4px #d2e9df" }, word.start);
+      tl.set(word.selector, { color: "#283e3c", backgroundColor: "transparent",
+        boxShadow: "none" }, word.end);
+    }
+    tl.eventCallback("onUpdate", () => {
+      for (const pause of pauses) {
+        const node = document.getElementById(`count-${pause.index}`);
+        node.textContent = Math.max(0, Math.ceil(pause.start + pause.duration - tl.time())) + " s";
+      }
+    });
+    window.__timelines = window.__timelines || {};
+    window.__timelines.main = tl;
+    tl.seek(0);
+  </script>
+</body>
+</html>

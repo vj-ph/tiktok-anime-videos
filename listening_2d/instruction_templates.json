@@ -1,0 +1,61 @@
+{
+  "language": "de-AT",
+  "status": "Draft for review; no speech generated.",
+  "source_transcript": "assets\\model.txt",
+  "source_use": "Instruction structure only. Reworded for independent video practice; official example and task recordings are not included.",
+  "timing_reference": "..\\.github\\skills\\oeif-b1-listening-video-gen\\SKILL.md",
+  "naming": {
+    "proposed_title": "ÖIF B1 Hören – Unabhängige Prüfungssimulation",
+    "opening": "ÖIF B1 Hören. Unabhängige Prüfungssimulation von Deutsch Kompass.",
+    "opening_tts": "Ö I F B eins Hören. Unabhängige Prüfungssimulation von Deutsch Kompass.",
+    "disclaimer": "Dieses Übungsvideo stammt von Deutsch Kompass und ist keine offizielle Prüfung des ÖIF.",
+    "description_reference": "Unabhängige Hörpraxis zur Vorbereitung auf den Deutsch-Test für Österreich (DTÖ), Niveau B1.",
+    "note": "Naming proposal, not legal clearance or permission to use official logos, recordings or questions."
+  },
+  "viewer_setup": "Halten Sie Papier und einen Stift bereit. Notieren Sie zu jeder Aufgabennummer Ihre Antwort. Die Lösungen sehen Sie erst nach allen vier Teilen.",
+  "sections": [
+    {
+      "part": 1,
+      "task_numbers": [1, 2, 3, 4],
+      "instruction": "Hören, Teil eins. In diesem Teil hören Sie vier kurze Ansagen. Für jede Ansage wählen Sie eine Antwort: a, b oder c. Entscheiden Sie, welche Antwort am besten zum gehörten Text passt. Notieren Sie Ihre Antworten zu den Aufgaben eins bis vier.",
+      "example_cue": "Beispiel.",
+      "number_cues": ["Nummer eins.", "Nummer zwei.", "Nummer drei.", "Nummer vier."],
+      "end_cue": "Ende von Teil eins."
+    },
+    {
+      "part": 2,
+      "task_numbers": [5, 6, 7, 8, 9],
+      "instruction": "Hören, Teil zwei. Jetzt hören Sie fünf kurze Radiomeldungen. Zu jeder Meldung gehört eine Aufgabe mit drei Antworten. Wählen Sie jeweils a, b oder c und notieren Sie Ihre Antworten zu den Aufgaben fünf bis neun.",
+      "example_cue": null,
+      "number_cues": ["Nummer fünf.", "Nummer sechs.", "Nummer sieben.", "Nummer acht.", "Nummer neun."],
+      "end_cue": "Ende von Teil zwei."
+    },
+    {
+      "part": 3,
+      "task_numbers": [10, 11, 12, 13, 14, 15, 16, 17],
+      "instruction": "Hören, Teil drei. Sie hören vier Gespräche. Zu jedem Gespräch bearbeiten Sie zwei Aufgaben. Bei der ersten Aufgabe entscheiden Sie: richtig oder falsch. Bei der zweiten wählen Sie die passende Antwort: a, b oder c. Notieren Sie Ihre Antworten zu den Aufgaben zehn bis siebzehn.",
+      "example_cue": "Beispiel.",
+      "number_cues": ["Nummer zehn und elf.", "Nummer zwölf und dreizehn.", "Nummer vierzehn und fünfzehn.", "Nummer sechzehn und siebzehn."],
+      "end_cue": "Ende von Teil drei."
+    },
+    {
+      "part": 4,
+      "task_numbers": [18, 19, 20],
+      "instruction": "Hören, Teil vier. Mehrere Personen sprechen über dasselbe Thema. Ordnen Sie den Aussagen der Personen jeweils einen passenden Satz von a bis f zu. Ein Satz gehört zum Beispiel. Verwenden Sie jeden Satz höchstens einmal. Zwei Sätze bleiben übrig. Notieren Sie Ihre Antworten zu den Aufgaben achtzehn bis zwanzig. Lesen Sie zuerst die sechs Sätze auf dem Bildschirm. Dafür haben Sie eine Minute Zeit. Anschließend hören Sie das Beispiel und die drei Aussagen.",
+      "example_cue": "Beispiel.",
+      "number_cues": ["Nummer achtzehn.", "Nummer neunzehn.", "Nummer zwanzig."],
+      "end_cue": "Der Hörteil ist beendet."
+    }
+  ],
+  "review_transition": "Jetzt folgen die Lösungen. Vergleichen Sie diese mit Ihren notierten Antworten.",
+  "source_notes": [
+    "The transcript contains obvious recognition errors and mixed-language fragments. It is not a verified verbatim transcript.",
+    "The spoken cue for tasks 10 and 11 is missing from the transcript; the template uses the user's supplied numbering and timing reference.",
+    "The Teil 4 example cue is garbled or missing, and the cue for task 19 is missing. Both are supplied from the user's timing reference and the task sequence, not claimed as recovered speech.",
+    "The transcript indicates end cues for Teile 1-3 and the end of the listening subtest. The draft normalizes or rewords these cues.",
+    "The transcript has no timestamps. It cannot independently verify silence durations or chime placement.",
+    "No full-recording repetition rule is inferred from dialogue or an announcement's internal repetition.",
+    "Use original or permitted book-based examples separately for Teile 1, 3 and 4; do not reuse the official example dialogues from this file.",
+    "The added Teil 4 one-use rule describes the authored episode's matching exercise; it is not claimed as recovered wording from the source transcript."
+  ]
+}

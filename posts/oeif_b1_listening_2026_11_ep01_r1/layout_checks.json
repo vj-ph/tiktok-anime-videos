@@ -1,0 +1,1391 @@
+{
+  "covers": {
+    "full\\thumbnail_youtube.png": {
+      "size": [
+        1920,
+        1080
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            108,
+            581,
+            146
+          ]
+        },
+        {
+          "text": "ÖIF B1",
+          "font_px": 112,
+          "bounds": [
+            94,
+            255,
+            454,
+            358
+          ]
+        },
+        {
+          "text": "Hören",
+          "font_px": 176,
+          "bounds": [
+            86,
+            389,
+            596,
+            517
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 86,
+          "bounds": [
+            94,
+            597,
+            905,
+            678
+          ]
+        },
+        {
+          "text": "Geführte Übung · alle 4 Teile",
+          "font_px": 48,
+          "bounds": [
+            288.03125,
+            765,
+            936.03125,
+            819
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 57,
+          "bounds": [
+            94,
+            892,
+            518,
+            934
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 44,
+          "bounds": [
+            760,
+            902,
+            966,
+            943
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 46,
+          "bounds": [
+            1480.0,
+            880,
+            1560.0,
+            913
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "full\\thumbnail_tiktok.png": {
+      "size": [
+        1080,
+        1920
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            310,
+            581,
+            348
+          ]
+        },
+        {
+          "text": "ÖIF B1 Hören",
+          "font_px": 100,
+          "bounds": [
+            220.0,
+            434,
+            860.0,
+            525
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 78,
+          "bounds": [
+            173.0,
+            572,
+            907.0,
+            646
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 44,
+          "bounds": [
+            502.5,
+            1272,
+            577.5,
+            1304
+          ]
+        },
+        {
+          "text": "Geführte Übung · alle 4 Teile",
+          "font_px": 44,
+          "bounds": [
+            243.5234375,
+            1373,
+            836.5234375,
+            1421
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 60,
+          "bounds": [
+            319.5,
+            1486,
+            760.5,
+            1530
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 54,
+          "bounds": [
+            412.5,
+            1570,
+            667.5,
+            1620
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "full\\thumbnail_instagram.png": {
+      "size": [
+        1080,
+        1350
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            108,
+            581,
+            146
+          ]
+        },
+        {
+          "text": "ÖIF B1 Hören",
+          "font_px": 100,
+          "bounds": [
+            220.0,
+            242,
+            860.0,
+            333
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 78,
+          "bounds": [
+            173.0,
+            380,
+            907.0,
+            454
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 44,
+          "bounds": [
+            502.5,
+            918,
+            577.5,
+            950
+          ]
+        },
+        {
+          "text": "Geführte Übung · alle 4 Teile",
+          "font_px": 44,
+          "bounds": [
+            243.5234375,
+            1019,
+            836.5234375,
+            1067
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 60,
+          "bounds": [
+            319.5,
+            1132,
+            760.5,
+            1176
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 54,
+          "bounds": [
+            412.5,
+            1216,
+            667.5,
+            1266
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "teil_1\\thumbnail_youtube.png": {
+      "size": [
+        1920,
+        1080
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            108,
+            581,
+            146
+          ]
+        },
+        {
+          "text": "ÖIF B1",
+          "font_px": 112,
+          "bounds": [
+            94,
+            255,
+            454,
+            358
+          ]
+        },
+        {
+          "text": "Hören",
+          "font_px": 176,
+          "bounds": [
+            86,
+            389,
+            596,
+            517
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 86,
+          "bounds": [
+            94,
+            597,
+            905,
+            678
+          ]
+        },
+        {
+          "text": "Teil 1 · Verkürzte Übung",
+          "font_px": 48,
+          "bounds": [
+            338.0546875,
+            765,
+            886.0546875,
+            819
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 57,
+          "bounds": [
+            94,
+            892,
+            518,
+            934
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 44,
+          "bounds": [
+            760,
+            902,
+            966,
+            943
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 46,
+          "bounds": [
+            1480.0,
+            880,
+            1560.0,
+            913
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "teil_1\\thumbnail_tiktok.png": {
+      "size": [
+        1080,
+        1920
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            310,
+            581,
+            348
+          ]
+        },
+        {
+          "text": "ÖIF B1 Hören",
+          "font_px": 100,
+          "bounds": [
+            220.0,
+            434,
+            860.0,
+            525
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 78,
+          "bounds": [
+            173.0,
+            572,
+            907.0,
+            646
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 44,
+          "bounds": [
+            502.5,
+            1272,
+            577.5,
+            1304
+          ]
+        },
+        {
+          "text": "Teil 1 · Verkürzte Übung",
+          "font_px": 44,
+          "bounds": [
+            289.5390625,
+            1373,
+            790.5390625,
+            1421
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 60,
+          "bounds": [
+            319.5,
+            1486,
+            760.5,
+            1530
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 54,
+          "bounds": [
+            412.5,
+            1570,
+            667.5,
+            1620
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "teil_1\\thumbnail_instagram.png": {
+      "size": [
+        1080,
+        1350
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            108,
+            581,
+            146
+          ]
+        },
+        {
+          "text": "ÖIF B1 Hören",
+          "font_px": 100,
+          "bounds": [
+            220.0,
+            242,
+            860.0,
+            333
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 78,
+          "bounds": [
+            173.0,
+            380,
+            907.0,
+            454
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 44,
+          "bounds": [
+            502.5,
+            918,
+            577.5,
+            950
+          ]
+        },
+        {
+          "text": "Teil 1 · Verkürzte Übung",
+          "font_px": 44,
+          "bounds": [
+            289.5390625,
+            1019,
+            790.5390625,
+            1067
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 60,
+          "bounds": [
+            319.5,
+            1132,
+            760.5,
+            1176
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 54,
+          "bounds": [
+            412.5,
+            1216,
+            667.5,
+            1266
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "teil_2\\thumbnail_youtube.png": {
+      "size": [
+        1920,
+        1080
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            108,
+            581,
+            146
+          ]
+        },
+        {
+          "text": "ÖIF B1",
+          "font_px": 112,
+          "bounds": [
+            94,
+            255,
+            454,
+            358
+          ]
+        },
+        {
+          "text": "Hören",
+          "font_px": 176,
+          "bounds": [
+            86,
+            389,
+            596,
+            517
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 86,
+          "bounds": [
+            94,
+            597,
+            905,
+            678
+          ]
+        },
+        {
+          "text": "Teil 2 · Verkürzte Übung",
+          "font_px": 48,
+          "bounds": [
+            338.0546875,
+            765,
+            886.0546875,
+            819
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 57,
+          "bounds": [
+            94,
+            892,
+            518,
+            934
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 44,
+          "bounds": [
+            760,
+            902,
+            966,
+            943
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 46,
+          "bounds": [
+            1480.0,
+            880,
+            1560.0,
+            913
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "teil_2\\thumbnail_tiktok.png": {
+      "size": [
+        1080,
+        1920
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            310,
+            581,
+            348
+          ]
+        },
+        {
+          "text": "ÖIF B1 Hören",
+          "font_px": 100,
+          "bounds": [
+            220.0,
+            434,
+            860.0,
+            525
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 78,
+          "bounds": [
+            173.0,
+            572,
+            907.0,
+            646
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 44,
+          "bounds": [
+            502.5,
+            1272,
+            577.5,
+            1304
+          ]
+        },
+        {
+          "text": "Teil 2 · Verkürzte Übung",
+          "font_px": 44,
+          "bounds": [
+            289.5390625,
+            1373,
+            790.5390625,
+            1421
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 60,
+          "bounds": [
+            319.5,
+            1486,
+            760.5,
+            1530
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 54,
+          "bounds": [
+            412.5,
+            1570,
+            667.5,
+            1620
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "teil_2\\thumbnail_instagram.png": {
+      "size": [
+        1080,
+        1350
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            108,
+            581,
+            146
+          ]
+        },
+        {
+          "text": "ÖIF B1 Hören",
+          "font_px": 100,
+          "bounds": [
+            220.0,
+            242,
+            860.0,
+            333
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 78,
+          "bounds": [
+            173.0,
+            380,
+            907.0,
+            454
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 44,
+          "bounds": [
+            502.5,
+            918,
+            577.5,
+            950
+          ]
+        },
+        {
+          "text": "Teil 2 · Verkürzte Übung",
+          "font_px": 44,
+          "bounds": [
+            289.5390625,
+            1019,
+            790.5390625,
+            1067
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 60,
+          "bounds": [
+            319.5,
+            1132,
+            760.5,
+            1176
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 54,
+          "bounds": [
+            412.5,
+            1216,
+            667.5,
+            1266
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "teil_3\\thumbnail_youtube.png": {
+      "size": [
+        1920,
+        1080
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            108,
+            581,
+            146
+          ]
+        },
+        {
+          "text": "ÖIF B1",
+          "font_px": 112,
+          "bounds": [
+            94,
+            255,
+            454,
+            358
+          ]
+        },
+        {
+          "text": "Hören",
+          "font_px": 176,
+          "bounds": [
+            86,
+            389,
+            596,
+            517
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 86,
+          "bounds": [
+            94,
+            597,
+            905,
+            678
+          ]
+        },
+        {
+          "text": "Teil 3 · Verkürzte Übung",
+          "font_px": 48,
+          "bounds": [
+            338.0546875,
+            765,
+            886.0546875,
+            819
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 57,
+          "bounds": [
+            94,
+            892,
+            518,
+            934
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 44,
+          "bounds": [
+            760,
+            902,
+            966,
+            943
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 46,
+          "bounds": [
+            1480.0,
+            880,
+            1560.0,
+            913
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "teil_3\\thumbnail_tiktok.png": {
+      "size": [
+        1080,
+        1920
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            310,
+            581,
+            348
+          ]
+        },
+        {
+          "text": "ÖIF B1 Hören",
+          "font_px": 100,
+          "bounds": [
+            220.0,
+            434,
+            860.0,
+            525
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 78,
+          "bounds": [
+            173.0,
+            572,
+            907.0,
+            646
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 44,
+          "bounds": [
+            502.5,
+            1272,
+            577.5,
+            1304
+          ]
+        },
+        {
+          "text": "Teil 3 · Verkürzte Übung",
+          "font_px": 44,
+          "bounds": [
+            289.5390625,
+            1373,
+            790.5390625,
+            1421
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 60,
+          "bounds": [
+            319.5,
+            1486,
+            760.5,
+            1530
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 54,
+          "bounds": [
+            412.5,
+            1570,
+            667.5,
+            1620
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "teil_3\\thumbnail_instagram.png": {
+      "size": [
+        1080,
+        1350
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            108,
+            581,
+            146
+          ]
+        },
+        {
+          "text": "ÖIF B1 Hören",
+          "font_px": 100,
+          "bounds": [
+            220.0,
+            242,
+            860.0,
+            333
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 78,
+          "bounds": [
+            173.0,
+            380,
+            907.0,
+            454
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 44,
+          "bounds": [
+            502.5,
+            918,
+            577.5,
+            950
+          ]
+        },
+        {
+          "text": "Teil 3 · Verkürzte Übung",
+          "font_px": 44,
+          "bounds": [
+            289.5390625,
+            1019,
+            790.5390625,
+            1067
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 60,
+          "bounds": [
+            319.5,
+            1132,
+            760.5,
+            1176
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 54,
+          "bounds": [
+            412.5,
+            1216,
+            667.5,
+            1266
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "teil_4\\thumbnail_youtube.png": {
+      "size": [
+        1920,
+        1080
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            108,
+            581,
+            146
+          ]
+        },
+        {
+          "text": "ÖIF B1",
+          "font_px": 112,
+          "bounds": [
+            94,
+            255,
+            454,
+            358
+          ]
+        },
+        {
+          "text": "Hören",
+          "font_px": 176,
+          "bounds": [
+            86,
+            389,
+            596,
+            517
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 86,
+          "bounds": [
+            94,
+            597,
+            905,
+            678
+          ]
+        },
+        {
+          "text": "Teil 4 · Verkürzte Übung",
+          "font_px": 48,
+          "bounds": [
+            338.0546875,
+            765,
+            886.0546875,
+            819
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 57,
+          "bounds": [
+            94,
+            892,
+            518,
+            934
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 44,
+          "bounds": [
+            760,
+            902,
+            966,
+            943
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 46,
+          "bounds": [
+            1480.0,
+            880,
+            1560.0,
+            913
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "teil_4\\thumbnail_tiktok.png": {
+      "size": [
+        1080,
+        1920
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            310,
+            581,
+            348
+          ]
+        },
+        {
+          "text": "ÖIF B1 Hören",
+          "font_px": 100,
+          "bounds": [
+            220.0,
+            434,
+            860.0,
+            525
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 78,
+          "bounds": [
+            173.0,
+            572,
+            907.0,
+            646
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 44,
+          "bounds": [
+            502.5,
+            1272,
+            577.5,
+            1304
+          ]
+        },
+        {
+          "text": "Teil 4 · Verkürzte Übung",
+          "font_px": 44,
+          "bounds": [
+            289.5390625,
+            1373,
+            790.5390625,
+            1421
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 60,
+          "bounds": [
+            319.5,
+            1486,
+            760.5,
+            1530
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 54,
+          "bounds": [
+            412.5,
+            1570,
+            667.5,
+            1620
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    },
+    "teil_4\\thumbnail_instagram.png": {
+      "size": [
+        1080,
+        1350
+      ],
+      "text": [
+        {
+          "text": "Deutsch Kompass",
+          "font_px": 42,
+          "bounds": [
+            216,
+            108,
+            581,
+            146
+          ]
+        },
+        {
+          "text": "ÖIF B1 Hören",
+          "font_px": 100,
+          "bounds": [
+            220.0,
+            242,
+            860.0,
+            333
+          ]
+        },
+        {
+          "text": "Prüfungssimulation",
+          "font_px": 78,
+          "bounds": [
+            173.0,
+            380,
+            907.0,
+            454
+          ]
+        },
+        {
+          "text": "Lea",
+          "font_px": 44,
+          "bounds": [
+            502.5,
+            918,
+            577.5,
+            950
+          ]
+        },
+        {
+          "text": "Teil 4 · Verkürzte Übung",
+          "font_px": 44,
+          "bounds": [
+            289.5390625,
+            1019,
+            790.5390625,
+            1067
+          ]
+        },
+        {
+          "text": "November 2026",
+          "font_px": 60,
+          "bounds": [
+            319.5,
+            1132,
+            760.5,
+            1176
+          ]
+        },
+        {
+          "text": "Episode 1",
+          "font_px": 54,
+          "bounds": [
+            412.5,
+            1216,
+            667.5,
+            1266
+          ]
+        }
+      ],
+      "lea_source_crop": [
+        600,
+        82,
+        940,
+        422
+      ],
+      "lea_identity": "candidate_a / Lea"
+    }
+  },
+  "captions": {
+    "full/youtube": {
+      "characters": 1250,
+      "title": "ÖIF B1 Hören: Prüfungssimulation mit Lösungen | November 2026 · Episode 1"
+    },
+    "full/tiktok": {
+      "characters": 1027,
+      "title": "ÖIF B1 Hören: Prüfungssimulation mit Lösungen | November 2026 · Episode 1"
+    },
+    "full/instagram": {
+      "characters": 1027,
+      "title": "ÖIF B1 Hören: Prüfungssimulation mit Lösungen | November 2026 · Episode 1"
+    },
+    "teil_1/youtube": {
+      "characters": 1094,
+      "title": "ÖIF B1 Hören · Teil 1 | Verkürzte Prüfungssimulation | November 2026 · Episode 1"
+    },
+    "teil_1/tiktok": {
+      "characters": 1085,
+      "title": "ÖIF B1 Hören · Teil 1 | Verkürzte Prüfungssimulation | November 2026 · Episode 1"
+    },
+    "teil_1/instagram": {
+      "characters": 1085,
+      "title": "ÖIF B1 Hören · Teil 1 | Verkürzte Prüfungssimulation | November 2026 · Episode 1"
+    },
+    "teil_2/youtube": {
+      "characters": 1099,
+      "title": "ÖIF B1 Hören · Teil 2 | Verkürzte Prüfungssimulation | November 2026 · Episode 1"
+    },
+    "teil_2/tiktok": {
+      "characters": 1090,
+      "title": "ÖIF B1 Hören · Teil 2 | Verkürzte Prüfungssimulation | November 2026 · Episode 1"
+    },
+    "teil_2/instagram": {
+      "characters": 1090,
+      "title": "ÖIF B1 Hören · Teil 2 | Verkürzte Prüfungssimulation | November 2026 · Episode 1"
+    },
+    "teil_3/youtube": {
+      "characters": 1079,
+      "title": "ÖIF B1 Hören · Teil 3 | Verkürzte Prüfungssimulation | November 2026 · Episode 1"
+    },
+    "teil_3/tiktok": {
+      "characters": 1070,
+      "title": "ÖIF B1 Hören · Teil 3 | Verkürzte Prüfungssimulation | November 2026 · Episode 1"
+    },
+    "teil_3/instagram": {
+      "characters": 1070,
+      "title": "ÖIF B1 Hören · Teil 3 | Verkürzte Prüfungssimulation | November 2026 · Episode 1"
+    },
+    "teil_4/youtube": {
+      "characters": 1165,
+      "title": "ÖIF B1 Hören · Teil 4 | Verkürzte Prüfungssimulation | November 2026 · Episode 1"
+    },
+    "teil_4/tiktok": {
+      "characters": 1156,
+      "title": "ÖIF B1 Hören · Teil 4 | Verkürzte Prüfungssimulation | November 2026 · Episode 1"
+    },
+    "teil_4/instagram": {
+      "characters": 1156,
+      "title": "ÖIF B1 Hören · Teil 4 | Verkürzte Prüfungssimulation | November 2026 · Episode 1"
+    }
+  }
+}
