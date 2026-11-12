@@ -1,0 +1,60 @@
+{
+  "schema": "oeif_a2_pending_revision_v1",
+  "base_episode": "oeif_a2_listening_01.json",
+  "base_episode_sha256": "89668388afff3291edf7d8453e563f0d477e98d80c867d847ec2a7a5b4af9358",
+  "status": "Production authorized by the subsequent user request: ok, regenerate the video and reduced video. Earlier process-only restriction is superseded; preserve all r1 deliveries. This is a revision specification, not a replacement episode.",
+  "reference": {
+    "path": "..\\assets\\model_oeif_a2.txt",
+    "sha256": "002fda59c4ed451d011ea8be090fd47887f671ac3b0f4e78f034b934760a3756",
+    "provenance": "User-supplied model transcript; preserve its original text.",
+    "supports": "Four parts and 15 tasks; shared message repeated in Teil 1, each message repeated separately in Teil 2, once-only playback in Teile 3 and 4, 30-second reading instructions and the test-ending cue.",
+    "limitations": [
+      "No timestamps or reliable silence/chime annotations. Exact 5/10-second pauses and chime positions come from the user's sequence, not this text.",
+      "Recognition gaps include ingtwood, broken words, omitted task-8/task-10 number cues and absent section-ending cues for Teile 1 and 3. Do not invent missing official wording.",
+      "Use only format/instruction evidence; retain the independently written exercises rather than copying the model recordings."
+    ]
+  },
+  "opening": {
+    "display": "ÖIF A2 Hören",
+    "text": "Ö I F A zwei Hören.",
+    "speaker": "narrator",
+    "full_slide_body": "<h1>ÖIF A2 Hören</h1>",
+    "remove": ["Wie viel verstehst du?", "15 Aufgaben aus dem Alltag"],
+    "preserve": "Deutsch Kompass logo, book/Amazon promotion and established phase/footer styling."
+  },
+  "sequence_profile": "oeif_a2_user_sequence_2026_11_11_guided",
+  "compact_options": {
+    "label_separator": "Keep a clearly visible space after a), b) and c); do not visually join the label to the answer.",
+    "minimum_portrait_label_gap_px": 8,
+    "minimum_portrait_question_font_px": 42,
+    "minimum_portrait_option_font_px": 40,
+    "fit_strategy": "Allow options to wrap and adjust row/card padding; measure all seven-question reading/listening/reveal cards. Do not recover space by shrinking the approved text."
+  },
+  "timing": {
+    "initial_read_seconds_per_part": 30,
+    "between_replays_seconds": 5,
+    "answer_seconds_after_final_play": 10,
+    "between_parts_seconds": 5,
+    "reveal_seconds": 3
+  },
+  "chimes": {
+    "section_start": "After the complete 30-second reading silence, before the first spoken task number.",
+    "part_1_repeat": "After the complete five-second replay silence, before the second playback.",
+    "part_2_repeat": "No extra chime between the five-second replay silence and the second playback.",
+    "between_tasks": "No extra back chimes.",
+    "answer_reveal": "Keep the approved remove sound at the start of each separate three-second reveal."
+  },
+  "endings": {
+    "parts_1_to_3": "Spoken section ending after the last reveal, then five seconds of silence before the next instruction.",
+    "part_4": {
+      "text": "Ende des Testteils Hören.",
+      "source": "Final line of the supplied transcript, with normalized capitalization."
+    }
+  },
+  "release": {
+    "new_versioned_drivers_required": true,
+    "reuse": "Unchanged reviewed exercise content, normalized audio and verified word alignments only where text, references and hashes match.",
+    "gates": "Inherit review/approval of unchanged exercises; new opening and final cue follow the user's explicit wording. Independently audit the scheduled sequence and actual title HTML before rendering and repeat PCM, ASR, browser and encoded validation.",
+    "preserve": "Do not modify frozen r1 episode, drivers, full/short exports, posting assets or manifests."
+  }
+}

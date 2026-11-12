@@ -1,0 +1,34 @@
+{
+  "publication_manifest_sha256": "de7f0c78cdfac2589b28ee865216803377e18da480044b29bbeafd2754ddb9fe",
+  "video_cross_audit_sha256": "d119451cf1fc68851021426685201e3db03ced5cdb6fcc87921672287706351e",
+  "inputs_rehashed": 46,
+  "assets_rehashed": 33,
+  "native_covers_decoded_and_bounds_checked": 15,
+  "descriptions_checked": 15,
+  "contact_sheet_inspected": true,
+  "youtube_chapters": [
+    [
+      0,
+      "Start und Teil 1 – Eine Nachricht, sieben Details"
+    ],
+    [
+      157,
+      "Teil 2 – Zwei kurze Nachrichten"
+    ],
+    [
+      341,
+      "Teil 3 – Drei Ansagen"
+    ],
+    [
+      498,
+      "Teil 4 – Drei Gespräche"
+    ],
+    [
+      678,
+      "Lösungen und Buch"
+    ]
+  ],
+  "minimum_chapter_seconds": 10,
+  "a2_book_links_and_all_task_short_scope_verified": true,
+  "publication": "Local drafts only; nothing uploaded"
+}

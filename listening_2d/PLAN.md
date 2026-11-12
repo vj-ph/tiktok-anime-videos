@@ -644,6 +644,282 @@ the correct listening-book link, original task scope, AI disclosure and
 appropriate Mixkit credits; the longest is 1250 characters. Full YouTube
 chapters come from measured original event starts. No upload or publication.
 
+## A2 listening episode 1 preparation (November 11, 2026)
+
+The user requested A2 videos inspired by the book without copying exercises,
+and confirmed the same delivery scope as B1: full landscape/portrait videos
+plus four under-three-minute selections. New editable script:
+`episodes\oeif_a2_listening_01.json`. Preserve all B1 episodes, pinned drivers
+and approved deliveries; the B1-specific generators are not a generic A2 route.
+
+Reference book: `..\..\german\books\a2\listening_oeif\book_no_toc.md`, using
+the structural overview and test 1 tasks/transcripts as inspiration only.
+That reference test concerns medical appointments and a pharmacy. The new
+script uses independently written bicycle repair, cooking, library meeting,
+transport, swimming-pool and shopping scenarios. Initial checks find all
+15 task numbers/keys complete and no shared eight-word recording phrases
+with the inspected reference test; this mechanical screen is not originality
+certification and does not replace independent script review.
+
+The official Sprachportal A2 model PDF, checked November 11, confirms four
+parts and 15 tasks: one shared voicemail for 1-7 heard twice; two messages for
+8-9 heard twice; three announcements for 10-12 heard once; three true/false
+conversations for 13-15 heard once. Each part's worksheet gives 30 seconds of
+initial reading. Source:
+`https://sprachportal.at/fileadmin/user_upload/meinsprachportal-at/Materialen_zur_Pruefungsvorbereitung/A2/OEIF-TEST_neu_Modelltest.pdf`
+(printed worksheet pages 22-25). Local reference-audio analysis now supports
+Teil 2 order 8/8/9/9. FFmpeg quiet detection finds roughly five-second replay
+gaps and mostly ten-second response gaps, with an approximately eight-second
+gap after task 11. These threshold-dependent intervals are not an exact authored
+pause clock. Source URL/hash, selected measurements and ASR limitations are in
+`assets\oeif_a2_format_reference.json`. The official MP3 and full local research
+ASR remain outside authored outputs; do not copy them into the new episode.
+
+Proposed guided practice uses an 8-second gap between the two identical WAV
+playbacks and 12 seconds to finish answering after the final playback, followed
+by the approved three-second remove reveal.
+The longer pauses require approval as independent practice choices; per-message
+Teil 2 repeats now follow the locally checked reference sequence.
+The seven Teil 1 keys reveal together only after both complete playbacks and
+the answer pause. Do not introduce unsupported example recordings. Preserve
+the actual A2 repeat counts, not the B1 once-only assumption.
+
+Retain the light palette, current mobile typography, instruction highlighting,
+Austrian-reference voices at 0.8x, complete exercise silences, persistent book
+promotion, short title speech plus 0.5 seconds and final CTA. Budget shorts
+only after measuring processed audio; do not cut up the shared seven-question
+recording, omit required repeats or claim reduced question counts when all
+questions in a short actually fit. Use accurate per-clip scope labels.
+
+The user supplied `https://amzn.eu/d/0afqgrGT` for the A2 listening book.
+A GET followed the redirect successfully (HTTP 200) to Amazon product
+`B0H6TPD33B`; HEAD returned 404 and must not be used alone to reject this link.
+Matching local cover: `..\..\german\books\a2\listening_oeif\oeif_a2_hoeren.jpg`.
+The redirect alone does not independently confirm the product's title/content.
+
+Independent Claude Sonnet 5.5 review is preserved in
+`builds\oeif_a2_listening_script_review_r1\review.json`, bound to the initial
+draft hash. The reviewer found all 15 keys supported and the level suitable
+for A2, with two required repairs: explicitly vegetarian soup in task 14 and
+realistic railway display/Gleis wording in task 10. Both are fixed; also
+replace reused character names, vary task 13 with a laundry scenario, clarify
+spelled letters and a compact Schlüssel option, improve task 12's distractor
+and assign a distinct speaker role to task 8. Keep the plausible café
+distractor because coffee is mentioned only after the actual meeting.
+
+The same reviewer rechecked all changed items: pass, no blockers. The reviewed
+episode SHA256 is
+`89668388afff3291edf7d8453e563f0d477e98d80c867d847ec2a7a5b4af9358`.
+The original review, `recheck.json`, a readable `script_for_approval.txt` and
+`script_validation.json` remain in the review build. Validation confirms all
+15 numbers/keys, group/play counts, dialogue voice roles, A2 link and existing
+reference paths. Still pending synthesis checks: distinct task-8 versus
+Teil-1 voices, workshop-name contrast, spelled letters and phone digits.
+The user explicitly approved this script and the 30/8/12/3-second timing through
+the structured approval form. `user_approval.json` binds that approval to the
+reviewed hash; local Austrian-reference TTS is now running in the separate
+`builds\oeif_a2_listening_full_production_r1` directory. No video exports yet.
+
+New A2-only stage drivers: `prepare_a2.py`, `process_a2.py`, `compose_a2.py`,
+`validate_a2.py`, `review_a2_frames.py`, `deliver_a2.py` and
+`publish_a2_assets.py`. They reuse pinned low-level helpers and the unchanged
+light template, without modifying frozen B1 programs/episodes/deliveries.
+The A2 plan has 51 unique speech turns and 85 full-timeline events; playback
+repeats reuse identical normalized WAVs. Bind `announcement_female` to the
+verified elderly female reference so it differs from `service_female`.
+
+All 38 listening regressions pass. Development-only Chrome measurements fit
+all 13 task/overview cards in both native ratios. Tighten portrait shared-card
+option gaps/borders rather than shrinking 42/40-px question/answer text.
+Final instruction highlights, runtime checks, native contact inspection and
+encoded validations remain pending real processed audio.
+
+Completed raw/processed speech is retained with content-addressed caches.
+The early primary ASR receipt covers the opening, first two short titles,
+first two instructions and shared first message. Independent cached medium
+ASR resolves title-word flags and supports every Teil-1 answer detail,
+including the spelled street and both nine-digit phone readings
+(`0100 04217` -> `010004217`). Preserve the small model's compressed
+eight-digit recognition in the original receipt.
+`critical_review_resolution.json` records this partial review without claiming
+human listening or review of the still-generating clips.
+
+### A2 actual-audio production preflight
+
+All 51 normalized speech clips are now complete. The full clock is 16,732
+frames at 24 fps: 697.166667 seconds (11:37.167). All four instructions have
+actual forced alignment for 168 displayed words. Primary cached small ASR
+reviews every clip (21 strict token matches); the independent medium model
+rechecks 12 targeted clips. Preserve numeral/abbreviation/homophone differences
+and the unresolved short-title-3/4 and Nähkurs recognition spellings, including
+the raw-audio comparison. They are not confirmed pronunciation errors.
+`audio_review_resolution.json` records the adjudication and lower-confidence
+final Zeit alignment in instruction 2 (0.181). No human listening or accent
+certification is claimed.
+
+Both real compositions pass source/PCM, browser/runtime/layout/contrast/audio
+and geometry gates: 66 scenes each; minimum bottom clearance is 32.40625 px
+landscape and 98.96875 px portrait. Inspect all five native sheets/38 review
+frames per ratio, including every answer/reveal boundary, title, instruction,
+summary and CTA. Promotion-panel pixels are identical across each layout's
+38 frames. Keep dense/static/craft warnings; motion checking is disabled.
+
+The measured complete-part short candidates all fit below 180 seconds:
+Teil 1 140.0; Teil 2 174.833333; Teil 3 148.333333; Teil 4 169.958333.
+Consequently retain all 15 tasks across the four clips and label the shorter
+versions as "Verkürzte Übung · Ohne Anleitung", not selected/reduced question
+counts. Preserve the shared first recording, required repeats and every
+approved reading/replay/answer pause.
+
+The full renders have now completed and passed encoded/source validation:
+`production_landscape.mp4` (1920x1080) and `production_portrait.mp4`
+(1080x1920), each 16,732 frames/11:37.167. All five decoded sheets per format
+were inspected. All 85 encoded events and 17 silent intervals per layout pass; minimum
+event audio correlation is 0.99993565 and overall correlation is 0.99997212.
+All 38 export/browser comparisons per layout pass; maximum mean RGB error is
+2.474957. The 557-file delivery manifest and recursive code/source/reference
+pins are rehashed in `delivery_audit.json`. Nothing uploaded.
+
+The four native portrait clips are complete and frozen in
+`builds\oeif_a2_listening_reduced_r1\teil_N\production_portrait.mp4`:
+2:20, 2:54.833, 2:28.333 and 2:49.958. They retain all tasks, complete
+replay counts, 30-second initial reads, 8-second replay gaps, 12-second response
+silences, three-second reveals and the original voiced CTA. Title-only openings
+last the measured speech plus 0.5 seconds, rounded up to 24 fps. Every screen
+says "Verkürzte Übung · Ohne Anleitung"; no task count or exercise pause was
+reduced. All four encoded audio/video/container durations are below 180 seconds.
+Inspect all seven native and seven encoded short sheets: 43 sampled frames,
+including exact title cuts and all final-response/first-reveal boundaries.
+All 78 short encoded events and 16 silent intervals pass.
+
+The final cross-delivery audit is
+`builds\oeif_a2_listening_reduced_r1\delivery_audit.json`: all 781 delivery
+files and source/code/reference pins rehashed, 248 encoded events, 50 silent
+intervals and 119 export/browser comparisons across all six videos. Minimum
+event audio correlation is 0.99993565; maximum mean RGB error is 2.510464.
+Preserve the documented ASR/low-confidence notes and one-frame countdown
+rounding observations; human listening and motion certification were not performed.
+All 39 listening tests pass.
+
+Final publishing drafts and Lea covers:
+`posts\oeif_a2_listening_2026_11_ep01_r1`, with `full` and `teil_1` through
+`teil_4`. All 15 descriptions and 15 native platform PNG covers pass
+decode/size/text-bounds/overlap checks. The inspected thumbnail contact sheet,
+correct A2 book links, all-task short scope, disclosures and actual SFX credits
+are bound to the final frozen videos. `publication_audit.json` verifies
+46 inputs and 33 assets; the five full YouTube chapters start at 00:00 and
+each span at least ten seconds. Nothing uploaded; publication approval is separate.
+
+### A2 sequence/opening correction: process only (November 11, 2026)
+
+The user supplied a more specific sequence after delivery. R1 does not match it:
+the listening-start chime precedes reading instead of following it; replay
+silences are 8 rather than 5 seconds; response silences are 12 rather than 10;
+the Teil 1 repeat lacks its chime; all three five-second section breaks are
+absent; five extra back chimes appear; the last spoken cue ends Teil 4 rather
+than the listening test. The original delivery checks correctly validated the
+earlier approved guided-practice plan, not this new contract.
+
+The user explicitly retained separate three-second remove-sound answer reveals
+after the full ten-second response pauses. Preserve the 30-second reading
+silences, per-message repeats in Teil 2, once-only playback in Teile 3/4,
+original exercise content, promotion and final CTA. The new full opening must
+display/say only "ÖIF A2 Hören", without the hook or everyday-task paragraph.
+
+`episodes\oeif_a2_listening_01_revision_r2.json` records these requirements,
+the immutable base-episode hash and the supplied model transcript's hash.
+`assets\model_oeif_a2.txt` supports structure, replay counts, reading
+instructions and "Ende des Testteils Hören." It has recognition gaps and no
+timestamps or reliable chime/pause markers; exact pauses and missing ending
+cues remain attributed to the user, not claimed as measured official timing.
+Keep this source unchanged and do not copy its exercise content.
+
+`audit_a2_sequence.py` independently checks frame-derived pauses, sequence,
+repeat hashes, guided reveals, title speech metadata and actual title HTML.
+It rejects the frozen r1 against the revised requirements without changing
+that delivery. The retrospective report is outside r1 in
+`builds\oeif_a2_listening_sequence_review_r2\sequence_audit.json`.
+Run this gate on newly composed full layouts before any future replacement
+render, then repeat ordinary source/browser/encoded validations. Use versioned
+drivers: the old preparation, composition and delivery programs are hash-pinned.
+
+The user chose **process/checks only** after supplying the reference.
+No new speech, preview, production video or publication asset was generated.
+Replacement production and updated post bindings remain a separate request.
+The user also flagged the compact card's nearly joined `a)/b)/c)` labels.
+Record at least an 8-px portrait label gap for the revision, preserving
+42/40-px question/option minima. Wrap options and remeasure rather than shrink
+the text; the frozen r1's 2-px gap remains unchanged.
+
+Validation: all 49 listening tests pass, including corrected-sequence fixtures
+and failures for wrong pause lengths/order, missing breaks/chimes/reveals,
+changed repeat audio, old ending speech and stale title HTML. The latest
+encoded-bound retrospective audit records 32 expected r1 mismatches against
+the new sequence/opening contract. Rehashing confirms that all 781 delivery
+files, pinned generation programs, 33 publication assets and 46 publication
+inputs remain unchanged.
+
+### Authorized A2 replacement production (November 11, 2026)
+
+The later request **"ok, regenerate the video and reduced video"** supersedes
+the preceding process-only restriction. Preserve the r1 full/short exports,
+posting assets, reviewed episode and pinned stage programs. Use separate
+`prepare_a2_r2.py`, `process_a2_r2.py`, `compose_a2_r2.py`,
+`validate_a2_r2.py`, `deliver_a2_r2.py`, `review_a2_frames_r2.py` and
+`check_a2_layout_r2.cjs`.
+
+The revised full build is
+`builds\oeif_a2_listening_full_production_r2`. Its source clock is
+16,137 frames / 24 fps = **672.375 seconds (11:12.375)**.
+All 49 inherited speech clips match the original text/speaker/WAV hashes;
+the title and test-ending cue are newly measured local TTS. Independent medium
+ASR supports both new cues; preserve the raw small/medium flags and inherited
+notes. All 168 instruction-word intervals are reused at verified shifted starts.
+The independent sequence gate, exact PCM placement and both actual browser
+checks pass. Both native contact-sheet sets have been inspected, including
+read/chime/replay boundaries, every reveal, section breaks and the test ending.
+
+The 8-px label gap wraps questions 4/7. Reducing only compact portrait row-bottom
+spacing from 10 to 4 px retains 42/40-px text and fits the progress bar inside
+the card, with minimum measured bottom clearance **14.96875 px**.
+All-task short budgets are **141.25 / 166.125 / 141.791667 / 163.416667 seconds**,
+including complete title speech plus half a second, 30-second reading, the
+post-reading chime, all recordings/repeats, 5/10-second exercise pauses,
+three-second reveals and the original voiced CTA.
+
+Both full exports are now frozen: **168 encoded timeline events, 40 silent
+intervals and 120 export/browser frame comparisons** pass. Minimum event
+correlation is **0.9999376308**, maximum mean RGB error **2.47484375**.
+All 14 decoded sheets (60 frames per ratio) were inspected. The 392-file
+delivery manifest and its source/code/reference pins have been rehashed.
+The external `builds\oeif_a2_listening_sequence_review_r3\sequence_audit.json`
+independently binds the corrected sequence/title checks to both actual exports
+with zero findings. All **52** listening tests and whitespace checks pass.
+All four portrait clips are now frozen in
+`builds\oeif_a2_listening_reduced_r2\teil_N\production_portrait.mp4`,
+at the complete-task durations above. All eight native and eight decoded
+sheets (53 frames each) were inspected, including the eight exact opening-cut
+frames. Each title's PCM is complete, followed by at least 0.5 seconds of
+padding; all video/audio/container durations are below 180 seconds.
+
+The final reduced-root `delivery_audit.json` rehashes **642** revised delivery
+files and all source/code/reference/browser pins. Across the six exports,
+**246 encoded events, 56 silent intervals and 173 frame comparisons** pass;
+minimum event correlation is **0.9999314874**, maximum mean RGB error
+**2.5146429720**. It also confirms preservation of all **781** original r1
+delivery files, their pins, and 33 original posting assets/46 inputs.
+Retain inherited ASR notes and Teil 3's documented one-frame countdown
+rounding at exact integer boundaries; the actual reading silence is unchanged.
+
+Fresh publishing assets are in `..\posts\oeif_a2_listening_2026_11_ep01_r2`.
+Their `publication_audit.json` verifies **49 inputs, 33 assets, 15 descriptions
+and 15 decoded native covers**, text bounds/overlap and binding to the final
+video cross-audit. The existing Lea covers match the approved r1 design.
+Full YouTube chapters are **00:00 / 02:33 / 05:30 / 08:03 / 10:53**, each at
+least ten seconds long. Captions describe the corrected 30/5/10-second pauses,
+all-task short scope and actual start/remove SFX. No upload or human listening
+certification is claimed.
+
 ## Validation and optional AnyCap
 
 Local deterministic checks are the primary acceptance gate:

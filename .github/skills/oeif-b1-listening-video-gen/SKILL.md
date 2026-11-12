@@ -15,9 +15,13 @@ dependencies, not alternative current defaults. A documentation-only request
 must not trigger synthesis/rendering. A captions/covers-only request must not
 modify the videos.
 
+The table and legacy recipes below describe **B1**. For A2, apply the separate
+revision contract and sequence gate in the next section, not B1 timing defaults.
+
 | Area | Current requirement |
 | --- | --- |
 | Full video | Four Teile, 20 tasks, examples and complete pauses; native landscape and portrait layouts. |
+| Script review | Required independent Claude Sonnet 5.5 review of generated listening transcripts, questions and answer keys before script approval and TTS. |
 | Shorts | One portrait selection per Teil, strictly under 180 seconds; reduce task count, never reading/answer time. |
 | Short opening | Say only "ÖIF B1 Hören Teil N"; complete processed TTS plus 0.5 seconds, rounded up to 24 fps. |
 | Shorts mobile text | MC 56/48 px, paired 42/40 px, matching 48/40 px for prompts/options; measure all scenes for overflow. |
@@ -40,6 +44,157 @@ The drivers are episode-1 implementations, not a generic episode CLI.
 Do not feed their outputs back into the same transformation. For new content,
 edition labels, cast or crop geometry, create a separately versioned generator
 and fresh outputs rather than changing a helper pinned by an approved build.
+
+## A2 sequence and opening revision (November 11, 2026)
+
+Use `listening_2d\episodes\oeif_a2_listening_01_revision_r2.json` as the
+revision specification. It references the unchanged reviewed episode, pins the
+user-supplied `listening_2d\assets\model_oeif_a2.txt`, and separates reference
+evidence from requested timing. The earlier process/checks-only request was
+superseded by **"ok, regenerate the video and reduced video"**: replacement
+full landscape/portrait and four reduced portrait videos are now authorized.
+Use the separately versioned `*_a2_r2.py` drivers and fresh r2 build folders.
+Existing
+`oeif_a2_listening_full_production_r1` and reduced-r1 deliveries remain frozen.
+They pass their original approved 30/8/12/3-second guided-practice contract,
+not the newly requested sequence.
+
+The supplied transcript supports the four-part/15-task structure, play counts,
+30-second reading instructions and final "Ende des Testteils Hören." cue.
+It contains recognition gaps, missing number/ending cues, and no timestamps or
+reliable chime/silence markers. Preserve it verbatim. Exact pause lengths and
+chime placement below come from the user's sequence, not a timing measurement
+of this transcript. Do not copy its exercise recordings into the original episode.
+
+For the next full-video revision:
+
+1. The first slide's main body is only **ÖIF A2 Hören**. Remove
+   "Wie viel verstehst du?" and "15 Aufgaben aus dem Alltag". Say only
+   "ÖIF A2 Hören" (internal pronunciation text: `Ö I F A zwei Hören.`).
+   Preserve the logo and book/Amazon promotion. The old composer hardcodes
+   the extra phrases: changing episode metadata alone does not remove them.
+   The old full-title WAV also cannot be reused for the shorter speech.
+2. Start each Teil with its instruction, then **30 seconds of silence** for
+   reading, then the listening-start chime, then the first spoken number cue.
+   Do not put that chime before or inside the reading silence.
+3. Teil 1: say the combined numbers 1-7; play the shared message; allow
+   **five silent seconds**, play a separate chime, then replay the same WAV.
+4. Teil 2: number 8, recording, **five silent seconds**, same recording again;
+   complete its answer/reveal sequence, then number 9 and the same pattern.
+   Do not add a replay chime here or replay the entire section as 8/9/8/9.
+5. Teile 3 and 4: number 10/11/12 or 13/14/15 and the complete recording once.
+   After every group's final playback, preserve **ten silent answer seconds**.
+   The user explicitly retained the separate **three-second answer reveal**
+   with remove sound after that pause, including the joint seven-key reveal.
+   Do not count reveal/chime time as silent answer time.
+6. Do not insert extra back chimes between tasks. After each of Teile 1-3,
+   put its ending after the last reveal, then **five silent seconds** before
+   the next instruction. The supplied text omits some endings; these cues
+   follow the user's requested sequence, not invented transcript evidence.
+7. After task 15's pause/reveal, use the test-ending cue
+   **Ende des Testteils Hören.**, not merely "Ende von Teil vier".
+   Preserve the final solutions/voiced book CTA after the test.
+
+On the seven-question card, r1's 2-px label gap was a space-saving compromise
+that the user found unclear. The revision must visibly separate `a)`, `b)`
+and `c)` from their answers: use at least an 8-px portrait label gap, preserve
+question/option minima of 42/40 px, and allow wrapping or adjust padding rather
+than shrinking text. The 8-px test made questions 4/7 wrap and the progress
+bar extend 21 px below the compact card. In r2, reduce only compact portrait
+row-bottom spacing from 10 to 4 px to recover space, keeping the bar inside
+the card and promotion separate. Measure every affected card again.
+
+Do not edit generators or inputs pinned by r1. When replacement production is
+requested, create versioned preparation/composition/delivery drivers and fresh
+outputs, inheriting unchanged exercise review/audio hashes and measured word
+alignments only where wording/references match. Review/approve substantive
+script changes before TTS. Measure new speech; do not retain the old opening's
+duration. Rebudget shorts from the verified replacement full version instead
+of assuming old clocks or silently changing old posting descriptions.
+
+The independent `listening_2d\audit_a2_sequence.py` gate checks frame-derived
+pauses, event order, missing/extra chimes and breaks, repeat hashes, separate
+reveals, the final cue, title speech metadata and **actual title HTML** in each
+composed layout. Run it after composition and before rendering; stop on a
+nonzero exit. The old validator's agreement with the old builder is not
+evidence of matching this new sequence.
+
+```powershell
+& .\pilot_3d\.venv\Scripts\python.exe -X utf8 .\listening_2d\audit_a2_sequence.py `
+  --build .\listening_2d\builds\oeif_a2_listening_full_new `
+  --output .\listening_2d\builds\oeif_a2_listening_full_new\sequence_pre_render.json
+if ($LASTEXITCODE -ne 0) { throw 'A2 sequence/opening gate failed.' }
+```
+
+Use a fresh report path, and place retrospective audits outside frozen builds.
+The gate verifies encoded-export bindings when auditing a frozen full delivery,
+but does not replace PCM, ASR, browser/geometry or post-render event/frame
+validation. It is for the full test; shorts intentionally omit instructions
+and need their own explicitly scoped checks.
+
+### Authorized A2 replacement workflow
+
+The r2 drivers derive revised episode metadata in memory, leaving the reviewed
+base JSON and all r1 programs unchanged. Reuse 49 unchanged speech clips and
+all 168 instruction-word intervals only after matching text, voice, WAV hash
+and measured duration. Synthesize only the full title and final test-ending
+cue; inspect their independent small/medium ASR receipts. Preserve inherited
+pronunciation/recognition notes rather than claiming new human certification.
+
+Use fresh build paths. Run each command separately and stop on failure:
+
+```powershell
+$py = '.\pilot_3d\.venv\Scripts\python.exe'
+$full = '.\listening_2d\builds\oeif_a2_listening_full_new'
+$short = '.\listening_2d\builds\oeif_a2_listening_reduced_new'
+& $py -X utf8 .\listening_2d\prepare_a2_r2.py --build $full --plan-only
+& $py -X utf8 .\listening_2d\prepare_a2_r2.py --build $full
+& $py -X utf8 .\listening_2d\process_a2_r2.py align --build $full
+& $py -X utf8 .\listening_2d\process_a2_r2.py review --build $full --model small --ids title end_test
+& $py -X utf8 .\listening_2d\process_a2_r2.py review --build $full --model medium --ids title end_test
+& $py -X utf8 .\listening_2d\compose_a2_r2.py --build $full
+& $py -X utf8 .\listening_2d\audit_a2_sequence.py --build $full --output "$full\sequence_pre_render.json"
+& $py -X utf8 .\listening_2d\deliver_a2_r2.py check --build $full
+& $py -X utf8 .\listening_2d\review_a2_frames_r2.py --build $full
+```
+
+Inspect every native sheet and record `visual_approval.json`; resolve the new
+speech alongside inherited notes in `audio_review_resolution.json`.
+`check_a2_layout_r2.cjs` measures the actual portrait text-to-label gap as well
+as font minima and 12-px card-bottom clearance. Then use
+`deliver_a2_r2.py render`, `validate_a2_r2.py --encoded` and
+`review_a2_frames_r2.py --encoded`, all with `--build $full`.
+Inspect decoded sheets, set the separate encoded approval, and run
+`deliver_a2_r2.py freeze --build $full`. Rendering alone is not delivery.
+
+Only derive shorts from the verified frozen full:
+`process_a2_r2.py shorts --source $full --build $short`. Each `teil_N` must
+then complete the same compose/check/native-review/render/encoded-review/freeze
+gates. Shorts retain the post-reading start chime, the Teil 1 replay chime,
+all complete selected groups and the voiced CTA. They omit instructions,
+section endings, section-break silences and the full-test summary, not the
+exercise reading/replay/response pauses. Keep all tasks if the measured clocks
+fit; verify video/audio/container are each strictly below 180 seconds.
+
+Refresh directly dependent posting drafts with `publish_a2_assets_r2.py`,
+explicit `--full`, `--short`, and a fresh `--output` under `posts`.
+Its captions use 30/5/10-second pauses, five-second full-test section breaks
+and actual start/remove credits. Do not bind revised videos to unchanged r1
+captions. Keep the existing Lea cover design; verify all publication input,
+asset and layout hashes and the measured chapter starts. Nothing is uploaded.
+
+Verified A2 episode-1 references are now
+`listening_2d\builds\oeif_a2_listening_full_production_r2` (both ratios,
+11:12.375) and `oeif_a2_listening_reduced_r2\teil_N\production_portrait.mp4`
+(2:21.250 / 2:46.125 / 2:21.792 / 2:43.417). Preserve these frozen builds and
+their pinned r2 programs; reuse rather than regenerate them for a lookup.
+The reduced-root cross-audit verifies 642 delivery files, 246 encoded events,
+56 silences, 173 frame comparisons and eight exact short opening boundaries,
+plus all 781 preserved r1 delivery files. Retain the inherited ASR notes and
+documented one-frame countdown rounding; this is not human listening approval.
+Current A2 posts are in `posts\oeif_a2_listening_2026_11_ep01_r2`:
+49 pinned inputs, 33 assets, 15 checked descriptions and 15 decoded Lea covers.
+These counts are recorded results, not substitutes for fresh revision checks.
 
 ## Instruction template
 
@@ -239,10 +394,32 @@ do not silently reinterpret an existing frozen episode.
 
 Adapt the book's task structure into fresh scenarios, questions, distractors
 and recordings; do not reproduce the book test verbatim. Check all 20 question
-numbers, answer keys, paired questions and matching options. Review ambiguities
-and B1 difficulty before script approval and synthesis. Use another reviewing
-model only when requested. Pin the applicable exam-version evidence separately
-from the user's pause reference.
+numbers, answer keys, paired questions and matching options. Pin the applicable
+exam-version evidence separately from the user's pause reference.
+
+**Required independent script review:** before user script approval and TTS,
+have another model, Claude Sonnet 5.5 (`claude-sonnet-5.5`), review the complete
+generated listening transcripts together with instructions, examples, questions,
+options and answer keys. This is a standing requirement for new listening
+scripts, not an optional step requiring a fresh request each time. Use a
+separate reviewer context; self-review by the author does not satisfy it.
+If the requested reviewer is unavailable, report the blocker and obtain the
+user's choice of replacement rather than silently skipping or substituting.
+
+Check natural, coherent German and Austrian usage where relevant; B1-level
+vocabulary, sentence complexity and listening demands; plausible distractors;
+unambiguous questions; exactly one supported answer per item; and consistency
+across paired questions, matching options, task numbering and transcripts.
+Flag exercises that are too easy for B1, including answers obtainable without
+listening, and suggest substantive improvements rather than merely longer text.
+
+Evaluate the findings, fix valid issues and have the reviewer recheck materially
+changed items before presenting the final script for approval. Retain the
+reviewed script version/hash, actual reviewer model, findings and their
+resolution in the build's review records. Repeat this gate for substantive new
+or revised exercise content; unchanged cuts and layout-only revisions can
+inherit the original review. Model review does not replace user approval,
+post-synthesis ASR/audio checks or human listening certification.
 
 Verify the book cover/link, concrete Austrian voice WAVs and their reference
 transcripts. Episode 1 uses nine roles bound to five references, different

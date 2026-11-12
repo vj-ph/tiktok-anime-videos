@@ -1,0 +1,50 @@
+{
+  "checked": "2026-11-11",
+  "purpose": "Structural/timing evidence only. Do not copy official exercise scripts or audio into authored videos.",
+  "pdf": {
+    "url": "https://sprachportal.at/fileadmin/user_upload/meinsprachportal-at/Materialen_zur_Pruefungsvorbereitung/A2/OEIF-TEST_neu_Modelltest.pdf",
+    "worksheet_printed_pages": [22, 23, 24, 25],
+    "task_numbers_per_part": [[1, 2, 3, 4, 5, 6, 7], [8, 9], [10, 11, 12], [13, 14, 15]],
+    "recording_plays_per_part": [2, 2, 1, 1],
+    "initial_read_seconds_per_part": [30, 30, 30, 30]
+  },
+  "audio": {
+    "url": "https://sprachportal.at/fileadmin/user_upload/meinsprachportal-at/Materialen_zur_Pruefungsvorbereitung/A2/Audios/A2_OEIF-TEST_neu_Modelltest_Audio_01.mp3",
+    "sha256": "f441db040ca82769a4d17cbebadb3ed5e7facf59e31d320464fc27de2997c468",
+    "duration_seconds": 654.594966,
+    "analysis": "Local FFprobe, FFmpeg silencedetect at -40dB for at least 1.5 seconds, and cached unprompted faster-whisper-small.",
+    "part_2_replay_order": ["8_first", "8_second", "9_first", "9_second"],
+    "selected_detected_quiet_intervals": [
+      {"purpose": "part_1_read", "end": 60.902268, "duration": 30.660068},
+      {"purpose": "part_1_between_recordings", "end": 105.282109, "duration": 4.467891},
+      {"purpose": "part_1_after_second_recording", "end": 153.377959, "duration": 10.018231},
+      {"purpose": "part_2_read", "end": 216.186032, "duration": 30.408299},
+      {"purpose": "task_8_between_recordings", "end": 241.324535, "duration": 5.010658},
+      {"purpose": "task_8_after_second_recording", "end": 267.802744, "duration": 10.189637},
+      {"purpose": "task_9_between_recordings", "end": 289.106871, "duration": 4.996032},
+      {"purpose": "task_9_after_second_recording", "end": 313.294989, "duration": 10.019252},
+      {"purpose": "part_3_read", "end": 375.111882, "duration": 30.194195},
+      {"purpose": "task_10_response", "end": 412.378254, "duration": 10.05737},
+      {"purpose": "task_11_response", "end": 439.405034, "duration": 8.037551},
+      {"purpose": "task_12_response", "end": 468.480227, "duration": 10.049615},
+      {"purpose": "part_4_read", "end": 526.324444, "duration": 30.087143},
+      {"purpose": "task_13_response", "end": 564.362041, "duration": 10.040317},
+      {"purpose": "task_14_response", "end": 610.688685, "duration": 10.124762},
+      {"purpose": "task_15_response", "end": 647.636621, "duration": 10.063107}
+    ],
+    "limitations": [
+      "Detected quiet intervals include threshold-dependent room noise, breaths, fades and padding; they are not exact authored pause durations.",
+      "The primary ASR hallucinated repeated words over some silent/low-level regions and missed part of the second instruction; do not use those ASR timestamps as an exact speech clock.",
+      "Part 2 per-message repetition is supported by the successive recognized recordings, but this is not human listening certification.",
+      "Approximate replay gaps are five seconds; most response gaps are ten seconds, with a shorter observed task-11 gap. Do not flatten these observations into an asserted uniform official rule.",
+      "The official audio is retained only as a local research reference outside the authored delivery. New videos must use newly approved text and synthesized recordings."
+    ]
+  },
+  "proposed_guided_practice": {
+    "initial_read_seconds_per_part": 30,
+    "between_replays_seconds": 8,
+    "answer_seconds_after_final_play": 12,
+    "reveal_seconds": 3,
+    "status": "Pending user approval. Longer replay/answer pauses than the observed model; no claim of official uninterrupted exam timing."
+  }
+}

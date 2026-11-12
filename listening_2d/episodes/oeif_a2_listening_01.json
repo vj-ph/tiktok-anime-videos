@@ -1,0 +1,241 @@
+{
+  "schema": "oeif_a2_listening_v1",
+  "id": "oeif_a2_listening_01",
+  "status": "Revised after independent Claude Sonnet 5.5 review; changed items awaiting reviewer recheck and user script approval. No TTS or rendering authorized by this draft.",
+  "edition": {"month": "November", "year": 2026, "episode": 1},
+  "title": "ÖIF A2 Hören – Wie viel verstehst du?",
+  "level": "A2",
+  "practice_mode": "guided",
+  "source": {
+    "book": "..\\..\\..\\german\\books\\a2\\listening_oeif\\book_no_toc.md",
+    "reference_lines": [[60, 77], [1024, 1162], [1878, 1925]],
+    "use": "Task structure and everyday listening skills only. New settings, scripts, questions, distractors and answer explanations; no book or official recordings reused.",
+    "distinctness": "The reference test concerns medical appointments and a pharmacy. This episode instead uses bicycle repair, a cooking course, a library meeting, transport, a swimming pool, bottle returns and other independently written situations.",
+    "official_model": {
+      "publisher": "ÖIF / Sprachportal",
+      "url": "https://sprachportal.at/fileadmin/user_upload/meinsprachportal-at/Materialen_zur_Pruefungsvorbereitung/A2/OEIF-TEST_neu_Modelltest.pdf",
+      "checked": "2026-11-11",
+      "printed_pages": [22, 23, 24, 25],
+      "verified": {
+        "parts": 4,
+        "tasks": 15,
+        "part_1": {"numbers": [1, 2, 3, 4, 5, 6, 7], "type": "shared_voicemail_mc", "plays": 2, "initial_read_seconds": 30},
+        "part_2": {"numbers": [8, 9], "type": "voicemail_mc", "plays": 2, "initial_read_seconds": 30},
+        "part_3": {"numbers": [10, 11, 12], "type": "announcement_mc", "plays": 1, "initial_read_seconds": 30},
+        "part_4": {"numbers": [13, 14, 15], "type": "dialogue_true_false", "plays": 1, "initial_read_seconds": 30}
+      },
+      "audio_reference": "..\\assets\\oeif_a2_format_reference.json",
+      "limitations": "The PDF establishes task types, play counts and initial reading time. Local audio analysis supports per-message repeats in Part 2 and roughly five-second replay gaps/mostly ten-second response gaps, not uniform exact authored pauses. The proposed longer guided-practice gaps remain separate. The official approximate 12-minute duration is not a target for slower guided practice."
+    }
+  },
+  "delivery": {
+    "confirmed_by_user": "2026-11-11",
+    "full_layouts": [{"name": "youtube", "width": 1920, "height": 1080}, {"name": "portrait", "width": 1080, "height": 1920}],
+    "shorts": {
+      "parts": [1, 2, 3, 4],
+      "width": 1080,
+      "height": 1920,
+      "maximum_duration_seconds_exclusive": 180,
+      "selection": "Budget after measuring complete processed audio. Keep shared-recording groups intact and preserve prescribed play counts and all practice reading/answer pauses. Reduce exercise count only where needed.",
+      "scope_label": "Label actual omissions accurately. If every task of a part fits and only instructions are omitted, do not claim that its exercise count was reduced."
+    },
+    "publication": "Separate German YouTube, TikTok and Instagram descriptions and native Lea covers after validated final video delivery. Nothing uploaded.",
+    "preserve": "All B1 generators, episodes and approved deliveries remain unchanged."
+  },
+  "promotion": {
+    "amazon_url": "https://amzn.eu/d/0afqgrGT",
+    "url_source": "User supplied on 2026-11-11 for the A2 listening book. A GET followed redirects successfully to Amazon product B0H6TPD33B (HTTP 200); product title/content not independently verified. HEAD returned 404.",
+    "cover_source": "..\\..\\..\\german\\books\\a2\\listening_oeif\\oeif_a2_hoeren.jpg",
+    "book_title": "ÖIF A2 Hören – Übungsbuch mit Audio",
+    "youtube_label": "Amazon: Link in der Beschreibung 👇",
+    "social_label": "Amazon: Link in der Bio 👇",
+    "cta": "Mehr Hörübungen, Transkripte und Erklärungen finden Sie im Buch. Den Amazon-Link finden Sie in der Beschreibung oder in der Bio."
+  },
+  "presentation": {
+    "reuse": "Approved light sage/cream visual style, Deutsch Kompass logo, persistent book promotion and final voiced CTA; adapt task layouts and all level labels to A2.",
+    "question_visibility": "Show questions throughout reading, both listening passes where applicable and the full answer pause. Do not show recording transcripts or early answer highlights.",
+    "part_1_layout": "Seven compact numbered rows with A/B/C alternatives, maintaining readable mobile type. Validate actual geometry; do not shrink below approved text minima to fit.",
+    "instruction_highlights": "Forced-align the actual instruction speech; no estimated word timing.",
+    "opening_short": "Say only ÖIF A2 Hören Teil N. Use complete processed title audio plus 0.5 seconds, rounded up to 24 fps.",
+    "thumbnail": "ÖIF A2 Hören · Prüfungssimulation · November 2026 · Episode 1, with established Lea avatar and accurate guided/short scope.",
+    "removed_byline": "Do not reintroduce the removed guided/byline text inside video slides."
+  },
+  "audio": {
+    "atempo": 0.8,
+    "voice_locale": "de-AT",
+    "voices": "Reuse existing verified Austrian-reference narrator and speaker voices, binding concrete reference WAV/transcript hashes before synthesis. Different voices within every dialogue.",
+    "background_music": false,
+    "background_ambience": false,
+    "recording_reuse": "Reuse each exact normalized recording WAV for its second playback; do not synthesize a different take.",
+    "sfx": "Reuse approved processed start/back/remove chimes with atempo=0.8 and subtle reverb, outside reading/answer silences. Remove starts with each reveal.",
+    "contact_data": "All message names, addresses and telephone digits below are fictional practice data, not a real service contact."
+  },
+  "timing": {
+    "status": "Proposed guided-practice timing pending script approval; no synthesized duration estimates treated as measured.",
+    "fps": 24,
+    "sample_rate": 48000,
+    "initial_read_seconds_per_part": 30,
+    "initial_read_provenance": "Verified in official model worksheet instructions.",
+    "between_replays_seconds": 8,
+    "answer_seconds_after_final_play": 12,
+    "reveal_seconds": 3,
+    "practice_pause_provenance": "The 8-second replay gap and 12-second response pause are proposed independent practice settings, longer than the approximate gaps observed in the official reference audio. They are not official A2 audio timings or inherited B1 rules.",
+    "part_1": "Read all seven items for 30 seconds; play the single message twice with an 8-second silent gap; allow 12 seconds to finish all answers; reveal all seven keys together for 3 seconds.",
+    "part_2": "Read both items for 30 seconds. Play task 8 twice with an 8-second gap, then 12 seconds for its answer and a 3-second reveal. Repeat that sequence for task 9. Per-message replay order follows the locally checked official recording; longer gaps and reveals remain independent guided-practice additions.",
+    "part_3_and_4": "Read all three items for 30 seconds; play each recording once, then its complete 12-second answer pause and 3-second reveal before advancing.",
+    "examples": "No extra example recordings are introduced: this draft follows the 15 scored A2 model tasks.",
+    "duration": null
+  },
+  "opening": {
+    "display": "ÖIF A2 Hören · 15 Aufgaben",
+    "text": "Ö I F A zwei Hören. Fünfzehn Aufgaben aus dem Alltag. Lesen Sie mit, hören Sie genau zu und wählen Sie Ihre Antworten.",
+    "speaker": "narrator"
+  },
+  "sections": [
+    {
+      "part": 1,
+      "label": "Eine Nachricht, sieben Details",
+      "instruction": "In Teil eins hören Sie eine Nachricht für Frau Aydin. Dazu gibt es sieben Fragen. Wählen Sie bei jeder Frage a, b oder c. Die Nachricht wird zweimal abgespielt. Lesen Sie jetzt alle sieben Fragen. Dafür haben Sie dreißig Sekunden Zeit.",
+      "plays": 2,
+      "groups": [
+        {
+          "id": "a2_p1_bicycle",
+          "recording": [
+            {
+              "speaker": "service_female",
+              "text": "Guten Tag, Frau Aydin. Hier ist die Fahrradwerkstatt Radpunkt. Ihr Fahrrad braucht eine neue Bremse. Bitte bringen Sie es am achtzehnten November um halb drei am Nachmittag zu uns. Unsere Werkstatt ist jetzt in der Lindengasse. Ich buchstabiere den ersten Teil: L wie Ludwig, I, N, D, E, N. Die Hausnummer ist sechsundvierzig. Nehmen Sie bitte den Schlüssel für Ihr Fahrradschloss mit. Einen Ausweis brauchen wir nicht. Wenn Sie eine Frage haben, erreichen Sie uns unter null eins, null null null, vier zwei, eins sieben. Ich wiederhole: null eins, null null null, vier zwei, eins sieben. Auf Wiederhören."
+            }
+          ],
+          "questions": [
+            {"number": 1, "question": "Wer ruft an?", "options": {"a": "Radpark", "b": "Radpunkt", "c": "Radring"}, "answer": "b", "explanation": "Die Anruferin nennt die Fahrradwerkstatt Radpunkt."},
+            {"number": 2, "question": "An welchem Tag ist der Termin?", "options": {"a": "08.11.", "b": "18.10.", "c": "18.11."}, "answer": "c", "explanation": "Der Termin ist am achtzehnten November."},
+            {"number": 3, "question": "Um wie viel Uhr ist der Termin?", "options": {"a": "14:30", "b": "13:30", "c": "15:30"}, "answer": "a", "explanation": "Halb drei am Nachmittag bedeutet 14:30 Uhr."},
+            {"number": 4, "question": "Wie heißt die Straße?", "options": {"a": "Lindenstraße", "b": "Lindengasse", "c": "Lerchengasse"}, "answer": "b", "explanation": "Die Adresse liegt in der Lindengasse. Der erste Namensteil wird buchstabiert."},
+            {"number": 5, "question": "Welche Hausnummer ist richtig?", "options": {"a": "64", "b": "16", "c": "46"}, "answer": "c", "explanation": "Die Nachricht nennt die Hausnummer sechsundvierzig."},
+            {"number": 6, "question": "Was soll Frau Aydin mitbringen?", "options": {"a": "Schlüssel", "b": "Fahrkarte", "c": "Ausweis"}, "answer": "a", "explanation": "Sie braucht den Schlüssel für ihr Fahrradschloss, keinen Ausweis."},
+            {"number": 7, "question": "Welche Telefonnummer ist richtig?", "options": {"a": "01 000 24 17", "b": "01 000 42 17", "c": "01 000 42 71"}, "answer": "b", "explanation": "Die Ziffernfolge lautet 01 000 42 17 und wird unverändert wiederholt."}
+          ]
+        }
+      ]
+    },
+    {
+      "part": 2,
+      "label": "Zwei kurze Nachrichten",
+      "instruction": "Teil zwei hat zwei Nachrichten und zwei Fragen. Wählen Sie bei Aufgabe acht und neun a, b oder c. Jede Nachricht hören Sie zweimal. Nach der zweiten Wiedergabe haben Sie Zeit zum Antworten. Lesen Sie jetzt beide Fragen. Sie haben dreißig Sekunden Zeit.",
+      "plays": 2,
+      "groups": [
+        {
+          "id": "a2_p2_cooking",
+          "recording": [
+            {"speaker": "announcement_female", "text": "Guten Tag, Herr Demir. Hier spricht Eva vom Kochkurs. Für unseren Kurs morgen brauchen Sie keine Lebensmittel mitzubringen. Das Gemüse und die anderen Zutaten kaufen wir für die ganze Gruppe. Bitte nehmen Sie aber eine große, leere Dose mit. Darin können Sie nach dem Kurs Ihr Essen mit nach Hause nehmen. Bis morgen!"}
+          ],
+          "questions": [
+            {"number": 8, "question": "Was soll Herr Demir mitbringen?", "options": {"a": "Gemüse für die Gruppe.", "b": "Ein Kochbuch.", "c": "Eine leere Dose."}, "answer": "c", "explanation": "Die Lebensmittel werden besorgt. Herr Demir soll eine Dose für sein fertiges Essen mitnehmen."}
+          ]
+        },
+        {
+          "id": "a2_p2_library",
+          "recording": [
+            {"speaker": "dialogue_female", "text": "Hallo Nina, hier ist Anna. Eigentlich wollten wir morgen im Park spazieren gehen. Aber es soll den ganzen Tag regnen. Treffen wir uns lieber in der Stadtbücherei. Dort gibt es die neuen Bücher, die wir anschauen wollten. Ich warte um elf Uhr gleich beim Eingang auf dich. Einen Kaffee können wir danach trinken. Ruf mich bitte kurz zurück."}
+          ],
+          "questions": [
+            {"number": 9, "question": "Wo möchte Anna Nina treffen?", "options": {"a": "In der Stadtbücherei.", "b": "In einem Café.", "c": "Im Park."}, "answer": "a", "explanation": "Anna schlägt wegen des Regens die Stadtbücherei vor. Der Kaffee ist erst danach geplant."}
+          ]
+        }
+      ]
+    },
+    {
+      "part": 3,
+      "label": "Meldungen und Ansagen",
+      "instruction": "In Teil drei hören Sie drei Ansagen. Jede Ansage gehört zu einer Frage. Wählen Sie bei Aufgabe zehn bis zwölf a, b oder c. Die Ansagen werden nur einmal abgespielt. Lesen Sie zuerst die drei Fragen. Sie haben dafür dreißig Sekunden Zeit.",
+      "plays": 1,
+      "groups": [
+        {
+          "id": "a2_p3_platform",
+          "recording": [
+            {"speaker": "announcement_male", "text": "Achtung, eine Information für die Reisenden nach Krems. Der Regionalzug um sechzehn Uhr zehn fährt heute von Gleis fünf ab. Auf der Anzeige steht noch Gleis drei. Das ist nicht richtig. Bitte gehen Sie zu Gleis fünf. Die Abfahrtszeit bleibt gleich."}
+          ],
+          "questions": [
+            {"number": 10, "question": "Von welchem Gleis fährt der Zug nach Krems heute ab?", "options": {"a": "Gleis 3.", "b": "Gleis 5.", "c": "Gleis 10."}, "answer": "b", "explanation": "Heute fährt der Zug von Gleis fünf. Gleis drei steht noch auf der Anzeige."}
+          ]
+        },
+        {
+          "id": "a2_p3_pool",
+          "recording": [
+            {"speaker": "announcement_female", "text": "Liebe Gäste, unser Hallenbad öffnet heute erst um vierzehn Uhr. Am Vormittag werden die Becken gereinigt. Der Schwimmkurs um zehn Uhr fällt deshalb aus. Ab zwei Uhr am Nachmittag können alle Gäste wieder schwimmen. Morgen sind wir wie gewohnt schon ab acht Uhr für Sie da."}
+          ],
+          "questions": [
+            {"number": 11, "question": "Wann können Gäste heute schwimmen?", "options": {"a": "Ab 08:00 Uhr.", "b": "Ab 10:00 Uhr.", "c": "Ab 14:00 Uhr."}, "answer": "c", "explanation": "Das Bad öffnet heute erst um vierzehn Uhr. Acht Uhr gilt erst wieder morgen."}
+          ]
+        },
+        {
+          "id": "a2_p3_bottles",
+          "recording": [
+            {"speaker": "announcement_male", "text": "Eine kurze Information für unsere Kundinnen und Kunden: Sie möchten leere Flaschen zurückgeben? Der Automat steht jetzt neben dem Seiteneingang, links von den Einkaufswagen. Bitte geben Sie die Flaschen dort ab und nicht direkt an der Kassa. Den Zettel vom Automaten können Sie wie immer beim Bezahlen vorlegen."}
+          ],
+          "questions": [
+            {"number": 12, "question": "Wo geben Kunden leere Flaschen zurück?", "options": {"a": "Neben dem Seiteneingang.", "b": "Direkt an der Kassa.", "c": "Beim Haupteingang."}, "answer": "a", "explanation": "Der Flaschenautomat steht neben dem Seiteneingang. An der Kassa wird nur der Zettel vorgelegt."}
+          ]
+        }
+      ]
+    },
+    {
+      "part": 4,
+      "label": "Gespräche im Alltag",
+      "instruction": "Teil vier enthält drei Gespräche. Zu jedem Gespräch sehen Sie einen Satz. Entscheiden Sie bei Aufgabe dreizehn bis fünfzehn: Ist der Satz richtig oder falsch? Jedes Gespräch hören Sie nur einmal. Lesen Sie jetzt die drei Sätze. Sie haben dreißig Sekunden Zeit.",
+      "plays": 1,
+      "groups": [
+        {
+          "id": "a2_p4_laundry",
+          "recording": [
+            {"speaker": "dialogue_male", "text": "Hallo Lea, du hast eine große Tasche. Was ist da drin?"},
+            {"speaker": "dialogue_female", "text": "Meine Wäsche. Meine Waschmaschine ist kaputt."},
+            {"speaker": "dialogue_male", "text": "Kaufst du jetzt eine neue Maschine?"},
+            {"speaker": "dialogue_female", "text": "Nein, der Techniker kommt morgen. Heute wasche ich bei meiner Schwester."},
+            {"speaker": "dialogue_male", "text": "Das ist praktisch. Fährst du mit dem Bus?"},
+            {"speaker": "dialogue_female", "text": "Nein, sie wohnt gleich neben dem Park. Ich gehe zu Fuß."}
+          ],
+          "questions": [
+            {"number": 13, "question": "Lea kauft eine neue Waschmaschine.", "options": {"richtig": "Richtig", "falsch": "Falsch"}, "answer": "falsch", "explanation": "Lea erwartet morgen einen Techniker. Heute wäscht sie bei ihrer Schwester, statt eine neue Maschine zu kaufen."}
+          ]
+        },
+        {
+          "id": "a2_p4_dinner",
+          "recording": [
+            {"speaker": "dialogue_female", "text": "Emre, was kochst du heute Abend? Wir bekommen doch Besuch."},
+            {"speaker": "dialogue_male", "text": "Ich mache Reis mit Gemüse und eine Gemüsesuppe. Julia isst kein Fleisch."},
+            {"speaker": "dialogue_female", "text": "Aber im Kühlschrank ist noch Hühnerfleisch."},
+            {"speaker": "dialogue_male", "text": "Das koche ich morgen. Heute gibt es nur vegetarisches Essen."},
+            {"speaker": "dialogue_female", "text": "Gut. Soll ich noch etwas einkaufen?"},
+            {"speaker": "dialogue_male", "text": "Ja, bitte Tomaten für den Salat. Reis und Gemüse habe ich schon."},
+            {"speaker": "dialogue_female", "text": "Dann gehe ich schnell zum Geschäft. Wann kommen die Gäste?"},
+            {"speaker": "dialogue_male", "text": "Um sieben. Bis dahin bin ich fertig."}
+          ],
+          "questions": [
+            {"number": 14, "question": "Emre kocht heute ohne Fleisch.", "options": {"richtig": "Richtig", "falsch": "Falsch"}, "answer": "richtig", "explanation": "Heute gibt es Reis, Gemüse und Gemüsesuppe, also nur vegetarisches Essen. Das Hühnerfleisch kommt erst morgen."}
+          ]
+        },
+        {
+          "id": "a2_p4_payment",
+          "recording": [
+            {"speaker": "dialogue_female", "text": "Guten Tag, ich möchte mich für den Nähkurs anmelden. Gibt es noch einen Platz?"},
+            {"speaker": "dialogue_male", "text": "Ja, ein Platz ist noch frei. Bitte füllen Sie dieses Formular aus."},
+            {"speaker": "dialogue_female", "text": "Gerne. Was kostet der Kurs?"},
+            {"speaker": "dialogue_male", "text": "Achtzig Euro für sechs Abende."},
+            {"speaker": "dialogue_female", "text": "Ich habe das Geld dabei. Kann ich gleich bar bezahlen?"},
+            {"speaker": "dialogue_male", "text": "Nein, das geht hier leider nicht. Wir schicken Ihnen morgen eine Rechnung per E-Mail."},
+            {"speaker": "dialogue_female", "text": "Dann überweise ich das Geld von meinem Konto."},
+            {"speaker": "dialogue_male", "text": "Genau. Heute brauchen Sie noch nichts zu bezahlen."}
+          ],
+          "questions": [
+            {"number": 15, "question": "Die Frau bezahlt den Kurs heute bar.", "options": {"richtig": "Richtig", "falsch": "Falsch"}, "answer": "falsch", "explanation": "Barzahlung ist nicht möglich. Die Frau bekommt zuerst eine Rechnung und möchte das Geld überweisen."}
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "title": "Deine Antworten vergleichen",
+    "narration": "Das war unsere A zwei Hörübung. Vergleichen Sie jetzt Ihre Antworten mit den Lösungen. Welche Aufgabe möchten Sie noch einmal üben?"
+  }
+}

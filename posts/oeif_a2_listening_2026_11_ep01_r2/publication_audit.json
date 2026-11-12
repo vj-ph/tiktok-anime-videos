@@ -1,0 +1,24 @@
+{
+  "publication_manifest_sha256": "7689fe9ed647443fbc8f6a88a24857078cb2adbff259cf7f65501ec47fbf7535",
+  "inputs_rehashed": 49,
+  "assets_rehashed": 33,
+  "covers_decoded_and_bounds_checked": 15,
+  "covers_unchanged_from_approved_r1": true,
+  "captions_checked": 15,
+  "maximum_caption_characters": 1570,
+  "full_youtube_chapters_seconds": [
+    0,
+    153,
+    330,
+    483,
+    653
+  ],
+  "all_chapters_at_least_ten_seconds": true,
+  "thumbnail_contact_sheet_inspected": true,
+  "final_video_cross_audit": {
+    "path": "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\oeif_a2_listening_reduced_r2\\delivery_audit.json",
+    "sha256": "6907e55c6c8ce84f9a48eba52a676da8f2c6064bbd7da8d73b517f02f752806a"
+  },
+  "all_video_and_publication_bindings_verified": true,
+  "uploaded": false
+}
