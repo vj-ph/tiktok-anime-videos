@@ -1,0 +1,88 @@
+{
+  "episode": 1,
+  "edition": "November 2026",
+  "video_build": "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\oeif_b2_listening_display_r2",
+  "videos": {
+    "full_landscape": {
+      "file": "full\\production_landscape.mp4",
+      "sha256": "98b482630dd3b68b119f5c059b8ec87fc539b4ab3ffb77344a6b561047b64e5a",
+      "frames": 33283,
+      "duration": 1386.7916666666667
+    },
+    "full_portrait": {
+      "file": "full\\production_portrait.mp4",
+      "sha256": "803cb4129e7a866072a1cf02fc2d8ecdcb7dc1583572b5ab7bd7d3b064155b05",
+      "frames": 33283,
+      "duration": 1386.7916666666667
+    },
+    "teil_1": {
+      "file": "teil_1\\production_portrait.mp4",
+      "sha256": "62b7a3a8ef55bf3289b47cd26d514ffb47041ebd010afea9f01429df54224736",
+      "frames": 3632,
+      "duration": 151.33333333333334
+    },
+    "teil_2": {
+      "file": "teil_2\\production_portrait.mp4",
+      "sha256": "c0b80066e7507b3bde9be34e63ec8ab0a3925aafef9e5a4ccf7bf39ba5ba72f7",
+      "frames": 2176,
+      "duration": 90.66666666666667
+    },
+    "teil_3": {
+      "file": "teil_3\\production_portrait.mp4",
+      "sha256": "823101a5d1b958f33a390943dfed0935e717179c3f59da1e879fc545de16d98f",
+      "frames": 3444,
+      "duration": 143.5
+    }
+  },
+  "avatar_identity": "candidate_b / Samir",
+  "avatar_provenance": "Local crop of the approved smiling third character; no new model image.",
+  "inputs": {
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\oeif_b2_listening_display_r2\\delivery_audit.json": "af7e16e36d6653e94022b51ba5dac62daf081e01f64f46572d86fc1a9863f697",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\oeif_b2_listening_display_r2\\delivery_manifest.json": "ea71ca7ce26b8585599b183d2f3d17852848fd35e1440dc2b1ed3fa39c17fa06",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\oeif_b2_listening_display_r2\\full\\sample_content.json": "5d1d757a2f84a4f6762aaa590ec127cba066d8071bc6e6b094d9df0912d409b9",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\oeif_b2_listening_display_r2\\full\\timeline.json": "ed8c9cce0575cef162b4062e96216cfb77b6cc15d2cc1ec0294dabc34262b060",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\oeif_b2_listening_display_r2\\teil_1\\sample_content.json": "6eb5e64ea8bddb32fef5f460140abdf7896cbe49816bba6ccd232ba8e03b0799",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\oeif_b2_listening_display_r2\\teil_1\\timeline.json": "84660cef626f6479029376f3994ea6dda440bfb76ca762cff6bcbed76e681730",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\oeif_b2_listening_display_r2\\teil_2\\sample_content.json": "302987d0cfdd345e8f3bd2bee3de3047c43e0d1267d9cf8f294e393d76242201",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\oeif_b2_listening_display_r2\\teil_2\\timeline.json": "ea74d895e336b42b5bdcf5e81b161cec50ba37d853119311278a80114ce55045",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\oeif_b2_listening_display_r2\\teil_3\\sample_content.json": "dc39deaecd75c3b4d39bde96852bff10af8466c0eaa939ec283b45376391651b",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\oeif_b2_listening_display_r2\\teil_3\\timeline.json": "5e34067b4f2e342808c1a64184ee171c11a0e0a3220040919b1d679c00d0d186",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\publication_assets.py": "bc218ee37f37089c603ea8b437294900a44fa0bb71648464df40b5ff0ccb7cf5",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\publish_b2_assets.py": "ff276ff12e6bf83fdc86bdc4e84f83eb4f4e2bd998ee918f51dc887ba26f0c9e",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\test_b2_publication.py": "3fc1d20043d9f08643703cc627e533f71550ddf9d0cfdbaf97e7429c7a773d24",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\pilot_3d\\assets\\deutschkompass-logo.png": "a90d1e2b0ff00764191d535d70475f2d1d4c37cbf8abf9567ded3eaf4a48c673",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\pilot_3d\\builds\\oeif_b1_speaking_long_contact_r7\\episode.json": "02a4d75ff49fa536bbe0b499517ab1b44c1dc692e38a971e85c453af0066c88f",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\pilot_3d\\builds\\oeif_b1_speaking_long_contact_r7\\native\\youtube_group.png": "157a783853c7e81f3368c576d5ab323aec4afa03fe9db23798889ede45ddb026",
+    "C:\\Windows\\Fonts\\arialbd.ttf": "e8f4e3baf6cc35fed6fcce3a540e8b39e8f6cda1d22a28f2ec8f526fef7a43f5"
+  },
+  "files": {
+    "avatar_samir.png": "139678be1284b070f33bc9d407762084274b011bd063fb716f07340134403175",
+    "layout_checks.json": "91ac0e8a1c962681aa866dd0e73c6be1f32bdb30fbeb2567d4b0077d2e2b90c8",
+    "thumbnail_contact_sheet.jpg": "ff5c60596f6fbf7de3e2aaca62a5b027d9f8a3c00209c595128164916135d0d0",
+    "full\\instagram.txt": "dc0711da53d0aca871176d3471d7513e7f753537db518aef1e3cb26484d1824a",
+    "full\\thumbnail_instagram.png": "37984700aaf5aa1b46ef20dfebf9e473e074cd3b56e9766c323e79328aba5e33",
+    "full\\thumbnail_tiktok.png": "00ac4edd0a1ebe5a4c7698d89fb85d1f4cbd61793d5eb6338b8741c841e5fd3b",
+    "full\\thumbnail_youtube.png": "1001c4064e89f1260f3cb05f66db402bac12a465a2faf0818ad34edaea50cd41",
+    "full\\tiktok.txt": "dc0711da53d0aca871176d3471d7513e7f753537db518aef1e3cb26484d1824a",
+    "full\\youtube.txt": "530897dde8fba3c3c849d0d93fe228a95ba13f46f10112d15352dec6f3672afe",
+    "teil_1\\instagram.txt": "02555c52177d3357842481f96100e7ebc29260f1dcb455307f931197e003d858",
+    "teil_1\\thumbnail_instagram.png": "2bafd0b8e997ef15f23f0aca934a4a7e892975593aa8abe8ca03bfb944890540",
+    "teil_1\\thumbnail_tiktok.png": "b6d2882a8b058394b22a653219f4b59bcc15aeda13dcec6a1dbf8449995c8bee",
+    "teil_1\\thumbnail_youtube.png": "84e9b05c070499a9abe5d253028f082e51774baba7235a223e0c67c32acbef35",
+    "teil_1\\tiktok.txt": "02555c52177d3357842481f96100e7ebc29260f1dcb455307f931197e003d858",
+    "teil_1\\youtube.txt": "6354a9d64bea208127db1e8ae5b73226a9db2f734a2c53653e868b966b177fbd",
+    "teil_2\\instagram.txt": "03863c5ebec6e80a2aa1463caf9e84e2d0932f1b9e2405d967c7d61a103fac1a",
+    "teil_2\\thumbnail_instagram.png": "8dcad41b1eda0bce5ca4a34dbd7904dd9a09083cb4726037ad8da26174cab3e6",
+    "teil_2\\thumbnail_tiktok.png": "c5fdc4e6edc812c4997262b6a9d437cc88faaec67de592d1bcb010e81dc04dfc",
+    "teil_2\\thumbnail_youtube.png": "88b152d19a9017a55797a630c23db57dfb21dcf4ff011676621d2a73f895bc5c",
+    "teil_2\\tiktok.txt": "03863c5ebec6e80a2aa1463caf9e84e2d0932f1b9e2405d967c7d61a103fac1a",
+    "teil_2\\youtube.txt": "2657fdf33918b2400cd0a2f51725e4619d14934bdb14b5061ff214043d66768b",
+    "teil_3\\instagram.txt": "c53378d3110a1647ecc98324ca490f4464b4a31a71998924e91cbd90ddb7ecc4",
+    "teil_3\\thumbnail_instagram.png": "a6fbb401830fe3375ed8a5fbf1585d10dc4a5ae8ef9e2de25f94ae9771b88b92",
+    "teil_3\\thumbnail_tiktok.png": "000d2b59af0c6dc4d7a255413ce371506df230ab36daa047c474f0edefa635ed",
+    "teil_3\\thumbnail_youtube.png": "2976f28e16ce3df9f885d1bdd001a4502e09c079796156e35ad3d89e56e55fef",
+    "teil_3\\tiktok.txt": "c53378d3110a1647ecc98324ca490f4464b4a31a71998924e91cbd90ddb7ecc4",
+    "teil_3\\youtube.txt": "1d4f0a76e95911cb8f0c58d4681d2fedee14e18951f0f827c31fe64e4a7b64bb"
+  },
+  "publication": "Local descriptions and covers only; nothing uploaded."
+}

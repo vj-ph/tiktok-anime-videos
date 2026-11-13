@@ -45,6 +45,188 @@ Do not feed their outputs back into the same transformation. For new content,
 edition labels, cast or crop geometry, create a separately versioned generator
 and fresh outputs rather than changing a helper pinned by an approved build.
 
+## In-place answer reveals (authorized B2 revision: November 13, 2026)
+
+For future true/false reveal revisions, keep the original question items
+visible and mark each statement directly **Richtig** or **Falsch**. Do not
+replace the question board with a separate solutions-only slide. Preserve
+statement wording, numbering and layout; reserve room for readable inline
+labels without shrinking mobile text or causing overflow.
+
+The reveal remains a separate **timing phase**, not a separate visual slide:
+hide all answer markings until the complete response silence has finished,
+then use the existing three-second reveal and remove sound. Preserve the
+requested pauses, chimes, promotion and CTA. The final answer overview may
+remain separate. For paginated boards, resolve how all items receive visible
+markings without silently changing approved key coverage, reveal duration
+or font minima.
+
+On November 13, 2026, the user authorized regenerating the improved **B2**
+full landscape and portrait videos. The separate `*_b2_r3.py` drivers and
+`check_b2_layout_r3.cjs` implement this in a fresh
+`oeif_b2_listening_full_production_r3` build, reusing verified r2 speech and
+word alignments without TTS. Teil 2 has two consecutive three-second reveal
+groups after its full 30-second checking pause: 46-50, then 51-55, with the
+existing remove sound at each group's start. Portrait displays the matching
+five-statement page; landscape keeps all ten statements visible, retaining
+the first group's markings when the second appears. Both full formats gain
+three seconds; every other reveal stays three seconds.
+
+Reserve identical inline label slots before and during the reveal, hidden
+until the correct phase, so the question text does not jump. Measure actual
+statement positions across phases as well as overflow and the 42/40px mobile
+question/answer minima. The final overview remains separate.
+All earlier frozen deliveries and pinned generators remain unchanged.
+Older recipes below document their original reveal presentation, not the
+new B2 r3 behavior. A2/B1 regeneration is not authorized by this B2 request.
+
+The B2 r3 revision is now validated and frozen: both native exports are
+33,283 frames / **23:06.792**, with all 60 regression tests, 148 encoded events
+(128 audio / 20 silences), 174 decoded/browser comparisons and separate
+promotion-crop checks passing. All 20 native and all 20 decoded sheets were
+inspected. Its external `oeif_b2_listening_full_production_r3_final_audit.json`
+rehashes all 447 delivery files / 28 code pins and verifies the unchanged
+772-file / 21-code-pin r2 source. The complete lossless audio before/after the
+added 72-frame interval is byte-identical to r2. Preserve r3 and its pinned
+drivers for lookups; use fresh versions for further revisions. Retain all six
+inherited ASR uncertainties, low alignment scores and no-human-listening/
+disabled-motion limitations. Nothing was uploaded.
+
+## Authorized B2 reduced practice (November 13, 2026)
+
+The user subsequently requested three under-three-minute portrait clips and
+confirmed that Teile 1/2 use selected complete recordings, not their full
+audio. This supersedes the earlier B2 full-only scope for these clips only.
+Use `prepare_b2_reduced.py`, `compose_b2_reduced.py` and
+`deliver_b2_reduced.py`, deriving a fresh build from frozen full **r3**:
+
+| Clip | Selected questions/recordings | Reading silence | Answer/checking silence |
+| --- | --- | --- | --- |
+| Teil 1 | 41-42, two complete news reports | 15 seconds | 10 seconds after both reports |
+| Teil 2 | 49, complete interviewer question and response | 15 seconds | 10 seconds after the exchange |
+| Teil 3 | 56-57, two complete recording groups | None | 15 seconds after each recording |
+
+These are explicitly **adapted short-practice pauses**, not the unchanged-pause
+B1/A2 recipes above/below. The user authorized production after this timing
+proposal, then requested spoken German preparation before reading silence:
+**Sie haben jetzt fünfzehn Sekunden Zeit, die Aufgaben zu lesen.**
+Use that complete narrator cue in Teile 1/2 and start all 15 silent seconds
+only after the cue ends. The original reduced r1 displayed questions during
+the cue; the later dedicated-slide revision below supersedes that presentation.
+Do not add a reading pause/cue to Teil 3.
+
+Reuse complete source WAVs without another tempo pass or mid-sentence cuts.
+Omit original instructions announcing six reports/ten questions, the six-report
+introduction, the old spoken 30-second checking instruction, whole-section
+ending claims and the full-test overview. Generate only three title-only voiced
+openings and the shared new reading cue with the bound narrator at 0.8x.
+Opening duration is complete processed title plus 0.5 seconds, rounded up.
+Retain original numbering, selected/full counts, persistent reduced-practice
+notice, logo/book/Amazon panel, separate three-second inline answer reveals,
+complete start/back/remove cues as applicable and the original voiced CTA.
+
+The verified frozen reference is `oeif_b2_listening_reduced_r1`, with native
+`teil_N\production_portrait.mp4` outputs at **2:31.333 / 1:30.667 / 2:23.500**
+(3,632 / 2,176 / 3,444 frames at 24fps). Reuse it for lookups; preserve its
+32 pinned programs and choose a fresh build/version for further revisions.
+All 64 listening tests, 30-scene browser/geometry gates, 32 encoded events
+(26 audio / six silences) and 96 decoded/browser/promotion comparisons pass.
+All 12 native and 12 decoded sheets were inspected. Minimum event correlation
+is 0.9999597094, guarded silence peak/RMS are zero and maximum mean RGB error
+is 2.0661789481 (promotion crop 2.3490009977).
+The external `oeif_b2_listening_reduced_r1_final_audit.json` independently
+rehashes all 346 delivery files / 32 code pins and preserves all 447-file /
+28-code-pin full r3 and 772-file / 21-code-pin r2 bindings. Both ASR models
+recognize the complete new reading cue. Retain the numeral/acronym flags,
+medium title-1 word-boundary uncertainty and all inherited speech notes;
+this is not human listening or continuous-motion certification.
+
+For fresh revisions, run both local small/medium ASR on all four new
+speech clips; inherit unchanged exercise review/audio notes. Require independent
+selection/pause/cue-order checks, exact source PCM, 42/40px minimum mobile
+question/answer fonts, stable question positions, native browser/contact-sheet
+review, strict video/audio/container duration below 180 seconds, full encoded
+event checks and decoded browser/promotion comparisons before freezing. Preserve
+the full r3/r2 deliveries and their pinned programs. No publishing assets or
+uploads are requested by this reduced-video generation task.
+
+## B2 display-only revision (November 13, 2026)
+
+The user subsequently requested a **separate slide** for the complete
+15-second reading instruction in reduced Teile 1/2, with actual speech-timed
+word highlighting. Show only that instruction during its existing audio
+interval; show the selected questions when the complete 15-second reading
+silence begins. Do not add time, synthesize again or put the questions on the
+instruction slide. Teil 3 has no new reading instruction.
+
+Use distinct **green Richtig / red Falsch** text and backgrounds for all
+three reduced videos and both full-video ratios, including the final full
+answer overview. Preserve the existing inline labels, question positions,
+42/40px mobile minima, reveal timing, speech, silences, promotion and CTA.
+This request does not authorize A2/B1 regeneration or publishing assets.
+
+Separate drivers `prepare_b2_display.py`, `deliver_b2_display.py`,
+`check_b2_display.cjs` and `test_b2_display.py` derive a fresh display build
+from frozen full r3 and reduced r1. Align the existing processed cue locally;
+all ten words require measured intervals, not proportional estimates.
+The native checker seeks every cue frame forward and backward and verifies
+truth-label colors/contrast and stable source question positions.
+
+For these display-only edits, use native browser replacement frames only on
+the changed intervals, reusing verified source footage elsewhere and encoding
+audio from the unchanged lossless mix. This is a video re-encode, not lossless
+stream copying. Replace only the final overview's answer-grid rectangle:
+its 15-second countdown/progress must remain moving. Expand crop bounds to
+even coordinates for YUV420 and test actual first/last replacement frames
+and odd-coordinate spatial alignment with FFmpeg.
+
+Latest verified B2 delivery: `builds\oeif_b2_listening_display_r2`, containing
+`full\production_landscape.mp4`, `full\production_portrait.mp4` and
+`teil_N\production_portrait.mp4` for N=1,2,3. Full clocks remain 23:06.792;
+shorts remain 2:31.333 / 1:30.667 / 2:23.500, each below 180 seconds for
+video/audio/container. All lossless mixes and timelines equal their sources.
+
+All 68 listening tests, five native layout/color/contrast/browser checks and
+188 forward/reverse cue frame seeks per applicable clip pass. All 20 native
+and 20 decoded edited sheets were inspected. The five exports pass 180 encoded
+events in total (154 audio / 26 silent intervals) and 340 browser/export/
+promotion comparisons. Minimum event correlation is 0.9999597094; guarded
+silence peak/RMS are zero; maximum mean RGB error is 2.9458352623 (promotion
+2.4428126969). The external `oeif_b2_listening_display_r2_final_audit.json`
+rehashes all 899 delivery files / 36 code pins and all frozen full r3,
+reduced r1 and original full r2 source bindings. Preserve those originals,
+their pinned programs, inherited ASR notes and the measured minimum new
+alignment score of 0.406. No human listening/continuous-motion certification,
+publishing assets or upload.
+
+## B2 Samir publishing assets (November 13, 2026)
+
+The user later authorized thumbnails featuring **Samir** and platform
+descriptions for the completed B2 full video and three shorts. This supersedes
+the earlier no-publishing-assets scope for this bundle only, not the no-upload
+rule. Do not change videos or the B1/A2 Lea assets.
+
+Use `publish_b2_assets.py --build` with the frozen
+`oeif_b2_listening_display_r2` root and a fresh `--output`. It verifies that
+delivery's files/code pins and binds all five video hashes. Samir is the
+third character (`candidate_b`) in the approved group render, not Lea:
+use the measured crop/head guard and retain image/cast provenance.
+Generate native YouTube 1920x1080, TikTok 1080x1920 and Instagram 1080x1350
+covers plus separate platform text files for `full` and `teil_1`–`teil_3`.
+
+Current verified bundle: `posts\oeif_b2_listening_2026_11_ep01_samir_r2`.
+All 12 Samir covers and 12 descriptions pass; the avatar/contact sheet were
+inspected, all text/portrait/logo bounds are separate and all PNGs decode.
+Three focused publication regressions pass. The external final audit rehashes
+27 assets / 17 inputs and all 899 source-delivery files / 36 code pins,
+confirming unchanged videos. Full YouTube chapters are 00:00 / 06:19 /
+16:46 / 22:42. Describe guided practice and adapted short pauses accurately,
+including the single Aufgabe 49; do not claim unchanged full-test pauses in
+shorts or a complete interview there. Read the B2 book link from frozen
+content; credit chime IDs across all event kinds, including `chime_remove`
+on reveal events, rather than only events with `kind="chime"`.
+Nothing was uploaded.
+
 ## A2 sequence and opening revision (November 11, 2026)
 
 Use `listening_2d\episodes\oeif_a2_listening_01_revision_r2.json` as the
@@ -195,6 +377,107 @@ documented one-frame countdown rounding; this is not human listening approval.
 Current A2 posts are in `posts\oeif_a2_listening_2026_11_ep01_r2`:
 49 pinned inputs, 33 assets, 15 checked descriptions and 15 decoded Lea covers.
 These counts are recorded results, not substitutes for fresh revision checks.
+
+## B2 sequence and scope (November 12, 2026)
+
+For B2, use `listening_2d\episodes\oeif_b2_listening_01.json`, not the B1/A2
+planners or timing defaults. The user supplied
+`listening_2d\assets\model_oeif_b2.txt` and the B2 listening-book link recorded
+in the episode. Preserve the transcript verbatim: it has recognition gaps,
+an English recognition fragment and a missing/garbled number-58 cue, with no
+timestamps or reliable chime annotations. Use the book only as structural
+inspiration; independently author the exercises, statements and explanations.
+The current official model (valid from October 15, 2026) confirms three parts
+with 5/10/5 true/false tasks. The supplied transcript identifies numbers 41-60
+and once-only playback. Exact pauses/chimes below are the user's contract,
+not independently measured official audio timing.
+
+The user confirmed **full landscape and portrait only**, no reduced clips,
+and separate **three-second guided answer reveals** after complete pauses:
+
+1. Teil 1: instruction, 30-second silence, start chime, complete six-report
+   bulletin once, 15-second silence, joint five-key reveal with remove sound,
+   ending chime, spoken section ending.
+2. Teil 2: instruction, 60-second silence, start chime, complete two-voice
+   interview once, spoken checking instruction, 30-second silence, joint
+   ten-key reveal with remove sound, ending chime, spoken section ending.
+   Do not insert a 15-second response pause or interrupt the interview.
+3. Teil 3: instruction, spoken number and recording, 15-second silence,
+   separate reveal with remove sound, chime, next number/recording. Repeat
+   through task 60, preserving its final silence/reveal/chime before
+   "Ende des Subtests Hören." No initial reading pause or initial chime
+   was requested for this part. Do not import A2's inter-part pauses.
+
+Keep all silences outside speech/chimes/reveals and answers hidden until their
+dedicated scene. Retain the title-only opening "ÖIF B2 Hören", mobile-readable
+statements, persistent logo/book/Amazon panel and final voiced CTA. Measure
+five-/ten-statement cards in both ratios rather than shrinking text. The
+independent Claude Sonnet 5.5 review must assess **B2**, not B1, difficulty:
+extended arguments, qualification, modality, causal claims and paraphrase,
+with exactly one defensible truth value and explicit evidence per item.
+Obtain user script approval before TTS/rendering. New B2 drivers must remain
+separate from all frozen B1/A2 programs.
+
+Episode 1 has passed independent full review and changed-item recheck, and
+the user approved TTS plus both full formats. Bind the exact reviewed episode
+to `builds\oeif_b2_listening_script_review_r1\review_resolution.json` and
+`user_approval.json`. The user also approved two five-statement portrait pages
+for the interview: 30/30 seconds within its uninterrupted 60-second reading
+pause, switching during speech at the interviewer question for item 51,
+then 15/15 seconds within the 30-second checking pause. Landscape shows all
+ten statements at once. The joint three-second reveal shows all ten keys.
+This changes visual paging, not the audio or silence clock.
+
+The separate episode-1 drivers are `prepare_b2.py`, `process_b2.py`,
+`compose_b2.py`, `audit_b2_sequence.py`, `validate_b2.py`, `deliver_b2.py`,
+`review_b2_frames.py` and `check_b2_layout.cjs`. Use fresh builds and run each
+gate separately, stopping on failure:
+
+```powershell
+& $py -X utf8 .\listening_2d\prepare_b2.py --build $full --plan-only
+& $py -X utf8 .\listening_2d\prepare_b2.py --build $full
+& $py -X utf8 .\listening_2d\process_b2.py align --build $full
+& $py -X utf8 .\listening_2d\process_b2.py review --build $full --model small
+& $py -X utf8 .\listening_2d\compose_b2.py --build $full
+& $py -X utf8 .\listening_2d\deliver_b2.py check --build $full
+& $py -X utf8 .\listening_2d\review_b2_frames.py --build $full
+```
+
+Recheck substantive ASR flags using cached medium with `--ids`, retain all
+raw flags and resolve them explicitly before rendering. Inspect native sheets
+and record separate native/encoded approval flags. Then use
+`deliver_b2.py render` (optionally `--layout landscape` or `portrait`),
+`validate_b2.py --encoded`, `review_b2_frames.py --encoded`, inspect decoded
+sheets, and `deliver_b2.py freeze`, each with `--build $full`.
+Keep `research_input_pin.json` binding the downloaded official format reference
+and extraction; the supplied transcript is not evidence for measured chimes.
+The source SFX index names its back cue **end**, not back. Preparation checks
+all selected originals and the full remove-tail fit before starting synthesis.
+`--reuse-cache` accepts an existing audio cache only through the helper's exact
+text/reference/settings/WAV checks; pin imported source cache files, never
+reinterpret an interrupted run as a finished delivery.
+
+The historical B2 episode-1 reference is
+`listening_2d\builds\oeif_b2_listening_full_production_r2`: full native
+`production_landscape.mp4` and `production_portrait.mp4`, each 33,211 frames /
+23:03.792 at 24fps. Preserve its pinned programs/inputs and reuse rather than
+regenerating for a lookup. It passes 146 encoded events (126 audio and 20
+silences), 166 decoded/browser comparisons and separate promotion-region
+checks; all native/decoded contact sheets were inspected. Its external
+`oeif_b2_listening_full_production_r2_final_audit.json` rehashes the complete
+772-file delivery inventory, 21 code pins and referenced evidence, while
+verifying unchanged current B1/A2 deliveries. Retain the six documented
+non-critical ASR uncertainties, low alignment scores, nonblocking browser
+warnings and disabled-motion/human-listening limitations. These are measured
+results for this build, not acceptance shortcuts for new episodes or proof
+of human listening. The r2 full-video task did not authorize reduced clips
+or new publishing assets; the later November 13 short-video authorization is
+recorded above.
+
+The complete-test timing reference is frozen **r3**, described in the in-place
+answer-reveal section above. Use its revised 3+3-second Teil 2 reveal and
+23:06.792 clock, not the historical r2 joint-key reveal or clock. The later
+display-only revision preserves that clock while updating answer colors.
 
 ## Instruction template
 

@@ -1,0 +1,36 @@
+{
+  "status": "pass",
+  "posts": "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\posts\\oeif_b2_listening_2026_11_ep01_samir_r2",
+  "publication_manifest_sha256": "c3cf1ef4ed01fff563f66d23a90078331bc772dfb2faf5eb653f57f9fd394e36",
+  "assets_rehashed": 27,
+  "inputs_rehashed": 17,
+  "native_covers_decoded": 12,
+  "platform_descriptions_checked": 12,
+  "source_delivery_files_rehashed": 899,
+  "source_code_inputs_rehashed": 36,
+  "original_video_hashes_unchanged": true,
+  "native_dimensions_and_all_region_bounds_verified": true,
+  "samir_identity_crop_avatar_and_twelve_cover_contact_sheet_inspected": true,
+  "exact_timeline_chapters_and_adapted_short_pauses_verified": true,
+  "actual_start_back_remove_credits_verified": true,
+  "full_chapters": [
+    [
+      0,
+      "Start und Teil 1 – Nachrichten"
+    ],
+    [
+      379,
+      "Teil 2 – Interview"
+    ],
+    [
+      1006,
+      "Teil 3 – Kurze Hörtexte"
+    ],
+    [
+      1362,
+      "Lösungen im Überblick und Buch"
+    ]
+  ],
+  "audit_script_sha256": "2fc667bc697d478540398f5f3f0cf62981919763aef1deed381b19251c2d8235",
+  "publication": "Nothing uploaded."
+}

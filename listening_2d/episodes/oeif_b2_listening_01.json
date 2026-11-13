@@ -1,0 +1,258 @@
+{
+  "schema": "oeif_b2_listening_v1",
+  "id": "oeif_b2_listening_01",
+  "status": "Revised after independent Claude Sonnet 5.5 review; changed items await reviewer recheck, then user script approval. No TTS or rendering before those gates.",
+  "edition": {"month": "November", "year": 2026, "episode": 1},
+  "title": "ÖIF B2 Hören",
+  "level": "B2",
+  "practice_mode": "guided",
+  "source": {
+    "book": "..\\..\\..\\german\\books\\b2\\listening_oeif\\book_no_toc.md",
+    "book_sha256": "659a910358341f2babe69d337f7e0827ccc715b05672bc5ba205435f8fe896dc",
+    "reference_lines": [[37, 71], [1974, 2179]],
+    "use": "Task structure and B2 listening skills only. Independently written scenarios, recordings, statements and explanations; no source recordings or exercise text copied.",
+    "distinctness": "The sampled book simulation uses public-space heat planning as its interview and news about temporary premises, apprentice advice, airport bicycle storage, walking research and a museum card. This episode instead concerns paid workplace learning, accessible theatre, editorial corrections, grain storage, historical recordings, a bus trial and a sports hall. The official sample's child-welfare interview, news and short-text situations are not reused.",
+    "fictional_scenarios": "All news, programmes, organisations, people, trials, dates and announcements in the authored exercise recordings are fictional training situations, not current reporting, legal advice or real service information.",
+    "model_transcript": {
+      "path": "..\\assets\\model_oeif_b2.txt",
+      "sha256": "d890ef0408667d61624e8ab6a715d5fb4a802c4c7654c9207a1f6d73d01e14f2",
+      "provenance": "Supplied by the user on 2026-11-12; preserve verbatim.",
+      "supports": "Three parts; once-only news bulletin with six reports and five true/false tasks 41-45; once-only two-voice interview with ten true/false tasks 46-55; five once-only short texts with tasks 56-60. Reading instructions specify 30 and 60 seconds; the post-interview instruction specifies 30 seconds to check answers.",
+      "limitations": "Untimed automatic-looking transcript with broken words, unrelated fragments, an English recognition passage in the interview and a missing/garbled number-58 cue. It does not measure chime positions or silent intervals. Do not repair the reference in place or copy its exercise content."
+    },
+    "official_model": {
+      "publisher": "ÖIF / Sprachportal",
+      "page_url": "https://sprachportal.at/kurse-und-pruefungen/pruefungsmaterialien/uebungstests/b2-oeif-test-modelltest/",
+      "pdf_url": "https://sprachportal.at/fileadmin/user_upload/meinsprachportal-at/Materialen_zur_Pruefungsvorbereitung/B2/B2_OEIF-Test_Modelltest_ab_15.10.2026_15102026.pdf",
+      "checked": "2026-11-12",
+      "valid_from": "2026-10-15",
+      "format_table_pdf_page": 3,
+      "verified": {"parts": 3, "tasks": 20, "task_counts": [5, 10, 5], "task_type": "true_false"},
+      "limitations": "The current format table confirms structure, not the exact user-authored silence/chime sequence. No claim that this guided slowed practice is an official uninterrupted exam recording."
+    }
+  },
+  "delivery": {
+    "confirmed_by_user": "2026-11-12",
+    "full_layouts": [{"name": "youtube", "width": 1920, "height": 1080}, {"name": "portrait", "width": 1080, "height": 1920}],
+    "shorts": false,
+    "publication": "Do not upload automatically. Any dependent descriptions must identify guided practice and use the B2 book, measured chapters and actual SFX.",
+    "preserve": "All frozen B1/A2 episodes, programs, references, builds and publishing assets remain unchanged."
+  },
+  "promotion": {
+    "amazon_url": "https://amzn.eu/d/07GfdR1Q",
+    "url_source": "User supplied on 2026-11-12. Browser fetch followed the short link to Amazon ASIN B0H9HLTL7V but could not access the product page; product contents are not independently verified.",
+    "cover_source": "..\\..\\..\\german\\books\\b2\\listening_oeif\\oeif_b2_hoeren.jpg",
+    "cover_sha256": "f60fa10df27f7f12f00e839e8d22c1cf95b8b918b06f95455acf04336c97317d",
+    "book_title": "ÖIF B2 Hören – Übungsbuch",
+    "youtube_label": "Amazon: Link in der Beschreibung 👇",
+    "social_label": "Amazon: Link in der Bio 👇",
+    "cta": "Mehr Hörübungen, Transkripte und Erklärungen finden Sie im Buch. Den Amazon-Link finden Sie in der Beschreibung oder in der Bio."
+  },
+  "presentation": {
+    "style": "Reuse the established pale sage, cream and dark-text style with the Deutsch Kompass logo, persistent book/Amazon promotion and final voiced CTA. Do not reintroduce removed bylines.",
+    "opening": "Main title only: ÖIF B2 Hören. No question-count paragraph or hook in the opening body.",
+    "instruction_highlights": "Measured forced-aligned word highlights for instructions only; never show listening-recording transcripts.",
+    "question_visibility": "Show all five statements during Teil 1, all ten during Teil 2 and the current numbered statement in Teil 3. Keep answers hidden through every full reading/playback/response pause.",
+    "mobile_layout": "Measure actual five-/ten-statement cards and all reveals; preserve at least 42px statement text and 40px answer labels, 8px label gaps where applicable, no horizontal overflow and at least 12px card-bottom clearance. Do not shrink text to force ten statements into a single portrait column.",
+    "answer_reveals": "User confirmed separate three-second reveals: all five keys together after Teil 1's 15 seconds; all ten together after Teil 2's checking instruction and 30 seconds; each key after its complete Teil 3 15-second answer pause. Do not stop a shared recording to reveal an individual answer.",
+    "summary": "Separate readable full answer overview after the subtest ending, followed by the retained voiced CTA. Measure layout and adequate reading duration."
+  },
+  "audio": {
+    "atempo": 0.8,
+    "voice_locale": "de-AT",
+    "voices": "Reuse verified local Austrian-reference voices after binding WAV/transcript hashes. Distinct interviewer/guest voices. All authored speaker and programme names are fictional.",
+    "background_music": false,
+    "background_ambience": false,
+    "sfx": "Preserve complete approved start/back/remove chime tails at existing 0.8x/reverb treatment. Start after complete reading silence, back before section endings/next Teil 3 numbers, remove at the start of each separate reveal. Never place sound inside a prescribed silent interval.",
+    "speech_clock": "Measure every processed WAV; 24fps/48000Hz mono PCM16, 2000 samples per frame, speech rounded up with zero padding. No estimated duration treated as measured.",
+    "recording_plays": 1
+  },
+  "timing": {
+    "sequence_profile": "oeif_b2_user_sequence_2026_11_12_guided",
+    "provenance": "User-specified exact pauses/chimes, with a later explicit choice of separate three-second guided reveals. The supplied transcript supports the spoken 30/60/30-second instructions but does not measure silence or chimes.",
+    "fps": 24,
+    "sample_rate": 48000,
+    "reveal_seconds": 3,
+    "between_parts_added_silence_seconds": 0,
+    "part_1": {
+      "read_seconds": 30,
+      "answer_seconds": 15,
+      "sequence": ["instruction", "read_silence_30", "start_chime", "complete_news_bulletin_once", "answer_silence_15", "joint_reveal_3_with_remove", "end_chime", "end_part_1"]
+    },
+    "part_2": {
+      "read_seconds": 60,
+      "check_seconds": 30,
+      "sequence": ["instruction", "read_silence_60", "start_chime", "complete_interview_once", "checking_instruction", "check_silence_30", "joint_reveal_3_with_remove", "end_chime", "end_part_2"],
+      "important": "The follow-up instruction is spoken after the interview and before the 30 seconds. Do not insert a 15-second answer pause, replay or per-question reveals in the interview."
+    },
+    "part_3": {
+      "answer_seconds_per_recording": 15,
+      "initial_read_seconds": 0,
+      "sequence": ["instruction", "number_56", "recording_56_once", "answer_silence_15", "reveal_3_with_remove", "transition_chime", "number_57", "repeat_complete_number_recording_silence_reveal_chime_through_60", "end_subtest"],
+      "important": "No invented initial reading pause or initial chime. Include the final task's full 15-second pause, separate reveal and final chime before the test-ending speech. No extra inter-part silences are inferred from A2."
+    },
+    "duration": null
+  },
+  "opening": {"display": "ÖIF B2 Hören", "text": "Ö I F B zwei Hören.", "speaker": "narrator"},
+  "sections": [
+    {
+      "part": 1,
+      "label": "Sechs Meldungen",
+      "instruction": "Teil eins. Sie hören eine Nachrichtensendung mit sechs Meldungen und bearbeiten dazu fünf Aussagen. Die Sendung wird einmal abgespielt. Entscheiden Sie bei den Nummern einundvierzig bis fünfundvierzig jeweils: richtig oder falsch. Lesen Sie die fünf Aussagen jetzt durch. Dafür haben Sie dreißig Sekunden.",
+      "plays": 1,
+      "ending": "Ende von Teil eins.",
+      "groups": [
+        {
+          "id": "b2_p1_news",
+          "recording": [
+            {"id": "news_intro", "speaker": "radio_female", "text": "Guten Abend beim Abendjournal. Unsere sechs Meldungen aus Österreich."},
+            {
+              "id": "news_theatre",
+              "speaker": "radio_female",
+              "text": "Ein Theater in Linz erprobt ab kommendem Monat Übertitel auf kleinen Bildschirmen. Damit soll das Programm auch Menschen offenstehen, die gesprochene Dialoge nur eingeschränkt verstehen. Zunächst werden drei bereits laufende Produktionen entsprechend ausgestattet. Für neue Inszenierungen ist das Angebot zwar ebenfalls vorgesehen, die technischen Vorbereitungen dauern dort aber länger. Das Haus übernimmt die Einrichtungskosten aus seinem bestehenden Budget. Beim Eintritt gibt es keinen Zuschlag für die Nutzung der Bildschirme; auch Personen ohne nachgewiesene Hörbeeinträchtigung dürfen sie verwenden. Erst nach der ersten Spielzeit wird entschieden, ob das System dauerhaft bleibt. Die künstlerische Leitung betont, dass die gesprochenen Texte nicht verkürzt werden. Auf den Geräten erscheint eine schriftliche Fassung, keine vereinfachte Zusammenfassung."
+            },
+            {
+              "id": "news_corrections",
+              "speaker": "radio_female",
+              "text": "Mehrere regionale Onlinezeitungen wollen Korrekturen künftig sichtbarer machen. Wird ein sachlicher Fehler nachträglich berichtigt, soll neben dem Artikel stehen, welche Angabe verändert wurde und warum. Bisher waren Änderungen oft nur am Datum der letzten Bearbeitung zu erkennen. Die Redaktionen haben die neue Regelung bereits vereinbart, setzen sie technisch aber erst ab Februar um. Wer heute einen Artikel öffnet, kann deshalb noch nicht mit dem zusätzlichen Hinweis rechnen. Die Vereinbarung gilt für Tatsachenfehler, nicht für jede sprachliche Überarbeitung. Ein unabhängiger Beirat soll im nächsten Herbst prüfen, wie konsequent die Regel angewendet wird. Nach Angaben der beteiligten Häuser soll die Offenlegung das Vertrauen stärken, auch wenn dadurch zunächst mehr Fehler sichtbar werden."
+            },
+            {
+              "id": "news_grain",
+              "speaker": "radio_female",
+              "text": "Im Weinviertel nehmen mehrere landwirtschaftliche Betriebe einen gemeinsam finanzierten Getreidespeicher in Betrieb. Darin können unterschiedliche Ernten getrennt gelagert und vor dem Verkauf auf ihre Qualität geprüft werden. Der Zusammenschluss will verhindern, dass kleinere Betriebe unmittelbar nach der Ernte zu ungünstigen Bedingungen verkaufen müssen. Einen gemeinsamen Mindestpreis haben die Mitglieder ausdrücklich nicht vereinbart. Jeder Betrieb entscheidet weiterhin selbst, wann und an wen er liefert. Die Nutzung des Speichers wird nach eingelagerter Menge verrechnet. Für die kommenden Monate sind noch Kapazitäten frei; zunächst sollen jedoch nur die beteiligten Betriebe davon Gebrauch machen können. Ob später weitere Höfe aufgenommen werden, hängt von den Erfahrungen der ersten Saison ab."
+            },
+            {
+              "id": "news_archive",
+              "speaker": "radio_female",
+              "text": "Ein Forschungsprojekt in Klagenfurt sammelt private Tonaufnahmen aus den siebziger und achtziger Jahren. Gesucht werden keine professionellen Konzertmitschnitte, sondern Aufnahmen von Familienfeiern, Vereinsabenden oder Gesprächen aus dem Alltag. Sie sollen zeigen, wie sich Sprache außerhalb von Rundfunk und Fernsehen verändert hat. Wer eine Kassette zur Verfügung stellt, gibt damit noch keine Zustimmung zur Veröffentlichung. Das Projektteam klärt zuerst mit den Beteiligten, ob und in welcher Form das Material zugänglich gemacht werden darf. Auch Aufnahmen, die nicht öffentlich abgespielt werden können, sind für die Forschung von Interesse. Die Originalkassetten werden nach der Digitalisierung zurückgegeben. Über den wissenschaftlichen Wert entscheidet nicht die Tonqualität allein, sondern vor allem, ob sich Ort, Zeitraum und Gesprächssituation ausreichend zuordnen lassen."
+            },
+            {
+              "id": "news_bus",
+              "speaker": "radio_female",
+              "text": "In einer oberösterreichischen Gemeinde endet der dreimonatige Versuch mit einem späten Buskurs zum Bahnhof. Die Zahl der Fahrgäste lag an Freitagen über den Erwartungen, an den übrigen Wochentagen blieb sie deutlich darunter. Trotzdem spricht sich die zuständige Arbeitsgruppe gegen eine sofortige Beschränkung auf das Wochenende aus. Beschäftigte mit wechselnden Dienstzeiten hätten den Kurs erst spät kennengelernt; zudem sei der Versuch in eine Zeit mit ungewöhnlich vielen Betriebsurlauben gefallen. Vor einer Entscheidung soll deshalb ein weiterer Monat außerhalb der Ferien ausgewertet werden. Der bisherige Fahrplan bleibt in dieser Zeit bestehen. Über eine dauerhafte Finanzierung ist damit noch nichts entschieden. Die Gemeinde erwartet auch von größeren Arbeitgebern einen Beitrag, hat dafür aber bislang keine Zusage."
+            },
+            {
+              "id": "news_hall",
+              "speaker": "radio_female",
+              "text": "Eine Sporthalle in der Steiermark bleibt nach Abschluss der Dachsanierung länger gesperrt als angekündigt. Die Bauarbeiten am Dach sind zwar abgenommen, bei der anschließenden Kontrolle wurden jedoch Mängel an den Notausgängen festgestellt. Sie stehen nach Angaben der Gemeinde nicht in Zusammenhang mit dem neuen Dach, müssen aber vor der Freigabe behoben werden. Für die Vereine werden deshalb weiterhin Ersatzzeiten in zwei anderen Hallen organisiert. Bereits vereinbarte Veranstaltungen können nicht einfach stattfinden, nur weil die eigentlichen Sanierungsarbeiten beendet sind. Ein neuer Öffnungstermin soll erst genannt werden, wenn auch die Sicherheitskontrolle abgeschlossen ist. Das waren die Meldungen im Abendjournal."
+            }
+          ],
+          "questions": [
+            {"number": 41, "question": "Die Nutzung der neuen Übertitel erhöht den Eintrittspreis im Theater nicht.", "answer": true, "evidence_turn": "news_theatre", "explanation": "Für die Bildschirme wird kein Zuschlag verlangt; die Einrichtung wird aus dem bestehenden Budget finanziert.", "listening_focus": "Kostenfolge aus einer paraphrasierten Information ableiten."},
+            {"number": 42, "question": "Die beteiligten Onlinezeitungen kennzeichnen sachliche Korrekturen bereits nach dem neuen Verfahren.", "answer": false, "evidence_turn": "news_corrections", "explanation": "Die Vereinbarung steht bereits, die technische Umsetzung erfolgt aber erst ab Februar.", "listening_focus": "Beschlossene Regel und bereits umgesetzte Änderung unterscheiden."},
+            {"number": 43, "question": "Die Zustimmung zur öffentlichen Nutzung wird bei den privaten Tonaufnahmen gesondert geklärt.", "answer": true, "evidence_turn": "news_archive", "explanation": "Die Übergabe einer Kassette ist noch keine Veröffentlichungserlaubnis; das Team klärt die Zugänglichkeit anschließend mit den Beteiligten.", "listening_focus": "Bereitstellung und Einwilligung auseinanderhalten."},
+            {"number": 44, "question": "Der späte Buskurs wird während der weiteren Auswertung auf das Wochenende beschränkt.", "answer": false, "evidence_turn": "news_bus", "explanation": "Trotz schwächerer Nutzung an den übrigen Wochentagen bleibt der bisherige Fahrplan während des zusätzlichen Monats bestehen.", "listening_focus": "Naheliegende Schlussfolgerung von der tatsächlich gewählten Maßnahme unterscheiden."},
+            {"number": 45, "question": "Mit der Abnahme des neuen Dachs ist die Sporthalle wieder für Veranstaltungen freigegeben.", "answer": false, "evidence_turn": "news_hall", "explanation": "Das Dach ist abgenommen, aber Mängel an den Notausgängen verhindern weiterhin die Freigabe.", "listening_focus": "Abschluss einer Baumaßnahme und Freigabe des gesamten Gebäudes unterscheiden."}
+          ]
+        }
+      ]
+    },
+    {
+      "part": 2,
+      "label": "Weiterlernen im Beruf",
+      "instruction": "Teil zwei. Es folgt ein längeres Radiointerview. Dazu gehören die zehn Aussagen sechsundvierzig bis fünfundfünfzig. Sie hören das Gespräch einmal. Kennzeichnen Sie jede Aussage als richtig oder falsch. Vor dem Gespräch haben Sie eine Minute, um alle zehn Aussagen zu lesen.",
+      "checking_instruction": "Prüfen Sie jetzt Ihre Antworten zu diesem Gespräch. Dafür stehen Ihnen dreißig Sekunden zur Verfügung.",
+      "plays": 1,
+      "ending": "Ende von Teil zwei.",
+      "groups": [
+        {
+          "id": "b2_p2_learning",
+          "recording": [
+            {"id": "interview_intro", "speaker": "dialogue_male", "text": "Willkommen zu Arbeitswelt im Gespräch. Wer im Beruf Neues lernen soll, braucht mehr als einen Zugang zu einem Onlinekurs. Besonders in kleineren Unternehmen fehlt oft die Zeit, jemanden für mehrere Tage freizustellen. Ein Verbund aus zwölf Betrieben erprobt deshalb kurze, bezahlte Lernzeiten. Bei uns ist heute die Projektkoordinatorin Eva Leitner. Frau Leitner, wollten Sie mit dem Versuch vor allem möglichst viele Beschäftigte zu einer neuen Qualifikation führen?"},
+            {"id": "interview_46", "speaker": "dialogue_female", "text": "Das wäre als Ziel zu kurz gegriffen. Einige Teilnehmende bereiten sich tatsächlich auf eine zusätzliche Qualifikation vor. Ausgangspunkt waren aber ganz konkrete Veränderungen im Arbeitsalltag: neue Bestellsysteme, andere Materialien und mehr Abstimmung zwischen Abteilungen. Wir wollten herausfinden, wie Beschäftigte dabei regelmäßig lernen können, ohne dass Weiterbildung ständig in ihre Freizeit rutscht. Ob am Ende ein Zeugnis steht, ist für manche wichtig, für andere nicht. Entscheidend ist zunächst, dass sie eine neue Aufgabe besser bewältigen und dabei Unterstützung bekommen. Ein Zertifikat allein würde uns noch nicht zeigen, ob das im Betrieb wirklich gelingt."},
+            {"id": "interview_q47", "speaker": "dialogue_male", "text": "Bei zwölf Unternehmen müsste es doch einfacher sein, einen einheitlichen Nachmittag für alle festzulegen. Warum bestehen Sie auf unterschiedlichen Zeitplänen?"},
+            {"id": "interview_47", "speaker": "dialogue_female", "text": "Wir haben einen gemeinsamen Rahmen, aber keinen gemeinsamen Lernnachmittag. In einer Werkstatt kann man am frühen Nachmittag gut eine Stunde frei halten, während ein anderer Betrieb genau dann besonders viele Aufträge abwickelt. Die konkrete Zeit vereinbaren die Teams deshalb vor Ort. Was überall gleich ist: Diese Stunden gehören zur bezahlten Arbeitszeit. Sie dürfen nicht stillschweigend an den Feierabend angehängt werden. Auch die Dokumentation ist gemeinsam geregelt, damit wir die Erfahrungen vergleichen können. Gleichbehandlung heißt für uns also nicht, dass alle zur selben Uhrzeit vor einem Bildschirm sitzen."},
+            {"id": "interview_q48", "speaker": "dialogue_male", "text": "Und wenn kurzfristig ein dringender Auftrag hereinkommt? Kann ein Team dann sagen: Diese Woche fällt das Lernen eben aus?"},
+            {"id": "interview_48", "speaker": "dialogue_female", "text": "Einmalig lässt sich eine Verschiebung manchmal nicht vermeiden. Uns wäre nicht geholfen, wenn deswegen ein wichtiger Auftrag scheitert. Früher bedeutete Verschieben allerdings häufig, dass der Termin auf unbestimmte Zeit verschwand. Deshalb wird jetzt gleich ein Ersatztermin innerhalb der folgenden zwei Wochen vereinbart. Der wird genauso verbindlich eingetragen wie eine Kundenbesprechung. Kommt es immer wieder zu solchen Verschiebungen, suchen wir nicht beim einzelnen Mitarbeiter nach mangelnder Motivation. Dann prüfen wir mit der Leitung, ob der Personaleinsatz überhaupt genügend Raum zum Lernen lässt."},
+            {"id": "interview_q49", "speaker": "dialogue_male", "text": "Sie bieten auch Onlineeinheiten an. Ist das nicht gerade für Menschen schwierig, die mit digitalen Anwendungen noch wenig Erfahrung haben?"},
+            {"id": "interview_49", "speaker": "dialogue_female", "text": "Ja, wenn man ihnen lediglich ein Passwort schickt. Deshalb beginnt niemand allein zu Hause. Vor der ersten selbstständigen Einheit gibt es im Betrieb eine begleitete Einführung an den Geräten, die später auch benutzt werden. Dabei kann man sehr einfache Fragen stellen, ohne sich vor der ganzen Gruppe erklären zu müssen. Manche merken erst dort, dass ihnen eine kleine Bedienhandlung gefehlt hat und nicht das Verständnis für das Thema. Die Rückmeldungen zeigen, dass diese Einführung Hemmungen abbaut. Sie ersetzt nicht die fachliche Begleitung, macht den Zugang dazu aber leichter."},
+            {"id": "interview_q50", "speaker": "dialogue_male", "text": "Bleibt es bei den Beschäftigten, die sich freiwillig melden? Bei solchen Angeboten sind ja häufig gerade die dabei, die ohnehin schon viel Weiterbildung nutzen."},
+            {"id": "interview_50", "speaker": "dialogue_female", "text": "Diesen Effekt haben wir am Anfang tatsächlich gesehen. Bei der ersten offenen Einladung meldeten sich vorwiegend Personen, die solche Kurse schon kannten. Für die zweite Runde haben wir zusätzlich mit jedem Team besprochen, welche Aufgaben sich verändern und wer dafür Unterstützung brauchen könnte. Dabei werden auch Kolleginnen und Kollegen angesprochen, die sich selbst nicht als Kursteilnehmende sehen. Das ist keine Pflicht zur Teilnahme. Wer ablehnt, hat dadurch keinen Nachteil. Aber ein Angebot ist noch nicht wirklich offen, wenn es praktisch nur diejenigen erreicht, die sich ohnehin sicher fühlen."},
+            {"id": "interview_q51", "speaker": "dialogue_male", "text": "In Ihrer ersten Auswertung steht, dass sich Beschäftigte inzwischen selbstständiger an neue Aufgaben herantrauen. Das klingt nach einem klaren Erfolg. Oder ist diese Aussage verfrüht?"},
+            {"id": "interview_51", "speaker": "dialogue_female", "text": "Es ist ein positives Signal, aber zunächst eine Einschätzung der Beteiligten. Wir haben keine Vergleichsgruppe, die unter denselben Bedingungen ohne das Angebot arbeitet. Außerdem wurde in einigen Betrieben gleichzeitig die Zuständigkeit für neue Aufträge verändert. Wenn dort jetzt weniger Rückfragen entstehen, kann das auch an klareren Abläufen liegen. Wir dürfen deshalb aus den Rückmeldungen nicht ableiten, dass allein unsere Lernzeiten diese Entwicklung verursacht haben. Wir beobachten zusätzlich konkrete Arbeitsaufgaben über einen längeren Zeitraum. Erst dann können wir besser einschätzen, was sich dauerhaft verändert und welche Rolle das Projekt dabei spielt."},
+            {"id": "interview_q52", "speaker": "dialogue_male", "text": "Sie haben die Kursform inzwischen verändert. Anfangs waren es zwei längere Einheiten im Monat, jetzt treffen sich manche Gruppen deutlich kürzer und häufiger. War die erste Planung zu anspruchsvoll?"},
+            {"id": "interview_52", "speaker": "dialogue_female", "text": "Der Inhalt war nicht das eigentliche Problem. Bei längeren Abständen wurde das Gelernte im Alltag selten ausprobiert, und bis zum nächsten Treffen war vieles wieder unsicher. Jetzt arbeiten diese Gruppen in kürzeren wöchentlichen Einheiten. Dazwischen erproben sie jeweils einen überschaubaren Schritt direkt bei ihrer Arbeit und besprechen anschließend, was funktioniert hat. Die gesamte vorgesehene Lernzeit bleibt gleich; wir teilen sie anders auf. Nicht jede Tätigkeit eignet sich für dieses Format, aber dort, wo es passt, ist der Bezug zur eigenen Aufgabe viel deutlicher geworden."},
+            {"id": "interview_q53", "speaker": "dialogue_male", "text": "Die Unternehmen arbeiten teilweise im selben Markt. Tauschen sie in den gemeinsamen Gruppen nicht Informationen aus, die bei der Konkurrenz besser nicht ankommen sollten?"},
+            {"id": "interview_53", "speaker": "dialogue_female", "text": "Das war eine berechtigte Sorge. Wir trennen deshalb zwischen allgemeinen Arbeitsweisen und vertraulichen Betriebsdaten. Für gemeinsame Übungen verwenden wir erfundene Bestellungen und neutrale Beispieldateien. Echte Kundendaten, Preislisten und interne Kalkulationen bleiben im jeweiligen Unternehmen. Wer einen Ablauf aus seinem Betrieb erläutert, muss ihn so beschreiben können, dass keine vertraulichen Angaben erkennbar werden. Das schränkt einzelne Beispiele ein. Trotzdem bleibt genug Raum, voneinander zu lernen, etwa darüber, wie man Informationen verständlich weitergibt oder typische Eingabefehler bemerkt."},
+            {"id": "interview_q54", "speaker": "dialogue_male", "text": "Einige Beschäftigte übernehmen nach dem Kurs schwierigere Aufgaben. Bedeutet das automatisch mehr Verantwortung und eine höhere Bezahlung?"},
+            {"id": "interview_54", "speaker": "dialogue_female", "text": "Automatisch folgt daraus in unserem Projekt keine neue Funktion. Das wird im jeweiligen Betrieb gesondert besprochen. Wir können nicht versprechen, dass jede Teilnahme unmittelbar zu einer anderen Stelle führt. Was wir aber verlangen, ist Klarheit vor Beginn: Wofür soll das Lernen genutzt werden, welche Aufgaben können dazukommen und wer entscheidet darüber? Beschäftigte sollen nicht erst nach dem Kurs erfahren, dass von ihnen plötzlich etwas ganz anderes erwartet wird. Wenn ein Betrieb eine zusätzliche Verantwortung plant, gehört dieses Gespräch deshalb an den Anfang und nicht erst an den Tag der Abschlussbescheinigung."},
+            {"id": "interview_q55", "speaker": "dialogue_male", "text": "Zum Schluss ein Blick nach vorn: Die gemeinsame Finanzierung läuft im Frühjahr aus. Ist damit auch das Ende der Lernzeiten absehbar?"},
+            {"id": "interview_55", "speaker": "dialogue_female", "text": "Die zusätzliche Förderung endet, ja. Einige Betriebe haben aber schon eigene Mittel für die Fortsetzung eingeplant. Bei anderen ist das noch offen. Unser Ziel ist nicht, dass jede einzelne Kursform unverändert weiterläuft. Wir möchten, dass regelmäßiges Lernen in der Arbeitsplanung einen festen Platz behält, auch wenn externe Unterstützung wegfällt. Dafür braucht es jemanden im Betrieb, der Zeiten koordiniert und nachfragt, wenn Termine ausfallen. Ein gutes Abschlussheft reicht nicht. Ob sich das Modell bewährt, zeigt sich für mich daran, ob Beschäftigte auch ein halbes Jahr nach Projektende tatsächlich Zeit zum Lernen bekommen."},
+            {"id": "interview_outro", "speaker": "dialogue_male", "text": "Eva Leitner, vielen Dank für die Einblicke. Wir nehmen mit: Weiterbildung beginnt nicht erst beim Kursinhalt, sondern schon bei der Frage, wie im Arbeitsalltag Platz dafür entsteht. Das war Arbeitswelt im Gespräch."}
+          ],
+          "questions": [
+            {"number": 46, "question": "Ein formaler Abschluss ist für die Koordinatorin der ausschlaggebende Nachweis des Projekterfolgs.", "answer": false, "evidence_turn": "interview_46", "explanation": "Entscheidend ist die Bewältigung neuer Arbeitsaufgaben; ein Zertifikat allein zeigt noch keinen Erfolg im Betrieb.", "listening_focus": "Ein anerkanntes Teilziel von der entscheidenden Bewertung unterscheiden."},
+            {"number": 47, "question": "Die Betriebe regeln den Zeitpunkt unterschiedlich, erkennen die Lernstunden aber einheitlich als bezahlte Arbeitszeit an.", "answer": true, "evidence_turn": "interview_47", "explanation": "Die Teams legen Zeiten vor Ort fest. Gemeinsam gilt, dass die Stunden zur bezahlten Arbeitszeit gehören.", "listening_focus": "Gemeinsamen Grundsatz trotz verschiedener Umsetzung erkennen."},
+            {"number": 48, "question": "Bei dringenden Aufträgen dürfen Lerntermine ohne festgelegten Ausgleich entfallen.", "answer": false, "evidence_turn": "interview_48", "explanation": "Eine Verschiebung ist möglich, aber ein Ersatztermin innerhalb der folgenden zwei Wochen wird sofort verbindlich vereinbart.", "listening_focus": "Erlaubte Ausnahme und daran gebundene Verpflichtung verbinden."},
+            {"number": 49, "question": "Eine begleitete Einführung erleichtert Personen mit wenig digitaler Erfahrung den Einstieg.", "answer": true, "evidence_turn": "interview_49", "explanation": "Die Einführung an den später verwendeten Geräten baut nach den Rückmeldungen Hemmungen ab und erleichtert den Zugang.", "listening_focus": "Zweck und berichtete Wirkung einer unterstützenden Maßnahme erkennen."},
+            {"number": 50, "question": "Beschäftigte, die in der zweiten Runde direkt angesprochen werden, müssen am Angebot teilnehmen.", "answer": false, "evidence_turn": "interview_50", "explanation": "Auch die zusätzliche direkte Ansprache verpflichtet nicht zur Teilnahme; wer ablehnt, hat ausdrücklich keinen Nachteil.", "listening_focus": "Gezielte Einladung und verpflichtende Teilnahme unterscheiden."},
+            {"number": 51, "question": "Die bisherigen Rückmeldungen belegen noch nicht, dass die Lernzeiten die Verbesserungen verursacht haben.", "answer": true, "evidence_turn": "interview_51", "explanation": "Es fehlt eine Vergleichsgruppe, und parallel wurden Arbeitsabläufe verändert. Eine eindeutige Ursachenzuordnung wäre verfrüht.", "listening_focus": "Positive Beobachtung von belastbarer kausaler Erklärung unterscheiden."},
+            {"number": 52, "question": "Die kürzeren Treffen sollen das Erproben im Arbeitsalltag erleichtern, ohne die gesamte Lernzeit zu verringern.", "answer": true, "evidence_turn": "interview_52", "explanation": "Zwischen den wöchentlichen Einheiten wird ein Arbeitsschritt erprobt. Die Gesamtlernzeit bleibt ausdrücklich gleich.", "listening_focus": "Verteilung der Lernzeit von ihrem Gesamtumfang unterscheiden."},
+            {"number": 53, "question": "Für realistische gemeinsame Übungen stellen die Unternehmen ihre tatsächlichen Kundendaten bereit.", "answer": false, "evidence_turn": "interview_53", "explanation": "Gemeinsame Übungen nutzen erfundene Bestellungen; echte Kundendaten bleiben im eigenen Betrieb.", "listening_focus": "Plausiblen Übungszweck von der tatsächlich erlaubten Datenbasis trennen."},
+            {"number": 54, "question": "Mit der Teilnahme ist bereits die Übernahme einer neuen Funktion im Betrieb zugesagt.", "answer": false, "evidence_turn": "interview_54", "explanation": "Eine neue Funktion folgt nicht automatisch; Aufgaben und mögliche Verantwortung werden gesondert im Betrieb besprochen.", "listening_focus": "Qualifizierung und verbindliche Stellenzusage unterscheiden."},
+            {"number": 55, "question": "Für die Koordinatorin zeigt sich die Bewährung auch daran, ob Lernzeit nach Projektende bestehen bleibt.", "answer": true, "evidence_turn": "interview_55", "explanation": "Als entscheidend nennt sie tatsächlich verfügbare Lernzeit ein halbes Jahr nach Projektende, nicht unveränderte Kursformen.", "listening_focus": "Langfristiges Erfolgskriterium aus der Schlussposition erschließen."}
+          ]
+        }
+      ]
+    },
+    {
+      "part": 3,
+      "label": "Fünf kurze Texte",
+      "instruction": "Teil drei besteht aus fünf kurzen Hörtexten. Zu jedem Text gehört eine Aussage mit der Nummer sechsundfünfzig bis sechzig. Jeden Text hören Sie einmal. Entscheiden Sie jeweils, ob die Aussage richtig oder falsch ist.",
+      "plays": 1,
+      "ending": "Ende des Subtests Hören.",
+      "groups": [
+        {
+          "id": "b2_p3_parcel",
+          "number_cue": "Nummer sechsundfünfzig.",
+          "recording": [
+            {"id": "short_56", "speaker": "announcement_male", "text": "Eine Information für Kundinnen und Kunden unserer Paketstation. Wegen Wartungsarbeiten werden morgen zwischen acht und elf Uhr keine neuen Sendungen in die Fächer eingelegt. Pakete, die bereits dort liegen, können in diesem Zeitraum trotzdem abgeholt werden; die Zugangscodes bleiben gültig. Lediglich die Annahme neu eintreffender Lieferungen ist unterbrochen. Zusteller bringen diese Sendungen am Nachmittag erneut vorbei. Bitte kommen Sie nicht vorsorglich zur Abholung, wenn Sie noch keine Benachrichtigung erhalten haben. Die Wartung verlängert die übliche Aufbewahrungsfrist bereits eingelagerter Pakete nicht. Für die Rückgabe von Waren verwenden Sie während der Arbeiten bitte die Annahmestelle im Erdgeschoss."}
+          ],
+          "questions": [
+            {"number": 56, "question": "Bereits eingelagerte Pakete bleiben während der Wartung zur Abholung zugänglich.", "answer": true, "evidence_turn": "short_56", "explanation": "Die Unterbrechung betrifft neue Lieferungen, nicht die Abholung schon vorhandener Pakete mit gültigem Code.", "listening_focus": "Umfang einer Betriebseinschränkung erfassen."}
+          ]
+        },
+        {
+          "id": "b2_p3_stage",
+          "number_cue": "Nummer siebenundfünfzig.",
+          "recording": [
+            {"id": "short_57", "speaker": "announcement_female", "text": "Hier ein Hinweis aus unserem Kulturprogramm. Bei der offenen Bühne am Freitag treten zunächst alle Angemeldeten im Abendprogramm auf. Wer danach im Finale steht, legt eine Fachjury bereits nach der Nachmittagsprobe fest. Die Abstimmung im Saal findet trotzdem statt: Mit ihr wird ein zusätzlicher Publikumspreis vergeben, der unabhängig von den Finalplätzen ist. Auch eine Person, die nicht ins Finale kommt, kann diesen Preis erhalten. Die Veranstalter wollen damit unterschiedliche Rückmeldungen sichtbar machen, statt die Entscheidung der Jury nachträglich zu verändern. Eintrittskarten gelten für das gesamte Abendprogramm; für die Probe am Nachmittag ist aus Platzgründen kein öffentlicher Zugang vorgesehen."}
+          ],
+          "questions": [
+            {"number": 57, "question": "Durch die Publikumsabstimmung wird zusätzlich ein Finalplatz vergeben.", "answer": false, "evidence_turn": "short_57", "explanation": "Das Publikum vergibt einen unabhängigen Preis. Die Finalplätze werden von der Jury festgelegt.", "listening_focus": "Getrennte Entscheidungswege und ihre jeweilige Wirkung verstehen."}
+          ]
+        },
+        {
+          "id": "b2_p3_meters",
+          "number_cue": "Nummer achtundfünfzig.",
+          "recording": [
+            {"id": "short_58", "speaker": "announcement_male", "text": "Liebe Bewohnerinnen und Bewohner, am kommenden Montag werden die Verbrauchsanzeigen in den Wohnungen erneuert. Für diesen allgemeinen Austauschtermin ist ein Zeitfenster von acht bis vierzehn Uhr vorgesehen. Die Techniker müssen die Anzeigen in den einzelnen Wohnungen erreichen können; die Freigabe des Hauseingangs allein genügt also nicht. Falls Sie am Montag nicht anwesend sein können, melden Sie sich bitte bis diesen Donnerstag bei der Hausbetreuung. Sie erhalten dann einen individuellen Ersatztermin in der Woche nach dem gemeinsamen Austauschtermin. Eine Wahl der genauen Uhrzeit innerhalb des Montagstermins ist dagegen nicht möglich. Die Anleitung zur neuen Anzeige wird bei jedem Besuch persönlich übergeben, nicht vorab im Stiegenhaus aufgelegt."}
+          ],
+          "questions": [
+            {"number": 58, "question": "Ein rechtzeitig angefragter Ersatztermin ermöglicht den Austausch auch nach dem allgemeinen Montagstermin.", "answer": true, "evidence_turn": "short_58", "explanation": "Wer am kommenden Montag verhindert ist, meldet sich bis diesen Donnerstag und erhält einen Termin in der Woche nach dem allgemeinen Austausch.", "listening_focus": "Anmeldefrist, Haupttermin und späteren Ausweichtermin unterscheiden."}
+          ]
+        },
+        {
+          "id": "b2_p3_workshop",
+          "number_cue": "Nummer neunundfünfzig.",
+          "recording": [
+            {"id": "short_59", "speaker": "announcement_female", "text": "Die Volkshochschule lädt zu einem Schreibwochenende ein. Wer anschließend einen Beitrag für die gemeinsame Broschüre einreichen möchte, schickt seinen Text innerhalb einer Woche an die Redaktion. Wegen des begrenzten Umfangs können nicht alle Einsendungen aufgenommen werden. Die Auswahl wird den Schreibenden vor dem Druck mitgeteilt. Bei der späteren Abschlussveranstaltung stellt die Kursleitung die Broschüre vor und liest daraus vor. Für die aufgenommenen Autorinnen und Autoren besteht dabei keine Anwesenheitspflicht. Wer seinen eigenen Beitrag auf der Bühne lesen möchte, kann sich zusätzlich dafür anmelden. Die Aufnahme in die Broschüre und die Anmeldung für eine Lesung sind also getrennte Schritte. Die gedruckten Exemplare können auch nach der Veranstaltung im Kursbüro abgeholt werden."}
+          ],
+          "questions": [
+            {"number": 59, "question": "Ein Beitrag kann in der Broschüre erscheinen, ohne dass die schreibende Person bei der Abschlussveranstaltung auftritt.", "answer": true, "evidence_turn": "short_59", "explanation": "Für aufgenommene Autorinnen und Autoren besteht keine Anwesenheitspflicht. Eine eigene Bühnenlesung erfordert eine zusätzliche Anmeldung.", "listening_focus": "Auswahl für eine Publikation von der Teilnahme an ihrer Präsentation unterscheiden."}
+          ]
+        },
+        {
+          "id": "b2_p3_lost",
+          "number_cue": "Nummer sechzig.",
+          "recording": [
+            {"id": "short_60", "speaker": "announcement_male", "text": "Zum Schluss eine Mitteilung des Fundbüros. Die neue Onlineübersicht enthält Fotos ausgewählter Gegenstände, die bei uns abgegeben wurden. Sie ist jedoch kein vollständiges Verzeichnis. Dokumente, Schlüssel und Dinge mit erkennbaren persönlichen Angaben werden aus Datenschutzgründen nicht abgebildet. Wenn Sie Ihren Gegenstand auf den Fotos nicht finden, lohnt sich daher weiterhin eine direkte Anfrage mit einer möglichst genauen Beschreibung. Umgekehrt bedeutet ein ähnliches Foto noch nicht, dass Sie die Sache ohne weitere Prüfung abholen können. Vor der Ausgabe müssen besondere Merkmale beschrieben oder andere Nachweise vorgelegt werden. Die Onlineübersicht soll die Suche erleichtern; sie ersetzt weder die persönliche Zuordnung noch die Prüfung bei der Ausgabe."}
+          ],
+          "questions": [
+            {"number": 60, "question": "Wer auf einem Foto einen ähnlichen Gegenstand erkennt, kann ihn ohne weitere Prüfung abholen.", "answer": false, "evidence_turn": "short_60", "explanation": "Ein ähnliches Foto reicht ausdrücklich nicht. Vor der Ausgabe müssen besondere Merkmale beschrieben oder andere Nachweise vorgelegt werden.", "listening_focus": "Visuelle Ähnlichkeit von einer ausreichenden Zuordnung zum Eigentümer unterscheiden."}
+          ]
+        }
+      ]
+    }
+  ]
+}
