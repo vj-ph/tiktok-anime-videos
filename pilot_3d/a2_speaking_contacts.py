@@ -212,6 +212,9 @@ def setup_scene(visual):
     scene.render.image_settings.file_format = "PNG"
     scene.render.use_sequencer = False
     scene.render.use_persistent_data = True
+    if visual.get("scene", {}).get("swiss_flags"):
+        from swiss_flags import add_flags
+        add_flags(scene, visual["scene"]["swiss_flags"])
     return actors, cameras, cast, hair
 
 
@@ -228,11 +231,16 @@ def native(request):
         receipt = render_contact_still(scene, camera, visible,
                                        build / "native" / f"youtube_{name}.png")
         receipts.append({"camera": name, **receipt})
+    flag_checks = None
+    if request["visual"].get("scene", {}).get("swiss_flags"):
+        from swiss_flags import inspect_flags
+        flag_checks = inspect_flags(scene, cameras)
     atomic_json(build / "native_checks.json", {
         "images": receipts, "cast": cast, "hair": hair,
         "candidate_examiner_angle_degrees": 180,
         "examiner_seating": "Opposite Lea across the table, as requested.",
         "source_scene_saved": False, "speech_generated": False,
+        "swiss_flags": flag_checks,
     })
 
 

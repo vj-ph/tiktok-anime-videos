@@ -377,6 +377,40 @@ def main():
                                 or raw_episode.get("render", {}).get("native_source") != "youtube"):
             raise ValueError("--reuse-scene requires shared-frame long-speaking production.")
         if isinstance(raw_episode, dict) and raw_episode.get("template") in (
+                "fide_speaking_full_preview", "fide_speaking_production"):
+            from fide_content import load_episode
+            from fide_speaking import build_contacts, build_preview
+
+            production = raw_episode["template"] == "fide_speaking_production"
+            if production:
+                from fide_speaking_production import production_reuse_spec
+                if (args.speech_device != "cpu" or args.promo or args.speech_cache_from
+                        or args.reuse_scene or args.reuse_preview_frames or args.reuse_preview_audio):
+                    raise ValueError("Fide production reuses exact approved audio and needs a fresh full-quality bake.")
+            elif (args.profile != "preview" or args.render_device != "CPU" or args.speech_device != "cpu"
+                    or args.promo or args.reuse_audio or args.reuse_scene
+                    or args.reuse_preview_frames or args.reuse_preview_audio):
+                raise ValueError("Fide uses its separate full-length CPU preview; production needs later approval.")
+            episode, _ = load_episode(args.episode, args.profile)
+            if production:
+                production_reuse_spec(episode, args.reuse_audio)
+                if args.render_device != "CPU":
+                    check_render_device(args.render_device)
+            if args.command == "validate":
+                count = sum("source_segment" in turn for turn in episode["turns"])
+                print(f"Valid fide A2-B1 {'production' if production else 'full preview'}: "
+                      f"{len(episode['turns'])} turns; {count} source segments; "
+                      "Swiss voices; duration strictly below 900 seconds.")
+            elif args.build is None:
+                parser.error("--build is required for build/contacts")
+            elif args.command == "contacts":
+                if production:
+                    raise ValueError("Use build for fide production.")
+                build_contacts(args.episode, args.build)
+            else:
+                build_preview(args.episode, args.build, args.jobs, args.until, args.speech_cache_from,
+                              profile=args.profile, reuse_audio=args.reuse_audio, render_device=args.render_device)
+        elif isinstance(raw_episode, dict) and raw_episode.get("template") in (
                 "a2_speaking_full_preview", "a2_speaking_production"):
             from a2_speaking_preview import build_preview, load_preview
 

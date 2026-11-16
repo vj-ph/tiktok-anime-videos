@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>fide-test A2-B1 Sprechen Prüfungssimulation</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {"imports": {"three": "./node_modules/three/build/three.module.js"}}
+  </script>
+</head>
+<body>
+  <main id="app">
+    <header>
+      <div class="brand"><span class="compass">✦</span><span>Deutsch<br>Kompass</span></div>
+      <div class="heading"><div class="eyebrow">SPRECHEN IM SCHWEIZER ALLTAG</div>
+        <h1>fide-test A2-B1 Sprechen Prüfungssimulation</h1></div>
+      <span class="preview">TECHNIKVORSCHAU</span>
+    </header>
+    <section class="stage">
+      <div class="room">
+        <canvas id="scene" aria-label="Eine Kandidatin, ein aktiver Prüfer und eine seitlich sitzende beobachtende Prüferin"></canvas>
+        <div class="phase"><span class="dot"></span><span id="phase">Technikvorschau</span></div>
+        <div class="people"><span>Kandidatin</span><span>Prüferin · Beobachtung</span><span>Prüfer · Gespräch</span></div>
+      </div>
+      <aside class="task">
+        <div class="eyebrow">A2 · SITUATIONSBESCHREIBUNG</div>
+        <h2>Was sehen Sie?</h2>
+        <img src="picture.svg" alt="Eine Frau mit Tasche liest den Fahrplan an einer Bushaltestelle.">
+        <p>Personen, Ort und Handlung beschreiben.</p>
+        <span class="task-note">Eigene Illustration · Beispielaufgabe</span>
+      </aside>
+    </section>
+    <section class="speech">
+      <div class="speaker"><span id="speaker">Prüfer</span><span id="time">00:00</span></div>
+      <div id="caption" aria-live="off"></div>
+    </section>
+    <footer><span>Kurzer A2-Ausschnitt · keine vollständige Prüfung</span><span>Drei Personen. Ein Gespräch.</span></footer>
+    <div class="controls"><button id="play">Abspielen</button><input id="seek" type="range" min="0" max="1" step="0.001" value="0" aria-label="Videozeit"></div>
+  </main>
+  <script type="module" src="main.mjs"></script>
+</body>
+</html>

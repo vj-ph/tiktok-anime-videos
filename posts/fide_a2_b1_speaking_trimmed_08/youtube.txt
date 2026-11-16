@@ -1,0 +1,49 @@
+fide-test A2-B1 Sprechen Prüfungssimulation
+
+Eine langsam gesprochene Modellsequenz mit Lea:
+A2 Bildbeschreibung, einen Arzttermin am Telefon vereinbaren und drei
+Gesprächsimpulse zu Vorlieben, einem Arztbesuch und dem Ablauf der Terminvereinbarung.
+Danach entscheidet sich Lea ausdrücklich für B1, wählt Wohnen und Nachbarschaft
+und zeigt vier Gesprächsfunktionen mit kurzen Nachfragen.
+
+Sprechtempo für Lernende auf 0,8 reduziert, ohne Änderung der Tonhöhe.
+Video pausieren, selbst antworten und mit den Modellen vergleichen.
+Didaktisch gestraffte Modellsequenz, keine zeitidentische echte Prüfung.
+
+Kapitel:
+00:00 Einstieg und Begrüssung
+00:38 A2 Aufgabe 1: Situationsbeschreibung
+01:13 A2 Aufgabe 2: Einen Arzttermin vereinbaren
+02:08 A2 Aufgabe 3: Persönliches Gespräch
+03:24 Weiter mit B1? Empfehlung und Zustimmung
+03:51 B1: Themenwahl
+04:10 B1: Eine Erfahrung schildern
+05:18 B1: Einen Ablauf erklären
+06:25 B1: Vor- und Nachteile
+07:25 B1: Was wäre, wenn ...?
+08:04 Abschluss und Buchhinweis
+
+Mehr Aufgaben und Modelldialoge:
+fide A2 Sprechen + Schreiben: https://amzn.eu/d/05ZjsyvD
+fide B1 Sprechen + Schreiben: https://amzn.eu/d/0dBQqMFu
+
+Werbung für eigene Bücher. Unabhängiges Übungsmaterial; nicht von fide
+herausgegeben oder unterstützt. Keine offizielle Prüfungsaufnahme, keine
+Bewertung und kein zertifiziertes Prüfungsergebnis.
+KI-generierte Stimmen aus bereitgestellten Schweizer
+Standarddeutsch-Referenzen und animierte Figuren.
+
+Snow Rig und Rain Rig: Blender Foundation, CC BY 4.0.
+https://studio.blender.org/characters/snow/v4/
+https://studio.blender.org/characters/rain/v3/
+https://creativecommons.org/licenses/by/4.0/
+Verändert: Kleidung, Farben, Grösse, Sitzposition, Posen und Animation.
+Keine Unterstützung oder Empfehlung durch Blender Foundation/Blender Studio.
+Bild und Cover: bereitgestellte Deutsch-Kompass-fide-Bücher.
+Zeige-Emoji: Twemoji, Twitter und Mitwirkende, CC BY 4.0; skaliert.
+Schweizerfahne: Wikimedia Commons, gemeinfrei; Vektor von Marc Mongenet und Mitwirkenden.
+https://commons.wikimedia.org/wiki/File:Flag_of_Switzerland.svg
+Fahnenmast: Quaternius, CC0; quadratisches Fahnentuch, Schweizer Textur,
+Metallmaterial und Tischständer angepasst.
+https://poly.pizza/m/FuOkF3WBrx
+https://creativecommons.org/publicdomain/zero/1.0/

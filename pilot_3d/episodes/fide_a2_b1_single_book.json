@@ -1,0 +1,18 @@
+{
+  "source": "../builds/fide_a2_b1_trimmed_08_production_r1",
+  "source_manifest_sha256": "fca32d69ff33faa9eaa1caa399271c1de19c1149736f0956e0c6face7675c746",
+  "book": {
+    "cover": "../assets/fide_a2_b1_complete.png",
+    "cover_sha256": "1d2413431f416b0db424366265ef90bd5fb05c25f32ac197d8194cca6014dc44",
+    "title": "fide A2-B1 Komplettband",
+    "url": "https://amzn.eu/d/0cFUP7BV",
+    "cta": "Mehr Aufgaben und Modelldialoge im fide A2-B1 Komplettband: Sprechen + Schreiben + Hören."
+  },
+  "spoken_cta": "Möchten Sie weiterüben? Mehr Aufgaben und Modelldialoge finden Sie in unserem fide A2-B1 Komplettband: Sprechen, Schreiben und Hören. Den Amazon Link finden Sie in der Beschreibung oder in der Bio.",
+  "authorization": {
+    "requested_by": "user",
+    "requested_on": "2026-11-16",
+    "scope": "Replace the two promoted books with the supplied complete A2-B1 book and link; keep the exam sequence and reuse existing native renders. Update the spoken final CTA to singular.",
+    "publication_approved": false
+  }
+}

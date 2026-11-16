@@ -60,6 +60,10 @@ def bake(build, episode, storyboard, timeline, plan):
         if any(turn["speaker"] == name for turn in timeline["turns"]) and motion[name]["jaw_range"] < .01:
             raise ValueError(f"{name}: missing measured mouth-cue animation.")
     scene.frame_set(1)
+    flag_checks = None
+    if storyboard.get("scene", {}).get("swiss_flags"):
+        from swiss_flags import inspect_flags
+        flag_checks = inspect_flags(scene, cameras)
     bpy.ops.wm.save_as_mainfile(filepath=str(build / "preview.blend"), compress=True)
     atomic_json(build / "scene_checks.json", {
         "motion": motion, "cast": cast, "hair": hair,
@@ -69,6 +73,7 @@ def bake(build, episode, storyboard, timeline, plan):
         "checked_native_frames": len(plan),
         "camera_lenses": {name: camera.data.lens for name, camera in cameras.items()},
         "source_scene_saved": False, "preview_scene_sha256": sha256_file(build / "preview.blend"),
+        "swiss_flags": flag_checks,
     })
 
 

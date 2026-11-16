@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "template": "fide_speaking_full_preview",
+  "id": "fide_a2_b1_speaking_full",
+  "language": "de",
+  "exam": {"family": "fide", "level": "A2-B1", "skill": "speaking", "section": "all"},
+  "title": "fide-test A2-B1 Sprechen Prüfungssimulation",
+  "script": "fide_a2_b1_script.json",
+  "fps": 24,
+  "speech_tempo": 1.0,
+  "intro_seconds": 0,
+  "outro_seconds": 3,
+  "output_formats": ["youtube", "social"],
+  "render": {"motion_step": 3, "native_scale": 0.25, "samples": 2},
+  "source": {
+    "duration_limit_seconds": 900,
+    "duration_exception": "User requested the complete book-based fide A2-B1 Blender video on November 14, 2026. Social cuts are deferred. This is a separate full-length preview, not a short promotional excerpt.",
+    "a2_manifest": "../../../german/books/a2/speaking_fide_gpt_v1/audio/manifest.jsonl",
+    "b1_manifest": "../../../german/books/b1/speaking_fide_gpt_v1/audio/manifest.jsonl"
+  },
+  "scene": {
+    "base_scene": "../builds/v2/studio.blend",
+    "wall_logo": "../assets/deutschkompass-logo.png",
+    "layout": "interview",
+    "observer": true,
+    "entrance": false
+  },
+  "picture": "../../../german/books/a2/speaking_fide_gpt_v1/images_no/04_01.jpg",
+  "promotion": {
+    "a2": {
+      "cover": "../../../german/books/a2/speaking_fide_gpt_v1/fide_a2_speaking.jpg",
+      "title": "fide A2 Sprechen",
+      "url": "https://amzn.eu/d/05ZjsyvD"
+    },
+    "b1": {
+      "cover": "../../../german/books/b1/speaking_fide_gpt_v1/fide_b1_speaking.jpg",
+      "title": "fide B1 Sprechen",
+      "url": "https://amzn.eu/d/0dBQqMFu"
+    },
+    "pointing_emoji": "../assets/emoji/point-down.png"
+  },
+  "voices": {
+    "examiner": {
+      "audio": "../../../shared-voices/gemini_3.8_flash_tts/swiss/male_middle_aged.wav",
+      "transcript": "../../../shared-voices/gemini_3.8_flash_tts/swiss/text_male_middle_aged.txt"
+    },
+    "candidate_a": {
+      "audio": "../../../shared-voices/gemini_3.8_flash_tts/swiss/female_young_adult.wav",
+      "transcript": "../../../shared-voices/gemini_3.8_flash_tts/swiss/text_female_young_adult.txt"
+    }
+  }
+}

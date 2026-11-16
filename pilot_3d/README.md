@@ -1,5 +1,240 @@
 # Reusable 3D exam-practice generator
 
+## fide thumbnails
+
+The full-video YouTube thumbnail is
+`posts\fide_a2_b1_single_book\thumbnail_youtube.jpg` (1920x1080), with the
+complete title “fide A2-B1 Sprechen Prüfungssimulation” and Swiss flag.
+Each of the three folders under `posts\fide_a2_b1_social_three` contains
+`thumbnail_instagram.jpg` and its byte-identical `thumbnail_tiktok.jpg`
+(1080x1920). Social titles match the clips and use Video 1/3 through 3/3.
+The revised social badges use 50-pixel text instead of 27 pixels, with larger
+gold backgrounds and adjusted title/photo spacing. All three crop checks still
+pass. The previous social covers are archived in
+`builds\fide_thumbnails_original_badges_r1`; the YouTube cover is unchanged.
+
+`fide_thumbnails.py` reuses four hash-verified source renders and the existing
+public-domain Swiss flag, preserving the video builds and post descriptions.
+Three focused tests verify exact YouTube title/flag, visible head/hair bounds
+and social crop safety. All JPEGs decode and stay below 2 MB. Social essential
+content stays in the conservative rectangle x=90..900, y=460..1240, verified
+against central square, 4:5 and 3:4 crops; this is not a universal Instagram
+interface guarantee. Primary Meta help pages could not be retrieved.
+Visually inspected overview/crop sheets and provenance are in
+`posts\fide_a2_b1_social_three\thumbnail_contact_sheet.jpg`,
+`thumbnail_crop_preview.jpg` and `thumbnail_manifest.json`.
+The compositor refuses to overwrite thumbnails; use `--posts` with a fresh
+output root for a separate revision. No new Blender render or publication.
+
+## Three fide social excerpts, each under three minutes
+
+From `pilot_3d`, generate three 1080x1920 videos from the verified single-book
+production, without new TTS, alignment or Blender rendering:
+
+```powershell
+.\.venv\Scripts\python.exe -B -X utf8 derive_fide_social.py `
+  --config .\episodes\fide_a2_b1_social_three.json `
+  --build .\builds\fide_a2_b1_social_three_r1
+```
+
+Each clip folder contains `production_social.mp4`, suitable for both TikTok
+and Instagram. Rerun the same command to reuse completed, hash-verified exports.
+Use a fresh build directory after changing inputs.
+
+| Folder | Content | Exact frame-clock duration |
+| --- | --- | --- |
+| `video_1_a2` | Picture, complete telephone task, three personal question/answer pairs | 3999/24 = 2:46.625 |
+| `video_2_b1_erfahrung_ablauf` | Examiner recommendation, consent, topic choice, experience and procedure | 4250/24 = 2:57.083 |
+| `video_3_b1_meinung` | Opinions, neighbours, ideal living and farewell | 2872/24 = 1:59.667 |
+
+These are labelled Video 1/3 through 3/3, not three exam Teile. Preserve the
+0.8x speech and measured highlights, complete opening, complete main answers
+and a brief final CTA sentence with the combined cover/link. Remove the long
+welcome and three redundant transitions, not speech inside model answers.
+The source full video remains unchanged.
+
+The command is validated through `--until prepare` in
+`builds\fide_a2_b1_social_three_validation_r1`: exact source PCM, all 4,684
+reused image mappings/hashes, strict durations and 110 caption pages without
+reading warnings pass. Sixteen focused tests pass. An 11.58-second
+opening/CTA-only diagnostic in `fide_a2_b1_social_three_encode_fixture_r1`
+passes full decoding, 24 encoded checks and .997021 audio correlation; its
+contact sheet was visually inspected. This diagnostic is not a full social
+video. The three full exports have not been started. Original ASR/listening
+flags remain inherited; no new ASR or human listening is claimed.
+Exercise-specific post drafts are in `posts\fide_a2_b1_social_three`.
+
+## fide single-book revision (November 16)
+
+The user replaced the two advertised level books with the supplied **fide A2-B1
+Komplettband: Sprechen + Schreiben + Hören** and `https://amzn.eu/d/0cFUP7BV`.
+The original full-resolution production finished after the user resumed it;
+preserve it, its source snapshots and all 5,285 shared native images.
+
+`revise_fide_book.py` is a separate derivative compositor, outside the frozen
+production source set. It verifies the complete source delivery, snapshots,
+speech chain and native PNG receipts. It reopens only the picture, emoji and
+voice assets that the derivative actually uses, not mutable book manuscripts
+or Blender construction assets. Show the new single cover throughout both
+levels and once on the final CTA. Only the spoken final CTA is changed to
+singular, retaining the Swiss examiner and 0.8x pitch-preserving tempo with fresh
+alignment/independent ASR. The first 47 turns, their timestamps, pre-CTA PCM and
+native plan stay unchanged. No Blender rendering is needed.
+
+```powershell
+.\.venv\Scripts\python.exe -B -X utf8 revise_fide_book.py `
+  --config .\episodes\fide_a2_b1_single_book.json `
+  --build .\builds\fide_a2_b1_single_book_r1
+```
+
+`--until contacts` stops after speech, caption preflight and both contact sheets;
+the same command without it resumes composition into `production_youtube.mp4`
+and `production_social.mp4` in the new directory. No old episode, source guard,
+preview manifest or production output is rewritten. Revision-specific posts
+are in `posts\fide_a2_b1_single_book`. The link and cover are user-supplied;
+Amazon product metadata could not be independently retrieved.
+Both revised full-size MP4s are complete in `builds\fide_a2_b1_single_book_r1`:
+1920x1080 YouTube and 1080x1920 social, each 12,284 frames at 24 fps (8:31.83).
+Twenty-six focused tests, full decodes and 130 encoded highlight/cover checks
+per layout pass. Independent verification confirms all 5,285 reused PNGs,
+372 derivative file hashes and 340 unchanged original-production file hashes;
+the first 23,680,000 PCM samples and first 47 turns/timings are unchanged.
+Encoded/reference audio correlation is .999696. Both contact sheets and
+encoded openings/final CTAs have been visually inspected. All 122 caption pages
+fit without reading warnings. Fourteen ASR disagreements and two low-confidence
+words remain flagged; no human listening or publication approval is claimed.
+The independent audit is in `builds\fide_a2_b1_single_book_review_r1`.
+
+## fide exact-audio production command
+
+The user approved the revised 8:30 preview and requested the production command.
+The new production episode pins that preview manifest and all selected content,
+voice/flag/book assets and source snapshots; it rejects changed speech or
+unapproved sources. Reuse the exact dialogue, word/lip timeline and ASR flags,
+without synthesis or retiming. Bake a fresh full-resolution scene, never the
+reduced-quality preview scene. The preset uses 24 fps, motion on twos, eight
+Cycles samples and shared YouTube native images for separately composed
+1920x1080 and 1080x1920 exports. Production omits the preview watermark.
+
+From `pilot_3d`, run:
+
+```powershell
+.\.venv\Scripts\python.exe -B -X utf8 pipeline.py build `
+  --episode .\episodes\fide_a2_b1_trimmed_08_production.json `
+  --profile production `
+  --reuse-audio .\builds\fide_a2_b1_trimmed_08_preview_r1 `
+  --build .\builds\fide_a2_b1_trimmed_08_production_r1 `
+  --render-device CPU --jobs 2
+```
+
+Outputs will be `production_youtube.mp4` and `production_social.mp4` in the
+specified fresh build. The full command has not been started. Validation passes
+102 focused tests and a real audio-only invocation in
+`builds\fide_a2_b1_production_audio_validation_r1`: six reused files are
+byte-identical, duration remains 12,241/24 seconds, all 182 preview hashes are
+unchanged, and the full plan contains 5,285 shared 1216x580 native frames.
+Only the audio-reuse stage ran; no Blender bake/render or production export is
+claimed. The 14 inherited ASR disagreements remain flagged, not certified.
+Use the existing revision-specific post drafts; publication remains separate.
+
+## fide revision: Swiss flags, targeted trim and 0.8x speech
+
+The user approved the targeted trim on November 14: A2 Aufgabe 3 now has three
+core question/answer pairs on doctor visits, preserving preferences, experience
+and procedure. Remove the repeated picture follow-up and three extra long B1
+follow-ups; keep the complete telephone model, all four main B1 answers and
+three short book follow-ups. Shorten the A2/B1 explanation without losing the
+level choice, Verstehen context or Lea's explicit B1 consent.
+
+`episodes\fide_a2_b1_trimmed_08_preview.json` and its separate script contain
+48 turns with 24 explicitly selected, unchanged book segments. Original
+episodes/scripts/deliveries remain intact. Explicit source selections still
+reject omissions and duplicates; legacy scripts retain the full-source guard.
+Speech uses the existing pitch-preserving `atempo=0.8` stage before lip cues
+and measured word alignment, without stretching authored pauses.
+
+Swiss props use the downloaded assets/provenance in `assets\flags`: the CC0
+Quaternius pole with a square Swiss-artwork panel and small stand, plus a wall
+print. The wall flag uses the visible side wall rather than the logo wall so
+both props fit the shared portrait-safe wide crop. These props are opt-in;
+other episodes do not import them. Actual native visibility/ray and head/hair
+checks pass; inspect `builds\fide_a2_b1_swiss_contacts_r3\contact_youtube.jpg`
+and `contact_social.jpg`. All 58 targeted tests and revised episode validation
+pass. Both failed placement diagnostics are preserved rather than overwritten.
+
+Both full previews are complete in `builds\fide_a2_b1_trimmed_08_preview_r1`:
+`preview_youtube.mp4` (960x540) and `preview_social.mp4` (540x960). Each has
+12,241 frames at 24 fps: **8:30.04**, including pauses and CTA. Reuse 44 verified
+raw clips and synthesize four changed utterances; all 48 clips are measured at
+pitch-preserving 0.8x. Full decodes and 57 encoded checks per format pass, with
+audio correlation above .99999. Independently verify 3,529 native hashes,
+182 export hashes, 288 speech-chain hashes and unchanged generation inputs;
+all 217 original-delivery hashes remain unchanged. Visually inspect both
+decoded sheets and full-size final CTAs.
+
+New post drafts, credits and measured YouTube chapters are in
+`posts\fide_a2_b1_speaking_trimmed_08`. Separate verification and unmodified
+speech-review flags are in `builds\fide_a2_b1_trimmed_08_review_r1`: 34/48 exact
+ASR matches, 14 disagreements, two low-confidence word alignments, and no
+reading-speed warnings across 122 caption pages. No human listening or accent
+certification is claimed. Production/publication and social cuts remain separate.
+
+```powershell
+.\.venv\Scripts\python.exe -B -X utf8 pipeline.py build --episode episodes\fide_a2_b1_trimmed_08_preview.json --build builds\fide_a2_b1_trimmed_08_preview_r1 --speech-cache-from builds\fide_a2_b1_trimmed_speech_cache_r1 --jobs 2
+```
+
+## fide A2-B1 speaking: full Blender preview
+
+November 14: the user requested the full video first and deferred social cuts.
+`episodes\fide_a2_b1_combined_full_preview.json` selects a distinct fide route through
+`pipeline.py`, not an ÖIF episode relabelled as fide. The 66-turn script retains
+all 34 selected book segments, Swiss reference voices, explicit B1 consent,
+two-topic choice, A2 doctor picture/telephone/personal conversation and four
+B1 housing functions. Combined A2/B1 Sprechen + Schreiben covers and the user-supplied Amazon links
+change with the level; both covers appear on the final CTA.
+
+```powershell
+.\.venv\Scripts\python.exe -B -X utf8 pipeline.py validate --episode episodes\fide_a2_b1_combined_full_preview.json
+.\.venv\Scripts\python.exe -B -X utf8 pipeline.py contacts --episode episodes\fide_a2_b1_combined_full_preview.json --build builds\fide_a2_b1_contacts_r4
+.\.venv\Scripts\python.exe -B -X utf8 pipeline.py build --episode episodes\fide_a2_b1_combined_full_preview.json --build builds\fide_a2_b1_combined_full_preview_r1 --speech-cache-from builds\fide_a2_b1_speech_cache_r1 --jobs 2
+```
+
+The last command imports only hash-compatible raw speech from the separately
+prepared local cache. Omit `--speech-cache-from` to synthesize directly. Use
+fresh build names when inputs change; matching commands resume verified stages.
+`--until audio` and `--until scene` provide bounded checkpoints. Preview quality
+is 960x540/540x960, two CPU Cycles samples and native motion every three frames,
+sharing portrait-safe Blender scene images between layouts. The complete
+measured frame clock must remain strictly below 900 seconds; ordinary short
+routes retain their own duration limits. No production profile is enabled.
+
+`full_script.txt`, `source_segments.json`, actual speech/alignment/ASR,
+native receipts, decoded contact sheets and `delivery_checks.json` document the
+result. Text/render automation does not establish human listening, accent,
+production or publication approval. Full build status remains in `plan\TODO.md`.
+
+Current still-only review: `builds\fide_a2_b1_contacts_r3\contact_youtube.jpg`
+and `contact_social.jpg`. Its 26 panels reuse three verified native Blender
+stills, show combined-book covers throughout, retain B1 promotion during the
+farewell and preserve all 67 r1/r2 files. The original speaking-only episode
+remains unchanged to preserve its raw-speech provenance; the new
+combined-cover episode preserves all 66 turns, voices and speech tempo.
+Completed full previews are in `builds\fide_a2_b1_combined_full_preview_r1`:
+`preview_youtube.mp4` (960x540) and `preview_social.mp4` (540x960).
+Both contain 13,729 frames / 24 fps = 572.041667 seconds (9:32.04), including
+pauses and the final CTA. Full decodes, 75 encoded frame/highlight checks per
+format, audio correlation above .99999, all 3,989 native receipts and unchanged
+217-file export/264-file speech-chain hashes pass. Both decoded contact sheets
+and full-size final CTAs were visually inspected.
+
+Separate audit and compact decoded-section sheets:
+`builds\fide_a2_b1_combined_full_review_r1`. Its `auditory_review_flags.json`
+retains 13 independent ASR disagreements (53/66 exact matches), five
+low-confidence aligned words and 16 caption reading-speed warnings across 171
+pages. These are review flags, not confirmed speech errors. Human listening
+and user preview approval are pending; no production/publication or short cuts.
+All 56 focused fide/individual-exam/audio tests and episode validation pass.
+
 ## ÖIF A2 speaking: still-only contact review
 
 `a2_speaking_contacts.py` reads the 55-turn transcript in

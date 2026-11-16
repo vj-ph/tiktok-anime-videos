@@ -1,0 +1,25 @@
+{
+  "retrieved": "2026-11-14",
+  "switzerland.svg": {
+    "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Switzerland.svg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Switzerland.svg",
+    "author": "Original unknown; vector by Marc Mongenet and Wikimedia Commons contributors",
+    "license": "Public domain; simple geometry and Swiss official flag",
+    "sha256": "900a0befb655721c1b52b5ec2754f2f553f52b230443aaf016cc224e6a0707ce"
+  },
+  "switzerland.png": {
+    "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Switzerland.svg",
+    "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Switzerland.svg/500px-Flag_of_Switzerland.svg.png",
+    "license": "Public-domain raster rendering of switzerland.svg",
+    "sha256": "747a129b904dc120e98726a29dedeac45604f3021fe80f2da94b24cd1a1f4b61"
+  },
+  "quaternius_flag.glb": {
+    "source": "https://poly.pizza/m/FuOkF3WBrx",
+    "download": "https://static.poly.pizza/4cd7e950-9c30-4005-8a7d-81b4d555715e.glb",
+    "author": "Quaternius",
+    "license": "CC0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "ac75a6cb5328baf68fb1cad86204191f9717e20cfcccc600b3f10c4a1d260cbd",
+    "adaptations": "Square Swiss flag proportions, projected texture UVs, metal pole, desk scale and added small stand base."
+  }
+}

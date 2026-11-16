@@ -1,0 +1,52 @@
+{
+  "title": "fide-test A2-B1 Sprechen Prüfungssimulation",
+  "language": "de",
+  "fps": 24,
+  "scope": "Technical preview of the A2 picture-description stage, not a complete examination.",
+  "voice_note": "User-provided Swiss Standard German references: male_middle_aged examiner and female_young_adult candidate. Synthetic speech; not human pronunciation certification.",
+  "source": {"duration_limit_seconds": 90},
+  "turns": [
+    {
+      "id": "title",
+      "speaker": "examiner",
+      "text": "fide Test A zwei B eins Sprechen Prüfungssimulation.",
+      "phase": "Technikvorschau",
+      "pause_after": 0.5
+    },
+    {
+      "id": "question",
+      "speaker": "examiner",
+      "text": "Wir beginnen mit einem Bild. Was sehen Sie hier?",
+      "phase": "A2 · Bild beschreiben",
+      "pause_after": 0.6
+    },
+    {
+      "id": "description",
+      "speaker": "candidate",
+      "text": "Ich sehe eine Frau an einer Bushaltestelle. Sie schaut auf den Fahrplan.",
+      "phase": "A2 · Bild beschreiben",
+      "pause_after": 0.5
+    },
+    {
+      "id": "followup",
+      "speaker": "examiner",
+      "text": "Was denken Sie, wohin möchte die Frau fahren?",
+      "phase": "A2 · Nachfrage",
+      "pause_after": 0.6
+    },
+    {
+      "id": "answer",
+      "speaker": "candidate",
+      "text": "Vielleicht fährt sie zur Arbeit. Sie hat eine Tasche dabei.",
+      "phase": "A2 · Antwort",
+      "pause_after": 0.6
+    },
+    {
+      "id": "outro",
+      "speaker": "examiner",
+      "text": "Üben Sie mit uns für Ihr Gespräch.",
+      "phase": "Weiter üben",
+      "pause_after": 1.0
+    }
+  ]
+}

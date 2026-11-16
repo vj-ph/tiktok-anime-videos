@@ -1,0 +1,60 @@
+:root { color-scheme: light; font-family: Arial, sans-serif; color: #233d3b; background: #eaf0e9; }
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+#app { height: 100vh; display: grid; grid-template-rows: 15% 61% 19% 5%; padding: 0 3%; }
+header { display: flex; align-items: center; gap: 20px; }
+.brand { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 800; line-height: 1.1; flex-shrink: 0; }
+.compass { font-size: 39px; color: #a26b4c; }
+.heading { flex: 1; }
+.eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: #7d6350; }
+h1 { margin: 6px 0 0; font-size: 23px; line-height: 1.12; max-width: 650px; }
+.preview { font-size: 8px; letter-spacing: 1px; border: 1px solid #bdc9bc; padding: 8px; border-radius: 20px; white-space: nowrap; }
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 25%; gap: 16px; }
+.room { position: relative; min-width: 0; min-height: 0; overflow: hidden; border-radius: 22px; background: #d7e3de; }
+canvas { width: 100%; height: 100%; display: block; }
+.phase { position: absolute; top: 16px; left: 16px; display: flex; align-items: center; gap: 7px; background: #fffdf6ed; font-size: 12px; font-weight: 700; padding: 9px 13px; border-radius: 30px; }
+.dot { width: 7px; height: 7px; border-radius: 100%; background: #b27950; }
+.people { position: absolute; left: 12px; right: 12px; bottom: 12px; display: flex; justify-content: space-around; gap: 4px; font-size: 9px; color: #28403c; }
+.people span { padding: 5px 8px; background: #fffdf6d9; border-radius: 20px; }
+.task { background: #fffdf6; border-radius: 22px; padding: 19px 16px; min-height: 0; display: flex; flex-direction: column; }
+.task .eyebrow { font-size: 8px; line-height: 1.6; letter-spacing: 1px; }
+h2 { font-size: 23px; line-height: 1.1; margin: 8px 0 12px; }
+.task img { width: 100%; min-height: 0; flex: 1; object-fit: contain; border-radius: 10px; background: #eef2ed; }
+.task p { font-size: 12px; line-height: 1.4; margin: 10px 0 6px; }
+.task-note { font-size: 8px; color: #61736b; }
+.speech { padding: 14px 5px 4px; overflow: hidden; }
+.speaker { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #846046; letter-spacing: .5px; margin-bottom: 8px; }
+#caption { font-size: 26px; font-weight: 600; line-height: 1.35; }
+.word { display: inline-block; border-radius: 5px; padding: 0 3px; margin-right: 1px; }
+.word.active { background: #c9dfce; color: #153f33; }
+footer { display: flex; justify-content: space-between; align-items: center; font-size: 9px; border-top: 1px solid #ced8cc; }
+.controls { position: fixed; bottom: 0; left: 0; right: 0; padding: 8px; background: #fffdf6f2; display: flex; gap: 12px; z-index: 20; }
+.controls input { flex: 1; }
+button { background: #345b50; color: white; border: 0; border-radius: 8px; padding: 8px 16px; cursor: pointer; }
+.capture .controls { display: none; }
+@media (max-aspect-ratio: 1/1) {
+  #app { grid-template-rows: 15% 59% 21% 5%; padding: 0 5%; }
+  header { gap: 12px; flex-wrap: wrap; align-content: center; position: relative; }
+  .brand { font-size: 10px; }
+  .compass { font-size: 30px; }
+  .heading { flex-basis: 72%; }
+  h1 { font-size: 21px; }
+  .heading .eyebrow { font-size: 7px; letter-spacing: .8px; }
+  .preview { display: none; }
+  .stage { grid-template-columns: 1fr; grid-template-rows: 66% 34%; gap: 9px; }
+  .room { border-radius: 18px; }
+  .task { border-radius: 18px; padding: 13px 15px; display: grid; grid-template-columns: 48% 1fr; grid-template-rows: 20px 45px 1fr; column-gap: 16px; }
+  .task img { grid-column: 1; grid-row: 1 / 4; height: 100%; }
+  .task .eyebrow { grid-column: 2; grid-row: 1; font-size: 7px; }
+  .task h2 { grid-column: 2; grid-row: 2; margin: 4px 0; font-size: 23px; }
+  .task p { grid-column: 2; grid-row: 3; margin: 3px 0; font-size: 13px; }
+  .task-note { display: none; }
+  .phase { font-size: 11px; top: 12px; left: 12px; }
+  .people { font-size: 8px; left: 5px; right: 5px; }
+  .people span { padding: 5px; }
+  .speech { padding-top: 21px; }
+  .speaker { font-size: 12px; margin-bottom: 13px; }
+  #caption { font-size: 25px; line-height: 1.45; }
+  footer { font-size: 8px; line-height: 1.5; gap: 20px; }
+  footer span:last-child { display: none; }
+}

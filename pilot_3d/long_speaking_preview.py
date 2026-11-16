@@ -37,7 +37,8 @@ SOURCES = ("pipeline.py", "long_speaking.py", "long_speaking_scene.py", "long_sp
 
 
 def is_production(episode):
-    return episode.get("template") in ("long_speaking_production", "a2_speaking_production")
+    return episode.get("template") in (
+        "long_speaking_production", "a2_speaking_production", "fide_speaking_production")
 
 
 def shared_native(episode):

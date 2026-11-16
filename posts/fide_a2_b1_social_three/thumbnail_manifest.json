@@ -1,0 +1,1050 @@
+{
+  "outputs": [
+    {
+      "file": "fide_a2_b1_single_book\\thumbnail_youtube.jpg",
+      "sha256": "9fea14634513b117c0b1032faebc37741deef6590cf982e51171e855b4125a27",
+      "size": [
+        1920,
+        1080
+      ],
+      "text": [
+        {
+          "box": [
+            80,
+            25,
+            1300,
+            70
+          ],
+          "font_size": 32,
+          "lines": [
+            "Deutsch Kompass"
+          ]
+        },
+        {
+          "box": [
+            80,
+            88,
+            1570,
+            233
+          ],
+          "font_size": 113,
+          "lines": [
+            "fide A2-B1 Sprechen"
+          ]
+        },
+        {
+          "box": [
+            80,
+            228,
+            1570,
+            356
+          ],
+          "font_size": 98,
+          "lines": [
+            "Prüfungssimulation"
+          ]
+        }
+      ],
+      "swiss_flag_box": [
+        1648,
+        95,
+        1828,
+        275
+      ],
+      "heads": [
+        {
+          "actor": "candidate_a",
+          "box": [
+            1205.2267456054688,
+            549.192717664627,
+            1365.3172302246094,
+            707.993808496467
+          ]
+        },
+        {
+          "actor": "examiner",
+          "box": [
+            561.2798881530762,
+            521.6069517968524,
+            703.0316162109375,
+            701.0265694185116
+          ]
+        },
+        {
+          "actor": "observer",
+          "box": [
+            306.3961601257324,
+            720.5370357213583,
+            574.2615509033203,
+            958.4928886765476
+          ]
+        }
+      ],
+      "source_crop": [
+        0,
+        0,
+        1216,
+        458
+      ],
+      "scene_box": [
+        0,
+        356,
+        1920,
+        1080
+      ],
+      "critical_boxes": [
+        [
+          80,
+          25,
+          1300,
+          70
+        ],
+        [
+          80,
+          88,
+          1570,
+          233
+        ],
+        [
+          80,
+          228,
+          1570,
+          356
+        ],
+        [
+          1648,
+          95,
+          1828,
+          275
+        ],
+        [
+          1205.2267456054688,
+          549.192717664627,
+          1365.3172302246094,
+          707.993808496467
+        ],
+        [
+          561.2798881530762,
+          521.6069517968524,
+          703.0316162109375,
+          701.0265694185116
+        ],
+        [
+          306.3961601257324,
+          720.5370357213583,
+          574.2615509033203,
+          958.4928886765476
+        ]
+      ],
+      "safe_box": null,
+      "crop_checks": []
+    },
+    {
+      "file": "fide_a2_b1_social_three\\video_1_a2\\thumbnail_instagram.jpg",
+      "sha256": "676a41c25fa71e48c5497ec782c07ad1b33ea80d05846d0c75e0b354bb0c46d8",
+      "size": [
+        1080,
+        1920
+      ],
+      "text": [
+        {
+          "box": [
+            112,
+            470,
+            730,
+            510
+          ],
+          "font_size": 28,
+          "lines": [
+            "Deutsch Kompass"
+          ]
+        },
+        {
+          "box": [
+            132,
+            515,
+            448,
+            580
+          ],
+          "font_size": 50,
+          "lines": [
+            "Video 1/3"
+          ]
+        },
+        {
+          "box": [
+            112,
+            600,
+            884,
+            677
+          ],
+          "font_size": 58,
+          "lines": [
+            "fide A2 Sprechen"
+          ]
+        },
+        {
+          "box": [
+            112,
+            677,
+            884,
+            736
+          ],
+          "font_size": 44,
+          "lines": [
+            "Alle drei Aufgaben"
+          ]
+        }
+      ],
+      "swiss_flag_box": [
+        811,
+        470,
+        881,
+        540
+      ],
+      "heads": [
+        {
+          "actor": "candidate_a",
+          "box": [
+            345.8239222049713,
+            836.5367914058945,
+            634.3556008577347,
+            1184.9141561443155
+          ]
+        }
+      ],
+      "source_crop": [
+        280,
+        0,
+        920,
+        352
+      ],
+      "scene_box": [
+        112,
+        800,
+        884,
+        1224
+      ],
+      "critical_boxes": [
+        [
+          112,
+          470,
+          730,
+          510
+        ],
+        [
+          132,
+          515,
+          448,
+          580
+        ],
+        [
+          112,
+          600,
+          884,
+          677
+        ],
+        [
+          112,
+          677,
+          884,
+          736
+        ],
+        [
+          811,
+          470,
+          881,
+          540
+        ],
+        [
+          345.8239222049713,
+          836.5367914058945,
+          634.3556008577347,
+          1184.9141561443155
+        ]
+      ],
+      "safe_box": [
+        90,
+        460,
+        900,
+        1240
+      ],
+      "crop_checks": [
+        "3:4",
+        "4:5",
+        "1:1"
+      ]
+    },
+    {
+      "file": "fide_a2_b1_social_three\\video_1_a2\\thumbnail_tiktok.jpg",
+      "sha256": "676a41c25fa71e48c5497ec782c07ad1b33ea80d05846d0c75e0b354bb0c46d8",
+      "size": [
+        1080,
+        1920
+      ],
+      "text": [
+        {
+          "box": [
+            112,
+            470,
+            730,
+            510
+          ],
+          "font_size": 28,
+          "lines": [
+            "Deutsch Kompass"
+          ]
+        },
+        {
+          "box": [
+            132,
+            515,
+            448,
+            580
+          ],
+          "font_size": 50,
+          "lines": [
+            "Video 1/3"
+          ]
+        },
+        {
+          "box": [
+            112,
+            600,
+            884,
+            677
+          ],
+          "font_size": 58,
+          "lines": [
+            "fide A2 Sprechen"
+          ]
+        },
+        {
+          "box": [
+            112,
+            677,
+            884,
+            736
+          ],
+          "font_size": 44,
+          "lines": [
+            "Alle drei Aufgaben"
+          ]
+        }
+      ],
+      "swiss_flag_box": [
+        811,
+        470,
+        881,
+        540
+      ],
+      "heads": [
+        {
+          "actor": "candidate_a",
+          "box": [
+            345.8239222049713,
+            836.5367914058945,
+            634.3556008577347,
+            1184.9141561443155
+          ]
+        }
+      ],
+      "source_crop": [
+        280,
+        0,
+        920,
+        352
+      ],
+      "scene_box": [
+        112,
+        800,
+        884,
+        1224
+      ],
+      "critical_boxes": [
+        [
+          112,
+          470,
+          730,
+          510
+        ],
+        [
+          132,
+          515,
+          448,
+          580
+        ],
+        [
+          112,
+          600,
+          884,
+          677
+        ],
+        [
+          112,
+          677,
+          884,
+          736
+        ],
+        [
+          811,
+          470,
+          881,
+          540
+        ],
+        [
+          345.8239222049713,
+          836.5367914058945,
+          634.3556008577347,
+          1184.9141561443155
+        ]
+      ],
+      "safe_box": [
+        90,
+        460,
+        900,
+        1240
+      ],
+      "crop_checks": [
+        "3:4",
+        "4:5",
+        "1:1"
+      ]
+    },
+    {
+      "file": "fide_a2_b1_social_three\\video_2_b1_erfahrung_ablauf\\thumbnail_instagram.jpg",
+      "sha256": "4103ddb5bb5875f4c7f6f44e3b28908e72894397c73e4895e4b2dcf2fcbddf64",
+      "size": [
+        1080,
+        1920
+      ],
+      "text": [
+        {
+          "box": [
+            112,
+            470,
+            730,
+            510
+          ],
+          "font_size": 28,
+          "lines": [
+            "Deutsch Kompass"
+          ]
+        },
+        {
+          "box": [
+            132,
+            515,
+            448,
+            580
+          ],
+          "font_size": 50,
+          "lines": [
+            "Video 2/3"
+          ]
+        },
+        {
+          "box": [
+            112,
+            600,
+            884,
+            677
+          ],
+          "font_size": 58,
+          "lines": [
+            "fide B1 Sprechen"
+          ]
+        },
+        {
+          "box": [
+            112,
+            677,
+            884,
+            736
+          ],
+          "font_size": 44,
+          "lines": [
+            "Erfahrungen"
+          ]
+        },
+        {
+          "box": [
+            112,
+            728,
+            884,
+            787
+          ],
+          "font_size": 44,
+          "lines": [
+            "und Abläufe"
+          ]
+        }
+      ],
+      "swiss_flag_box": [
+        811,
+        470,
+        881,
+        540
+      ],
+      "heads": [
+        {
+          "actor": "candidate_a",
+          "box": [
+            345.84302524328234,
+            836.9728661396286,
+            634.3599722623825,
+            1185.4111322625117
+          ]
+        }
+      ],
+      "source_crop": [
+        280,
+        0,
+        920,
+        352
+      ],
+      "scene_box": [
+        112,
+        800,
+        884,
+        1224
+      ],
+      "critical_boxes": [
+        [
+          112,
+          470,
+          730,
+          510
+        ],
+        [
+          132,
+          515,
+          448,
+          580
+        ],
+        [
+          112,
+          600,
+          884,
+          677
+        ],
+        [
+          112,
+          677,
+          884,
+          736
+        ],
+        [
+          112,
+          728,
+          884,
+          787
+        ],
+        [
+          811,
+          470,
+          881,
+          540
+        ],
+        [
+          345.84302524328234,
+          836.9728661396286,
+          634.3599722623825,
+          1185.4111322625117
+        ]
+      ],
+      "safe_box": [
+        90,
+        460,
+        900,
+        1240
+      ],
+      "crop_checks": [
+        "3:4",
+        "4:5",
+        "1:1"
+      ]
+    },
+    {
+      "file": "fide_a2_b1_social_three\\video_2_b1_erfahrung_ablauf\\thumbnail_tiktok.jpg",
+      "sha256": "4103ddb5bb5875f4c7f6f44e3b28908e72894397c73e4895e4b2dcf2fcbddf64",
+      "size": [
+        1080,
+        1920
+      ],
+      "text": [
+        {
+          "box": [
+            112,
+            470,
+            730,
+            510
+          ],
+          "font_size": 28,
+          "lines": [
+            "Deutsch Kompass"
+          ]
+        },
+        {
+          "box": [
+            132,
+            515,
+            448,
+            580
+          ],
+          "font_size": 50,
+          "lines": [
+            "Video 2/3"
+          ]
+        },
+        {
+          "box": [
+            112,
+            600,
+            884,
+            677
+          ],
+          "font_size": 58,
+          "lines": [
+            "fide B1 Sprechen"
+          ]
+        },
+        {
+          "box": [
+            112,
+            677,
+            884,
+            736
+          ],
+          "font_size": 44,
+          "lines": [
+            "Erfahrungen"
+          ]
+        },
+        {
+          "box": [
+            112,
+            728,
+            884,
+            787
+          ],
+          "font_size": 44,
+          "lines": [
+            "und Abläufe"
+          ]
+        }
+      ],
+      "swiss_flag_box": [
+        811,
+        470,
+        881,
+        540
+      ],
+      "heads": [
+        {
+          "actor": "candidate_a",
+          "box": [
+            345.84302524328234,
+            836.9728661396286,
+            634.3599722623825,
+            1185.4111322625117
+          ]
+        }
+      ],
+      "source_crop": [
+        280,
+        0,
+        920,
+        352
+      ],
+      "scene_box": [
+        112,
+        800,
+        884,
+        1224
+      ],
+      "critical_boxes": [
+        [
+          112,
+          470,
+          730,
+          510
+        ],
+        [
+          132,
+          515,
+          448,
+          580
+        ],
+        [
+          112,
+          600,
+          884,
+          677
+        ],
+        [
+          112,
+          677,
+          884,
+          736
+        ],
+        [
+          112,
+          728,
+          884,
+          787
+        ],
+        [
+          811,
+          470,
+          881,
+          540
+        ],
+        [
+          345.84302524328234,
+          836.9728661396286,
+          634.3599722623825,
+          1185.4111322625117
+        ]
+      ],
+      "safe_box": [
+        90,
+        460,
+        900,
+        1240
+      ],
+      "crop_checks": [
+        "3:4",
+        "4:5",
+        "1:1"
+      ]
+    },
+    {
+      "file": "fide_a2_b1_social_three\\video_3_b1_meinung\\thumbnail_instagram.jpg",
+      "sha256": "7e91403fef7e706c520dd3a7092d2aefc285c6f20a4d5764a59892c6177e7f4b",
+      "size": [
+        1080,
+        1920
+      ],
+      "text": [
+        {
+          "box": [
+            112,
+            470,
+            730,
+            510
+          ],
+          "font_size": 28,
+          "lines": [
+            "Deutsch Kompass"
+          ]
+        },
+        {
+          "box": [
+            132,
+            515,
+            448,
+            580
+          ],
+          "font_size": 50,
+          "lines": [
+            "Video 3/3"
+          ]
+        },
+        {
+          "box": [
+            112,
+            600,
+            884,
+            677
+          ],
+          "font_size": 58,
+          "lines": [
+            "fide B1 Sprechen"
+          ]
+        },
+        {
+          "box": [
+            112,
+            677,
+            884,
+            736
+          ],
+          "font_size": 44,
+          "lines": [
+            "Meinung"
+          ]
+        },
+        {
+          "box": [
+            112,
+            728,
+            884,
+            787
+          ],
+          "font_size": 44,
+          "lines": [
+            "und Wünsche"
+          ]
+        }
+      ],
+      "swiss_flag_box": [
+        811,
+        470,
+        881,
+        540
+      ],
+      "heads": [
+        {
+          "actor": "candidate_a",
+          "box": [
+            345.7874646902084,
+            835.5345940589905,
+            634.3586608409881,
+            1183.8610306653109
+          ]
+        }
+      ],
+      "source_crop": [
+        280,
+        0,
+        920,
+        352
+      ],
+      "scene_box": [
+        112,
+        800,
+        884,
+        1224
+      ],
+      "critical_boxes": [
+        [
+          112,
+          470,
+          730,
+          510
+        ],
+        [
+          132,
+          515,
+          448,
+          580
+        ],
+        [
+          112,
+          600,
+          884,
+          677
+        ],
+        [
+          112,
+          677,
+          884,
+          736
+        ],
+        [
+          112,
+          728,
+          884,
+          787
+        ],
+        [
+          811,
+          470,
+          881,
+          540
+        ],
+        [
+          345.7874646902084,
+          835.5345940589905,
+          634.3586608409881,
+          1183.8610306653109
+        ]
+      ],
+      "safe_box": [
+        90,
+        460,
+        900,
+        1240
+      ],
+      "crop_checks": [
+        "3:4",
+        "4:5",
+        "1:1"
+      ]
+    },
+    {
+      "file": "fide_a2_b1_social_three\\video_3_b1_meinung\\thumbnail_tiktok.jpg",
+      "sha256": "7e91403fef7e706c520dd3a7092d2aefc285c6f20a4d5764a59892c6177e7f4b",
+      "size": [
+        1080,
+        1920
+      ],
+      "text": [
+        {
+          "box": [
+            112,
+            470,
+            730,
+            510
+          ],
+          "font_size": 28,
+          "lines": [
+            "Deutsch Kompass"
+          ]
+        },
+        {
+          "box": [
+            132,
+            515,
+            448,
+            580
+          ],
+          "font_size": 50,
+          "lines": [
+            "Video 3/3"
+          ]
+        },
+        {
+          "box": [
+            112,
+            600,
+            884,
+            677
+          ],
+          "font_size": 58,
+          "lines": [
+            "fide B1 Sprechen"
+          ]
+        },
+        {
+          "box": [
+            112,
+            677,
+            884,
+            736
+          ],
+          "font_size": 44,
+          "lines": [
+            "Meinung"
+          ]
+        },
+        {
+          "box": [
+            112,
+            728,
+            884,
+            787
+          ],
+          "font_size": 44,
+          "lines": [
+            "und Wünsche"
+          ]
+        }
+      ],
+      "swiss_flag_box": [
+        811,
+        470,
+        881,
+        540
+      ],
+      "heads": [
+        {
+          "actor": "candidate_a",
+          "box": [
+            345.7874646902084,
+            835.5345940589905,
+            634.3586608409881,
+            1183.8610306653109
+          ]
+        }
+      ],
+      "source_crop": [
+        280,
+        0,
+        920,
+        352
+      ],
+      "scene_box": [
+        112,
+        800,
+        884,
+        1224
+      ],
+      "critical_boxes": [
+        [
+          112,
+          470,
+          730,
+          510
+        ],
+        [
+          132,
+          515,
+          448,
+          580
+        ],
+        [
+          112,
+          600,
+          884,
+          677
+        ],
+        [
+          112,
+          677,
+          884,
+          736
+        ],
+        [
+          112,
+          728,
+          884,
+          787
+        ],
+        [
+          811,
+          470,
+          881,
+          540
+        ],
+        [
+          345.7874646902084,
+          835.5345940589905,
+          634.3586608409881,
+          1183.8610306653109
+        ]
+      ],
+      "safe_box": [
+        90,
+        460,
+        900,
+        1240
+      ],
+      "crop_checks": [
+        "3:4",
+        "4:5",
+        "1:1"
+      ]
+    }
+  ],
+  "source_manifest_sha256": "967b10ca531f51c41b64ebd040f2130e62a5928d89169bd29c029beecc9a005d",
+  "source_stills_sha256": {
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\pilot_3d\\builds\\fide_a2_b1_single_book_r1\\native\\youtube_00000.png": "5c35613e3a0c6f28a9cf225f1f9e9e378d81f6fbb80aef35bde403427f933e40",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\pilot_3d\\builds\\fide_a2_b1_single_book_r1\\native\\youtube_03457.png": "184071338e74a69574b2841fa6b522e144c4128136bb2bd6ab638c0808998773",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\pilot_3d\\builds\\fide_a2_b1_single_book_r1\\native\\youtube_06384.png": "63940980fc4c6679150d29a99707539338a03c4dec358beaa624fe77ab6fabdb",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\pilot_3d\\builds\\fide_a2_b1_single_book_r1\\native\\youtube_10831.png": "d7f64240876db014e4ac8707e3629b442e187cd6477800e2ef8b5a8974914bbf"
+  },
+  "swiss_flag": {
+    "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Switzerland.svg",
+    "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Switzerland.svg/500px-Flag_of_Switzerland.svg.png",
+    "license": "Public-domain raster rendering of switzerland.svg",
+    "sha256": "747a129b904dc120e98726a29dedeac45604f3021fe80f2da94b24cd1a1f4b61"
+  },
+  "generator_sha256": "482afa0b358e429cd1ea397f4b3bd18b30ff30ad2cfbeace89aad9bee0d0366b",
+  "social_safety": "Conservative central design region, checked against square, 4:5 and 3:4 crops; not a universal Instagram UI guarantee.",
+  "reference_check": "Meta primary help pages were inaccessible; no exact current official safe-zone claim.",
+  "original_videos_changed": false,
+  "new_native_rendering": false,
+  "publication_approved": false
+}
