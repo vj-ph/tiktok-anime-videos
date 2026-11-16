@@ -1,0 +1,230 @@
+{
+  "schema": "fide_a2_b1_listening_v1",
+  "id": "fide_a2_b1_listening_01",
+  "language": "de",
+  "voice_locale": "de-CH",
+  "title": "fide A2-B1 Verstehen Prüfungssimulation",
+  "opening": {
+    "text": "fide A zwei B eins Verstehen. Prüfungssimulation.",
+    "display_text": "fide A2-B1 Verstehen Prüfungssimulation",
+    "display_word_groups": [[0], [1, 2, 3, 4], [5], [6]]
+  },
+  "setup": "Willkommen zu Ihrer Hörübung für den fide-Test. Wir beginnen mit A zwei und machen danach mit B eins weiter. Das Sprechtempo ist zum Üben verlangsamt. Sie hören jeden Text einmal. Wenn Sie ihn ein zweites Mal hören möchten, springen Sie einmal zum Anfang des Hörtextes zurück. Die Zeitmarken finden Sie in der Beschreibung. Wenn Sie mehr Zeit zum Antworten brauchen, pausieren Sie das Video. Die Lösungen folgen erst nach allen Aufgaben.",
+  "a2_instruction": "Im A zwei Teil sehen Sie zu jeder Aufgabe drei Bilder. Ich stelle zuerst eine Frage. Dann haben Sie fünf Sekunden Zeit, die Bilder anzusehen. Sie hören einen kurzen Text und danach noch einmal die Frage. Zeigen Sie auf das passende Bild oder sagen Sie A, B oder C. Zum Antworten haben Sie zehn Sekunden Zeit.",
+  "transition": {
+    "heading": "B1 · Verstehen",
+    "text": "Der A zwei Teil ist beendet. Jetzt folgt B eins. Sie hören wieder kurze Texte. Diesmal gibt es keine Antwortbilder. Beantworten Sie die Fragen bitte laut. Wenn Sie mehr Zeit brauchen, pausieren Sie das Video.",
+    "display_text": "Der A2-Teil ist beendet. Jetzt folgt B1. Sie hören wieder kurze Texte. Diesmal gibt es keine Antwortbilder. Beantworten Sie die Fragen bitte laut. Wenn Sie mehr Zeit brauchen, pausieren Sie das Video.",
+    "display_word_groups": [[0], [1, 2, 3], [4], [5], [6], [7], [8, 9], [10], [11], [12], [13], [14], [15], [16], [17], [18], [19], [20], [21], [22], [23], [24], [25], [26], [27], [28], [29], [30], [31], [32], [33], [34]]
+  },
+  "b1_instruction": "Auch bei B eins hören Sie die Frage vor und nach jedem Hörtext. Antworten Sie danach mündlich. Kurze Antworten mit den wichtigen Informationen genügen. Sie haben jeweils zwanzig Sekunden Zeit.",
+  "end_test": "Damit ist die Hörübung beendet. Jetzt folgen die Lösungen und mögliche Antworten. Vergleichen Sie die Informationen mit Ihren eigenen Antworten.",
+  "solutions_instruction": "Zuerst sehen Sie die sechs Lösungen zu A zwei. Danach hören Sie mögliche Antworten zu B eins. Auch andere Formulierungen sind richtig, wenn sie die Frage inhaltlich beantworten. Dies ist eine Übung, keine offizielle Bewertung Ihres Prüfungsergebnisses.",
+  "timing": {
+    "fps": 24,
+    "sample_rate": 48000,
+    "speech_tempo": 0.8,
+    "recording_plays": 1,
+    "a2_picture_seconds": 5,
+    "a2_answer_seconds": 10,
+    "b1_answer_seconds": 20,
+    "solution_padding_seconds": 2,
+    "opening_padding_seconds": 0.5,
+    "outro_seconds": 3,
+    "provenance": "User approved the book-based plan and generation on 2026-11-16. Fixed pauses are adapted practice settings, not mandated official silence lengths."
+  },
+  "promotion": {
+    "cover": "..\\..\\pilot_3d\\assets\\fide_a2_b1_complete.png",
+    "cover_sha256": "1d2413431f416b0db424366265ef90bd5fb05c25f32ac197d8194cca6014dc44",
+    "amazon_url": "https://amzn.eu/d/0cFUP7BV",
+    "book_title": "fide A2-B1 Komplettband · Sprechen + Schreiben + Hören",
+    "cta": "Mehr Hörübungen, Transkripte und Modelldialoge finden Sie in unserem fide A zwei B eins Komplettband: Sprechen, Schreiben und Hören. Den Amazon Link finden Sie in der Beschreibung oder in der Bio."
+  },
+  "source": {
+    "research_pin": "..\\builds\\fide_a2_b1_listening_research_r1\\research_input_pin.json",
+    "complete_book": "..\\..\\..\\german\\books\\a2_b1\\complete_fide",
+    "a2_component": "..\\..\\..\\german\\books\\a2\\listening_fide_v2\\book_with_images.md",
+    "b1_component": "..\\..\\..\\german\\books\\b1\\listening_fide\\book_no_toc.md",
+    "use": "User-supplied book exercises, source-linked and adapted only where recorded. No official exercise text, recordings or artwork reused."
+  },
+  "situations": [
+    {
+      "id": "a2_sbb",
+      "level": "A2",
+      "field": "Mobilität",
+      "heading": "A2 · Situation 1",
+      "introduction": "Sie sind am Bahnhof und möchten mit dem Zug verreisen. Sie hören drei kurze Mitteilungen.",
+      "source": "A2 Übungssatz 5, Situation 1, Aufgaben 1-3",
+      "items": [
+        {
+          "number": 7,
+          "question": "Was hat Verspätung?",
+          "speaker": "service",
+          "recording": "Der Zug nach Bern hat heute zehn Minuten Verspätung. Bitte bleiben Sie noch einen Moment in der Bahnhofshalle. Der Bus vor dem Bahnhof fährt normal nach Fahrplan. Die nächste Durchsage kommt in ungefähr fünf Minuten.",
+          "image": "..\\..\\..\\german\\books\\a2\\listening_fide_v2\\trimmed_images\\E042.png",
+          "options": ["Zug", "Bus", "Tram"],
+          "answer": "A",
+          "solution": "Bei Frage sieben ist A richtig: der Zug. Der Zug nach Bern hat zehn Minuten Verspätung.",
+          "source_item": "a2_uebungssatz_05_aufgabe_01",
+          "adaptations": ["Replace the platform-three sentence with neutral waiting information so item 7 does not reveal item 8."]
+        },
+        {
+          "number": 8,
+          "question": "Von welchem Gleis fährt der Zug?",
+          "speaker": "service",
+          "recording": "Der Zug fährt heute von Gleis drei. Bitte beachten Sie auch die Anzeigen im Bahnhof. Gleis eins ist heute für einen anderen Zug reserviert. Folgen Sie bitte den gelben Anzeigen in der Halle.",
+          "image": "..\\..\\..\\german\\books\\a2\\listening_fide_v2\\trimmed_images\\E043.png",
+          "options": ["Gleis 1", "Gleis 3", "Gleis 5"],
+          "answer": "B",
+          "solution": "Bei Frage acht ist B richtig: Gleis drei. Von dort fährt der Zug heute ab.",
+          "source_item": "a2_uebungssatz_05_aufgabe_02",
+          "adaptations": ["Ask the departure platform explicitly, matching the recording rather than inferring where to wait."]
+        },
+        {
+          "number": 9,
+          "question": "Was soll die Person für eine einzelne Fahrt kaufen?",
+          "speaker": "service",
+          "recording": "Für eine einzelne Fahrt kaufen Sie bitte ein einfaches Billet. Eine Tageskarte brauchen Sie dafür nicht. Das Billet bekommen Sie am Automaten oder in der SBB App. Denken Sie daran: Ein Halbtax allein genügt nicht.",
+          "image": "..\\..\\..\\german\\books\\a2\\listening_fide_v2\\trimmed_images\\E044.png",
+          "options": ["Tageskarte", "Halbtax", "Billet"],
+          "answer": "C",
+          "solution": "Bei Frage neun ist C richtig: ein Billet. Ein Halbtax allein genügt für diese Fahrt nicht.",
+          "source_item": "a2_uebungssatz_05_aufgabe_03",
+          "adaptations": ["Specify a single journey and explicitly distinguish the pictured Tageskarte from an ordinary single ticket; keep answer C. Spell SBB-App as SBB App in synthesis text."]
+        }
+      ]
+    },
+    {
+      "id": "a2_tram",
+      "level": "A2",
+      "field": "Mobilität",
+      "heading": "A2 · Situation 2",
+      "introduction": "Jetzt möchten Sie mit dem Tram zum Bahnhof fahren. Sie hören drei kurze Informationen zum Verkehr in der Stadt.",
+      "source": "A2 Übungssatz 5, Situation 2, Aufgaben 4-6",
+      "items": [
+        {
+          "number": 10,
+          "question": "Welches Tram fährt nicht bis zum Bahnhof?",
+          "speaker": "service",
+          "recording": "Eine wichtige Mitteilung für alle Fahrgäste: Das Tram Nummer sieben fährt heute nicht bis zum Bahnhof. Tram vier und Tram elf fahren wie immer bis zum Bahnhof. Bitte beachten Sie die Anzeigen an den Haltestellen.",
+          "image": "..\\..\\..\\german\\books\\a2\\listening_fide_v2\\regenerated_images\\backlog-20261106-trimmed\\E045.png",
+          "options": ["Tram 4", "Tram 7", "Tram 11"],
+          "answer": "B",
+          "solution": "Bei Frage zehn ist B richtig: Tram sieben. Dieses Tram fährt heute nicht bis zum Bahnhof.",
+          "source_item": "a2_uebungssatz_05_aufgabe_04",
+          "adaptations": ["Remove the advance construction-work explanation and any replacement-transport cue; these belong to later questions. Explicitly confirm that trams four and eleven reach the station so only tram seven is correct."]
+        },
+        {
+          "number": 11,
+          "question": "Warum fährt das Tram anders?",
+          "speaker": "service",
+          "recording": "Die Änderung ist wegen einer Baustelle in der Bahnhofstrasse. Dort werden diese Woche die Schienen erneuert. Die Haltestelle ist deshalb heute geschlossen. Bitte benutzen Sie stattdessen die Haltestelle beim Bahnhof, etwa zweihundert Meter weiter.",
+          "image": "..\\..\\..\\german\\books\\a2\\listening_fide_v2\\trimmed_images\\E046.png",
+          "options": ["Baustelle", "Schnee", "Demonstration"],
+          "answer": "A",
+          "solution": "Bei Frage elf ist A richtig: eine Baustelle. Deshalb fährt das Tram eine andere Strecke.",
+          "source_item": "a2_uebungssatz_05_aufgabe_05",
+          "adaptations": ["Replace unnatural explicit denials of snow and a demonstration with contextual construction and stop-location information; retain answer A and do not reveal item 12."]
+        },
+        {
+          "number": 12,
+          "question": "Was soll man nehmen?",
+          "speaker": "service",
+          "recording": "Bitte nehmen Sie den Bus Nummer zehn. Er hält direkt vor dem Bahnhof. Mit dem Velo ist der Weg wegen der Baustelle im Moment nicht einfach. Der Busfahrer wartet dort, bis alle Fahrgäste eingestiegen sind.",
+          "image": "..\\..\\..\\german\\books\\a2\\listening_fide_v2\\trimmed_images\\E047.png",
+          "options": ["Velo", "Taxi", "Bus"],
+          "answer": "C",
+          "solution": "Bei Frage zwölf ist C richtig: der Bus. Sie sollen den Bus Nummer zehn nehmen.",
+          "source_item": "a2_uebungssatz_05_aufgabe_06",
+          "adaptations": ["Add a comma before bis in the synthesis text; meaning unchanged."]
+        }
+      ]
+    },
+    {
+      "id": "b1_verwaltung",
+      "level": "B1",
+      "field": "Wohnen",
+      "heading": "B1 · Situation 1",
+      "introduction": "Eine Bewohnerin meldet sich bei der Hausverwaltung. Sie hören drei Teile ihrer Nachricht über ein Problem im Hauseingang.",
+      "source": "B1 Übungssatz 2, Situation 1, Aufgaben 1-3",
+      "items": [
+        {
+          "number": 13,
+          "question": "Was stört die Bewohnerin?",
+          "speaker": "resident",
+          "recording": "Guten Tag, ich wohne im Haus an der Seestrasse vierundvierzig. Seit drei Abenden bleibt das Licht im Hauseingang gar nicht mehr an. Sobald es draussen dunkel ist, sieht man drinnen kaum etwas. Gestern bin ich im dunklen Eingang fast gestolpert. Zum Glück konnte ich mich noch am Geländer festhalten.",
+          "solution": "Das Licht im Hauseingang funktioniert seit mehreren Abenden nicht mehr.",
+          "accepted": ["Das Licht im Hauseingang ist kaputt.", "Der Eingang ist am Abend dunkel.", "Die Beleuchtung beim Eingang funktioniert nicht."],
+          "essential": "Failure of the entrance lighting, not a generic complaint about neighbours or the front door.",
+          "source_item": "uebungssatz_02_aufgabe_01_seg_001",
+          "adaptations": ["Remove the advance child/pram explanation so the next recording is needed for item 14; keep the lighting complaint. Replace the unclear door-opening anecdote with a near-trip in the dark. Spell 44 aloud."]
+        },
+        {
+          "number": 14,
+          "question": "Warum ist das Problem für sie besonders unpraktisch?",
+          "speaker": "resident",
+          "recording": "Für mich ist es vor allem schwierig, wenn ich am Abend mit meiner kleinen Tochter nach Hause komme. Dann habe ich oft noch Taschen dabei und kann nicht gleichzeitig das Handy als Lampe benutzen. Besonders bei Regen ist das unangenehm, weil ich dann alles noch schneller ins Trockene bringen muss.",
+          "solution": "Sie kommt mit ihrer kleinen Tochter und Taschen nach Hause und hat keine Hand frei, um das Handy als Lampe zu benutzen.",
+          "accepted": ["Sie hat ihr Kind und Taschen dabei und kann das Handy nicht als Lampe benutzen.", "Mit ihrer Tochter und den Einkaufstaschen sind ihre Hände nicht frei.", "Besonders bei Regen ist es unangenehm.", "Sie hat Taschen dabei und kann das Handy nicht als Lampe benutzen.", "Wenn es regnet, muss sie alles schnell ins Trockene bringen."],
+          "essential": "Any one supported reason suffices: child/bags make using the phone as a lamp difficult, or rain makes getting inside quickly more urgent. Accept short phrases and valid paraphrases; no exact model sentence required.",
+          "source_item": "uebungssatz_02_aufgabe_02_seg_001",
+          "adaptations": []
+        },
+        {
+          "number": 15,
+          "question": "Was erwartet sie von der Verwaltung?",
+          "speaker": "resident",
+          "recording": "Ich wäre froh, wenn jemand die Lampe möglichst bald kontrollieren könnte. Falls ein Elektriker nötig ist, können Sie mir gern kurz schreiben, wann die Person kommt. Es wäre auch gut, wenn das Problem nicht nur provisorisch gelöst, sondern wirklich repariert würde.",
+          "solution": "Die Verwaltung soll die Lampe bald kontrollieren und richtig reparieren lassen. Wenn jemand kommen muss, möchte sie den Termin erfahren.",
+          "accepted": ["Die Lampe soll bald richtig repariert werden.", "Jemand soll die Lampe kontrollieren und ihr gegebenenfalls den Termin mitteilen."],
+          "essential": "Prompt inspection/proper repair; visit information is an additional supported detail, not a mandatory memorised second clause.",
+          "source_item": "uebungssatz_02_aufgabe_03_seg_001",
+          "adaptations": []
+        }
+      ]
+    },
+    {
+      "id": "b1_nachbarn",
+      "level": "B1",
+      "field": "Wohnen",
+      "heading": "B1 · Situation 2",
+      "introduction": "Eine Nachbarin hinterlässt den Bewohnerinnen und Bewohnern im Haus eine Nachricht. Sie hören drei Teile ihrer Nachricht.",
+      "source": "B1 Übungssatz 5, Situation 1, Aufgaben 1-3",
+      "items": [
+        {
+          "number": 16,
+          "question": "Warum meldet sich die Nachbarin?",
+          "speaker": "neighbour",
+          "recording": "Ich wollte nur kurz Bescheid geben, dass wir diesen Samstag zwischen zehn und zwei Uhr ein kleines Geburtstagsfest für unsere Tochter im Gemeinschaftsraum machen. Es kommen nur ein paar Kinder aus der Klasse und ihre Eltern, also bleibt die Gruppe eher klein.",
+          "solution": "Sie informiert die Nachbarn über das Geburtstagsfest ihrer Tochter im Gemeinschaftsraum.",
+          "accepted": ["Wegen des Geburtstagsfests ihrer Tochter.", "Sie kündigt ein Kindergeburtstagsfest im Gemeinschaftsraum an."],
+          "essential": "Advance information about her daughter's birthday party; exact time/date not required.",
+          "source_item": "uebungssatz_05_aufgabe_01_seg_001",
+          "adaptations": []
+        },
+        {
+          "number": 17,
+          "question": "Wie will sie auf die Nachbarn Rücksicht nehmen?",
+          "speaker": "neighbour",
+          "recording": "Wir achten darauf, dass die Musik nicht zu laut ist und räumen nachher sofort wieder auf. Falls Sie in dieser Zeit etwas Wichtiges geplant haben, sagen Sie es mir bitte. Wir wollen spätestens um halb drei fertig sein, damit danach wieder Ruhe im Haus ist.",
+          "solution": "Sie hält die Musik leise, räumt nachher auf und will spätestens um halb drei fertig sein.",
+          "accepted": ["Die Musik soll nicht zu laut sein.", "Sie räumt nach dem Fest sofort auf.", "Sie möchte spätestens um halb drei fertig sein."],
+          "essential": "Any concrete supported consideration measure answers this broad question. The model lists examples; it does not require all three.",
+          "source_item": "uebungssatz_05_aufgabe_02_seg_001",
+          "adaptations": ["Slightly rephrase the source question for natural spoken German; same comprehension target."]
+        },
+        {
+          "number": 18,
+          "question": "Warum informiert sie die Nachbarn schon vor dem Fest?",
+          "speaker": "neighbour",
+          "recording": "Mir ist wichtig, dass es für alle im Haus angenehm bleibt. Darum wollte ich lieber vorher informieren als erst nachher um Entschuldigung bitten. Ich finde es besser, wenn man offen miteinander spricht und kleine Probleme früh anspricht.",
+          "solution": "Sie möchte ein gutes Verhältnis im Haus bewahren und mögliche Probleme früh ansprechen, statt sich erst nachher entschuldigen zu müssen.",
+          "accepted": ["Damit es keine Probleme mit den Nachbarn gibt.", "Sie möchte vorher offen sprechen und Streit vermeiden.", "Damit es für alle im Haus angenehm bleibt."],
+          "essential": "Prevent problems/maintain considerate relations through advance communication; no exact phrase or multi-sentence performance required.",
+          "source_item": "uebungssatz_05_aufgabe_03_seg_001",
+          "adaptations": ["Replace the abstract source question about her overall attitude with a concrete why-question supported by the same recording."]
+        }
+      ]
+    }
+  ]
+}

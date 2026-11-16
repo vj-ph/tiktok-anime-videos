@@ -1,5 +1,31 @@
 # 2D listening videos: ÖIF B1 simulation
 
+## New fide A2-B1 production track (November 16, 2026)
+
+See `..\plan\fide_a2_b1_listening_simulation.md` for the separate, book-based
+Swiss listening plan. The user approved the reviewed complete script and both
+full formats; local 48-clip Swiss speech generation has started in
+`builds\fide_a2_b1_listening_full_production_r1`. Video rendering is still pending.
+The official format is not the four-section ÖIF template: A2 items 7-12 use
+pictures, then B1 items 13-18 require oral responses, with spoken questions
+before and after each recording. The user selected one scheduled playback,
+optional rewind once and Swiss Standard German at 0.8x. Solutions belong after
+the full test. Proposed practice pauses are not official fixed timings.
+Keep all frozen ÖIF programs/deliveries unchanged. Separate fide programs are
+`prepare_fide.py`, `process_fide.py`, `compose_fide.py`,
+`audit_fide_sequence.py`, `check_fide_layout.cjs`, `validate_fide.py`,
+`review_fide_frames.py` and `deliver_fide.py`.
+The 12-task episode is `episodes\fide_a2_b1_listening_01.json`; exact-script
+review/recheck and user approval are in `builds\fide_a2_b1_listening_script_review_r1`.
+Eleven focused tests and both 92-scene geometry fixtures pass. Six inspected
+layout-only sheets are in `builds\fide_a2_b1_listening_layout_fixture_r2\contact_*`.
+These silent, clearly labelled fixtures are not production timing/alignment
+evidence. The first real processed title has small/medium ASR receipts in
+`builds\fide_a2_b1_listening_title_probe_r1`; numeral-format flags are retained.
+After speech preparation, run real alignment/ASR, compose, source/sequence and
+browser checks, then inspect measured contact sheets before rendering.
+Encoded event/frame/promotion checks and freezing remain required for delivery.
+
 Planning date: November 8, 2026.
 Status: full production and four reduced-practice portrait cuts complete and
 validated, with earlier previews preserved. Human listening remains separate.
