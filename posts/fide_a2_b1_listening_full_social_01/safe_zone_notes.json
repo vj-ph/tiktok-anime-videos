@@ -1,0 +1,38 @@
+{
+  "design_safe_rectangle": [
+    90,
+    460,
+    900,
+    1240
+  ],
+  "canvas": [
+    1080,
+    1920
+  ],
+  "tested_center_crops": {
+    "square": [
+      0,
+      420,
+      1080,
+      1500
+    ],
+    "4x5": [
+      0,
+      285,
+      1080,
+      1635
+    ],
+    "3x4": [
+      0,
+      240,
+      1080,
+      1680
+    ]
+  },
+  "policy": "Conservative design bounds, not a universal Instagram interface guarantee. Use centered cover positioning.",
+  "official_pages_attempted_2026_11_17": [
+    "https://www.facebook.com/help/instagram/1038071743007909",
+    "https://www.facebook.com/business/help/980593475366490"
+  ],
+  "official_page_result": "Login/temporarily-blocked pages; no current numeric Meta safe-zone specification verified."
+}

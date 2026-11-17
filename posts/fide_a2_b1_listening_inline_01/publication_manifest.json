@@ -1,0 +1,34 @@
+{
+  "inputs": {
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\fide_a2_b1_listening_inline_r1\\delivery_manifest.json": "1161a955b1c85eb6daf332e5139b48d6a9638116e8031e2da2a5afb6a8ca5bd2",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\fide_a2_b1_listening_inline_r1\\timeline.json": "03f061ea2018115deea01bbd9668ac111f530c0c33eb2a81699224f95699c40b",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\publish_fide_assets.py": "fe2c906d36046a024c7d01a7e0405fe1380740e4068bb184858e4f81d30e9150",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\publication_assets.py": "bc218ee37f37089c603ea8b437294900a44fa0bb71648464df40b5ff0ccb7cf5",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\pilot_3d\\assets\\deutschkompass-logo.png": "a90d1e2b0ff00764191d535d70475f2d1d4c37cbf8abf9567ded3eaf4a48c673",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\pilot_3d\\assets\\flags\\switzerland.png": "747a129b904dc120e98726a29dedeac45604f3021fe80f2da94b24cd1a1f4b61",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\pilot_3d\\assets\\fide_a2_b1_complete.png": "1d2413431f416b0db424366265ef90bd5fb05c25f32ac197d8194cca6014dc44",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\revise_fide_inline.py": "9a8a1f7f18a306fed58355e4251f37178f6d540c901014b910ba8e81bde50db6"
+  },
+  "source_build": "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\fide_a2_b1_listening_inline_r1",
+  "video_hashes": {
+    "landscape": {
+      "sha256": "dc3359a128fe823bc36c0ca7f54c4a76bd79b8f0338356b634cbd6e7a4a3bc38"
+    },
+    "portrait": {
+      "sha256": "883a458ddeda183b0e75b2962c3aeb2f6294cf1acb16d1ef2ea4ee2a0920d1db"
+    }
+  },
+  "assets": {
+    "instagram.txt": "9de209447e23ddf2f20007bdf5f06e5298d9d6f39a76f7c065ee3e12112e12fa",
+    "layout_checks.json": "b93d40c9c26753b7e7784ced03dd9c121ece2d0570decbbae521cf60a910d4e6",
+    "thumbnail_contact_sheet.jpg": "19036e6e103d13e387a6aab6f71e5461cde13f1879bb5e7ccbbc007d28919f9a",
+    "thumbnail_instagram.jpg": "30c2d0289a491676f50be4659e0fddb9f6cd227a6f7ab3030ba7472d621f4d91",
+    "thumbnail_tiktok.jpg": "30c2d0289a491676f50be4659e0fddb9f6cd227a6f7ab3030ba7472d621f4d91",
+    "thumbnail_youtube.jpg": "e19eda2288dda69f1e2802241e7cc10fc2000253fc662bfcc1c3800e634923c7",
+    "tiktok.txt": "9de209447e23ddf2f20007bdf5f06e5298d9d6f39a76f7c065ee3e12112e12fa",
+    "youtube.txt": "bc8b1cd2e85d6ee820e137b065892a5ae6c30ab0aa7b39d026c56d12f7559f2a"
+  },
+  "measured_duration": 777.4166666666666,
+  "uploaded": false,
+  "presentation": "Per-exercise spoken answers after complete 10/20s response pauses; 2s holds."
+}

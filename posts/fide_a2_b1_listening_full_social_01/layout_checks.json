@@ -1,0 +1,1540 @@
+{
+  "full/youtube": {
+    "size": [
+      1920,
+      1080
+    ],
+    "regions": [
+      {
+        "text": "Deutsch Kompass logo",
+        "bounds": [
+          80,
+          65,
+          180,
+          165
+        ]
+      },
+      {
+        "text": "Swiss flag",
+        "bounds": [
+          1690,
+          80,
+          1810,
+          200
+        ]
+      },
+      {
+        "text": "Deutsch Kompass",
+        "font_px": 40,
+        "bounds": [
+          208,
+          98,
+          554,
+          135
+        ]
+      },
+      {
+        "text": "fide A2-B1",
+        "font_px": 116,
+        "bounds": [
+          90,
+          215,
+          666,
+          300
+        ]
+      },
+      {
+        "text": "Verstehen",
+        "font_px": 154,
+        "bounds": [
+          83,
+          367,
+          830,
+          479
+        ]
+      },
+      {
+        "text": "Prüfungssimulation",
+        "font_px": 88,
+        "bounds": [
+          90,
+          568,
+          916,
+          650
+        ]
+      },
+      {
+        "text": "12 Aufgaben · Mit Lösungen",
+        "font_px": 56,
+        "bounds": [
+          90,
+          719,
+          840,
+          772
+        ]
+      },
+      {
+        "text": "Geführte Übung · A2 + B1",
+        "font_px": 48,
+        "bounds": [
+          338.015625,
+          869,
+          922.015625,
+          923
+        ]
+      },
+      {
+        "text": "Book cover",
+        "bounds": [
+          1330,
+          290,
+          1730,
+          890
+        ]
+      }
+    ],
+    "safe_bounds": null,
+    "center_crops": {},
+    "new_ai_image_generation": false
+  },
+  "clip_1/youtube": {
+    "size": [
+      1920,
+      1080
+    ],
+    "regions": [
+      {
+        "text": "Deutsch Kompass logo",
+        "bounds": [
+          80,
+          65,
+          180,
+          165
+        ]
+      },
+      {
+        "text": "Swiss flag",
+        "bounds": [
+          1690,
+          80,
+          1810,
+          200
+        ]
+      },
+      {
+        "text": "Deutsch Kompass",
+        "font_px": 40,
+        "bounds": [
+          208,
+          98,
+          554,
+          135
+        ]
+      },
+      {
+        "text": "fide A2-B1",
+        "font_px": 116,
+        "bounds": [
+          90,
+          215,
+          666,
+          300
+        ]
+      },
+      {
+        "text": "Verstehen",
+        "font_px": 154,
+        "bounds": [
+          83,
+          367,
+          830,
+          479
+        ]
+      },
+      {
+        "text": "Bahnhof",
+        "font_px": 80,
+        "bounds": [
+          90,
+          568,
+          418,
+          628
+        ]
+      },
+      {
+        "text": "Aufgaben 7–8 · Verkürzte Übung",
+        "font_px": 50,
+        "bounds": [
+          90,
+          713,
+          868,
+          768
+        ]
+      },
+      {
+        "text": "Video 1/6",
+        "font_px": 86,
+        "bounds": [
+          439.515625,
+          839,
+          819.515625,
+          902
+        ]
+      },
+      {
+        "text": "Book cover",
+        "bounds": [
+          1330,
+          290,
+          1730,
+          890
+        ]
+      }
+    ],
+    "safe_bounds": null,
+    "center_crops": {},
+    "new_ai_image_generation": false
+  },
+  "clip_1/instagram": {
+    "size": [
+      1080,
+      1920
+    ],
+    "regions": [
+      {
+        "text": "Deutsch Kompass logo",
+        "bounds": [
+          112,
+          478,
+          172,
+          538
+        ]
+      },
+      {
+        "text": "Swiss flag",
+        "bounds": [
+          804,
+          474,
+          874,
+          544
+        ]
+      },
+      {
+        "text": "Deutsch Kompass",
+        "font_px": 32,
+        "bounds": [
+          190,
+          490,
+          472,
+          519
+        ]
+      },
+      {
+        "text": "fide A2-B1",
+        "font_px": 88,
+        "bounds": [
+          112,
+          585,
+          547,
+          650
+        ]
+      },
+      {
+        "text": "Verstehen",
+        "font_px": 104,
+        "bounds": [
+          111,
+          696,
+          616,
+          772
+        ]
+      },
+      {
+        "text": "Video 1/6",
+        "font_px": 72,
+        "bounds": [
+          334.0078125,
+          854,
+          651.0078125,
+          907
+        ]
+      },
+      {
+        "text": "A2 · Aufgaben 7–8",
+        "font_px": 44,
+        "bounds": [
+          112,
+          985,
+          494,
+          1026
+        ]
+      },
+      {
+        "text": "Bahnhof",
+        "font_px": 42,
+        "bounds": [
+          112,
+          1060,
+          285,
+          1090
+        ]
+      },
+      {
+        "text": "Mit Lösungen",
+        "font_px": 40,
+        "bounds": [
+          112,
+          1130,
+          368,
+          1167
+        ]
+      },
+      {
+        "text": "Verkürzte Übung",
+        "font_px": 36,
+        "bounds": [
+          111,
+          1195,
+          400,
+          1234
+        ]
+      },
+      {
+        "text": "Book cover",
+        "bounds": [
+          743,
+          1040,
+          860,
+          1216
+        ]
+      }
+    ],
+    "safe_bounds": [
+      90,
+      460,
+      900,
+      1240
+    ],
+    "center_crops": {
+      "square": [
+        0,
+        420,
+        1080,
+        1500
+      ],
+      "4x5": [
+        0,
+        285,
+        1080,
+        1635
+      ],
+      "3x4": [
+        0,
+        240,
+        1080,
+        1680
+      ]
+    },
+    "new_ai_image_generation": false
+  },
+  "clip_2/youtube": {
+    "size": [
+      1920,
+      1080
+    ],
+    "regions": [
+      {
+        "text": "Deutsch Kompass logo",
+        "bounds": [
+          80,
+          65,
+          180,
+          165
+        ]
+      },
+      {
+        "text": "Swiss flag",
+        "bounds": [
+          1690,
+          80,
+          1810,
+          200
+        ]
+      },
+      {
+        "text": "Deutsch Kompass",
+        "font_px": 40,
+        "bounds": [
+          208,
+          98,
+          554,
+          135
+        ]
+      },
+      {
+        "text": "fide A2-B1",
+        "font_px": 116,
+        "bounds": [
+          90,
+          215,
+          666,
+          300
+        ]
+      },
+      {
+        "text": "Verstehen",
+        "font_px": 154,
+        "bounds": [
+          83,
+          367,
+          830,
+          479
+        ]
+      },
+      {
+        "text": "Bahnhof & Tram",
+        "font_px": 80,
+        "bounds": [
+          90,
+          568,
+          714,
+          628
+        ]
+      },
+      {
+        "text": "Aufgaben 9–10 · Verkürzte Übung",
+        "font_px": 50,
+        "bounds": [
+          90,
+          713,
+          896,
+          768
+        ]
+      },
+      {
+        "text": "Video 2/6",
+        "font_px": 86,
+        "bounds": [
+          439.515625,
+          839,
+          819.515625,
+          902
+        ]
+      },
+      {
+        "text": "Book cover",
+        "bounds": [
+          1330,
+          290,
+          1730,
+          890
+        ]
+      }
+    ],
+    "safe_bounds": null,
+    "center_crops": {},
+    "new_ai_image_generation": false
+  },
+  "clip_2/instagram": {
+    "size": [
+      1080,
+      1920
+    ],
+    "regions": [
+      {
+        "text": "Deutsch Kompass logo",
+        "bounds": [
+          112,
+          478,
+          172,
+          538
+        ]
+      },
+      {
+        "text": "Swiss flag",
+        "bounds": [
+          804,
+          474,
+          874,
+          544
+        ]
+      },
+      {
+        "text": "Deutsch Kompass",
+        "font_px": 32,
+        "bounds": [
+          190,
+          490,
+          472,
+          519
+        ]
+      },
+      {
+        "text": "fide A2-B1",
+        "font_px": 88,
+        "bounds": [
+          112,
+          585,
+          547,
+          650
+        ]
+      },
+      {
+        "text": "Verstehen",
+        "font_px": 104,
+        "bounds": [
+          111,
+          696,
+          616,
+          772
+        ]
+      },
+      {
+        "text": "Video 2/6",
+        "font_px": 72,
+        "bounds": [
+          334.0078125,
+          854,
+          651.0078125,
+          907
+        ]
+      },
+      {
+        "text": "A2 · Aufgaben 9–10",
+        "font_px": 44,
+        "bounds": [
+          112,
+          985,
+          518,
+          1026
+        ]
+      },
+      {
+        "text": "Bahnhof & Tram",
+        "font_px": 42,
+        "bounds": [
+          112,
+          1060,
+          439,
+          1090
+        ]
+      },
+      {
+        "text": "Mit Lösungen",
+        "font_px": 40,
+        "bounds": [
+          112,
+          1130,
+          368,
+          1167
+        ]
+      },
+      {
+        "text": "Verkürzte Übung",
+        "font_px": 36,
+        "bounds": [
+          111,
+          1195,
+          400,
+          1234
+        ]
+      },
+      {
+        "text": "Book cover",
+        "bounds": [
+          743,
+          1040,
+          860,
+          1216
+        ]
+      }
+    ],
+    "safe_bounds": [
+      90,
+      460,
+      900,
+      1240
+    ],
+    "center_crops": {
+      "square": [
+        0,
+        420,
+        1080,
+        1500
+      ],
+      "4x5": [
+        0,
+        285,
+        1080,
+        1635
+      ],
+      "3x4": [
+        0,
+        240,
+        1080,
+        1680
+      ]
+    },
+    "new_ai_image_generation": false
+  },
+  "clip_3/youtube": {
+    "size": [
+      1920,
+      1080
+    ],
+    "regions": [
+      {
+        "text": "Deutsch Kompass logo",
+        "bounds": [
+          80,
+          65,
+          180,
+          165
+        ]
+      },
+      {
+        "text": "Swiss flag",
+        "bounds": [
+          1690,
+          80,
+          1810,
+          200
+        ]
+      },
+      {
+        "text": "Deutsch Kompass",
+        "font_px": 40,
+        "bounds": [
+          208,
+          98,
+          554,
+          135
+        ]
+      },
+      {
+        "text": "fide A2-B1",
+        "font_px": 116,
+        "bounds": [
+          90,
+          215,
+          666,
+          300
+        ]
+      },
+      {
+        "text": "Verstehen",
+        "font_px": 154,
+        "bounds": [
+          83,
+          367,
+          830,
+          479
+        ]
+      },
+      {
+        "text": "Tram",
+        "font_px": 80,
+        "bounds": [
+          90,
+          568,
+          286,
+          627
+        ]
+      },
+      {
+        "text": "Aufgaben 11–12 · Verkürzte Übung",
+        "font_px": 50,
+        "bounds": [
+          90,
+          713,
+          924,
+          768
+        ]
+      },
+      {
+        "text": "Video 3/6",
+        "font_px": 86,
+        "bounds": [
+          439.515625,
+          839,
+          819.515625,
+          902
+        ]
+      },
+      {
+        "text": "Book cover",
+        "bounds": [
+          1330,
+          290,
+          1730,
+          890
+        ]
+      }
+    ],
+    "safe_bounds": null,
+    "center_crops": {},
+    "new_ai_image_generation": false
+  },
+  "clip_3/instagram": {
+    "size": [
+      1080,
+      1920
+    ],
+    "regions": [
+      {
+        "text": "Deutsch Kompass logo",
+        "bounds": [
+          112,
+          478,
+          172,
+          538
+        ]
+      },
+      {
+        "text": "Swiss flag",
+        "bounds": [
+          804,
+          474,
+          874,
+          544
+        ]
+      },
+      {
+        "text": "Deutsch Kompass",
+        "font_px": 32,
+        "bounds": [
+          190,
+          490,
+          472,
+          519
+        ]
+      },
+      {
+        "text": "fide A2-B1",
+        "font_px": 88,
+        "bounds": [
+          112,
+          585,
+          547,
+          650
+        ]
+      },
+      {
+        "text": "Verstehen",
+        "font_px": 104,
+        "bounds": [
+          111,
+          696,
+          616,
+          772
+        ]
+      },
+      {
+        "text": "Video 3/6",
+        "font_px": 72,
+        "bounds": [
+          334.0078125,
+          854,
+          651.0078125,
+          907
+        ]
+      },
+      {
+        "text": "A2 · Aufgaben 11–12",
+        "font_px": 44,
+        "bounds": [
+          112,
+          985,
+          542,
+          1026
+        ]
+      },
+      {
+        "text": "Tram",
+        "font_px": 42,
+        "bounds": [
+          112,
+          1060,
+          214,
+          1090
+        ]
+      },
+      {
+        "text": "Mit Lösungen",
+        "font_px": 40,
+        "bounds": [
+          112,
+          1130,
+          368,
+          1167
+        ]
+      },
+      {
+        "text": "Verkürzte Übung",
+        "font_px": 36,
+        "bounds": [
+          111,
+          1195,
+          400,
+          1234
+        ]
+      },
+      {
+        "text": "Book cover",
+        "bounds": [
+          743,
+          1040,
+          860,
+          1216
+        ]
+      }
+    ],
+    "safe_bounds": [
+      90,
+      460,
+      900,
+      1240
+    ],
+    "center_crops": {
+      "square": [
+        0,
+        420,
+        1080,
+        1500
+      ],
+      "4x5": [
+        0,
+        285,
+        1080,
+        1635
+      ],
+      "3x4": [
+        0,
+        240,
+        1080,
+        1680
+      ]
+    },
+    "new_ai_image_generation": false
+  },
+  "clip_4/youtube": {
+    "size": [
+      1920,
+      1080
+    ],
+    "regions": [
+      {
+        "text": "Deutsch Kompass logo",
+        "bounds": [
+          80,
+          65,
+          180,
+          165
+        ]
+      },
+      {
+        "text": "Swiss flag",
+        "bounds": [
+          1690,
+          80,
+          1810,
+          200
+        ]
+      },
+      {
+        "text": "Deutsch Kompass",
+        "font_px": 40,
+        "bounds": [
+          208,
+          98,
+          554,
+          135
+        ]
+      },
+      {
+        "text": "fide A2-B1",
+        "font_px": 116,
+        "bounds": [
+          90,
+          215,
+          666,
+          300
+        ]
+      },
+      {
+        "text": "Verstehen",
+        "font_px": 154,
+        "bounds": [
+          83,
+          367,
+          830,
+          479
+        ]
+      },
+      {
+        "text": "Hausverwaltung",
+        "font_px": 80,
+        "bounds": [
+          90,
+          568,
+          711,
+          643
+        ]
+      },
+      {
+        "text": "Aufgaben 13–14 · Verkürzte Übung",
+        "font_px": 50,
+        "bounds": [
+          90,
+          713,
+          924,
+          768
+        ]
+      },
+      {
+        "text": "Video 4/6",
+        "font_px": 86,
+        "bounds": [
+          439.515625,
+          839,
+          819.515625,
+          902
+        ]
+      },
+      {
+        "text": "Book cover",
+        "bounds": [
+          1330,
+          290,
+          1730,
+          890
+        ]
+      }
+    ],
+    "safe_bounds": null,
+    "center_crops": {},
+    "new_ai_image_generation": false
+  },
+  "clip_4/instagram": {
+    "size": [
+      1080,
+      1920
+    ],
+    "regions": [
+      {
+        "text": "Deutsch Kompass logo",
+        "bounds": [
+          112,
+          478,
+          172,
+          538
+        ]
+      },
+      {
+        "text": "Swiss flag",
+        "bounds": [
+          804,
+          474,
+          874,
+          544
+        ]
+      },
+      {
+        "text": "Deutsch Kompass",
+        "font_px": 32,
+        "bounds": [
+          190,
+          490,
+          472,
+          519
+        ]
+      },
+      {
+        "text": "fide A2-B1",
+        "font_px": 88,
+        "bounds": [
+          112,
+          585,
+          547,
+          650
+        ]
+      },
+      {
+        "text": "Verstehen",
+        "font_px": 104,
+        "bounds": [
+          111,
+          696,
+          616,
+          772
+        ]
+      },
+      {
+        "text": "Video 4/6",
+        "font_px": 72,
+        "bounds": [
+          334.0078125,
+          854,
+          651.0078125,
+          907
+        ]
+      },
+      {
+        "text": "B1 · Aufgaben 13–14",
+        "font_px": 44,
+        "bounds": [
+          112,
+          985,
+          542,
+          1026
+        ]
+      },
+      {
+        "text": "Hausverwaltung",
+        "font_px": 42,
+        "bounds": [
+          112,
+          1060,
+          436,
+          1098
+        ]
+      },
+      {
+        "text": "Mit Modellantworten",
+        "font_px": 40,
+        "bounds": [
+          112,
+          1130,
+          494,
+          1159
+        ]
+      },
+      {
+        "text": "Verkürzte Übung",
+        "font_px": 36,
+        "bounds": [
+          111,
+          1195,
+          400,
+          1234
+        ]
+      },
+      {
+        "text": "Book cover",
+        "bounds": [
+          743,
+          1040,
+          860,
+          1216
+        ]
+      }
+    ],
+    "safe_bounds": [
+      90,
+      460,
+      900,
+      1240
+    ],
+    "center_crops": {
+      "square": [
+        0,
+        420,
+        1080,
+        1500
+      ],
+      "4x5": [
+        0,
+        285,
+        1080,
+        1635
+      ],
+      "3x4": [
+        0,
+        240,
+        1080,
+        1680
+      ]
+    },
+    "new_ai_image_generation": false
+  },
+  "clip_5/youtube": {
+    "size": [
+      1920,
+      1080
+    ],
+    "regions": [
+      {
+        "text": "Deutsch Kompass logo",
+        "bounds": [
+          80,
+          65,
+          180,
+          165
+        ]
+      },
+      {
+        "text": "Swiss flag",
+        "bounds": [
+          1690,
+          80,
+          1810,
+          200
+        ]
+      },
+      {
+        "text": "Deutsch Kompass",
+        "font_px": 40,
+        "bounds": [
+          208,
+          98,
+          554,
+          135
+        ]
+      },
+      {
+        "text": "fide A2-B1",
+        "font_px": 116,
+        "bounds": [
+          90,
+          215,
+          666,
+          300
+        ]
+      },
+      {
+        "text": "Verstehen",
+        "font_px": 154,
+        "bounds": [
+          83,
+          367,
+          830,
+          479
+        ]
+      },
+      {
+        "text": "Wohnen & Nachbarn",
+        "font_px": 80,
+        "bounds": [
+          90,
+          568,
+          880,
+          628
+        ]
+      },
+      {
+        "text": "Aufgaben 15–16 · Verkürzte Übung",
+        "font_px": 50,
+        "bounds": [
+          90,
+          713,
+          924,
+          768
+        ]
+      },
+      {
+        "text": "Video 5/6",
+        "font_px": 86,
+        "bounds": [
+          439.515625,
+          839,
+          819.515625,
+          902
+        ]
+      },
+      {
+        "text": "Book cover",
+        "bounds": [
+          1330,
+          290,
+          1730,
+          890
+        ]
+      }
+    ],
+    "safe_bounds": null,
+    "center_crops": {},
+    "new_ai_image_generation": false
+  },
+  "clip_5/instagram": {
+    "size": [
+      1080,
+      1920
+    ],
+    "regions": [
+      {
+        "text": "Deutsch Kompass logo",
+        "bounds": [
+          112,
+          478,
+          172,
+          538
+        ]
+      },
+      {
+        "text": "Swiss flag",
+        "bounds": [
+          804,
+          474,
+          874,
+          544
+        ]
+      },
+      {
+        "text": "Deutsch Kompass",
+        "font_px": 32,
+        "bounds": [
+          190,
+          490,
+          472,
+          519
+        ]
+      },
+      {
+        "text": "fide A2-B1",
+        "font_px": 88,
+        "bounds": [
+          112,
+          585,
+          547,
+          650
+        ]
+      },
+      {
+        "text": "Verstehen",
+        "font_px": 104,
+        "bounds": [
+          111,
+          696,
+          616,
+          772
+        ]
+      },
+      {
+        "text": "Video 5/6",
+        "font_px": 72,
+        "bounds": [
+          334.0078125,
+          854,
+          651.0078125,
+          907
+        ]
+      },
+      {
+        "text": "B1 · Aufgaben 15–16",
+        "font_px": 44,
+        "bounds": [
+          112,
+          985,
+          542,
+          1026
+        ]
+      },
+      {
+        "text": "Wohnen & Nachbarn",
+        "font_px": 42,
+        "bounds": [
+          112,
+          1060,
+          526,
+          1090
+        ]
+      },
+      {
+        "text": "Mit Modellantworten",
+        "font_px": 40,
+        "bounds": [
+          112,
+          1130,
+          494,
+          1159
+        ]
+      },
+      {
+        "text": "Verkürzte Übung",
+        "font_px": 36,
+        "bounds": [
+          111,
+          1195,
+          400,
+          1234
+        ]
+      },
+      {
+        "text": "Book cover",
+        "bounds": [
+          743,
+          1040,
+          860,
+          1216
+        ]
+      }
+    ],
+    "safe_bounds": [
+      90,
+      460,
+      900,
+      1240
+    ],
+    "center_crops": {
+      "square": [
+        0,
+        420,
+        1080,
+        1500
+      ],
+      "4x5": [
+        0,
+        285,
+        1080,
+        1635
+      ],
+      "3x4": [
+        0,
+        240,
+        1080,
+        1680
+      ]
+    },
+    "new_ai_image_generation": false
+  },
+  "clip_6/youtube": {
+    "size": [
+      1920,
+      1080
+    ],
+    "regions": [
+      {
+        "text": "Deutsch Kompass logo",
+        "bounds": [
+          80,
+          65,
+          180,
+          165
+        ]
+      },
+      {
+        "text": "Swiss flag",
+        "bounds": [
+          1690,
+          80,
+          1810,
+          200
+        ]
+      },
+      {
+        "text": "Deutsch Kompass",
+        "font_px": 40,
+        "bounds": [
+          208,
+          98,
+          554,
+          135
+        ]
+      },
+      {
+        "text": "fide A2-B1",
+        "font_px": 116,
+        "bounds": [
+          90,
+          215,
+          666,
+          300
+        ]
+      },
+      {
+        "text": "Verstehen",
+        "font_px": 154,
+        "bounds": [
+          83,
+          367,
+          830,
+          479
+        ]
+      },
+      {
+        "text": "Nachbarschaft",
+        "font_px": 80,
+        "bounds": [
+          90,
+          568,
+          650,
+          628
+        ]
+      },
+      {
+        "text": "Aufgaben 17–18 · Verkürzte Übung",
+        "font_px": 50,
+        "bounds": [
+          90,
+          713,
+          924,
+          768
+        ]
+      },
+      {
+        "text": "Video 6/6",
+        "font_px": 86,
+        "bounds": [
+          439.515625,
+          839,
+          819.515625,
+          902
+        ]
+      },
+      {
+        "text": "Book cover",
+        "bounds": [
+          1330,
+          290,
+          1730,
+          890
+        ]
+      }
+    ],
+    "safe_bounds": null,
+    "center_crops": {},
+    "new_ai_image_generation": false
+  },
+  "clip_6/instagram": {
+    "size": [
+      1080,
+      1920
+    ],
+    "regions": [
+      {
+        "text": "Deutsch Kompass logo",
+        "bounds": [
+          112,
+          478,
+          172,
+          538
+        ]
+      },
+      {
+        "text": "Swiss flag",
+        "bounds": [
+          804,
+          474,
+          874,
+          544
+        ]
+      },
+      {
+        "text": "Deutsch Kompass",
+        "font_px": 32,
+        "bounds": [
+          190,
+          490,
+          472,
+          519
+        ]
+      },
+      {
+        "text": "fide A2-B1",
+        "font_px": 88,
+        "bounds": [
+          112,
+          585,
+          547,
+          650
+        ]
+      },
+      {
+        "text": "Verstehen",
+        "font_px": 104,
+        "bounds": [
+          111,
+          696,
+          616,
+          772
+        ]
+      },
+      {
+        "text": "Video 6/6",
+        "font_px": 72,
+        "bounds": [
+          334.0078125,
+          854,
+          651.0078125,
+          907
+        ]
+      },
+      {
+        "text": "B1 · Aufgaben 17–18",
+        "font_px": 44,
+        "bounds": [
+          112,
+          985,
+          542,
+          1026
+        ]
+      },
+      {
+        "text": "Nachbarschaft",
+        "font_px": 42,
+        "bounds": [
+          112,
+          1060,
+          402,
+          1090
+        ]
+      },
+      {
+        "text": "Mit Modellantworten",
+        "font_px": 40,
+        "bounds": [
+          112,
+          1130,
+          494,
+          1159
+        ]
+      },
+      {
+        "text": "Verkürzte Übung",
+        "font_px": 36,
+        "bounds": [
+          111,
+          1195,
+          400,
+          1234
+        ]
+      },
+      {
+        "text": "Book cover",
+        "bounds": [
+          743,
+          1040,
+          860,
+          1216
+        ]
+      }
+    ],
+    "safe_bounds": [
+      90,
+      460,
+      900,
+      1240
+    ],
+    "center_crops": {
+      "square": [
+        0,
+        420,
+        1080,
+        1500
+      ],
+      "4x5": [
+        0,
+        285,
+        1080,
+        1635
+      ],
+      "3x4": [
+        0,
+        240,
+        1080,
+        1680
+      ]
+    },
+    "new_ai_image_generation": false
+  }
+}

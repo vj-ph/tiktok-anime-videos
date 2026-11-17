@@ -2,10 +2,110 @@
 
 ## New fide A2-B1 production track (November 16, 2026)
 
+**November 17 full/social publishing follow-up complete:** user authorized
+descriptions and YouTube/Instagram thumbnails for the frozen chimes full
+video and six frozen social clips. New `publish_fide_social_assets.py`
+creates `posts\fide_a2_b1_listening_full_social_01`: full YouTube description/
+cover, plus separate YouTube/Instagram/TikTok descriptions and YouTube/
+Instagram covers per clip (19 descriptions / 13 covers total).
+All covers retain Swiss flags, brand and book; social covers use prominent
+72px Video N/6 badges and decorative Alpine silhouettes. All essentials fit
+the conservative x=90..900, y=460..1240 rectangle on native 1080x1920, and
+centered square/4:5/3:4 crops. Inspect all covers and six crop previews.
+Meta help pages were login-blocked; this is a measured design region, not
+a verified universal current interface guarantee. Use centered positioning.
+All 34 fide tests pass; final focused publication recheck passes.
+External `posts\fide_a2_b1_listening_full_social_01_final_audit.json` verifies
+41 assets / 18 inputs / seven video hashes, decoded JPEG dimensions/sub-2-MB
+sizes, all caption/replay targets, seven valid full YouTube chapters and both
+complete frozen source deliveries. Descriptions retain practice timing,
+per-exercise chime/TTS answers, direct book link, AI disclosure and SFX credit.
+Videos and earlier posts unchanged; nothing uploaded.
+
+**November 17 six social clips complete and frozen:** fresh
+`builds\fide_a2_b1_listening_social_r1\clip_1` through `clip_6` each contain
+`production_portrait.mp4` (1080x1920, 24 fps). Task pairs 7-8 / 9-10 / 11-12 /
+13-14 / 15-16 / 17-18 run 2:03.583 / 2:22.000 / 2:07.708 / 2:29.792 /
+2:32.167 / 2:32.958. All twelve exercises appear once, with complete original
+recordings/questions, A2 5s inspection and 10s response / B1 20s response,
+chime then spoken answer then 2s hold, and full voiced CTA/outro.
+Separate `split_fide_social.py` / `check_fide_social.cjs` reuse frozen chimes
+r1; only five complete title/context sentence prefixes are trimmed using
+measured word gaps, without synthesis or another tempo pass. Render those
+changed scenes natively, reuse verified exercise/CTA footage, and add fixed
+Video N/6/task/subset overlays. Both Amazon cue and direct URL remain visible.
+All 31 fide tests, six native geometry/browser gates, 122 encoded events
+(80 audio / 42 silent intervals), strict video/audio/container caps below
+180s and 234 decoded/browser/promotion/scope comparisons pass. All 30 native
+and 30 decoded sheets inspected; minimum event correlation 0.9999708106,
+guarded silence peak/RMS zero, all image-region errors below 3.
+External `builds\fide_a2_b1_listening_social_r1_final_audit.json` rehashes
+839 files / 25 code pins, all three full-source deliveries recursively, and
+byte-identical whole-exercise/CTA PCM. Preserve title ASR spelling/number
+flags, inherited audio/browser notes and one-frame countdown rounding;
+no human listening or continuous-motion certification. Full videos unchanged;
+no short publishing assets or uploads.
+
+**November 17 chime/promotion follow-up complete and frozen:** separate
+`revise_fide_chimes.py` derives fresh `builds\fide_a2_b1_listening_chimes_r1`
+from frozen inline r1, preserving all 47 speech WAVs and measured words.
+After each full A2 10s / B1 20s response silence, show the answer and play the
+complete established remove chime (137,611 samples / 69 frames), then start
+the unchanged answer TTS, then keep the two-second hold. No overlap, new TTS
+or second tempo processing. Both formats gain 828 frames: 19,486 frames /
+13:31.917. Restore "Link in der Beschreibung" (landscape) and
+"Link in der Bio / Beschreibung" (portrait), keeping the direct
+`amzn.eu/d/0dDgJ1ZT` visible in the persistent panel and both CTA phases.
+All 25 fide tests, source PCM/order and both 103-scene native browser/geometry
+checks pass. All 36 native sheets (161 frames per ratio) were inspected,
+including each response/reveal/chime/TTS/hold boundary and the restored cue
+plus URL on persistent promotion and CTA. Promotion crops are pixel-identical.
+Both native 24-fps MP4s pass full decoding, all 206 encoded events
+(142 audio including 24 chimes / 64 silent intervals), and 322
+decoded/browser/promotion comparisons. All 36 decoded sheets were inspected.
+Minimum audio/chime correlation is 0.9999597429; guarded silence peak/RMS
+are zero; maximum RGB/promotion errors are 2.471084/2.524221.
+The external `builds\fide_a2_b1_listening_chimes_r1_final_audit.json`
+rehashes 802 delivery files / 22 code pins, all 646 files / 21 code pins of
+inline r1 and its recursively preserved original source.
+Fresh `posts\fide_a2_b1_listening_chimes_01` contains three verified platform
+descriptions/covers and inspected contact/crop previews; nine inputs/eight
+assets, all twelve replay timestamps per platform, caption limits and native
+cover dimensions/safe bounds/sub-2-MB sizes pass. Descriptions now credit the
+remove SFX and use the revised clocks and both link forms. Earlier frozen
+deliveries/posts and inherited speech-review, nonblocking-browser-warning
+and disabled-motion/no-human-listening limitations stay unchanged.
+Nothing uploaded.
+
+**November 17 revision complete and frozen:** answers now belong immediately after
+each exercise's complete A2 10-second / B1 20-second response silence, using
+the existing spoken explanation/model plus two-second hold. User also requests
+the direct `amzn.eu/d/0dDgJ1ZT` link beside Amazon and on the final CTA in both
+formats. Separate `revise_fide_inline.py` / `review_fide_inline.py` preserve
+the frozen full r1 and derive `builds\fide_a2_b1_listening_inline_r1`
+(18,658 frames / 12:57.417). Reuse unchanged speech/alignments; trim only two
+contradictory narration endings at measured sentence boundaries, without TTS.
+All 20 fide tests and source PCM/independent sequence gates pass. Both native
+browser/layout checks and two-model cut-clip ASR checks are complete; all 28
+native sheets (125 frames per ratio) were inspected. Both full MP4s pass
+182 encoded events (118 speech / 64 silences), full decoding and 250
+decoded/browser/promotion comparisons. All 28 decoded sheets were inspected.
+Minimum event correlation is 0.9999713941; guarded silence peak/RMS are zero;
+maximum RGB/promotion errors are 2.447126/2.331752. The external
+`builds\fide_a2_b1_listening_inline_r1_final_audit.json` rehashes 646 delivery
+files / 21 code pins and all 717 files / 19 code pins of the unchanged source.
+Revised descriptions and three platform covers are verified in
+`posts\fide_a2_b1_listening_inline_01` (eight inputs / eight assets).
+All twelve replay timestamps per platform, caption limits, image dimensions,
+safe bounds and sub-2-MB cover sizes pass. Preserve inherited ASR notes, low
+alignments and disabled-motion/no-human-listening limitations. Nothing uploaded.
+The historical original verified reference, with answers at the end, is below.
+
 See `..\plan\fide_a2_b1_listening_simulation.md` for the separate, book-based
 Swiss listening plan. The user approved the reviewed complete script and both
-full formats; local 48-clip Swiss speech generation has started in
-`builds\fide_a2_b1_listening_full_production_r1`. Video rendering is still pending.
+full formats. All 48 Swiss speech clips and the measured 19,333-frame /
+13:25.542 timeline are ready in `builds\fide_a2_b1_listening_full_production_r1`.
+Both native exports are validated, frozen and independently rehashed.
 The official format is not the four-section ÖIF template: A2 items 7-12 use
 pictures, then B1 items 13-18 require oral responses, with spoken questions
 before and after each recording. The user selected one scheduled playback,
@@ -22,9 +122,26 @@ layout-only sheets are in `builds\fide_a2_b1_listening_layout_fixture_r2\contact
 These silent, clearly labelled fixtures are not production timing/alignment
 evidence. The first real processed title has small/medium ASR receipts in
 `builds\fide_a2_b1_listening_title_probe_r1`; numeral-format flags are retained.
-After speech preparation, run real alignment/ASR, compose, source/sequence and
-browser checks, then inspect measured contact sheets before rendering.
-Encoded event/frame/promotion checks and freezing remain required for delivery.
+Real alignment of all 11 visible narrations, all-speech small ASR plus nine
+medium rechecks, source/sequence/geometry/browser gates and inspection of all
+14 measured sheets (60 frames per ratio) are complete. Preserve three noncritical
+ASR uncertainties (Hörübung/SBB/Halbtax), two low alignment scores and the
+no-human-listening/disabled-motion limitations in the review records.
+Both full exports pass 184 encoded events (120 audio / 64 silent intervals),
+full decoding and 120 decoded/browser/promotion comparisons. All 14 decoded
+sheets were inspected. Minimum audio-event correlation is 0.9999785527,
+guarded-silence peak/RMS are zero and maximum RGB/promotion errors are
+2.501109/2.310966. The external
+`builds\fide_a2_b1_listening_full_production_r1_final_audit.json` rehashes
+717 delivery files / 19 code pins plus seven publication inputs / eight assets.
+Use these frozen `production_landscape.mp4` / `production_portrait.mp4` files
+for lookups; preserve their pinned programs and choose a fresh version for edits.
+`publish_fide_assets.py` generated three platform descriptions, all 12 measured
+replay timestamps and Swiss crop-safe covers in `..\posts\fide_a2_b1_listening_01`.
+Fourteen combined fide regressions pass; final covers/crop previews were
+inspected, all JPEGs decode below 2 MB and descriptions fit their budgets.
+Nothing uploaded; human listening and continuous-motion certification remain
+unclaimed.
 
 Planning date: November 8, 2026.
 Status: full production and four reduced-practice portrait cuts complete and

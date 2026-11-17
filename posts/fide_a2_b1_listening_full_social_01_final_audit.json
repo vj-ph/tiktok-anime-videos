@@ -1,0 +1,169 @@
+{
+  "ok": true,
+  "publication_manifest_sha256": "515cc407a50eb46e56e73a67ab4bbc552c2c074fbec1ecb26a1964b3731e34d4",
+  "assets_rehashed": 41,
+  "inputs_rehashed": 18,
+  "videos_rehashed": 7,
+  "preserved_deliveries": [
+    {
+      "build": "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\fide_a2_b1_listening_chimes_r1",
+      "files": 802,
+      "code_pins": 22
+    },
+    {
+      "build": "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\fide_a2_b1_listening_social_r1",
+      "files": 839,
+      "code_pins": 25
+    }
+  ],
+  "description_characters": {
+    "full\\youtube.txt": 1776,
+    "clip_1\\instagram.txt": 1442,
+    "clip_1\\tiktok.txt": 1442,
+    "clip_1\\youtube.txt": 1436,
+    "clip_2\\instagram.txt": 1457,
+    "clip_2\\tiktok.txt": 1457,
+    "clip_2\\youtube.txt": 1451,
+    "clip_3\\instagram.txt": 1440,
+    "clip_3\\tiktok.txt": 1440,
+    "clip_3\\youtube.txt": 1434,
+    "clip_4\\instagram.txt": 1490,
+    "clip_4\\tiktok.txt": 1490,
+    "clip_4\\youtube.txt": 1484,
+    "clip_5\\instagram.txt": 1494,
+    "clip_5\\tiktok.txt": 1494,
+    "clip_5\\youtube.txt": 1488,
+    "clip_6\\instagram.txt": 1493,
+    "clip_6\\tiktok.txt": 1493,
+    "clip_6\\youtube.txt": 1487
+  },
+  "thumbnails": [
+    {
+      "file": "full\\thumbnail_youtube.jpg",
+      "size": [
+        1920,
+        1080
+      ],
+      "bytes": 289116
+    },
+    {
+      "file": "clip_1\\thumbnail_youtube.jpg",
+      "size": [
+        1920,
+        1080
+      ],
+      "bytes": 279222
+    },
+    {
+      "file": "clip_1\\thumbnail_instagram.jpg",
+      "size": [
+        1080,
+        1920
+      ],
+      "bytes": 184629
+    },
+    {
+      "file": "clip_2\\thumbnail_youtube.jpg",
+      "size": [
+        1920,
+        1080
+      ],
+      "bytes": 287730
+    },
+    {
+      "file": "clip_2\\thumbnail_instagram.jpg",
+      "size": [
+        1080,
+        1920
+      ],
+      "bytes": 189367
+    },
+    {
+      "file": "clip_3\\thumbnail_youtube.jpg",
+      "size": [
+        1920,
+        1080
+      ],
+      "bytes": 276910
+    },
+    {
+      "file": "clip_3\\thumbnail_instagram.jpg",
+      "size": [
+        1080,
+        1920
+      ],
+      "bytes": 183960
+    },
+    {
+      "file": "clip_4\\thumbnail_youtube.jpg",
+      "size": [
+        1920,
+        1080
+      ],
+      "bytes": 289641
+    },
+    {
+      "file": "clip_4\\thumbnail_instagram.jpg",
+      "size": [
+        1080,
+        1920
+      ],
+      "bytes": 192963
+    },
+    {
+      "file": "clip_5\\thumbnail_youtube.jpg",
+      "size": [
+        1920,
+        1080
+      ],
+      "bytes": 294792
+    },
+    {
+      "file": "clip_5\\thumbnail_instagram.jpg",
+      "size": [
+        1080,
+        1920
+      ],
+      "bytes": 195400
+    },
+    {
+      "file": "clip_6\\thumbnail_youtube.jpg",
+      "size": [
+        1920,
+        1080
+      ],
+      "bytes": 290219
+    },
+    {
+      "file": "clip_6\\thumbnail_instagram.jpg",
+      "size": [
+        1080,
+        1920
+      ],
+      "bytes": 193085
+    }
+  ],
+  "full_youtube_chapters_seconds": [
+    0,
+    57,
+    216,
+    377,
+    409,
+    599,
+    792
+  ],
+  "all_13_covers_and_six_crop_previews_visually_inspected": true,
+  "instagram_safe_region": [
+    90,
+    460,
+    900,
+    1240
+  ],
+  "centered_crops_checked": [
+    "square",
+    "4x5",
+    "3x4"
+  ],
+  "current_numeric_meta_safe_zone_not_verified": true,
+  "uploaded": false
+}

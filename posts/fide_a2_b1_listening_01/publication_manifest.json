@@ -1,0 +1,32 @@
+{
+  "inputs": {
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\fide_a2_b1_listening_full_production_r1\\delivery_manifest.json": "f38e86f694c94c1f29805b5554ccf5e8eededd4115ff39b241c3e1e53c9a2cb9",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\fide_a2_b1_listening_full_production_r1\\timeline.json": "0d0edcc3ee0de062822f19199126dccf4fe54ff2c26fed1bbed53aa276feaafe",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\publish_fide_assets.py": "fe2c906d36046a024c7d01a7e0405fe1380740e4068bb184858e4f81d30e9150",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\publication_assets.py": "bc218ee37f37089c603ea8b437294900a44fa0bb71648464df40b5ff0ccb7cf5",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\pilot_3d\\assets\\deutschkompass-logo.png": "a90d1e2b0ff00764191d535d70475f2d1d4c37cbf8abf9567ded3eaf4a48c673",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\pilot_3d\\assets\\flags\\switzerland.png": "747a129b904dc120e98726a29dedeac45604f3021fe80f2da94b24cd1a1f4b61",
+    "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\pilot_3d\\assets\\fide_a2_b1_complete.png": "1d2413431f416b0db424366265ef90bd5fb05c25f32ac197d8194cca6014dc44"
+  },
+  "source_build": "C:\\Users\\ronggong\\lang\\tiktok-anime-videos\\listening_2d\\builds\\fide_a2_b1_listening_full_production_r1",
+  "video_hashes": {
+    "landscape": {
+      "sha256": "c9f98a1537f40dbae3a0276be48650e7e2673113d342f6a00aeb89309a281056"
+    },
+    "portrait": {
+      "sha256": "e2a974d685f6b4e51041216d53807e5faa18d9ffe021e89523632b0a29a52bc7"
+    }
+  },
+  "assets": {
+    "instagram.txt": "ae9c33f8a643a5c809712ddf9b1231a6aea74327dd8e6a188390a2229f646019",
+    "layout_checks.json": "b93d40c9c26753b7e7784ced03dd9c121ece2d0570decbbae521cf60a910d4e6",
+    "thumbnail_contact_sheet.jpg": "19036e6e103d13e387a6aab6f71e5461cde13f1879bb5e7ccbbc007d28919f9a",
+    "thumbnail_instagram.jpg": "30c2d0289a491676f50be4659e0fddb9f6cd227a6f7ab3030ba7472d621f4d91",
+    "thumbnail_tiktok.jpg": "30c2d0289a491676f50be4659e0fddb9f6cd227a6f7ab3030ba7472d621f4d91",
+    "thumbnail_youtube.jpg": "e19eda2288dda69f1e2802241e7cc10fc2000253fc662bfcc1c3800e634923c7",
+    "tiktok.txt": "ae9c33f8a643a5c809712ddf9b1231a6aea74327dd8e6a188390a2229f646019",
+    "youtube.txt": "519be26eaa5bba5fae8103bfd50d7e715ccc7259d9de166ea131e36ddf2a02b7"
+  },
+  "measured_duration": 805.5416666666666,
+  "uploaded": false
+}
