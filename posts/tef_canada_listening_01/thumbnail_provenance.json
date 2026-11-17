@@ -1,0 +1,24 @@
+{
+  "files": {
+    "thumbnail_youtube.jpg": {
+      "sha256": "24b8987b23938036d712ccdf531f3d9154758419412833dbf3f1a7ecdc569891",
+      "source_frame": "/home/ronggong/lang/german/tiktok_anime_videos/listening_2d/builds/tef_canada_listening_01_r5/native_landscape/frame-01-at-0.25s.png",
+      "source_sha256": "5a1392178650758e2871ceeba9b67c5b3782131e157d08a29d7f363bb0bc9053",
+      "adaptation": "JPEG export of the actual r5 native opening frame, with supplied book cover and Amazon link; no new artwork."
+    },
+    "thumbnail_tiktok.jpg": {
+      "sha256": "57b0938615dc513a199f10316c82682d183d4aac283f396511bd8e91f6bffe77",
+      "source_frame": "/home/ronggong/lang/german/tiktok_anime_videos/listening_2d/builds/tef_canada_listening_01_r5/native_portrait/frame-01-at-0.25s.png",
+      "source_sha256": "bfb6e8b61432ae25162f105e32459bc0c82707d97db7fd4fca30132ad79aee84",
+      "adaptation": "JPEG export of the actual r5 native opening frame, with supplied book cover and Amazon link; no new artwork."
+    },
+    "thumbnail_instagram.jpg": {
+      "sha256": "57b0938615dc513a199f10316c82682d183d4aac283f396511bd8e91f6bffe77",
+      "source_frame": "/home/ronggong/lang/german/tiktok_anime_videos/listening_2d/builds/tef_canada_listening_01_r5/native_portrait/frame-01-at-0.25s.png",
+      "source_sha256": "bfb6e8b61432ae25162f105e32459bc0c82707d97db7fd4fca30132ad79aee84",
+      "adaptation": "JPEG export of the actual r5 native opening frame, with supplied book cover and Amazon link; no new artwork."
+    }
+  },
+  "book_image": "Actual user-supplied book cover; no title-page substitution.",
+  "purchase_url": "https://a.co/d/013rkncS"
+}

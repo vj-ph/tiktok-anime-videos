@@ -1,0 +1,1646 @@
+{
+  "canvas": [
+    1080,
+    1920
+  ],
+  "conservative_foreground_region": [
+    100,
+    480,
+    850,
+    1130
+  ],
+  "crop_tests": {
+    "grid_3x4": [
+      0,
+      240,
+      1080,
+      1680
+    ],
+    "feed_4x5": [
+      0,
+      285,
+      1080,
+      1635
+    ],
+    "square": [
+      0,
+      420,
+      1080,
+      1500
+    ],
+    "square_zoom10": [
+      49,
+      469,
+      1031,
+      1451
+    ]
+  },
+  "ui_stress_masks": {
+    "top": [
+      0,
+      0,
+      1080,
+      300
+    ],
+    "bottom": [
+      0,
+      1152,
+      1080,
+      1920
+    ],
+    "right": [
+      850,
+      300,
+      1080,
+      1920
+    ],
+    "left": [
+      0,
+      0,
+      65,
+      1920
+    ]
+  },
+  "outputs": [
+    {
+      "part": 1,
+      "file": "part_01/thumbnail_instagram.jpg",
+      "sha256": "193ed743b9700139ebc1985c58b96bc255d78da8858cd4801f9a1f4d6fc44cc1",
+      "title": "TEF Canada | Compréhension orale | Simulation d’examen corrigée – Partie 1/6",
+      "topic": "Dessins et annonces publiques",
+      "questions": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "source_video": "listening_2d/builds/tef_canada_listening_01_social_six_r2/reel_01_portrait.mp4",
+      "source_video_sha256": "e56d268accc7cfb07b232cbc372248e367b569e0b146c31e75a6341f43983ca9",
+      "old_text_outside_new_region": [
+        {
+          "text": "TEF Canada",
+          "bounds": [
+            110,
+            440,
+            742,
+            514
+          ],
+          "font_size": 96,
+          "critical": true
+        },
+        {
+          "text": "Dessins et annonces publiques",
+          "bounds": [
+            110,
+            1080,
+            895,
+            1123
+          ],
+          "font_size": 45,
+          "critical": true
+        },
+        {
+          "text": "Questions 1–4",
+          "bounds": [
+            110,
+            1170,
+            379,
+            1204
+          ],
+          "font_size": 38,
+          "critical": true
+        },
+        {
+          "text": "Avec le livre",
+          "bounds": [
+            110,
+            1300,
+            310,
+            1325
+          ],
+          "font_size": 33,
+          "critical": false
+        },
+        {
+          "text": "French Compass",
+          "bounds": [
+            110,
+            1355,
+            506,
+            1397
+          ],
+          "font_size": 43,
+          "critical": false
+        },
+        {
+          "text": "Entraînement indépendant",
+          "bounds": [
+            110,
+            1450,
+            487,
+            1478
+          ],
+          "font_size": 28,
+          "critical": false
+        },
+        {
+          "text": "VERSION COURTE · CORRIGÉS INCLUS",
+          "bounds": [
+            110,
+            1655,
+            889,
+            1690
+          ],
+          "font_size": 37,
+          "critical": false
+        }
+      ],
+      "elements": [
+        {
+          "kind": "artwork",
+          "file": "logo.png",
+          "bounds": [
+            120,
+            500,
+            172,
+            552
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "French Compass",
+          "bounds": [
+            190,
+            515,
+            420,
+            539
+          ],
+          "font_size": 25
+        },
+        {
+          "kind": "artwork",
+          "file": "flag.png",
+          "bounds": [
+            720,
+            500,
+            840,
+            560
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "TEF Canada",
+          "bounds": [
+            120,
+            580,
+            633,
+            640
+          ],
+          "font_size": 78
+        },
+        {
+          "kind": "text",
+          "text": "Compréhension orale",
+          "bounds": [
+            120,
+            675,
+            769,
+            729
+          ],
+          "font_size": 54
+        },
+        {
+          "kind": "panel",
+          "bounds": [
+            120,
+            755,
+            841,
+            816
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "SIMULATION D’EXAMEN",
+          "bounds": [
+            140,
+            771,
+            658,
+            800
+          ],
+          "font_size": 39
+        },
+        {
+          "kind": "panel",
+          "bounds": [
+            120,
+            842,
+            413,
+            903
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "PARTIE 1/6",
+          "bounds": [
+            140,
+            857,
+            367,
+            889
+          ],
+          "font_size": 38
+        },
+        {
+          "kind": "text",
+          "text": "Questions 1–4",
+          "bounds": [
+            440,
+            860,
+            653,
+            887
+          ],
+          "font_size": 30
+        },
+        {
+          "kind": "text",
+          "text": "Dessins et annonces",
+          "bounds": [
+            120,
+            935,
+            513,
+            961
+          ],
+          "font_size": 34
+        },
+        {
+          "kind": "text",
+          "text": "publiques",
+          "bounds": [
+            120,
+            979,
+            308,
+            1012
+          ],
+          "font_size": 34
+        },
+        {
+          "kind": "artwork",
+          "file": "book_cover.png",
+          "bounds": [
+            720,
+            935,
+            832,
+            1103
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "Version courte · Corrigés inclus",
+          "bounds": [
+            120,
+            1040,
+            580,
+            1066
+          ],
+          "font_size": 26
+        },
+        {
+          "kind": "text",
+          "text": "Entraînement indépendant",
+          "bounds": [
+            120,
+            1090,
+            430,
+            1113
+          ],
+          "font_size": 23
+        }
+      ],
+      "foreground_bounds": [
+        120,
+        500,
+        841,
+        1113
+      ],
+      "foreground_pixels": 120518,
+      "safe_box": [
+        100,
+        480,
+        850,
+        1130
+      ],
+      "pixel_preserving_crops": [
+        "grid_3x4",
+        "feed_4x5",
+        "square",
+        "square_zoom10"
+      ],
+      "zero_overlap_ui_masks": [
+        "top",
+        "bottom",
+        "right",
+        "left"
+      ]
+    },
+    {
+      "part": 2,
+      "file": "part_02/thumbnail_instagram.jpg",
+      "sha256": "5c581a585a41e41f2b57912f18c17470f7ee9a2ad6a83ec00e00b5e36ac4a900",
+      "title": "TEF Canada | Compréhension orale | Simulation d’examen corrigée – Partie 2/6",
+      "topic": "Messages sur répondeur",
+      "questions": [
+        5,
+        6
+      ],
+      "source_video": "listening_2d/builds/tef_canada_listening_01_social_six_r2/reel_02_portrait.mp4",
+      "source_video_sha256": "3dd2d69b3caadf4fd6d4e00a473fc59ff13db334e76797e44c90aa30b15cb200",
+      "old_text_outside_new_region": [
+        {
+          "text": "TEF Canada",
+          "bounds": [
+            110,
+            440,
+            742,
+            514
+          ],
+          "font_size": 96,
+          "critical": true
+        },
+        {
+          "text": "Questions 5–6",
+          "bounds": [
+            110,
+            1170,
+            379,
+            1204
+          ],
+          "font_size": 38,
+          "critical": true
+        },
+        {
+          "text": "Avec le livre",
+          "bounds": [
+            110,
+            1300,
+            310,
+            1325
+          ],
+          "font_size": 33,
+          "critical": false
+        },
+        {
+          "text": "French Compass",
+          "bounds": [
+            110,
+            1355,
+            506,
+            1397
+          ],
+          "font_size": 43,
+          "critical": false
+        },
+        {
+          "text": "Entraînement indépendant",
+          "bounds": [
+            110,
+            1450,
+            487,
+            1478
+          ],
+          "font_size": 28,
+          "critical": false
+        },
+        {
+          "text": "VERSION COURTE · CORRIGÉS INCLUS",
+          "bounds": [
+            110,
+            1655,
+            889,
+            1690
+          ],
+          "font_size": 37,
+          "critical": false
+        }
+      ],
+      "elements": [
+        {
+          "kind": "artwork",
+          "file": "logo.png",
+          "bounds": [
+            120,
+            500,
+            172,
+            552
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "French Compass",
+          "bounds": [
+            190,
+            515,
+            420,
+            539
+          ],
+          "font_size": 25
+        },
+        {
+          "kind": "artwork",
+          "file": "flag.png",
+          "bounds": [
+            720,
+            500,
+            840,
+            560
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "TEF Canada",
+          "bounds": [
+            120,
+            580,
+            633,
+            640
+          ],
+          "font_size": 78
+        },
+        {
+          "kind": "text",
+          "text": "Compréhension orale",
+          "bounds": [
+            120,
+            675,
+            769,
+            729
+          ],
+          "font_size": 54
+        },
+        {
+          "kind": "panel",
+          "bounds": [
+            120,
+            755,
+            841,
+            816
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "SIMULATION D’EXAMEN",
+          "bounds": [
+            140,
+            771,
+            658,
+            800
+          ],
+          "font_size": 39
+        },
+        {
+          "kind": "panel",
+          "bounds": [
+            120,
+            842,
+            413,
+            903
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "PARTIE 2/6",
+          "bounds": [
+            140,
+            857,
+            367,
+            889
+          ],
+          "font_size": 38
+        },
+        {
+          "kind": "text",
+          "text": "Questions 5–6",
+          "bounds": [
+            440,
+            860,
+            653,
+            887
+          ],
+          "font_size": 30
+        },
+        {
+          "kind": "text",
+          "text": "Messages sur répondeur",
+          "bounds": [
+            120,
+            935,
+            593,
+            969
+          ],
+          "font_size": 34
+        },
+        {
+          "kind": "artwork",
+          "file": "book_cover.png",
+          "bounds": [
+            720,
+            935,
+            832,
+            1103
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "Version courte · Corrigés inclus",
+          "bounds": [
+            120,
+            1040,
+            580,
+            1066
+          ],
+          "font_size": 26
+        },
+        {
+          "kind": "text",
+          "text": "Entraînement indépendant",
+          "bounds": [
+            120,
+            1090,
+            430,
+            1113
+          ],
+          "font_size": 23
+        }
+      ],
+      "foreground_bounds": [
+        120,
+        500,
+        841,
+        1113
+      ],
+      "foreground_pixels": 119279,
+      "safe_box": [
+        100,
+        480,
+        850,
+        1130
+      ],
+      "pixel_preserving_crops": [
+        "grid_3x4",
+        "feed_4x5",
+        "square",
+        "square_zoom10"
+      ],
+      "zero_overlap_ui_masks": [
+        "top",
+        "bottom",
+        "right",
+        "left"
+      ]
+    },
+    {
+      "part": 3,
+      "file": "part_03/thumbnail_instagram.jpg",
+      "sha256": "1c80ebd60480778d49dfa97df7ff9e8af2708e9c3995776396e3c37664feacaa",
+      "title": "TEF Canada | Compréhension orale | Simulation d’examen corrigée – Partie 3/6",
+      "topic": "Micro-trottoirs",
+      "questions": [
+        7,
+        8,
+        9
+      ],
+      "source_video": "listening_2d/builds/tef_canada_listening_01_social_six_r2/reel_03_portrait.mp4",
+      "source_video_sha256": "1b80da082f6c930f534a58b8ec95e1cd5dbd73b76f79b577e99d9fb6474847ee",
+      "old_text_outside_new_region": [
+        {
+          "text": "TEF Canada",
+          "bounds": [
+            110,
+            440,
+            742,
+            514
+          ],
+          "font_size": 96,
+          "critical": true
+        },
+        {
+          "text": "Questions 7–9",
+          "bounds": [
+            110,
+            1170,
+            379,
+            1204
+          ],
+          "font_size": 38,
+          "critical": true
+        },
+        {
+          "text": "Avec le livre",
+          "bounds": [
+            110,
+            1300,
+            310,
+            1325
+          ],
+          "font_size": 33,
+          "critical": false
+        },
+        {
+          "text": "French Compass",
+          "bounds": [
+            110,
+            1355,
+            506,
+            1397
+          ],
+          "font_size": 43,
+          "critical": false
+        },
+        {
+          "text": "Entraînement indépendant",
+          "bounds": [
+            110,
+            1450,
+            487,
+            1478
+          ],
+          "font_size": 28,
+          "critical": false
+        },
+        {
+          "text": "VERSION COURTE · CORRIGÉS INCLUS",
+          "bounds": [
+            110,
+            1655,
+            889,
+            1690
+          ],
+          "font_size": 37,
+          "critical": false
+        }
+      ],
+      "elements": [
+        {
+          "kind": "artwork",
+          "file": "logo.png",
+          "bounds": [
+            120,
+            500,
+            172,
+            552
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "French Compass",
+          "bounds": [
+            190,
+            515,
+            420,
+            539
+          ],
+          "font_size": 25
+        },
+        {
+          "kind": "artwork",
+          "file": "flag.png",
+          "bounds": [
+            720,
+            500,
+            840,
+            560
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "TEF Canada",
+          "bounds": [
+            120,
+            580,
+            633,
+            640
+          ],
+          "font_size": 78
+        },
+        {
+          "kind": "text",
+          "text": "Compréhension orale",
+          "bounds": [
+            120,
+            675,
+            769,
+            729
+          ],
+          "font_size": 54
+        },
+        {
+          "kind": "panel",
+          "bounds": [
+            120,
+            755,
+            841,
+            816
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "SIMULATION D’EXAMEN",
+          "bounds": [
+            140,
+            771,
+            658,
+            800
+          ],
+          "font_size": 39
+        },
+        {
+          "kind": "panel",
+          "bounds": [
+            120,
+            842,
+            413,
+            903
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "PARTIE 3/6",
+          "bounds": [
+            140,
+            857,
+            367,
+            889
+          ],
+          "font_size": 38
+        },
+        {
+          "kind": "text",
+          "text": "Questions 7–9",
+          "bounds": [
+            440,
+            860,
+            653,
+            887
+          ],
+          "font_size": 30
+        },
+        {
+          "kind": "text",
+          "text": "Micro-trottoirs",
+          "bounds": [
+            120,
+            935,
+            401,
+            961
+          ],
+          "font_size": 34
+        },
+        {
+          "kind": "artwork",
+          "file": "book_cover.png",
+          "bounds": [
+            720,
+            935,
+            832,
+            1103
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "Version courte · Corrigés inclus",
+          "bounds": [
+            120,
+            1040,
+            580,
+            1066
+          ],
+          "font_size": 26
+        },
+        {
+          "kind": "text",
+          "text": "Entraînement indépendant",
+          "bounds": [
+            120,
+            1090,
+            430,
+            1113
+          ],
+          "font_size": 23
+        }
+      ],
+      "foreground_bounds": [
+        120,
+        500,
+        841,
+        1113
+      ],
+      "foreground_pixels": 116747,
+      "safe_box": [
+        100,
+        480,
+        850,
+        1130
+      ],
+      "pixel_preserving_crops": [
+        "grid_3x4",
+        "feed_4x5",
+        "square",
+        "square_zoom10"
+      ],
+      "zero_overlap_ui_masks": [
+        "top",
+        "bottom",
+        "right",
+        "left"
+      ]
+    },
+    {
+      "part": 4,
+      "file": "part_04/thumbnail_instagram.jpg",
+      "sha256": "eae74964b7257b3210cdecf0cd729b06cbc46cea16b875d4c6fcc764b9d2b973",
+      "title": "TEF Canada | Compréhension orale | Simulation d’examen corrigée – Partie 4/6",
+      "topic": "Chronique radio et entrevue",
+      "questions": [
+        10,
+        11,
+        12
+      ],
+      "source_video": "listening_2d/builds/tef_canada_listening_01_social_six_r2/reel_04_portrait.mp4",
+      "source_video_sha256": "529046c7da71ae61126830fc1c27370b1a9bf5db28f9704010bbe2285b00d431",
+      "old_text_outside_new_region": [
+        {
+          "text": "TEF Canada",
+          "bounds": [
+            110,
+            440,
+            742,
+            514
+          ],
+          "font_size": 96,
+          "critical": true
+        },
+        {
+          "text": "Questions 10–12",
+          "bounds": [
+            110,
+            1170,
+            428,
+            1204
+          ],
+          "font_size": 38,
+          "critical": true
+        },
+        {
+          "text": "Avec le livre",
+          "bounds": [
+            110,
+            1300,
+            310,
+            1325
+          ],
+          "font_size": 33,
+          "critical": false
+        },
+        {
+          "text": "French Compass",
+          "bounds": [
+            110,
+            1355,
+            506,
+            1397
+          ],
+          "font_size": 43,
+          "critical": false
+        },
+        {
+          "text": "Entraînement indépendant",
+          "bounds": [
+            110,
+            1450,
+            487,
+            1478
+          ],
+          "font_size": 28,
+          "critical": false
+        },
+        {
+          "text": "VERSION COURTE · CORRIGÉS INCLUS",
+          "bounds": [
+            110,
+            1655,
+            889,
+            1690
+          ],
+          "font_size": 37,
+          "critical": false
+        }
+      ],
+      "elements": [
+        {
+          "kind": "artwork",
+          "file": "logo.png",
+          "bounds": [
+            120,
+            500,
+            172,
+            552
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "French Compass",
+          "bounds": [
+            190,
+            515,
+            420,
+            539
+          ],
+          "font_size": 25
+        },
+        {
+          "kind": "artwork",
+          "file": "flag.png",
+          "bounds": [
+            720,
+            500,
+            840,
+            560
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "TEF Canada",
+          "bounds": [
+            120,
+            580,
+            633,
+            640
+          ],
+          "font_size": 78
+        },
+        {
+          "kind": "text",
+          "text": "Compréhension orale",
+          "bounds": [
+            120,
+            675,
+            769,
+            729
+          ],
+          "font_size": 54
+        },
+        {
+          "kind": "panel",
+          "bounds": [
+            120,
+            755,
+            841,
+            816
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "SIMULATION D’EXAMEN",
+          "bounds": [
+            140,
+            771,
+            658,
+            800
+          ],
+          "font_size": 39
+        },
+        {
+          "kind": "panel",
+          "bounds": [
+            120,
+            842,
+            413,
+            903
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "PARTIE 4/6",
+          "bounds": [
+            140,
+            857,
+            367,
+            889
+          ],
+          "font_size": 38
+        },
+        {
+          "kind": "text",
+          "text": "Questions 10–12",
+          "bounds": [
+            440,
+            860,
+            691,
+            887
+          ],
+          "font_size": 30
+        },
+        {
+          "kind": "text",
+          "text": "Chronique radio et entrevue",
+          "bounds": [
+            120,
+            935,
+            663,
+            968
+          ],
+          "font_size": 34
+        },
+        {
+          "kind": "artwork",
+          "file": "book_cover.png",
+          "bounds": [
+            720,
+            935,
+            832,
+            1103
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "Version courte · Corrigés inclus",
+          "bounds": [
+            120,
+            1040,
+            580,
+            1066
+          ],
+          "font_size": 26
+        },
+        {
+          "kind": "text",
+          "text": "Entraînement indépendant",
+          "bounds": [
+            120,
+            1090,
+            430,
+            1113
+          ],
+          "font_size": 23
+        }
+      ],
+      "foreground_bounds": [
+        120,
+        500,
+        841,
+        1113
+      ],
+      "foreground_pixels": 120103,
+      "safe_box": [
+        100,
+        480,
+        850,
+        1130
+      ],
+      "pixel_preserving_crops": [
+        "grid_3x4",
+        "feed_4x5",
+        "square",
+        "square_zoom10"
+      ],
+      "zero_overlap_ui_masks": [
+        "top",
+        "bottom",
+        "right",
+        "left"
+      ]
+    },
+    {
+      "part": 5,
+      "file": "part_05/thumbnail_instagram.jpg",
+      "sha256": "259f0c26a2884ae7b67cae7d4d202726fb53ccc8fef6beca44d311906066ebeb",
+      "title": "TEF Canada | Compréhension orale | Simulation d’examen corrigée – Partie 5/6",
+      "topic": "Reportage",
+      "questions": [
+        13,
+        14
+      ],
+      "source_video": "listening_2d/builds/tef_canada_listening_01_social_six_r2/reel_05_portrait.mp4",
+      "source_video_sha256": "e910df704005320bcae6949028c5f10415838dd72e05b167f98fc781cdd0a8cf",
+      "old_text_outside_new_region": [
+        {
+          "text": "TEF Canada",
+          "bounds": [
+            110,
+            440,
+            742,
+            514
+          ],
+          "font_size": 96,
+          "critical": true
+        },
+        {
+          "text": "Questions 13–14",
+          "bounds": [
+            110,
+            1170,
+            428,
+            1204
+          ],
+          "font_size": 38,
+          "critical": true
+        },
+        {
+          "text": "Avec le livre",
+          "bounds": [
+            110,
+            1300,
+            310,
+            1325
+          ],
+          "font_size": 33,
+          "critical": false
+        },
+        {
+          "text": "French Compass",
+          "bounds": [
+            110,
+            1355,
+            506,
+            1397
+          ],
+          "font_size": 43,
+          "critical": false
+        },
+        {
+          "text": "Entraînement indépendant",
+          "bounds": [
+            110,
+            1450,
+            487,
+            1478
+          ],
+          "font_size": 28,
+          "critical": false
+        },
+        {
+          "text": "VERSION COURTE · CORRIGÉS INCLUS",
+          "bounds": [
+            110,
+            1655,
+            889,
+            1690
+          ],
+          "font_size": 37,
+          "critical": false
+        }
+      ],
+      "elements": [
+        {
+          "kind": "artwork",
+          "file": "logo.png",
+          "bounds": [
+            120,
+            500,
+            172,
+            552
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "French Compass",
+          "bounds": [
+            190,
+            515,
+            420,
+            539
+          ],
+          "font_size": 25
+        },
+        {
+          "kind": "artwork",
+          "file": "flag.png",
+          "bounds": [
+            720,
+            500,
+            840,
+            560
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "TEF Canada",
+          "bounds": [
+            120,
+            580,
+            633,
+            640
+          ],
+          "font_size": 78
+        },
+        {
+          "kind": "text",
+          "text": "Compréhension orale",
+          "bounds": [
+            120,
+            675,
+            769,
+            729
+          ],
+          "font_size": 54
+        },
+        {
+          "kind": "panel",
+          "bounds": [
+            120,
+            755,
+            841,
+            816
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "SIMULATION D’EXAMEN",
+          "bounds": [
+            140,
+            771,
+            658,
+            800
+          ],
+          "font_size": 39
+        },
+        {
+          "kind": "panel",
+          "bounds": [
+            120,
+            842,
+            413,
+            903
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "PARTIE 5/6",
+          "bounds": [
+            140,
+            857,
+            367,
+            889
+          ],
+          "font_size": 38
+        },
+        {
+          "kind": "text",
+          "text": "Questions 13–14",
+          "bounds": [
+            440,
+            860,
+            691,
+            887
+          ],
+          "font_size": 30
+        },
+        {
+          "kind": "text",
+          "text": "Reportage",
+          "bounds": [
+            120,
+            935,
+            320,
+            967
+          ],
+          "font_size": 34
+        },
+        {
+          "kind": "artwork",
+          "file": "book_cover.png",
+          "bounds": [
+            720,
+            935,
+            832,
+            1103
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "Version courte · Corrigés inclus",
+          "bounds": [
+            120,
+            1040,
+            580,
+            1066
+          ],
+          "font_size": 26
+        },
+        {
+          "kind": "text",
+          "text": "Entraînement indépendant",
+          "bounds": [
+            120,
+            1090,
+            430,
+            1113
+          ],
+          "font_size": 23
+        }
+      ],
+      "foreground_bounds": [
+        120,
+        500,
+        841,
+        1113
+      ],
+      "foreground_pixels": 116357,
+      "safe_box": [
+        100,
+        480,
+        850,
+        1130
+      ],
+      "pixel_preserving_crops": [
+        "grid_3x4",
+        "feed_4x5",
+        "square",
+        "square_zoom10"
+      ],
+      "zero_overlap_ui_masks": [
+        "top",
+        "bottom",
+        "right",
+        "left"
+      ]
+    },
+    {
+      "part": 6,
+      "file": "part_06/thumbnail_instagram.jpg",
+      "sha256": "5fb36ae3ba9e68857332daca317de24334cb7862efeb0d301bcb6990a84c1a89",
+      "title": "TEF Canada | Compréhension orale | Simulation d’examen corrigée – Partie 6/6",
+      "topic": "Documents audio variés",
+      "questions": [
+        15,
+        16
+      ],
+      "source_video": "listening_2d/builds/tef_canada_listening_01_social_six_r2/reel_06_portrait.mp4",
+      "source_video_sha256": "f3d9e18a90ca8f1617588f13955ab831fda7b03ffab70456e64a10c9b20d4adc",
+      "old_text_outside_new_region": [
+        {
+          "text": "TEF Canada",
+          "bounds": [
+            110,
+            440,
+            742,
+            514
+          ],
+          "font_size": 96,
+          "critical": true
+        },
+        {
+          "text": "Questions 15–16",
+          "bounds": [
+            110,
+            1170,
+            428,
+            1204
+          ],
+          "font_size": 38,
+          "critical": true
+        },
+        {
+          "text": "Avec le livre",
+          "bounds": [
+            110,
+            1300,
+            310,
+            1325
+          ],
+          "font_size": 33,
+          "critical": false
+        },
+        {
+          "text": "French Compass",
+          "bounds": [
+            110,
+            1355,
+            506,
+            1397
+          ],
+          "font_size": 43,
+          "critical": false
+        },
+        {
+          "text": "Entraînement indépendant",
+          "bounds": [
+            110,
+            1450,
+            487,
+            1478
+          ],
+          "font_size": 28,
+          "critical": false
+        },
+        {
+          "text": "VERSION COURTE · CORRIGÉS INCLUS",
+          "bounds": [
+            110,
+            1655,
+            889,
+            1690
+          ],
+          "font_size": 37,
+          "critical": false
+        }
+      ],
+      "elements": [
+        {
+          "kind": "artwork",
+          "file": "logo.png",
+          "bounds": [
+            120,
+            500,
+            172,
+            552
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "French Compass",
+          "bounds": [
+            190,
+            515,
+            420,
+            539
+          ],
+          "font_size": 25
+        },
+        {
+          "kind": "artwork",
+          "file": "flag.png",
+          "bounds": [
+            720,
+            500,
+            840,
+            560
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "TEF Canada",
+          "bounds": [
+            120,
+            580,
+            633,
+            640
+          ],
+          "font_size": 78
+        },
+        {
+          "kind": "text",
+          "text": "Compréhension orale",
+          "bounds": [
+            120,
+            675,
+            769,
+            729
+          ],
+          "font_size": 54
+        },
+        {
+          "kind": "panel",
+          "bounds": [
+            120,
+            755,
+            841,
+            816
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "SIMULATION D’EXAMEN",
+          "bounds": [
+            140,
+            771,
+            658,
+            800
+          ],
+          "font_size": 39
+        },
+        {
+          "kind": "panel",
+          "bounds": [
+            120,
+            842,
+            413,
+            903
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "PARTIE 6/6",
+          "bounds": [
+            140,
+            857,
+            367,
+            889
+          ],
+          "font_size": 38
+        },
+        {
+          "kind": "text",
+          "text": "Questions 15–16",
+          "bounds": [
+            440,
+            860,
+            691,
+            887
+          ],
+          "font_size": 30
+        },
+        {
+          "kind": "text",
+          "text": "Documents audio variés",
+          "bounds": [
+            120,
+            935,
+            582,
+            962
+          ],
+          "font_size": 34
+        },
+        {
+          "kind": "artwork",
+          "file": "book_cover.png",
+          "bounds": [
+            720,
+            935,
+            832,
+            1103
+          ]
+        },
+        {
+          "kind": "text",
+          "text": "Version courte · Corrigés inclus",
+          "bounds": [
+            120,
+            1040,
+            580,
+            1066
+          ],
+          "font_size": 26
+        },
+        {
+          "kind": "text",
+          "text": "Entraînement indépendant",
+          "bounds": [
+            120,
+            1090,
+            430,
+            1113
+          ],
+          "font_size": 23
+        }
+      ],
+      "foreground_bounds": [
+        120,
+        500,
+        841,
+        1113
+      ],
+      "foreground_pixels": 119337,
+      "safe_box": [
+        100,
+        480,
+        850,
+        1130
+      ],
+      "pixel_preserving_crops": [
+        "grid_3x4",
+        "feed_4x5",
+        "square",
+        "square_zoom10"
+      ],
+      "zero_overlap_ui_masks": [
+        "top",
+        "bottom",
+        "right",
+        "left"
+      ]
+    }
+  ],
+  "all_foreground_checked": "Every text, panel, logo, flag and book pixel; only background decoration may bleed.",
+  "negative_controls": "Old flag, logo, book and footer placements each fail the raster audit.",
+  "source_publishing_manifest_sha256": "d2daa32443933b59ab3295b7d92321ccb028fc450803b1a03d42578d9e12959f",
+  "original_54_publishing_files_unchanged": true,
+  "visual_inspection": true,
+  "reference_check": {
+    "status": "Meta primary help/ads pages redirected to login or returned HTTP 429; no exact current official safe-zone claim.",
+    "urls": [
+      "https://www.facebook.com/business/help/980593475366490",
+      "https://www.facebook.com/business/ads-guide/update/video/instagram-reels/outcome-engagement",
+      "https://help.instagram.com/1038071743007909"
+    ],
+    "policy": "Conservative project-owned crop and UI stress tests, not app screenshots or universal Instagram UI certification."
+  },
+  "videos_changed": false,
+  "youtube_assets_changed": false,
+  "publication": false,
+  "inspected_proof_sheets": [
+    "review_full.jpg",
+    "review_ui.jpg",
+    "review_crops_01.jpg",
+    "review_crops_02.jpg"
+  ],
+  "seven_source_video_hashes_verified_unchanged": true
+}

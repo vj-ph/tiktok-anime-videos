@@ -1,0 +1,49 @@
+{
+  "schema": "tef_canada_reduced_listening_v1",
+  "id": "tef_canada_listening_01",
+  "language": "fr",
+  "fps": 24,
+  "duration_limit_seconds": 900,
+  "book_root": "../../../../french/french_exam_books/tef_canada/listening",
+  "manuscript": "../../../../french/french_exam_books/tef_canada/listening_v2/book.md",
+  "instruction_bank": "../../.github/skills/tef-canada-video-gen/references/listening_instructions.json",
+  "narrator_voice": "fr_ca_qc_narrator_f01",
+  "title": "TEF Canada. Compréhension orale. Seize questions, huit types d’exercices.",
+  "setup": "Cet entraînement réduit couvre les huit types d’exercices. Écoutez chaque enregistrement une seule fois. Les corrections viennent à la fin. Les pauses de lecture et de réponse suivent les exemples officiels.",
+  "solutions_intro": "L’entraînement est terminé. Comparez maintenant vos réponses avec les corrections.",
+  "cta": "Continuez avec notre livre TEF Canada : Compréhension orale, par French Compass. Découvrez-le sur Amazon.",
+  "outro_seconds": 3,
+  "groups": [
+    {"family": "picture_dialogue", "heading": "Dialogues avec illustrations", "source_questions": [1, 3]},
+    {"family": "public_announcement", "heading": "Annonces publiques", "source_questions": [5, 6]},
+    {"family": "voicemail", "heading": "Messages sur répondeur", "source_questions": [10, 12]},
+    {"family": "street_interview", "heading": "Micro-trottoirs", "source_questions": [15, 17, 20]},
+    {"family": "radio_chronicle", "heading": "Chronique radio", "source_questions": [21]},
+    {"family": "interview", "heading": "Interview radio", "source_questions": [23, 24]},
+    {"family": "reportage", "heading": "Reportage radio", "source_questions": [29, 30]},
+    {"family": "varied_document", "heading": "Documents audio variés", "source_questions": [33, 40]}
+  ],
+  "explanations": {
+    "1": "La cliente veut emporter son sandwich pour attraper son autobus.",
+    "3": "La personne va chercher son roman réservé au comptoir de retrait.",
+    "5": "Il faut apporter un pot vide et propre.",
+    "6": "Les voyageurs doivent attendre au quai quatre.",
+    "10": "La cliente doit confirmer le code d’accès avant la livraison.",
+    "12": "L’entretien de stage se déroulera en visioconférence.",
+    "15": "Elle soutient les contenants réutilisables, malgré la contrainte du retour.",
+    "17": "Elle soutient le jardin à condition que les parcelles restent gratuites.",
+    "20": "Elle accepte un tarif réduit pour les inscriptions anticipées.",
+    "21": "Les ateliers aident à diagnostiquer les pannes et à prolonger l’usage des objets.",
+    "23": "Les visiteurs essaient les itinéraires avant de choisir leur propre vélo.",
+    "24": "Le prêt de plusieurs semaines nécessite un atelier de sécurité.",
+    "29": "Les bénévoles cherchent la panne avec le visiteur.",
+    "30": "Le visiteur doit payer les pièces nécessaires.",
+    "33": "La réunion porte sur l’emplacement des vélos dans l’immeuble.",
+    "40": "Le code reçu dans l’application permet d’ouvrir le casier."
+  },
+  "authorization": {
+    "date": "2026-11-16",
+    "user_request": "ok good, generate the video",
+    "scope": "Generate the approved reduced all-sections video; no publication."
+  }
+}

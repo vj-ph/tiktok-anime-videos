@@ -7,6 +7,12 @@ import sys
 
 ROOT = Path(__file__).resolve().parent
 
+
+def cli_path(platform=None):
+    platform = sys.platform if platform is None else platform
+    return ROOT / "node_modules" / ".bin" / ("hyperframes.cmd" if platform == "win32" else "hyperframes")
+
+
 if __name__ == "__main__":
     env = dict(os.environ)
     env.update({
@@ -20,5 +26,7 @@ if __name__ == "__main__":
     allowed = {"check", "snapshot", "render", "doctor", "lint", "info", "compositions", "docs"}
     if len(sys.argv) < 2 or sys.argv[1] not in allowed:
         raise SystemExit("Choose a local check, snapshot, render or diagnostic command.")
-    binary = ROOT / "node_modules" / ".bin" / "hyperframes.cmd"
+    binary = cli_path()
+    if not binary.is_file():
+        raise SystemExit("Pinned HyperFrames is missing; run npm ci in listening_2d.")
     raise SystemExit(subprocess.run([str(binary), *sys.argv[1:]], env=env).returncode)

@@ -1,0 +1,25 @@
+{
+  "files": {
+    "thumbnail_youtube.jpg": {
+      "sha256": "672d29e91dd8722a91122b007f2ca89d33132628577da7bee073cfbf79424043",
+      "source_frame": "/home/ronggong/lang/german/tiktok_anime_videos/listening_2d/builds/tef_canada_listening_01_inline_r1/native_landscape/frame-01-at-0.25s.png",
+      "source_sha256": "47244c4beb57bf608fb8579ea86bcc530cd00275a9c484b89a1b2f789099682c",
+      "adaptation": "JPEG export of the native opening frame, labelled correction after each exercise; no new artwork."
+    },
+    "thumbnail_tiktok.jpg": {
+      "sha256": "5c9774446c29134039c79fffb1a8c61befbde2e00b87f9d29e8419cd1e368f59",
+      "source_frame": "/home/ronggong/lang/german/tiktok_anime_videos/listening_2d/builds/tef_canada_listening_01_inline_r1/native_portrait/frame-01-at-0.25s.png",
+      "source_sha256": "02c06dab2781c235a37e5c3da37a3898f2f54e42361da182111c7fb5aca4c9b1",
+      "adaptation": "JPEG export of the native opening frame, labelled correction after each exercise; no new artwork."
+    },
+    "thumbnail_instagram.jpg": {
+      "sha256": "5c9774446c29134039c79fffb1a8c61befbde2e00b87f9d29e8419cd1e368f59",
+      "source_frame": "/home/ronggong/lang/german/tiktok_anime_videos/listening_2d/builds/tef_canada_listening_01_inline_r1/native_portrait/frame-01-at-0.25s.png",
+      "source_sha256": "02c06dab2781c235a37e5c3da37a3898f2f54e42361da182111c7fb5aca4c9b1",
+      "adaptation": "JPEG export of the native opening frame, labelled correction after each exercise; no new artwork."
+    }
+  },
+  "book_image": "Actual user-supplied book cover.",
+  "purchase_url": "https://a.co/d/013rkncS",
+  "edition": "Guided practice with immediate corrections."
+}

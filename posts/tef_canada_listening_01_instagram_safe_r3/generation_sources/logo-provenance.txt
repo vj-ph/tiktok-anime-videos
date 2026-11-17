@@ -1,0 +1,10 @@
+French Compass wall logo
+
+Source: /home/ronggong/lang/french/logo.png
+Local copy: frenchcompass-logo.png
+SHA-256: 70b23bbf76641a29a117e58385929a89d8477d2f80c5567d8ec8140674aa3431
+
+The user explicitly confirmed ownership/permission and approved commercial
+promotional-video reuse on October 24, 2026. No public license is inferred.
+The source pixels are unchanged. The scene packs the logo and mounts it on
+the existing framed wall plaque; the book advertisement remains unbranded.

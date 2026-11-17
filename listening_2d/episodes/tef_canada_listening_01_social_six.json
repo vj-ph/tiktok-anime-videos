@@ -1,0 +1,16 @@
+{
+  "id": "tef_canada_listening_01_social_six",
+  "source": "../builds/tef_canada_listening_01_inline_chime_r1",
+  "source_manifest_sha256": "f4620637d65e4fc12ce2fea7cd811d66a2c2846765277b089ec341df77dd46ef",
+  "duration_limit_seconds": 180,
+  "cta": "Notre livre est sur Amazon.",
+  "outro_frames": 24,
+  "parts": [
+    {"number": 1, "spoken_number": "un", "families": ["picture_dialogue", "public_announcement"], "label": "Dessins et annonces publiques"},
+    {"number": 2, "spoken_number": "deux", "families": ["voicemail"], "label": "Messages sur répondeur"},
+    {"number": 3, "spoken_number": "trois", "families": ["street_interview"], "label": "Micro-trottoirs"},
+    {"number": 4, "spoken_number": "quatre", "families": ["radio_chronicle", "interview"], "label": "Chronique radio et entrevue"},
+    {"number": 5, "spoken_number": "cinq", "families": ["reportage"], "label": "Reportage"},
+    {"number": 6, "spoken_number": "six", "families": ["varied_document"], "label": "Documents audio variés"}
+  ]
+}

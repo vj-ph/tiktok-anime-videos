@@ -1,0 +1,113 @@
+{
+  "schema": "tef_listening_instruction_bank_v1",
+  "source": "Eight instruction screenshots supplied by the user on 2026-11-16; source_text is transcribed from those images.",
+  "timing_scope": "Official published sample windows; not independently measured live-test timings.",
+  "tts_policy": "Synthesize tts_text in French before the family's first reading window. Numbers are written as spoken words. Display matching wording with measured alignment. Keep source_text as provenance, not as the display text when an adaptation changes meaning.",
+  "sequence": ["instruction_speech", "reading_silence", "recording_once", "response_silence"],
+  "chime_enabled": false,
+  "added_sfx_enabled": false,
+  "instructions": [
+    {
+      "id": "picture_dialogue",
+      "source_image": "copilot-image-701aab.png",
+      "source_image_sha256": "d9de71b8ecd814c3036f98a131175ec50c81337a6b284cef9e6f4195e496d971",
+      "source_text": "Vous allez entendre des conversations entre deux personnes.\nIndiquez à quel dessin correspond chaque conversation.\nVous avez 5 secondes avant et 10 secondes après chaque conversation pour lire et répondre à la question.",
+      "tts_text": "Vous allez entendre des conversations entre deux personnes. Indiquez à quel dessin correspond chaque conversation. Vous avez cinq secondes avant et dix secondes après chaque conversation pour lire et répondre à la question.",
+      "reading_seconds": 5,
+      "response_seconds": 10,
+      "questions_per_recording": 1,
+      "timing_evidence": "User screenshot",
+      "adaptations": []
+    },
+    {
+      "id": "public_announcement",
+      "source_image": "copilot-image-a3f282.png",
+      "source_image_sha256": "b447445adc3cc7b0d87a64ba8f1ca501d630ce4aa91d8c23e94fe7dfc3246a7b",
+      "source_text": "Vous allez entendre des annonces publiques.\nÉcoutez chacune des annonces et répondez à la question.\nVous avez 10 secondes avant et 10 secondes après chaque conversation pour lire et répondre à la question.",
+      "tts_text": "Vous allez entendre des annonces publiques. Écoutez chacune des annonces et répondez à la question. Vous avez dix secondes avant et dix secondes après chaque annonce pour lire et répondre à la question.",
+      "reading_seconds": 10,
+      "response_seconds": 10,
+      "questions_per_recording": 1,
+      "timing_evidence": "User screenshot",
+      "adaptations": ["The screenshot says conversation in its timing sentence. The video says annonce to match this task; source_text preserves the supplied wording."]
+    },
+    {
+      "id": "voicemail",
+      "source_image": "copilot-image-c3c729.png",
+      "source_image_sha256": "9ea0069cc390045e0bc1b55bf9553509d423bf0cdb41b98be638c61f006474ac",
+      "source_text": "Vous allez entendre des messages sur répondeur téléphonique.\nÉcoutez chacun des messages et répondez à la question.\nVous avez 10 secondes avant et 10 secondes après chaque message pour lire et répondre à la question.",
+      "tts_text": "Vous allez entendre des messages sur répondeur téléphonique. Écoutez chacun des messages et répondez à la question. Vous avez dix secondes avant et dix secondes après chaque message pour lire et répondre à la question.",
+      "reading_seconds": 10,
+      "response_seconds": 10,
+      "questions_per_recording": 1,
+      "timing_evidence": "User screenshot",
+      "adaptations": []
+    },
+    {
+      "id": "street_interview",
+      "source_image": "copilot-image-a21b01.png",
+      "source_image_sha256": "6071259ba77d25f54bca85ddf759625c2848f1ef752a4f545021c039753a3f52",
+      "source_text": "Vous allez entendre trois personnes répondre à la question suivante :\n« Pour ou contre l’uniforme à l’école ? »\nIndiquez si la personne interrogée\n• est totalement pour.\n• est pour à certaines conditions.\n• est totalement contre.",
+      "tts_text": "Vous allez entendre trois personnes donner leur avis sur différents sujets. Écoutez chaque personne et choisissez la bonne réponse à la question affichée. Vous avez cinq secondes avant et quinze secondes après chaque témoignage pour lire et répondre à la question.",
+      "reading_seconds": 5,
+      "response_seconds": 15,
+      "questions_per_recording": 1,
+      "selected_speaker_count": 3,
+      "timing_evidence": "Official sample booklet tef-exemples-epreuves-co.pdf, viewpoint instructions, verified in prior research; the supplied street-interview screenshot itself contains no timing sentence.",
+      "adaptations": [
+        "The selected book items concern reusable containers, a shared garden and early registration, not school uniforms or one shared question.",
+        "Retain the selected book's four choices and keys. Do not replace them with the source example's three stance bullets.",
+        "The timing sentence is supplemental video narration using the published sample windows, not a transcription of the screenshot.",
+        "Change trois and its display mapping if the selected number of speakers changes."
+      ]
+    },
+    {
+      "id": "radio_chronicle",
+      "source_image": "copilot-image-0f9454.png",
+      "source_image_sha256": "b1aa2caaf203ba8683a6ec908e233a70ca0386925a202a94cd70318c24f80343",
+      "source_text": "Vous allez entendre des messages diffusés à la radio.\nÉcoutez la chronique et répondez à la question.\nVous avez 10 secondes avant et 15 secondes après chaque chronique pour lire et répondre à la question.",
+      "tts_text": "Vous allez entendre des messages diffusés à la radio. Écoutez la chronique et répondez à la question. Vous avez dix secondes avant et quinze secondes après chaque chronique pour lire et répondre à la question.",
+      "reading_seconds": 10,
+      "response_seconds": 15,
+      "questions_per_recording": 1,
+      "timing_evidence": "User screenshot",
+      "adaptations": []
+    },
+    {
+      "id": "interview",
+      "source_image": "copilot-image-54eeff.png",
+      "source_image_sha256": "27a533bfe81c0b7814e22a70322405dd5612864cc468d9d232f8426728b36b6f",
+      "source_text": "Vous allez entendre des interviews à la radio. Pour chacune des interviews, répondez aux deux questions en sélectionnant la bonne réponse dans chaque menu déroulant.\nVous avez 20 secondes avant et 30 secondes après chaque interview pour lire et répondre aux deux questions.",
+      "tts_text": "Vous allez entendre une interview à la radio. Répondez aux deux questions en sélectionnant la bonne réponse parmi les choix affichés pour chaque question. Vous avez vingt secondes avant et trente secondes après l’interview pour lire et répondre aux deux questions.",
+      "reading_seconds": 20,
+      "response_seconds": 30,
+      "questions_per_recording": 2,
+      "timing_evidence": "User screenshot; windows apply once to the whole two-question recording",
+      "adaptations": ["Use singular for the selected single interview.", "Replace interactive dropdown wording with static displayed choices; preserve both complete questions and their choices."]
+    },
+    {
+      "id": "reportage",
+      "source_image": "copilot-image-379987.png",
+      "source_image_sha256": "6822d00875140f29184e16e679d5f89d636e255076822a007b4ac4db81731c7e",
+      "source_text": "Vous allez entendre un reportage radio. Écoutez-le et répondez aux deux questions en sélectionnant la bonne réponse dans chaque menu déroulant.\nVous avez 10 secondes avant et 15 secondes après le reportage pour lire et répondre aux deux questions.",
+      "tts_text": "Vous allez entendre un reportage radio. Écoutez-le et répondez aux deux questions en sélectionnant la bonne réponse parmi les choix affichés pour chaque question. Vous avez dix secondes avant et quinze secondes après le reportage pour lire et répondre aux deux questions.",
+      "reading_seconds": 10,
+      "response_seconds": 15,
+      "questions_per_recording": 2,
+      "timing_evidence": "User screenshot; windows apply once to the whole two-question recording",
+      "adaptations": ["Replace interactive dropdown wording with static displayed choices; preserve both complete questions and their choices."]
+    },
+    {
+      "id": "varied_document",
+      "source_image": "copilot-image-f961f1.png",
+      "source_image_sha256": "c073784340ec1ff160712f27a1a1f6c76bd1b502a2a4a7cdcc843e57274f19e5",
+      "source_text": "Vous allez entendre divers documents audio. Écoutez chaque enregistrement et répondez à la question.\nVous avez 10 secondes avant et 15 secondes après chaque audio pour lire et répondre à la question.",
+      "tts_text": "Vous allez entendre divers documents audio. Écoutez chaque enregistrement et répondez à la question. Vous avez dix secondes avant et quinze secondes après chaque audio pour lire et répondre à la question.",
+      "reading_seconds": 10,
+      "response_seconds": 15,
+      "questions_per_recording": 1,
+      "timing_evidence": "User screenshot",
+      "adaptations": []
+    }
+  ]
+}

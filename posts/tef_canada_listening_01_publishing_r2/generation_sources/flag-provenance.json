@@ -1,0 +1,19 @@
+{
+  "checked": "2026-10-26",
+  "assets": {
+    "canada_flag": {
+      "file": "canada-flag.png",
+      "sha256": "e2b4510352a7c1b6224702b26b0face88466adf16642c5601697de6eb321b6a7",
+      "source_file": "canada-flag.svg",
+      "source_sha256": "afe6921891d516f037e8fb9920128f8bfd86ef2ffe1a6d1d4aa7e22a032434bc",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_Canada_(Pantone).svg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Canada_%28Pantone%29.svg/1280px-Flag_of_Canada_%28Pantone%29.svg.png",
+      "source_download": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Flag_of_Canada_%28Pantone%29.svg",
+      "authors": "George F. G. Stanley (flag design); MapGrid (SVG rewrite); Wikimedia Commons",
+      "license": "Public domain (PD-ineligible)",
+      "license_source": "https://commons.wikimedia.org/wiki/File:Flag_of_Canada_(Pantone).svg#Licensing",
+      "rights_note": "The source's public-domain designation concerns copyright, not government-mark authorization or endorsement. Display only as room decor, not as French Compass branding.",
+      "adaptation": "Unmodified 1280x640 PNG and source SVG. Map the PNG onto original static 2:1 Blender flag meshes; retain the complete maple leaf, red fields and white centre. Procedural desk pole/base; no imported executable scene, cloth simulation, official wordmark or endorsement claim."
+    }
+  }
+}
