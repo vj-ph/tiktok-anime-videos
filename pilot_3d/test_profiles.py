@@ -223,7 +223,7 @@ class AlignmentLanguageTests(unittest.TestCase):
 class SceneProfileTests(unittest.TestCase):
     def test_examiner_pov_keeps_one_camera_for_every_turn_and_outro(self):
         episode = read_episode(ROOT / "episodes/dtz_b1_examiner_pov.json")
-        validate_template(episode, check_assets=True)
+        validate_template(episode)
         timeline = clock(episode, seconds=3)
         shots = camera_shots(episode, timeline)
         self.assertTrue(all(camera == "examiner_pov" for _, camera in shots))
@@ -249,7 +249,7 @@ class SceneProfileTests(unittest.TestCase):
 
     def test_pair_examiner_pov_starts_early_and_tracks_both_candidates(self):
         episode = read_episode(ROOT / "episodes/dtz_b1_examiner_pov_pair.json")
-        validate_template(episode, check_assets=True)
+        validate_template(episode)
         timeline = clock(episode, seconds=2.5)
         plan = entrance_plan(episode, timeline)
         shots = camera_shots(episode, timeline)

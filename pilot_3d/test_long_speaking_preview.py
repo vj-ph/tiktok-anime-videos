@@ -83,8 +83,9 @@ class PreviewOverlayTests(unittest.TestCase):
         from runtime_config import font_path
 
         frames, cases = [], []
-        for word, size, x in (("Teil", 17, 32), ("Auf", 14, 0), ("Wer", 14, 1),
-                              ("Wie", 14, 0), ("Die", 14, 1), ("Nach", 14, 0)):
+        # Keep small glyphs at both chroma alignments, inset like real captions.
+        for word, size, x in (("Teil", 17, 56), ("Auf", 16, 24), ("Wer", 16, 25),
+                              ("Wie", 16, 24), ("Die", 16, 25), ("Nach", 16, 24)):
             font = ImageFont.truetype(str(font_path()), size)
             for color in ("#e7bb67", "#f7f4e9"):
                 image = Image.new("RGB", (640, 80), "#101e27")
@@ -99,7 +100,8 @@ class PreviewOverlayTests(unittest.TestCase):
             path = Path(temp) / "words.mp4"
             subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
                             "-s", "640x80", "-r", "24", "-i", "pipe:0", "-c:v", "libx264",
-                            "-crf", "22", "-g", "1", "-pix_fmt", "yuv420p", str(path)],
+                            "-preset", "veryfast", "-crf", "22", "-g", "1",
+                            "-pix_fmt", "yuv420p", str(path)],
                            input=b"".join(frame.tobytes() for frame in frames), check=True)
             decoded = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-i", str(path),
                                       "-f", "rawvideo", "-pix_fmt", "rgb24", "pipe:1"],

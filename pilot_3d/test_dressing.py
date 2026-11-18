@@ -173,7 +173,8 @@ class DressingTests(unittest.TestCase):
 
     def test_halloween_assets_are_selected_verified_and_frozen(self):
         episode = self.halloween()
-        validate_template(episode, check_assets=True)
+        validate_template(episode)
+        validate_dressing(episode, check_assets=True)
         expected = {"halloween.provenance.json", "halloween-jackolantern.glb",
                     "halloween-candy-pail.glb", "halloween-sweets.glb",
                     "halloween-bat.glb", "halloween-witch-hat.glb"}
