@@ -24,7 +24,8 @@ from generation_runtime import GenerationRun, generation_job, run_process, stage
 from prepare_audio import (DEFAULT_TTS_THREADS, atomic_json, atomic_text, content_hash, inspect_wav,
                            load_audio_cache, make_cache_payload, sha256_file)
 
-SOURCES = ("pipeline.py", "runtime_config.py", "generation_runtime.py", "build_paths.py", "episode_config.py", "episode_profiles.py", "picture_presentation.py", "prepare_audio.py", "align_words.py", "check_speech.py",
+SOURCES = ("pipeline.py", "tef_speaking_preview.py", "tef_speaking_full.py", "long_speaking_scene.py", "listening_scene.py",
+           "listener_motion.py", "runtime_config.py", "generation_runtime.py", "build_paths.py", "episode_config.py", "episode_profiles.py", "picture_presentation.py", "prepare_audio.py", "align_words.py", "check_speech.py",
            "produce_v4.py", "render.py", "social_captions.py", "review_social.py",
            "check_v4_scene.py", "studio_characters.py", "polish_exchange.py",
            "scene_direction.py", "scene_dressing.py", "entrance.py", "build_scene.py")
@@ -68,6 +69,9 @@ def run_command(command, log):
 
 
 def caption_preflight(build, episode, with_promo):
+    if episode.get("template") == "tef_speaking_full_preview":
+        from tef_speaking_full import caption_preflight as full_caption_preflight
+        return full_caption_preflight(build, episode)
     from produce_v4 import plan_promo
     from social_captions import audit_ass, make_ass, write_caption_timing
 
@@ -504,6 +508,32 @@ def main():
             else:
                 build_listening(args.episode, args.build, args.jobs, args.until, args.speech_cache_from,
                                 profile=args.profile, reuse_audio=args.reuse_audio)
+        elif isinstance(raw_episode, dict) and raw_episode.get("template") == "tef_speaking_full_preview":
+            from tef_speaking_full import build_full, compile_episode
+            if (args.profile != "preview" or args.render_device != "CPU" or args.speech_device != "cpu"
+                    or args.promo or args.reuse_audio):
+                raise ValueError("The complete TEF rehearsal supports CPU preview only.")
+            if args.command == "validate":
+                episode = compile_episode(args.episode)
+                print(f"Valid complete TEF preview: {episode['id']}; all 48 model turns retained.")
+            elif args.command != "build" or args.build is None:
+                raise ValueError("Use build with a dedicated --build directory.")
+            else:
+                build_full(args.episode, args.build, args.jobs, args.until, args.speech_cache_from)
+        elif isinstance(raw_episode, dict) and raw_episode.get("template") == "tef_speaking_youtube_preview":
+            from tef_speaking_preview import build_preview, load_preview
+            if (args.profile != "preview" or args.render_device != "CPU" or args.speech_device != "cpu"
+                    or args.promo):
+                raise ValueError("The TEF landscape rehearsal supports CPU preview only.")
+            episode = load_preview(args.episode)
+            preflight(args.episode)
+            if args.command == "validate":
+                print(f"Valid TEF A+B YouTube preview: {episode['id']}; strict duration <90 seconds.")
+            elif args.command != "build" or args.build is None:
+                raise ValueError("Use build with a dedicated --build directory.")
+            else:
+                build_preview(args.episode, args.build, args.jobs, args.until, args.speech_cache_from,
+                              args.reuse_audio)
         elif args.command == "validate":
             episode = preflight(args.episode)
             if args.render_device != "CPU":

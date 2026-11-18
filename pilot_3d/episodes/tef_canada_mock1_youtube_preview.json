@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "template": "tef_speaking_youtube_preview",
+  "id": "tef_canada_mock1_youtube_preview",
+  "language": "fr",
+  "exam": {"family": "tef_canada", "skill": "speaking", "section": "A_B"},
+  "presentation": "social",
+  "visual_version": 7,
+  "credit_policy": "publishing_caption",
+  "subtitle_mode": "readable",
+  "title": "TEF Canada : sections A et B",
+  "label": "TEF Canada · Expression orale · Aperçu",
+  "disclaimer": "Aperçu adapté et indépendant ; ni sujet officiel ni simulation complète.",
+  "branding": "FRENCH COMPASS",
+  "scene": {
+    "template": "exam_room",
+    "layout": "interview",
+    "base_scene": "../builds/v2/studio.blend",
+    "wall_logo": "../assets/frenchcompass-logo.png",
+    "entrance": false,
+    "observer": false,
+    "dressing": {
+      "props": [
+        {"type": "flag", "pattern": "canada", "anchor": "back_wall_left"},
+        {"type": "flag", "pattern": "canada", "anchor": "table_corner"}
+      ],
+      "accessories": []
+    }
+  },
+  "header": {"brand": "FRENCH COMPASS · TEF CANADA", "topic": "Sections A et B · Aperçu"},
+  "sections": {"A": "Section A · Se renseigner", "B": "Section B · Convaincre un ami"},
+  "hook": "TEF Canada : sections A et B",
+  "task_card": [],
+  "takeaway": [],
+  "takeaway_seconds": 0,
+  "cta": ["Plus de dialogues modèles", "dans notre livre TEF Canada", "Expression orale"],
+  "publication": {
+    "intro": "Test blanc 1 : deux courts extraits adaptés, une inscription à la bibliothèque et un atelier de poterie.",
+    "disclosure": "Aperçu pédagogique indépendant, adapté du livre ; ni sujet officiel ni simulation complète. La durée ne reproduit pas les temps de l'examen.",
+    "hashtags": ["#TEFCanada", "#ExpressionOrale", "#FrenchCompass"]
+  },
+  "book_cover": "../../../french-exam-prep-book/french_exam_books/tef_canada/speaking/speaking.jpg",
+  "preview_notices": {
+    "A": "../../../french-exam-prep-book/french_exam_books/tef_canada/speaking/images/45.jpg",
+    "B": "../../../french-exam-prep-book/french_exam_books/tef_canada/speaking/images/53.jpg"
+  },
+  "source": {
+    "book": "../../../french-exam-prep-book/french_exam_books/tef_canada/speaking/book.md",
+    "exercise": "Mock Test 1: Library membership and beginner pottery",
+    "voice_registry": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/voices.json",
+    "duration_limit_seconds": 90,
+    "scope": "Short landscape preview of two adapted excerpts, not a full timed simulation.",
+    "adaptation": "Condense the library document question and answer; select the beginner-pottery objection and adapt the response. Add spoken title, section introductions and book CTA. No official preparation or response timing is represented.",
+    "purchase_url": null
+  },
+  "fps": 24,
+  "intro_seconds": 0,
+  "outro_seconds": 3,
+  "voices": {
+    "candidate_a": {
+      "audio": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/references/fr_ca_qc_narrator_f01.wav",
+      "transcript": "../assets/voices/fr_ca_qc_narrator_f01_reference.txt",
+      "voice_id": "fr_ca_qc_narrator_f01"
+    },
+    "examiner": {
+      "audio": "../../../french-exam-prep-book/french_exam_books/tef_canada/listening/audio/voices/references/fr_ca_qc_service_m01.wav",
+      "transcript": "../assets/voices/fr_ca_qc_service_m01_reference.txt",
+      "voice_id": "fr_ca_qc_service_m01"
+    }
+  },
+  "turns": [
+    {"id": "00", "speaker": "examiner", "name": "Examinateur", "text": "TEF Canada : sections A et B", "camera": "wide", "action": "welcome", "look_at": "candidate_a", "pause_after": 1.0},
+    {"id": "01", "speaker": "examiner", "name": "Examinateur", "text": "Section A. Vous appelez une bibliothèque pour vous renseigner.", "camera": "wide", "action": "explain", "phase": "dialogue", "look_at": "candidate_a", "section": "A", "pause_after": 1.0},
+    {"id": "02", "speaker": "candidate_a", "name": "Candidate", "text": "Bonjour. Quels documents faut-il présenter pour obtenir une carte ? Puis-je emprunter immédiatement ?", "camera": "candidate_a", "action": "ask", "look_at": "examiner", "section": "A", "pause_after": 0.8},
+    {"id": "03", "speaker": "examiner", "name": "Agent d'accueil", "text": "Une pièce d'identité et un justificatif d'adresse. Votre carte temporaire vous permet d'emprunter dès aujourd'hui.", "camera": "examiner", "action": "answer", "look_at": "candidate_a", "section": "A", "pause_after": 1.0},
+    {"id": "04", "speaker": "examiner", "name": "Examinateur", "text": "Section B. Convainquez un ami d'essayer la poterie.", "camera": "wide", "action": "explain", "phase": "dialogue", "look_at": "candidate_a", "section": "B", "pause_after": 1.0},
+    {"id": "05", "speaker": "candidate_a", "name": "Candidate", "text": "Samedi, il y a un atelier pour débutants. L'argile et la cuisson sont incluses. Ça te dit ?", "camera": "candidate_a", "action": "propose", "look_at": "examiner", "section": "B", "pause_after": 0.8},
+    {"id": "06", "speaker": "examiner", "name": "Ami", "text": "Je ne suis vraiment pas manuel. J'ai peur de ne pas y arriver.", "camera": "examiner", "action": "consider", "look_at": "candidate_a", "section": "B", "pause_after": 0.8},
+    {"id": "07", "speaker": "candidate_a", "name": "Candidate", "text": "Justement, c'est pour les débutants. Demandons si les gestes sont montrés pas à pas. On pourrait commencer par un petit bol.", "camera": "candidate_a", "action": "propose", "look_at": "examiner", "section": "B", "pause_after": 1.0},
+    {"id": "08", "speaker": "examiner", "name": "French Compass", "text": "Retrouvez les dialogues modèles complets dans notre livre TEF Canada, expression orale.", "camera": "wide", "action": "explain", "phase": "dialogue", "look_at": "candidate_a", "pause_after": 0.5}
+  ]
+}

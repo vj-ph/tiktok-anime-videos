@@ -102,7 +102,7 @@ def frame_safe_time(seconds, fps):
     return seconds
 
 
-def readable_pages(words, start, end, fps=24):
+def readable_pages(words, start, end, fps=24, *, width=RIGHT - LEFT, size=31):
     """Balance up to three lines, keeping measured spoken words on their page."""
     if not words or end < start + words[-1]["end"] - 0.005:
         raise ValueError("Subtitle window would truncate spoken words.")
@@ -120,7 +120,7 @@ def readable_pages(words, start, end, fps=24):
         for stop in range(first + 1, len(words) + 1):
             group = words[first:stop]
             value = " ".join(word["word"] for word in group)
-            if len(measured_lines(value, 31)) > 3:
+            if len(measured_lines(value, size, width=width)) > 3:
                 break
             duration = (boundaries[stop] - boundaries[first]) / 100
             visible = displayed_seconds(boundaries[first] / 100, boundaries[stop] / 100, fps)
@@ -159,7 +159,9 @@ def caption_pages(episode, timeline):
             if "caption_hold_seconds" in turn:
                 end = min(end, turn["end"] + turn["caption_hold_seconds"])
             try:
-                groups = readable_pages(words, turn["start"], end, timeline.get("fps", 24))
+                options = ({"width": 640, "size": 22}
+                           if episode.get("template") == "tef_speaking_full_preview" else {})
+                groups = readable_pages(words, turn["start"], end, timeline.get("fps", 24), **options)
             except ValueError as error:
                 raise ValueError(f"Turn {turn.get('id', index)} ({turn['name']}): {error}") from error
         else:

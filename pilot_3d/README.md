@@ -1,5 +1,89 @@
 # Reusable 3D exam-practice generator
 
+## TEF Canada speaking: complete YouTube preview
+
+`episodes\tef_canada_mock1_full_preview.json` selects all 20 Section A and
+28 Section B model turns from the speaking book's Mock Test 1. It is a
+separate long-form **preview**, not a production profile or a condensed
+short. `tef_speaking_full.py` preserves every model utterance verbatim,
+pins the manuscript/configuration and adds the spoken title, guided
+instructions, two explicitly adapted eight-second notice holds and book CTA.
+The source includes the user's explicit long-form duration exception; short
+TEF episodes retain their strict under-90-second limits.
+
+The supplied combined speaking/writing cover is copied byte-for-byte into
+the delivery. The persistent panel reads “Livre disponible sur Amazon” and
+`a.co/d/01FdtRDW`, including the final CTA. Separate publishing drafts use the
+same book and link in `posts\tef_canada_mock1_full_preview`. No portrait
+derivative or upload is authorized by this command.
+
+From `pilot_3d`:
+
+```powershell
+.\.venv\Scripts\python.exe -B -X utf8 pipeline.py build `
+  --episode episodes\tef_canada_mock1_full_preview.json `
+  --build builds\tef_canada_mock1_full_preview_r1 --jobs 2
+```
+
+`--until audio` performs synthesis, French alignment and actual landscape
+caption checks; `--until scene` additionally bakes the full native animation.
+Resume with the same inputs/build to retain verified checkpoints. The
+compiled episode is stored beside the build, and changed inputs require a
+new directory. Export is `preview_youtube.mp4` at 960x540/24 fps, with
+two-sample native preview images on threes. Do not treat those images as a
+full-quality production bake.
+
+The complete book models run at natural measured speech speed. Their
+pedagogical duration is **not** claimed as exact official 5/10-minute section
+timing; this distinction is spoken and retained in the preview/footer/posts.
+Independent ASR, encoded audio/frame checks and contact sheets remain
+separate from human listening and publication approval.
+
+## TEF Canada speaking: short YouTube rehearsal
+
+The separate `tef_speaking_youtube_preview` template combines two adapted
+Mock Test 1 excerpts: library membership (Section A) and beginner pottery
+(Section B). It is a short 960x540 landscape preview, not a full timed exam.
+It reuses the French interview animation, distinct Québec reference voices,
+Canadian decor and measured word highlights, with a persistent book panel
+and spoken closing. Earlier portrait episodes and production profiles remain
+unchanged.
+
+From `pilot_3d`:
+
+```powershell
+.\.venv\Scripts\python.exe -B -X utf8 pipeline.py build `
+  --episode episodes\tef_canada_mock1_youtube_preview.json `
+  --build builds\tef_canada_mock1_youtube_preview_r4 `
+  --reuse-audio builds\tef_canada_mock1_youtube_preview_r3 --jobs 2
+```
+
+`--until audio` prepares speech, French alignment and caption checks;
+`--until scene` also bakes and checks the native landscape performance.
+The complete export must remain strictly below 90 seconds, including the
+opening and CTA. Native motion uses the reduced preview setting, not the
+full-resolution production preset. The separate compositor verifies full
+decoding, the frame clock, encoded audio correlation and decoded
+title/subtitle/promotion/transition samples, and creates contact sheets.
+Independent ASR flags remain visible and do not establish human listening.
+Drafts for the YouTube preview and potential social derivatives are under
+`posts\tef_canada_mock1_youtube_preview`; no portrait derivative is generated.
+The speaking-book purchase URL is still unconfirmed and is not substituted
+with the listening-book URL.
+
+The completed r4 preview is 1,410 frames / 58.75 seconds, with 34 decoded
+composition samples, 18 encoded title-boundary checks and .999963 audio
+correlation. All three decoded sheets have been visually inspected. The
+composition-only revision preserves exact dialogue/alignment and all 470
+independently hash-verified native PNGs from r3. Sub-frame words use their
+measured overlap with a video frame, without extending alignment timestamps.
+`--reuse-audio` on this template requires the identical episode, frozen source
+delivery and independent native-frame audit; it reuses the scene images too.
+For a fresh speech/render build, omit that option and choose a new directory.
+The supplied existing cover has an apparent “Writing Exercises” subtitle
+mismatch; it is retained unedited for this preview. Cover correction,
+purchase URL, human listening and approval remain publication concerns.
+
 ## fide thumbnails
 
 The full-video YouTube thumbnail is

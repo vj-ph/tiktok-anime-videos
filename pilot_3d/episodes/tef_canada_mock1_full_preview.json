@@ -1,0 +1,13 @@
+{
+  "template": "tef_speaking_full_preview",
+  "id": "tef_canada_mock1_full_preview",
+  "base_episode": "tef_canada_mock1_youtube_preview.json",
+  "title": "TEF Canada : expression orale, simulation d'examen",
+  "book_cover": "C:\\Users\\ronggong\\OneDrive - Microsoft\\devbox\\cover\\french\\tef_ca\\speaking_writing.jpg",
+  "purchase_url": "https://a.co/d/01FdtRDW",
+  "visible_url": "a.co/d/01FdtRDW",
+  "promotion": "Livre disponible sur Amazon",
+  "source_heading": "Mock Test 1: Library membership and beginner pottery",
+  "duration_limit_seconds": 1800,
+  "duration_exception": "User requested the complete two-section preview on November 17, 2026; retain every model turn at natural speech speed. This is a guided model demonstration, not an exact 5/10-minute timed candidate attempt."
+}
