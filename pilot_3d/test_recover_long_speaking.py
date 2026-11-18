@@ -18,7 +18,7 @@ class RecoveryTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name)
+        self.root = Path(self.temp.name).resolve()
         self.build = self.root / "builds" / "production"
         self.build.mkdir(parents=True)
         (self.root / "episodes").mkdir()

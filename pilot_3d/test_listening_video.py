@@ -153,7 +153,7 @@ class ListeningVideoTest(unittest.TestCase):
 
     def test_prepare_source_requires_exact_book_text_and_never_overwrites(self):
         with TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             builds = root / "builds"
             for name in ("voice.wav",):
                 write_wav(root / name)
@@ -595,7 +595,7 @@ class ListeningVideoTest(unittest.TestCase):
 
     def test_reuse_checks_treated_announcement_delivery_hash(self):
         with TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data, files, sources, source, answer, _ = reuse_fixture(root)
             data["audio_effect"] = "pa_chime_echo"
             treated = listening.book_audio_file(data, source, create=True)
@@ -1040,15 +1040,15 @@ class ListeningVideoTest(unittest.TestCase):
         self.assertIn("[9:a]aresample=48000", filters)
         command = listening.encoding_command(Path("build"), episode(), timeline,
                                              Path("answer.wav"), Path("hook.wav"), hook_words=words)
-        self.assertIn("build/overlays/hook_word_0.png", command)
-        self.assertIn("build/overlays/hook_word_1.png", command)
+        self.assertIn(str(Path("build/overlays/hook_word_0.png")), command)
+        self.assertIn(str(Path("build/overlays/hook_word_1.png")), command)
         self.assertEqual(command[command.index("-filter_complex") + 1], filters)
         with self.assertRaisesRegex(ValueError, "no valid encoded highlight interval"):
             listening.hook_overlay_windows(timeline, [{"word": "A", "start": 0.01, "end": 0.02}])
 
     def test_title_alignment_is_measured_cached_and_validated(self):
         with TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             audio = root / "hook.wav"
             write_wav(audio)
             data = episode()
