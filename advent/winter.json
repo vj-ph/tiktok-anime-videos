@@ -1,0 +1,37 @@
+[
+  ["hook", "Einmal A2. Trotzdem B1?", [
+    ["Du hast einmal A zwei. Kannst du den DTZ trotzdem mit B eins abschließen?", "You got A2 in one area. Can you still get B1 overall on the DTZ?"],
+    ["Die Antwort kommt am Ende. Zuerst schauen wir uns die Prüfungsteile an.", "The answer comes at the end. First, let's look at the exam sections."]
+  ]],
+  ["why", "Warum der DTZ?", [
+    ["Der DTZ prüft dein Deutsch für den Alltag.", "The DTZ tests your everyday German."],
+    ["Mit B eins und dem Test Leben in Deutschland bekommst du das Zertifikat Integrationskurs.", "With B1 and a pass in Life in Germany, you get the integration course certificate."]
+  ]],
+  ["speak", "1 · Sprechen", [
+    ["Beim Sprechen seid ihr meistens zu zweit. Ihr habt etwa sechzehn Minuten.", "You usually speak in pairs, for about sixteen minutes."],
+    ["Erst stellst du dich vor. Dann kommen Fragen.", "First, you introduce yourself. Then come questions."],
+    ["Dann sprichst du über ein Bild und deine Erfahrungen.", "Then you talk about a picture and your experiences."],
+    ["Am Ende plant ihr gemeinsam etwas.", "At the end, you plan something together."]
+  ]],
+  ["listen", "2 · Hören", [
+    ["Beim Hören gibt es vier Teile und zwanzig Aufgaben.", "Listening has four parts and twenty questions."],
+    ["Du hörst jeden Text nur einmal. Markiere deine Antwort gleich auf dem Bogen.", "You hear each recording once. Mark your answer directly on the sheet."]
+  ]],
+  ["read", "3 · Lesen", [
+    ["In der schriftlichen Prüfung kommt nach dem Hören auch Lesen.", "In the written exam, reading comes after listening."]
+  ]],
+  ["write", "4 · Schreiben", [
+    ["Beim Schreiben wählst du eine von zwei Aufgaben.", "In writing, you choose one of two tasks."],
+    ["Du hast dreißig Minuten für einen Brief oder eine E Mail mit vier Punkten.", "You have thirty minutes to cover four points in a letter or email."]
+  ]],
+  ["payoff", "Nicht überall B1.", [
+    ["Nein. Du brauchst B eins im Sprechen.", "No. You need B1 in speaking."],
+    ["Dazu B eins in Hören und Lesen zusammen oder im Schreiben.", "Plus B1 in listening and reading combined, or in writing."],
+    ["Im anderen Bereich reicht A zwei.", "A2 is enough in the remaining area."]
+  ]],
+  ["advent", "DTZ B1 Advent", [
+    ["Vom ersten bis zum vierzehnten Dezember läuft unser B eins Advent.", "Our B1 Advent series runs from December 1 to 14."],
+    ["Zwei Wochen mit kleinen Übungen, die dir helfen, den DTZ auf B eins zu bestehen.", "Two weeks of short practice challenges to help you pass the DTZ at B1."],
+    ["Lerne mit uns. Folge uns und abonniere unseren Kanal.", "Learn with us. Follow us and subscribe to our channel."]
+  ]]
+]

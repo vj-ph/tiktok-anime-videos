@@ -1,0 +1,75 @@
+{
+  "title": "DTZ B1 · So läuft die Prüfung ab",
+  "sources": {
+    "Prüfungsformat und Bewertung": "https://www.gast.de/de/forschung-entwicklung/entwicklung/auftraege/deutsch-test-fuer-zuwanderer-dtz/der-dtz-auf-einen-blick",
+    "Ablauf der mündlichen Prüfung": "https://www.gast.de/fileadmin/gast.de/GAST/5_DTZ/PDF/DTZ_UEbungssatz_1_Erwachsene.pdf",
+    "Zertifikat Integrationskurs": "https://www.bamf.de/DE/Themen/Integration/ZugewanderteTeilnehmende/Integrationskurse/Abschlusspruefung/abschlusspruefung-node.html",
+    "Voice model and license": "https://huggingface.co/rhasspy/piper-voices/tree/main/de/de_DE/thorsten/high"
+  },
+  "scenes": [
+    {
+      "label": "DEUTSCH-TEST FÜR ZUWANDERER",
+      "title": "So läuft der DTZ ab",
+      "art": "route",
+      "color": "#ffd481",
+      "cards": ["Ziel: B1", "Ablauf statt Übungsaufgaben"],
+      "speech": ["Was passiert eigentlich beim Deutsch-Test für Zuwanderer?", "Hier siehst du den Ablauf und erfährst, wofür du das Ergebnis brauchst."]
+    },
+    {
+      "label": "01 / WARUM DER DTZ?",
+      "title": "Deutsch im Alltag",
+      "art": "certificate",
+      "color": "#a7e8d2",
+      "cards": ["DTZ: Sprachprüfung auf A2 und B1", "DTZ B1 + Leben in Deutschland bestanden", "→ Zertifikat Integrationskurs"],
+      "speech": ["Der DTZ prüft dein Deutsch für den Alltag.", "Er ist der Sprachtest am Ende des Integrationskurses und prüft auf A zwei und B eins.", "Mit B eins im DTZ und dem bestandenen Test Leben in Deutschland bekommst du das Zertifikat Integrationskurs."]
+    },
+    {
+      "label": "02 / DER PRÜFUNGSABLAUF",
+      "title": "Zwei Prüfungsblöcke",
+      "art": "clock",
+      "color": "#b9d7ff",
+      "cards": ["Schriftlich · ca. 100 Min.", "Hören 25 · Lesen 45 · Schreiben 30 Min.", "Mündlich · Sprechen ca. 16 Min."],
+      "speech": ["Die schriftliche Prüfung dauert rund hundert Minuten: Hören, Lesen und Schreiben.", "Dazu kommt die mündliche Prüfung. Schauen wir zuerst auf das Sprechen."]
+    },
+    {
+      "label": "03 / MÜNDLICHE PRÜFUNG",
+      "title": "Sprechen",
+      "art": "speaking",
+      "color": "#ffc5a6",
+      "cards": ["1 · Sich vorstellen und Nachfragen beantworten", "2 · Über ein Bild und eigene Erfahrungen sprechen", "3 · Gemeinsam etwas planen"],
+      "speech": ["Das Gespräch dauert etwa sechzehn Minuten, meistens zu zweit und ohne Vorbereitungszeit.", "Zuerst stellt ihr euch nacheinander vor und beantwortet Nachfragen.", "Dann sprecht ihr über ein Bild und eigene Erfahrungen.", "Zum Schluss macht ihr Vorschläge und plant gemeinsam etwas."]
+    },
+    {
+      "label": "04 / SCHRIFTLICHE PRÜFUNG",
+      "title": "Hören",
+      "art": "audio",
+      "color": "#a7e8d2",
+      "cards": ["4 Teile · 20 Aufgaben · ca. 25 Min.", "Jeden Hörtext nur einmal hören", "Antworten direkt auf dem Bogen markieren"],
+      "speech": ["Beim Hören gibt es vier Teile mit insgesamt zwanzig Aufgaben.", "Du hörst kurze Ansagen, Gespräche und einzelne Aussagen zu einem Thema.", "Jeder Hörtext läuft nur einmal. Markiere deine Lösungen direkt auf dem Antwortbogen.", "Zum Übertragen gibt es keine extra Zeit."]
+    },
+    {
+      "label": "05 / SCHRIFTLICHE PRÜFUNG",
+      "title": "Schreiben",
+      "art": "letter",
+      "color": "#b9d7ff",
+      "cards": ["30 Min. · 1 von 2 Aufgaben wählen", "Brief oder E-Mail · alle 4 Punkte bearbeiten", "Anrede und Gruß · direkt auf den Antwortbogen"],
+      "speech": ["Beim Schreiben hast du dreißig Minuten und wählst eine von zwei Aufgaben.", "Du schreibst einen Brief oder eine E-Mail zu einer Situation.", "Geh auf alle vier Punkte ein und vergiss Anrede und Gruß nicht.", "Schreib direkt auf den Antwortbogen. Nur dieser Text wird bewertet."]
+    },
+    {
+      "label": "06 / DEIN ERGEBNIS",
+      "title": "Wann erreichst du B1?",
+      "art": "certificate",
+      "color": "#ffd481",
+      "cards": ["Sprechen: B1", "Hören + Lesen ODER Schreiben: B1", "Im übrigen Bereich: mindestens A2"],
+      "speech": ["Für das Gesamtergebnis B eins brauchst du B eins im Sprechen.", "Dazu brauchst du B eins entweder in Hören und Lesen zusammen oder im Schreiben.", "Im übrigen Bereich brauchst du mindestens A zwei."]
+    },
+    {
+      "label": "07 / UNSERE ADVENTSREIHE",
+      "title": "Dein Weg zu B1",
+      "art": "advent",
+      "color": "#ffd481",
+      "cards": ["Ab 1. Dezember 2026", "Adventsvideos auf dem Weg zu B1", "Jetzt folgen & abonnieren"],
+      "speech": ["Ab dem ersten Dezember zweitausendsechsundzwanzig startet unsere Adventsreihe.", "Mit unseren Videos lernst du Schritt für Schritt Deutsch auf dem Weg zu B eins.", "Folge uns und abonniere unseren Kanal, damit du den Start nicht verpasst!"]
+    }
+  ]
+}
