@@ -526,7 +526,7 @@ remain separate, and nothing was uploaded.
 The user approved the six-part plan after requesting portrait videos strictly
 under three minutes. The derivative configuration is
 `listening_2d/episodes/tef_canada_listening_01_social_six.json`; generation uses
-`listening_2d/derive_tef_social.py` in a separate
+`listening_2d/shorts/derive_tef_social.py` in a separate
 `listening_2d/builds/tef_canada_listening_01_social_six_r2/` directory.
 The source manifest digest is
 `f4620637d65e4fc12ce2fea7cd811d66a2c2846765277b089ec341df77dd46ef`.

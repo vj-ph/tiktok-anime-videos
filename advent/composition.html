@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>DTZ B1 · So läuft die Prüfung ab</title>
+<script src="gsap.min.js"></script>
+<style>
+  * { box-sizing: border-box }
+  body { margin: 0; color: #fbf4e3; background: #101a2b; font-family: "DejaVu Sans", sans-serif }
+  #root { position: relative; width: 1080px; height: 1920px; overflow: hidden }
+  .scene { position: absolute; inset: 0; padding: 104px 142px 110px 96px;
+    background: radial-gradient(ellipse at 42% 23%, #293851, transparent 53%), #101a2b }
+  .brand, .count { position: absolute; top: 105px; font-size: 30px; letter-spacing: 4px; font-weight: bold }
+  .brand { color: var(--accent) }
+  .count { right: 142px; color: #bfcbdf }
+  .hero { position: relative; display: grid; place-items: center; margin: 111px 0 54px;
+    height: 540px; border: 2px solid #54667e; border-radius: 54px; color: var(--accent);
+    background: radial-gradient(circle, #ffffff15 0%, transparent 64%),
+      radial-gradient(circle, #a4b9d441 2px, transparent 3px) 0 0 / 29px 29px, #19263b }
+  .hero::after { content: ''; position: absolute; width: 425px; height: 425px; border-radius: 50%;
+    border: 2px dashed #c1cede50; pointer-events: none }
+  .icon { width: 390px; height: 390px; z-index: 1; overflow: visible }
+  .kicker { margin: 0 0 25px; color: var(--accent); letter-spacing: 3px; font-size: 29px; font-weight: bold }
+  h1 { margin: 0 0 37px; font-size: 76px; letter-spacing: -3px; line-height: 1.05 }
+  ul { display: grid; gap: 16px; padding: 0; margin: 0; list-style: none }
+  li { border-left: 7px solid var(--accent); border-radius: 0 17px 17px 0; background: #ffffff10;
+    padding: 19px 24px; font-size: 37px; line-height: 1.17; font-weight: 600 }
+  section:has(use[href="#advent"]) li:last-child { background: var(--accent); color: #101a2b }
+  .caption { z-index: 2; position: absolute; top: 1535px; left: 96px; right: 142px; margin: 0;
+    font-size: 34px; line-height: 1.32; text-align: center; padding: 18px 26px; border-radius: 22px;
+    background: #090f1a; color: white; text-wrap: balance }
+  .progress { position: absolute; bottom: 155px; height: 8px; border-radius: 99px; overflow: hidden;
+    left: 96px; right: 142px; background: #3b4960 }
+  .progress div { height: 100%; background: var(--accent) }
+  .art { fill: none; stroke: currentColor; stroke-width: 10px; stroke-linecap: round; stroke-linejoin: round }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs class="art">
+    <symbol id="route"><g class="art"><path d="M66 242h75c37 0 37-52 0-52H95c-40 0-40-54 0-54h129"/><circle cx="60" cy="242" r="13"/><path d="M258 125c0-23-18-41-41-41s-41 18-41 41c0 25 41 61 41 61s41-36 41-61Z" fill="#19263b"/><circle cx="217" cy="126" r="12"/><path d="M55 100h30m-15-15v30m183 88h28m-14-14v28"/></g></symbol>
+    <symbol id="certificate"><g class="art"><rect x="64" y="52" width="191" height="211" rx="22" fill="#19263b"/><path d="M99 100h122m-122 32h102m-102 33h62"/><circle cx="205" cy="215" r="22" fill="#19263b"/><path d="m193 235-9 37 21-13 21 13-9-37"/></g></symbol>
+    <symbol id="clock"><g class="art"><circle cx="160" cy="160" r="105" fill="#19263b"/><path d="M160 87v73l47 24m-47 41v13M83 160h13m128 0h13"/><circle cx="160" cy="160" r="6" fill="currentColor"/></g></symbol>
+    <symbol id="speaking"><g class="art"><path d="M51 63h121a17 17 0 0 1 17 17v50a17 17 0 0 1-17 17h-57l-33 25v-25H51a17 17 0 0 1-17-17V80a17 17 0 0 1 17-17Z" fill="#19263b"/><path d="M149 168h120a17 17 0 0 1 17 17v49a17 17 0 0 1-17 17h-20v26l-35-26h-65a17 17 0 0 1-17-17v-49a17 17 0 0 1 17-17Z" fill="#19263b"/><path d="M72 105h79m20 105h78"/></g></symbol>
+    <symbol id="audio"><g class="art"><path d="M61 176v-25a99 99 0 0 1 198 0v25"/><rect x="52" y="154" width="46" height="75" rx="17" fill="#19263b"/><rect x="222" y="154" width="46" height="75" rx="17" fill="#19263b"/><path d="M128 176v27m21-49v70m22-82v93m21-62v30"/></g></symbol>
+    <symbol id="letter"><g class="art"><rect x="49" y="94" width="222" height="140" rx="18" fill="#19263b"/><path d="m55 104 105 81 105-81M56 221l63-56m145 56-63-56M99 64h122"/></g></symbol>
+    <symbol id="advent"><g class="art"><rect x="62" y="76" width="196" height="168" rx="23" fill="#19263b"/><path d="M62 123h196M110 57v37m100-37v37"/><path d="m160 146 12 23 25 4-19 18 5 26-23-12-23 12 5-26-19-18 25-4Z" fill="currentColor"/><path d="M39 54v34M22 71h34m227 152v36m-18-18h36m-57 30v21m-10-10h21"/></g></symbol>
+  </defs>
+</svg>
+<main id="root" data-composition-id="root" data-width="1080" data-height="1920" data-start="0" data-duration="{{DURATION}}">
+{{SCENES}}
+<audio id="narration" src="narration.wav" data-start="0" data-duration="{{DURATION}}" data-track-index="3"></audio>
+</main>
+<script>
+  const tl = gsap.timeline({ paused: true });
+  document.querySelectorAll(".scene").forEach((scene) => {
+    const start = Number(scene.dataset.start);
+    const duration = Number(scene.dataset.duration);
+    tl.from(scene.querySelector(".icon"), { scale: .68, rotation: -12, opacity: 0, duration: .56, ease: "back.out(1.6)" }, start);
+    tl.to(scene.querySelector(".icon"), { y: -16, duration: duration / 2 - .3, yoyo: true, repeat: 1, ease: "sine.inOut" }, start + .6);
+    tl.from(scene.querySelectorAll(".kicker, h1, li"), {
+      y: 30, opacity: 0, duration: .45, stagger: .08, ease: "power2.out"
+    }, start + .13);
+  });
+  window.__timelines = { root: tl };
+</script>
+</body>
+</html>

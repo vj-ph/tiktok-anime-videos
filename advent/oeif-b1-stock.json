@@ -1,0 +1,24 @@
+{
+  "audio": {
+    "stock": {
+      "music": {
+        "title": "Holiday / Seasonal 3",
+        "creator": "Diego Nava",
+        "source": "https://mixkit.co/free-stock-music/mood/festive/",
+        "license": "https://mixkit.co/license/#musicFree",
+        "file": "holiday-seasonal-3",
+        "download": "https://assets.mixkit.co/music/510/510.mp3",
+        "sha256": "654cc3047b2a395a06386ffe076f7923320ec7eb0044a75291ea2e121f3b45a6"
+      },
+      "stamp": {
+        "title": "Stamp",
+        "creator": "kermite607",
+        "source": "https://freesound.org/people/kermite607/sounds/362622/",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "file": "stamp",
+        "download": "https://cdn.freesound.org/previews/362/362622_3165091-hq.mp3",
+        "sha256": "31583ce19caf4f595b54565343d6267a5a311d736653bc25a9fe32c750305e58"
+      }
+    }
+  }
+}

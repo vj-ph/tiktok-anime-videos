@@ -1,0 +1,27 @@
+[
+  ["hook", "Nationalité française : B1 ou B2 ?", [
+    ["Pour devenir français, il faut le niveau bé un ou bé deux ?", "To become a French citizen, do you need B1 or B2?"],
+    ["Je te donne la réponse à la fin. D’abord, voici les quatre épreuves.", "I’ll give you the answer at the end. First, here are the four sections."]
+  ]],
+  ["listen", "1 · Écouter", [
+    ["Tu écoutes des documents audio. Tu réponds à vingt-cinq questions en vingt minutes.", "You listen to audio clips and answer 25 questions in 20 minutes."]
+  ]],
+  ["read", "2 · Lire", [
+    ["Tu lis différents textes. Tu as trente-cinq minutes pour répondre à vingt-cinq questions.", "You read different texts and have 35 minutes to answer 25 questions."]
+  ]],
+  ["write", "3 · Écrire", [
+    ["Tu as trente minutes pour écrire trois textes courts.", "You have 30 minutes to write three short texts."]
+  ]],
+  ["speak", "4 · Parler", [
+    ["À l’oral, tu fais trois tâches en dix minutes, face à un examinateur.", "In speaking, you do three tasks in 10 minutes, face to face with an examiner."]
+  ]],
+  ["payoff", "Naturalisation : B2", [
+    ["Depuis le premier janvier deux mille vingt-six, pour la naturalisation, il faut un niveau global bé deux.", "Since January 1, 2026, naturalization requires an overall B2 level."],
+    ["Pour une première carte de résident, c’est généralement bé un. Le test reste le même.", "For a first resident card, it’s generally B1. The test itself is the same."],
+    ["Le test de français ne remplace pas l’examen civique.", "The French-language test does not replace the civic exam."]
+  ]],
+  ["advent", "Avent TCF IRN", [
+    ["Du premier au quatorze décembre, entraîne-toi avec nos défis bé un et bé deux.", "From December 1 to 14, practise with our B1 and B2 challenges."],
+    ["Suis-nous et abonne-toi pour les prochains défis.", "Follow and subscribe for the next challenges."]
+  ]]
+]

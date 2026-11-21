@@ -1,0 +1,15 @@
+{
+  "audio": {
+    "stock": {
+      "music": {
+        "title": "Christmas Gifts",
+        "creator": "Michael Ramir C.",
+        "source": "https://mixkit.co/free-stock-music/tag/traditional-christmas/",
+        "license": "https://mixkit.co/license/#musicFree",
+        "file": "christmas-gifts",
+        "download": "https://assets.mixkit.co/music/862/862.mp3",
+        "sha256": "cbf65a0967f00eca8f85b90815c7e9615907f2bb9d9af74884cd0ddd20d7439a"
+      }
+    }
+  }
+}

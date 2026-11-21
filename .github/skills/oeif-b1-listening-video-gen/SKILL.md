@@ -294,7 +294,7 @@ script changes before TTS. Measure new speech; do not retain the old opening's
 duration. Rebudget shorts from the verified replacement full version instead
 of assuming old clocks or silently changing old posting descriptions.
 
-The independent `listening_2d\audit_a2_sequence.py` gate checks frame-derived
+The independent `listening_2d\checks\audit_a2_sequence.py` gate checks frame-derived
 pauses, event order, missing/extra chimes and breaks, repeat hashes, separate
 reveals, the final cue, title speech metadata and **actual title HTML** in each
 composed layout. Run it after composition and before rendering; stop on a
@@ -302,7 +302,7 @@ nonzero exit. The old validator's agreement with the old builder is not
 evidence of matching this new sequence.
 
 ```powershell
-& .\pilot_3d\.venv\Scripts\python.exe -X utf8 .\listening_2d\audit_a2_sequence.py `
+& .\pilot_3d\.venv\Scripts\python.exe -X utf8 -m listening_2d.checks.audit_a2_sequence `
   --build .\listening_2d\builds\oeif_a2_listening_full_new `
   --output .\listening_2d\builds\oeif_a2_listening_full_new\sequence_pre_render.json
 if ($LASTEXITCODE -ne 0) { throw 'A2 sequence/opening gate failed.' }
@@ -329,15 +329,15 @@ Use fresh build paths. Run each command separately and stop on failure:
 $py = '.\pilot_3d\.venv\Scripts\python.exe'
 $full = '.\listening_2d\builds\oeif_a2_listening_full_new'
 $short = '.\listening_2d\builds\oeif_a2_listening_reduced_new'
-& $py -X utf8 .\listening_2d\prepare_a2_r2.py --build $full --plan-only
-& $py -X utf8 .\listening_2d\prepare_a2_r2.py --build $full
-& $py -X utf8 .\listening_2d\process_a2_r2.py align --build $full
-& $py -X utf8 .\listening_2d\process_a2_r2.py review --build $full --model small --ids title end_test
-& $py -X utf8 .\listening_2d\process_a2_r2.py review --build $full --model medium --ids title end_test
-& $py -X utf8 .\listening_2d\compose_a2_r2.py --build $full
-& $py -X utf8 .\listening_2d\audit_a2_sequence.py --build $full --output "$full\sequence_pre_render.json"
-& $py -X utf8 .\listening_2d\deliver_a2_r2.py check --build $full
-& $py -X utf8 .\listening_2d\review_a2_frames_r2.py --build $full
+& $py -X utf8 -m listening_2d.preparation.prepare_a2_r2 --build $full --plan-only
+& $py -X utf8 -m listening_2d.preparation.prepare_a2_r2 --build $full
+& $py -X utf8 -m listening_2d.preparation.process_a2_r2 align --build $full
+& $py -X utf8 -m listening_2d.preparation.process_a2_r2 review --build $full --model small --ids title end_test
+& $py -X utf8 -m listening_2d.preparation.process_a2_r2 review --build $full --model medium --ids title end_test
+& $py -X utf8 -m listening_2d.rendering.compose_a2_r2 --build $full
+& $py -X utf8 -m listening_2d.checks.audit_a2_sequence --build $full --output "$full\sequence_pre_render.json"
+& $py -X utf8 -m listening_2d.rendering.deliver_a2_r2 check --build $full
+& $py -X utf8 -m listening_2d.checks.review_a2_frames_r2 --build $full
 ```
 
 Inspect every native sheet and record `visual_approval.json`; resolve the new
@@ -434,13 +434,13 @@ The separate episode-1 drivers are `prepare_b2.py`, `process_b2.py`,
 gate separately, stopping on failure:
 
 ```powershell
-& $py -X utf8 .\listening_2d\prepare_b2.py --build $full --plan-only
-& $py -X utf8 .\listening_2d\prepare_b2.py --build $full
-& $py -X utf8 .\listening_2d\process_b2.py align --build $full
-& $py -X utf8 .\listening_2d\process_b2.py review --build $full --model small
-& $py -X utf8 .\listening_2d\compose_b2.py --build $full
-& $py -X utf8 .\listening_2d\deliver_b2.py check --build $full
-& $py -X utf8 .\listening_2d\review_b2_frames.py --build $full
+& $py -X utf8 -m listening_2d.preparation.prepare_b2 --build $full --plan-only
+& $py -X utf8 -m listening_2d.preparation.prepare_b2 --build $full
+& $py -X utf8 -m listening_2d.preparation.process_b2 align --build $full
+& $py -X utf8 -m listening_2d.preparation.process_b2 review --build $full --model small
+& $py -X utf8 -m listening_2d.rendering.compose_b2 --build $full
+& $py -X utf8 -m listening_2d.rendering.deliver_b2 check --build $full
+& $py -X utf8 -m listening_2d.checks.review_b2_frames --build $full
 ```
 
 Recheck substantive ASR flags using cached medium with `--ids`, retain all
@@ -673,6 +673,11 @@ do not silently reinterpret an existing frozen episode.
 
 ## Long-video workflow
 
+For new full episodes, use the shared `listening_2d/listening_pipeline.py`
+entry point documented in `listening_2d/PLAN.md`. The episode-1 recipe below
+records the original preparation and acceptance criteria, not a workflow to
+rerun for new content.
+
 ### 1. Approve content and bind inputs
 
 Adapt the book's task structure into fresh scenarios, questions, distractors
@@ -717,7 +722,7 @@ synthesizing; inspect it before the authorized audio run.
 ```powershell
 $sample = '.\listening_2d\builds\oeif_b1_listening_sample_r4'
 $full = '.\listening_2d\builds\oeif_b1_listening_full_new'
-& $py -X utf8 .\listening_2d\prepare_full.py --build $full --reuse-sample $sample --plan-only
+& $py -X utf8 -m listening_2d.preparation.prepare_full --build $full --reuse-sample $sample --plan-only
 ```
 
 ### 2. Generate, measure and align audio
@@ -734,15 +739,14 @@ Keep prescribed pauses exact; reveals and chimes are outside them. Measure
 total duration rather than imposing an estimated exam-length target.
 
 ```powershell
-& $py -X utf8 .\listening_2d\prepare_full.py --build $full --reuse-sample $sample
-& $py -X utf8 .\listening_2d\align_full.py --build $full
-& $py -X utf8 .\listening_2d\review_full.py --build $full
+& $py -X utf8 -m listening_2d.preparation.prepare_full --build $full --reuse-sample $sample
+& $py -X utf8 -m listening_2d.checks.review_full --build $full
 ```
 
-`align_full.py` aligns the title and all four instructions, reusing verified
-matching word intervals where possible. Reject changed displayed wording or
-missing timings. Never display task transcripts. Preparation rewrites the
-timeline, so rerunning it after alignment requires rerunning dependent stages.
+The historical aligner measured the title and all four instructions, reusing
+verified matching word intervals where possible. The current pipeline's
+`align` stage likewise rejects changed wording or missing timing. Never
+display task transcripts.
 
 Review ASR disagreements without treating strict matches as accent or human
 listening certification. Recheck substantive disagreements with an independent,
@@ -761,13 +765,13 @@ labels and measured narration highlighting; do not reintroduce removed bylines.
 Run each stage separately and stop on a nonzero exit or failed acceptance gate.
 
 ```powershell
-& $py -X utf8 .\listening_2d\compose_full.py --build $full
-& $py -X utf8 -m unittest discover -s .\listening_2d -p 'test_*.py'
-& $py -X utf8 .\listening_2d\validate_full.py --build $full
+& $py -X utf8 -m listening_2d.rendering.compose_full --build $full
+& $py -X utf8 -m unittest discover -s .\listening_2d\tests -p 'test_*.py'
+& $py -X utf8 -m listening_2d.checks.validate_full --build $full
 Copy-Item "$full\validation.json" "$full\source_validation.json"
 & $py -X utf8 $hf check "$full\landscape" --json --at-transitions --snapshots --no-browser-gpu --timeout 4m
 & $py -X utf8 $hf check "$full\portrait" --json --at-transitions --snapshots --no-browser-gpu --timeout 4m
-& $py -X utf8 .\listening_2d\review_full_frames.py --build $full
+& $py -X utf8 -m listening_2d.checks.review_full_frames --build $full
 ```
 
 Require browser `ok=true`, `browserSkipped=false` and zero runtime/layout/
@@ -787,8 +791,8 @@ Only render after source, browser and visual gates pass. Use delivery quality,
 ```powershell
 & $py -X utf8 $hf render "$full\landscape" --fps 24 --quality delivery --workers 2 --no-browser-gpu --output "$full\production_landscape.mp4"
 & $py -X utf8 $hf render "$full\portrait" --fps 24 --quality delivery --workers 2 --no-browser-gpu --output "$full\production_portrait.mp4"
-& $py -X utf8 .\listening_2d\validate_full.py --build $full --encoded
-& $py -X utf8 .\listening_2d\review_full_frames.py --build $full --encoded
+& $py -X utf8 -m listening_2d.checks.validate_full --build $full --encoded
+& $py -X utf8 -m listening_2d.checks.review_full_frames --build $full --encoded
 ```
 
 Verify full decode, native dimensions/frame rate, exact frame count, every
@@ -862,11 +866,11 @@ instead of claiming that an overlay updated the underlying footage.
 ```powershell
 $source = '.\listening_2d\builds\oeif_b1_listening_full_production_r1'
 $short = '.\listening_2d\builds\oeif_b1_listening_reduced_new'
-& $py -X utf8 .\listening_2d\reduce_full.py prepare --source $source --build $short
-& $py -X utf8 .\listening_2d\reduce_full.py check --build $short
-& $py -X utf8 .\listening_2d\reduce_full.py review --build $short
-& $py -X utf8 .\listening_2d\reduce_full.py render --build $short
-& $py -X utf8 .\listening_2d\reduce_full.py verify --build $short
+& $py -X utf8 -m listening_2d.shorts.reduce_full prepare --source $source --build $short
+& $py -X utf8 -m listening_2d.shorts.reduce_full check --build $short
+& $py -X utf8 -m listening_2d.shorts.reduce_full review --build $short
+& $py -X utf8 -m listening_2d.shorts.reduce_full render --build $short
+& $py -X utf8 -m listening_2d.shorts.reduce_full verify --build $short
 ```
 
 `prepare` requires a fresh build and pins the original long exports/inputs;
@@ -933,11 +937,11 @@ overflow and preserve at least 12 px below the final card element.
 ```powershell
 $approvedShort = '.\listening_2d\builds\oeif_b1_listening_reduced_r2'
 $revised = '.\listening_2d\builds\oeif_b1_listening_reduced_voiced_new'
-& $py -X utf8 .\listening_2d\revise_reduced.py prepare --source $approvedShort --build $revised
-& $py -X utf8 .\listening_2d\revise_reduced.py speech-review --build $revised
-& $py -X utf8 .\listening_2d\revise_reduced.py check --build $revised
-& $py -X utf8 .\listening_2d\revise_reduced.py render --build $revised
-& $py -X utf8 .\listening_2d\revise_reduced.py verify --build $revised
+& $py -X utf8 -m listening_2d.shorts.revise_reduced prepare --source $approvedShort --build $revised
+& $py -X utf8 -m listening_2d.shorts.revise_reduced speech-review --build $revised
+& $py -X utf8 -m listening_2d.shorts.revise_reduced check --build $revised
+& $py -X utf8 -m listening_2d.shorts.revise_reduced render --build $revised
+& $py -X utf8 -m listening_2d.shorts.revise_reduced verify --build $revised
 ```
 
 Inspect the independent title ASR results and native contact sheets before
@@ -982,10 +986,10 @@ one frame. Do not count the following exercise's reading silence as padding.
 ```powershell
 $voiced = '.\listening_2d\builds\oeif_b1_listening_reduced_r3'
 $trimmed = '.\listening_2d\builds\oeif_b1_listening_reduced_trimmed_new'
-& $py -X utf8 .\listening_2d\trim_reduced_intro.py prepare --source $voiced --build $trimmed
-& $py -X utf8 .\listening_2d\trim_reduced_intro.py check --build $trimmed
-& $py -X utf8 .\listening_2d\trim_reduced_intro.py render --build $trimmed
-& $py -X utf8 .\listening_2d\trim_reduced_intro.py verify --build $trimmed
+& $py -X utf8 -m listening_2d.shorts.trim_reduced_intro prepare --source $voiced --build $trimmed
+& $py -X utf8 -m listening_2d.shorts.trim_reduced_intro check --build $trimmed
+& $py -X utf8 -m listening_2d.shorts.trim_reduced_intro render --build $trimmed
+& $py -X utf8 -m listening_2d.shorts.trim_reduced_intro verify --build $trimmed
 ```
 
 Because only a static opening's duration changes, this step may reuse the r3
@@ -1014,7 +1018,7 @@ intermediate export.
 $full = '.\listening_2d\builds\oeif_b1_listening_full_production_r1'
 $trimmed = '.\listening_2d\builds\oeif_b1_listening_reduced_r5'
 $assets = '.\posts\oeif_b1_listening_2026_11_ep01_new'
-& $py -X utf8 .\listening_2d\publication_assets.py --full $full --short $trimmed --output $assets
+& $py -X utf8 -m listening_2d.publishing.publication_assets --full $full --short $trimmed --output $assets
 ```
 
 This creates `full` and `teil_1` through `teil_4`, each with separate

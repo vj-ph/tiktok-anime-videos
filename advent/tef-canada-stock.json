@@ -1,0 +1,15 @@
+{
+  "audio": {
+    "stock": {
+      "music": {
+        "title": "My Christmas Prayer",
+        "creator": "Michael Ramir C.",
+        "source": "https://mixkit.co/free-stock-music/tag/christmas/",
+        "license": "https://mixkit.co/license/#musicFree",
+        "file": "my-christmas-prayer",
+        "download": "https://assets.mixkit.co/music/912/912.mp3",
+        "sha256": "d4e2aa1231f721ae02fe31b7ec57e5413c4e6126542800cac9753efb26df95be"
+      }
+    }
+  }
+}

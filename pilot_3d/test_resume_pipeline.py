@@ -168,7 +168,7 @@ class RecoveryTests(unittest.TestCase):
         stop.assert_called_once_with([process])
 
     def test_invalid_retry_configuration_never_starts_a_process(self):
-        for options in ({"jobs": 3}, {"max_retries": -1}, {"max_retries": 4},
+        for options in ({"jobs": 0}, {"max_retries": -1}, {"max_retries": 4},
                         {"retry_delay": -1}, {"retry_delay": float("nan")}):
             with self.subTest(options=options), patch.object(recovery, "run_attempt") as run:
                 with self.assertRaises(ValueError):

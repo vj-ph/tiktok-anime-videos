@@ -1,0 +1,54 @@
+{
+  "exam": "dtz-b1",
+  "title": "DTZ B1 · Advent",
+  "script": "winter.json",
+  "graphics": "winter_graphics.json",
+  "stock_manifest": "winter_sources.json",
+  "voice": {
+    "model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+    "tempo": 0.85,
+    "audio": {
+      "path": "../../shared-voices/gemini_3.8_flash_tts/german/middle_female.wav",
+      "sha256": "791c8108a4948eb1d279f3bb4b2b7bcfef0f8eadbd821963ec5829a5eead51c5"
+    },
+    "transcript": {
+      "path": "../../shared-voices/gemini_3.8_flash_tts/german/text.txt",
+      "sha256": "6c357280a47fa5735bc262e5d3ae018076a2552753017f8950800888c90c281f"
+    }
+  },
+  "official_sources": [
+    "https://www.gast.de/de/forschung-entwicklung/entwicklung/auftraege/deutsch-test-fuer-zuwanderer-dtz/der-dtz-auf-einen-blick",
+    "https://www.bamf.de/SharedDocs/Anlagen/DE/Integration/FlyerIntegrationskurse/flyer-integrationskurse.pdf"
+  ],
+  "visual_assets": {
+    "market.jpg": {
+      "path": "build/winter-v7/market.jpg",
+      "download": "https://upload.wikimedia.org/wikipedia/commons/4/45/Striezelmarkt_Dresden_%28187341049%29.jpeg",
+      "sha256": "83cbea140f430faad52617e07c1460970da3ac973de8da73d60defb1e3c4065a"
+    },
+    "speaking-picture.jpg": {
+      "path": "../../german_exam_books/b1/speaking_dtz_gpt_v1/images/01.jpg",
+      "sha256": "a67ed47dfb66055c3197df0f83896f0a01b886612f224e44c3c10c65b511095e"
+    }
+  },
+  "beats": {
+    "hook": ["DTZ B1", "question", "anticipation"],
+    "why": ["DEIN ZIEL", "map", "certificate"],
+    "speak": ["MÜNDLICHE PRÜFUNG", "pair", "intro", "picture", "plan"],
+    "listen": ["SCHRIFTLICHE PRÜFUNG", "headphones", "answer"],
+    "read": ["SCHRIFTLICHE PRÜFUNG", "reading"],
+    "write": ["SCHRIFTLICHE PRÜFUNG", "choice", "writing"],
+    "payoff": ["DIE AUFLÖSUNG", "result-speaking", "result-choice", "result-a2"],
+    "advent": ["1.–14. DEZEMBER 2026", "calendar", "practice", "follow"]
+  },
+  "spelling": {
+    "b eins": "B1",
+    "a zwei": "A2",
+    "e mail": "E-Mail",
+    "sechzehn": "16",
+    "dreißig": "30",
+    "zwanzig": "20",
+    "vier": "4",
+    "eine von zwei": "1 von 2"
+  }
+}

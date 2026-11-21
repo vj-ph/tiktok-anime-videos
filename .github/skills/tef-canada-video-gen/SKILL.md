@@ -117,8 +117,11 @@ require `total_frames < 21600`; exactly 15 minutes fails. If the measured budget
 overruns, drop a whole optional single-question item while retaining all
 families, update numbering/instructions/solutions and regenerate a fresh review.
 
-The implemented 2D route uses `listening_2d/episodes/tef_canada_listening_01.json`,
-`prepare_tef.py`, `compose_tef.py`, `check_tef_layout.cjs` and `deliver_tef.py`.
+For new full 2D episodes, use `listening_2d/listening_pipeline.py` with
+`--profile tef` and use `listening_2d/episodes/tef_canada_listening_01.json`
+as the starting episode shape. The profile uses `preparation/prepare_tef.py`,
+`rendering/compose_tef.py`, `checks/check_tef_layout.cjs` and
+`rendering/deliver_tef.py` under `listening_2d/`.
 Run preparation, French alignment and ASR before composing and checking both
 native layouts. Inspect the native capture sheets before rendering, then check
 the complete encoded video, countdown boundaries and actual silence before
@@ -162,7 +165,8 @@ The user approved six standalone portrait parts on November 17, 2026, each
 **strictly below 180 seconds**, including its own spoken opening, CTA and hold.
 This explicit limit applies to these 2D derivatives, not the 3D short route.
 Use `episodes/tef_canada_listening_01_social_six.json` and
-`derive_tef_social.py`; preserve the frozen full-length source.
+`python -m listening_2d.shorts.derive_tef_social` from the repository root;
+preserve the frozen full-length source.
 
 Keep complete, consecutive families: pictures plus announcements (questions
 1–4), voicemail (5–6), street interviews (7–9), chronicle plus interview
@@ -190,7 +194,8 @@ automated speech/frame checks do not certify human listening or publication.
 
 If HyperFrames 0.9.2 fails a fractional wrapper range with a `[chunkAudio]`
 AAC packet-count error, preserve its logs and use
-`render_tef_wrapper.py --build <part-build> --kind closing` (or `opening`).
+`python -m listening_2d.shorts.render_tef_wrapper --build <part-build> --kind closing`
+(or `opening`).
 This captures every exact native frame from the already checked composition
 and encodes video only with explicit BT.709 conversion. Resume `export`,
 then `encoded`; the complete authoritative WAV is muxed separately, so no

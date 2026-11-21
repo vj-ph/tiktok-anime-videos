@@ -20,7 +20,7 @@ class B2SpeakingTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name)
+        self.root = Path(self.temp.name).resolve()
         Image.new("RGB", (200, 300), "#bb8b55").save(self.root / "image.png")
         (self.root / "scene.blend").write_bytes(b"fixture")
         raw = json.loads((ROOT / "episodes" / "oeif_b2_speaking_long.json").read_text(encoding="utf-8"))

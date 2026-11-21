@@ -1,0 +1,33 @@
+{
+  "exam": "tef-canada",
+  "title": "TEF Canada · Avent",
+  "script": "tef-canada-script.json",
+  "graphics": "tef-canada-art.json",
+  "stock_manifest": "tef-canada-stock.json",
+  "music_gain": 0.10,
+  "opening_flag": "ca",
+  "voice": {
+    "model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+    "tempo": 0.85,
+    "audio": {"path": "../../../french/french_exam_books/tef_canada/listening/audio/voices/references/fr_ca_qc_narrator_f01.wav", "sha256": "16bda7f98645b14c355bac7761d42b18990d0458fc3e7526d2c49d9fac3bed22"},
+    "transcript": {"path": "../pilot_3d/assets/voices/fr_ca_qc_narrator_f01_reference.txt", "sha256": "c3e0583687d58e9914feb0634ac8a19754d79f0f461fe690ef20b0fc7145295c"}
+  },
+  "official_sources": [
+    "https://www.lefrancaisdesaffaires.fr/candidat/test-evaluation-francais/tef-canada/presentation/",
+    "https://www.lefrancaisdesaffaires.fr/candidat/test-evaluation-francais/tef-canada/resultats/",
+    "https://www.canada.ca/fr/immigration-refugies-citoyennete/services/immigrer-canada/entree-express/documents/examen-linguistique.html"
+  ],
+  "visual_assets": {
+    "market.svg": {"path": "tef-winter.svg", "sha256": "2d57880b454b94fdf16e705e1ef1c389ccb849d1d9c1037de9a9df8a991d5a4d"}
+  },
+  "beats": {
+    "hook": ["TEF CANADA", "two-four", "preview"],
+    "listen": ["ÉCOUTER", "listen-count", "listen-time"],
+    "read": ["LIRE", "reading"],
+    "write": ["ÉCRIRE", "writing"],
+    "speak": ["PARLER", "ask", "convince"],
+    "payoff": ["LA RÉPONSE", "immigration", "citizenship"],
+    "advent": ["1–14 DÉCEMBRE 2026", "calendar", "follow"]
+  },
+  "spelling": {"t e f": "TEF", "deux épreuves": "2 épreuves", "quatre": "4", "quarante": "40", "quinze": "15", "une heure": "1 heure", "premier au quatorze": "1 au 14"}
+}

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#132638"/><stop offset="1" stop-color="#506b80"/></linearGradient>
+    <pattern id="trees" width="115" height="170" patternUnits="userSpaceOnUse"><path d="M56 2 24 68h16L13 125h18L5 164h103l-25-39h17L74 68h15Z" fill="#14333b"/></pattern>
+    <pattern id="lights" width="125" height="130" patternUnits="userSpaceOnUse"><rect x="21" y="12" width="39" height="49" rx="8" fill="#e1ae6e"/><path d="M40 13v46M22 35h37" stroke="#674b4a" stroke-width="4"/></pattern>
+  </defs>
+  <path d="M0 0h1080v1920H0z" fill="url(#sky)"/>
+  <circle cx="832" cy="248" r="95" fill="#f3d9b8" opacity=".8"/>
+  <path d="m0 740 250-284 120 135L584 300l340 474 156-196v715H0z" fill="#627287"/>
+  <path d="m133 590 117-134 120 135-89-45-37 25-43-14zm303-90 148-200 148 206-110-56-51 26-46-27z" fill="#d3dce2"/>
+  <path d="M0 916q250-220 550-56t530-40v490H0z" fill="#234552"/>
+  <path d="M0 952q250-220 550-56t530-40v530H0z" fill="url(#trees)"/>
+  <path d="M0 1390q360-164 710-65t370-26v621H0z" fill="#8a9baa"/>
+  <path d="M24 1480v215h310v-215l-158-131zm712 90v199h299v-199l-149-129z" fill="#633e43"/>
+  <path d="m0 1483 175-156 180 156-26 20-153-126-151 126zm713 92 174-154 178 154-26 21-153-126-147 126z" fill="#dce4e8"/>
+  <path d="M47 1515h245v135H47zm712 83h245v135H759z" fill="url(#lights)"/>
+  <path d="M0 1740q320-90 682 9t398-30v201H0z" fill="#b9c9d1"/>
+</svg>

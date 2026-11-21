@@ -1,0 +1,52 @@
+{
+  "photo": {
+    "title": "Striezelmarkt Dresden",
+    "photographer": "Pixel Shaper",
+    "source": "https://commons.wikimedia.org/wiki/File:Striezelmarkt_Dresden_(187341049).jpeg",
+    "license": "https://creativecommons.org/licenses/by/3.0/",
+    "changes": "Portrait crop, animated pan and zoom, color overlay, and synthetic falling snow."
+  },
+  "speaking_book_picture": {
+    "source": "german_exam_books/b1/speaking_dtz_gpt_v1/images/01.jpg",
+    "scene": "Auf dem Wochenmarkt einkaufen",
+    "use": "Image only; no exercise text on screen."
+  },
+  "description_credit": "Weihnachtsmarkt-Foto: „Striezelmarkt Dresden“ von Pixel Shaper, Wikimedia Commons, CC BY 3.0 (Porträtausschnitt, Farbüberlagerung und Animation). Musik: „Christmas Lullaby“ von Michael Ramir C. (Mixkit Stock Music Free License). Soundeffekte: „Stamp“ von kermite607 und „Sleigh bells hit“ von Selector (Freesound, CC0). Weitere Quellen: BAMF und g.a.s.t. zum Deutsch-Test für Zuwanderer; DTZ-Sprechbuch, Motiv „Auf dem Wochenmarkt einkaufen“.",
+  "audio": {
+    "narration": "Unchanged local narration from the German DTZ book voice reference.",
+    "stock": {
+      "stamp": {
+        "title": "Stamp",
+        "creator": "kermite607",
+        "source": "https://freesound.org/people/kermite607/sounds/362622/",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "file": "stamp",
+        "download": "https://cdn.freesound.org/previews/362/362622_3165091-hq.mp3",
+        "sha256": "31583ce19caf4f595b54565343d6267a5a311d736653bc25a9fe32c750305e58"
+      },
+      "section_bells": {
+        "title": "Sleigh bells hit",
+        "creator": "Selector",
+        "source": "https://freesound.org/people/Selector/sounds/369506/",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "file": "sleigh-bells",
+        "download": "https://cdn.freesound.org/previews/369/369506_270868-hq.mp3",
+        "sha256": "19fb3adc9eef002c9bd1684377efead4e7cb02126fc35e0b4f53aded342e89de"
+      },
+      "music": {
+        "title": "Christmas Lullaby",
+        "creator": "Michael Ramir C.",
+        "source": "https://mixkit.co/free-stock-music/tag/christmas/",
+        "license": "https://mixkit.co/license/#musicFree",
+        "file": "christmas-lullaby",
+        "download": "https://assets.mixkit.co/music/985/985.mp3",
+        "sha256": "39f48c12a40a41f4d5db7df36ebdf63536d9ba0fe9f6932f2fcfb0048d34e988"
+      }
+    }
+  },
+  "layout": {
+    "note": "The project keeps titles, graphic badges, captions, CTA and credits inside a conservative shared rectangle; only decorative scenery and snow fill the frame. Verify in the target apps before publishing because overlays vary.",
+    "tiktok": "https://ads.tiktok.com/help/article/tiktok-auction-in-feed-ads?lang=en",
+    "meta": "https://www.facebook.com/business/help/980593475366490"
+  }
+}

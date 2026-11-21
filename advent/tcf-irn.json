@@ -1,0 +1,40 @@
+{
+  "exam": "tcf-irn",
+  "title": "TCF IRN · Avent B1 et B2",
+  "script": "tcf-irn-script.json",
+  "graphics": "tcf-irn-art.json",
+  "stock_manifest": "tcf-irn-stock.json",
+  "music_gain": 0.065,
+  "opening_flag": "fr",
+  "voice": {
+    "model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+    "tempo": 0.85,
+    "audio": {"path": "../../../french/french_exam_books/tef_canada/listening/audio/voices/references/fr_fr_narrator_f01.wav", "sha256": "81808474520c2fd98c1ceb43425aa3cfc76966f956db6cdf95ffa1debaccd5c8"},
+    "transcript": {"path": "tcf-irn-voice.txt", "sha256": "1d3331d1b63780394b52333c0cb1e6a9f17e7a5b00a8505c8be9833d28755b24"}
+  },
+  "official_sources": [
+    "https://www.france-education-international.fr/test/tcf-irn",
+    "https://france-education-international.fr/document/manuelcandidattoutes20dc3a9clinaisonsi",
+    "https://www.service-public.gouv.fr/particuliers/vosdroits/F34501",
+    "https://www.service-public.gouv.fr/particuliers/vosdroits/F11926",
+    "https://www.service-public.gouv.fr/particuliers/actualites/A18713"
+  ],
+  "visual_assets": {
+    "market.svg": {"path": "tcf-irn-winter.svg", "sha256": "e453be48530635558889b9f81dea8653d7ae451a3c725c225b72ff6fd00d85da"}
+  },
+  "beats": {
+    "hook": ["TCF IRN", "two-four", "preview"],
+    "listen": ["COMPRÉHENSION ORALE", "listening"],
+    "read": ["COMPRÉHENSION ÉCRITE", "reading"],
+    "write": ["EXPRESSION ÉCRITE", "writing"],
+    "speak": ["EXPRESSION ORALE", "speaking"],
+    "payoff": ["LA RÉPONSE", "same-test", "goals", "civic"],
+    "advent": ["1–14 DÉCEMBRE 2026", "calendar", "follow"]
+  },
+  "spelling": {
+    "bé un": "B1", "bé deux": "B2", "vingt-cinq": "25",
+    "vingt": "20", "trente-cinq": "35", "trente": "30", "dix": "10",
+    "trois": "3", "quatre": "4", "premier au quatorze": "1er au 14",
+    "premier janvier deux mille vingt-six": "1er janvier 2026"
+  }
+}

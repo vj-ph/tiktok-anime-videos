@@ -1,0 +1,16 @@
+{
+  "mystery-panel": "<div class=\"score\"><div class=\"score-option\"><svg><use href=\"#icon-write\"/></svg><b class=\"hook-stamp\">A2</b></div><div class=\"score-option\" data-reveal-word=\"B1-Zeugnis?\"><svg viewBox=\"0 0 100 85\"><rect x=\"12\" y=\"9\" width=\"76\" height=\"59\" rx=\"8\"/><path d=\"M26 26h46M26 39h28m4 27 3 14 9-5 9 5 3-14\"/><circle cx=\"70\" cy=\"59\" r=\"11\"/></svg><b>B1?</b></div></div>",
+  "example-scores": "<div class=\"score\"><div class=\"score-option\"><svg><use href=\"#icon-speak\"/></svg><b>B1</b></div><div class=\"score-option\"><div><svg><use href=\"#icon-listen\"/></svg><span>+</span><svg><use href=\"#icon-read\"/></svg></div><b>B1</b></div><div class=\"score-option\"><svg viewBox=\"0 0 100 85\"><path d=\"M14 30 50 12l36 18zM20 68h60M30 33v32m20-32v32m20-32v32\"/></svg><span>Wertewissen</span><b>✓</b></div></div>",
+  "preview": "<div class=\"score\"><div class=\"score-option\"><div><svg><use href=\"#icon-listen\"/></svg><svg><use href=\"#icon-read\"/></svg><svg><use href=\"#icon-write\"/></svg><svg><use href=\"#icon-speak\"/></svg></div></div></div>",
+  "listen-count": "<div class=\"score\"><div class=\"score-option\"><div><svg><use href=\"#icon-listen\"/></svg></div><b>4 Teile · 20 Aufgaben</b></div></div>",
+  "listening-types": "<div class=\"score\"><div class=\"score-option\"><svg><use href=\"#icon-listen\"/></svg></div><div class=\"score-option\"><svg><use href=\"#icon-speak\"/></svg></div></div>",
+  "reading": "<div class=\"score-option\"><svg><use href=\"#icon-read\"/></svg><b>Infos finden</b></div>",
+  "writing": "<div class=\"score-option\"><svg><use href=\"#icon-write\"/></svg><b>Aufgabenpunkte</b><span>✓ &nbsp; ✓ &nbsp; ✓</span></div>",
+  "pair": "<div class=\"score-option\"><svg><use href=\"#icon-speak\"/></svg><b>Zu zweit</b></div>",
+  "picture": "<div class=\"score\"><div class=\"score-option\"><svg viewBox=\"0 0 100 85\"><path d=\"M8 13h84v59H8zM15 61l24-24 17 17 11-11 19 18\"/><circle cx=\"68\" cy=\"30\" r=\"7\"/></svg></div><div class=\"score-option\"><svg><use href=\"#icon-speak\"/></svg></div></div>",
+  "answer": "<div class=\"score\"><div class=\"score-option\"><svg><use href=\"#icon-write\"/></svg><b>A2</b></div><div class=\"score-option\" style=\"background:#234f42\"><svg viewBox=\"0 0 100 85\"><rect x=\"12\" y=\"9\" width=\"76\" height=\"59\" rx=\"8\"/><path d=\"m32 38 12 12 24-24M58 67l3 13 9-5 9 5 3-13\"/><circle cx=\"70\" cy=\"59\" r=\"10\"/></svg><b>B1-Zeugnis</b></div></div>",
+  "language-rule": "<div class=\"score\"><div class=\"score-option\"><svg><use href=\"#icon-speak\"/></svg><b>B1</b></div><i>+</i><div class=\"score-option\"><div><svg><use href=\"#icon-listen\"/></svg><svg><use href=\"#icon-read\"/></svg><span>oder</span><svg><use href=\"#icon-write\"/></svg></div><b>B1</b></div></div>",
+  "values": "<div class=\"score-option\"><svg viewBox=\"0 0 100 85\"><path d=\"M14 30 50 12l36 18zM20 68h60M30 33v32m20-32v32m20-32v32\"/></svg><b>Wertewissen ✓</b></div>",
+  "calendar": "<div class=\"score-option calendar-card\"><strong>DEZEMBER</strong><div>1–14</div></div>",
+  "follow": "<div class=\"follow-actions\"><div>＋ Folgen</div><div>▶ Abonnieren</div><svg class=\"tap\" viewBox=\"0 0 50 50\"><path d=\"M10 4l29 28-14 2-6 13z\"/></svg></div>"
+}
