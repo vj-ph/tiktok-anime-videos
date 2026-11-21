@@ -12,9 +12,12 @@ The source includes the user's explicit long-form duration exception; short
 TEF episodes retain their strict under-90-second limits.
 
 The supplied combined speaking/writing cover is copied byte-for-byte into
-the delivery. The persistent panel reads “Livre disponible sur Amazon” and
-`a.co/d/01FdtRDW`, including the final CTA. Separate publishing drafts use the
-same book and link in `posts\tef_canada_mock1_full_preview`. No portrait
+the delivery. The revised persistent panel reads “Livre disponible sur Amazon”,
+“Lien dans la description” and `a.co/d/01FdtRDW`, including the final CTA.
+A spoken and visual two-section overview precedes Section A. Both complete
+eight-second notice-reading silences have a countdown and shrinking progress
+bar, starting only after the instruction speech ends. Separate publishing
+drafts use the same book and link in `posts\tef_canada_mock1_full_preview_r2`. No portrait
 derivative or upload is authorized by this command.
 
 From `pilot_3d`:
@@ -22,7 +25,8 @@ From `pilot_3d`:
 ```powershell
 .\.venv\Scripts\python.exe -B -X utf8 pipeline.py build `
   --episode episodes\tef_canada_mock1_full_preview.json `
-  --build builds\tef_canada_mock1_full_preview_r1 --jobs 2
+  --build builds\tef_canada_mock1_full_preview_r2 `
+  --speech-cache-from builds\tef_canada_mock1_full_preview_r1 --jobs 4
 ```
 
 `--until audio` performs synthesis, French alignment and actual landscape
@@ -38,6 +42,172 @@ pedagogical duration is **not** claimed as exact official 5/10-minute section
 timing; this distinction is spoken and retained in the preview/footer/posts.
 Independent ASR, encoded audio/frame checks and contact sheets remain
 separate from human listening and publication approval.
+
+The completed r1 export is `builds\tef_canada_mock1_full_preview_r1\preview_youtube.mp4`:
+16,005 frames / 666.875 seconds (11:06.875), 960x540 at 24 fps and natural
+1.0x speech. All 48 book-model turns and 53 speech placements are preserved.
+The full decode, 166 encoded composition samples and .999971 audio correlation
+pass; all 14 encoded contact sheets and full-size opening/notices/CTA have been
+visually inspected. Primary ASR matches 33/53 turns; secondary ASR matches
+11/20 flagged turns. The nine remaining disagreements and 18 low-confidence
+aligned tokens are retained in `auditory_review_flags.json`, not certified by
+human listening. The earlier short preview remains unchanged.
+This historical r1 stays frozen. The November 18 revision is
+`builds\tef_canada_mock1_full_preview_r2\preview_youtube.mp4`: 16,291 frames /
+678.791667 seconds (11:18.792). Only its expanded setup uses new speech;
+the other 52 raw/prepared clips are byte-identical to r1. All 198 encoded
+composition samples and .999970 audio correlation pass. Both reading holds
+retain exactly eight seconds; guarded encoded PCM is digital zero. All 17
+decoded sheets and full-size overview/countdown/CTA frames have been inspected.
+Ten remaining primary/secondary ASR disagreements, including the setup's
+model-text spelling/plural and secondary extra-tail transcription, plus 18
+low-confidence aligned tokens remain in `auditory_review_flags.json`.
+These are listening-review flags, not confirmed speech errors. Earlier
+deliveries and posts are unchanged; revised drafts and measured chapters
+are in `posts\tef_canada_mock1_full_preview_r2`.
+
+## TEF Canada speaking: approved full YouTube production
+
+The separate `tef_speaking_full_production` route uses the user-approved r2
+preview above. It verifies the pinned preview manifest, every frozen delivery,
+source snapshot and original input before accepting exact speech reuse.
+It preserves all 53 recordings, measured word alignment, eight-second reading
+holds and the 16,291-frame / 11:18.792 runtime at **1.0x**. No TTS or
+realignment runs, and preview-quality images cannot be reused.
+
+From `pilot_3d`, run:
+
+```powershell
+.\.venv\Scripts\python.exe -B -X utf8 pipeline.py build `
+  --episode episodes\tef_canada_mock1_full_production.json `
+  --profile production `
+  --reuse-audio builds\tef_canada_mock1_full_preview_r2 `
+  --build builds\tef_canada_mock1_production_r1 --jobs 4
+```
+
+Output: `builds\tef_canada_mock1_production_r1\production_youtube.mp4`.
+The 1920x1080/24 fps composition uses newly baked 1280x640 native scene
+images inside its room panel, eight Cycles samples and motion on twos.
+Text, book artwork, notice images, countdowns and word highlights are
+composited at full resolution on every output frame. Caption pagination
+uses the actual 44-pixel production font; measured speech/word timestamps
+are unchanged. Production removes
+the preview badge/footer wording, not the independent guided-practice label.
+CPU rendering is the default; accelerator selection remains explicit.
+
+Append `--until audio` to prepare and verify exact audio, captions and input
+receipts without baking/rendering; `--until scene` additionally bakes and
+checks the complete native production animation. Resume with the identical
+command/build; changed code, assets or settings require a fresh directory.
+The source preview is never overwritten. `production_approval.json` records
+the approved manifest, inherited speech evidence and exact-reuse receipt.
+The export rechecks source hashes, full decoding, frame count, audio
+correlation, notice silences and encoded composition samples before freezing.
+Existing ASR/alignment flags remain review evidence, not human listening.
+
+Verification passes 56 focused tests, including a real 1080p encoded
+countdown fixture. A fresh 46-pose opening bake and three native production
+frames pass camera/hair, resolution and render-setting checks; the layout
+contact sheet and full-size overview/countdown/CTA/corrected B23 captions
+have been inspected. Real r2 audio-only preparation and verified-checkpoint
+resume pass: dialogue, timeline, alignment, SRT and both ASR reports are
+byte-identical. All 86 caption pages fit (minimum 3.875 seconds, maximum
+19.231 characters/second), and earlier frozen previews remain unchanged.
+Those implementation checks did not start the full render. The user
+subsequently completed `tef_canada_mock1_production_r1` on November 20:
+its 1920x1080 master, 16,291-frame timeline and 198 encoded composition
+checks are frozen in the production manifest. Exercise-specific publishing drafts
+are in `posts\tef_canada_mock1_full_production`; they are not publication approval.
+No portrait version is generated by this command.
+
+## TEF Canada speaking: five portrait parts below three minutes
+
+`episodes\tef_canada_mock1_social_five.json` partitions the complete production
+into A notice/A01-A10, A11-A20, B notice/B01-B09, B10-B19 and B20-B28.
+The user explicitly authorized a strict 180-second limit for these derivatives
+on November 20, 2026, including each numbered part's new spoken opening,
+brief context and unchanged final book CTA/hold. Ordinary short routes retain
+their separate under-90-second limits.
+
+From `pilot_3d`:
+
+```powershell
+.\.venv\Scripts\python.exe -B -X utf8 pipeline.py build `
+  --episode episodes\tef_canada_mock1_social_five.json --profile production `
+  --build builds\tef_canada_mock1_social_five_r1
+```
+
+`--until audio` synthesizes only the five titles and context sentences with
+the existing Québec female reference, then force-aligns them and saves
+independent ASR. `--until scene` prepares the five exact PCM edits, caption
+pages, native-frame mappings and layout sheets without Blender rendering.
+The default exports and checks every `tef_canada_mock1_reel_N\production_social.mp4`
+at 1080x1920/24 fps. Identical commands resume matching source/code/speech
+checkpoints and verified completed exports.
+
+The portrait compositor contains each complete native room image rather
+than cropping faces or the finished landscape video. It draws new titles,
+part labels and readable highlighted captions separately, with a persistent
+book cover, Amazon cue, bio/description cue and direct speaking-book URL.
+All 48 dialogue turns are preserved exactly once at 1.0x; both notice
+countdowns keep their complete eight-second reading silence. No full
+two-section setup is repeated. The YouTube master and frozen snapshots stay
+unchanged.
+
+Each export verifies full decoding, strict duration, exact frame count,
+encoded audio correlation, silent countdowns and decoded title/caption/book
+samples; native-frame hashes and source PCM edit spans are recorded.
+Inspect the `contact_native_*.jpg` and `contact_encoded_*.jpg` sheets before
+release. Layout clearance is a conservative project design, not an in-app
+Instagram placement certification. ASR/alignment flags and publication
+approval remain separate. Exercise-specific drafts are under
+`posts\tef_canada_mock1_reel_1` through `posts\tef_canada_mock1_reel_5`.
+
+Completed outputs are under `builds\tef_canada_mock1_social_five_r1`,
+in each `tef_canada_mock1_reel_N\production_social.mp4`:
+
+| Part | Complete duration | Frames | Content |
+| --- | --- | --- | --- |
+| 1 | 2:35.417 | 3,730 | Section A notice and A01-A10 |
+| 2 | 2:29.542 | 3,589 | Section A A11-A20 |
+| 3 | 2:37.250 | 3,774 | Section B notice and B01-B09 |
+| 4 | 2:28.542 | 3,565 | Section B B10-B19 |
+| 5 | 2:22.625 | 3,423 | Section B B20-B28 |
+
+All five full exports decode and pass 664 encoded composition checks.
+Audio correlation is at least .999967; both eight-second countdowns have
+digital-zero guarded encoded PCM. Independent checks verify every model
+turn exactly once, byte-identical dialogue/CTA cuts, all 124 caption pages
+and 7,799 source-native image hashes. Selected decoded sheets, the five-part
+overview and full-size countdown/dialogue/CTA samples have been inspected.
+The regression selection passes, including a real ten-second portrait
+encode/decode/countdown fixture. The full YouTube master and frozen source
+snapshots are unchanged. Six new primary-ASR spelling/infinitive/homophone
+disagreements and two low-confidence aligned words remain in the speech
+reports and external final audit; this is not human listening certification
+or publication approval.
+
+## TEF Canada Mock Test 1 publishing thumbnails
+
+The completed six-image set is in
+`posts\tef_canada_mock1_speaking_thumbnails_r1`:
+`youtube.jpg` (1920x1080, “TEF Canada - Prêt pour l'oral ?”, Sections A + B)
+and `instagram_1.jpg` through `instagram_5.jpg` (1080x1920, numbered 1/5-5/5
+with exercise-specific titles). Matching copies are alongside the full-video
+and five-part descriptions as `thumbnail_youtube.jpg` and
+`thumbnail_instagram.jpg`. Use those JPEGs for uploads, not the proof sheets.
+
+These reuse hash-verified, uniformly contained native character stills,
+the original French Compass logo, complete Canadian flag and supplied
+speaking/writing cover. All six final JPEGs have been visually inspected;
+their sizes are 184-374 KB. All social foreground, including the entire
+panel, logos, flag, book and text, fits the conservative project region
+`(100,480,850,1130)`. Actual-JPEG square, 4:5, 3:4 and 10%-zoomed-square
+checks preserve every foreground pixel; all 25 crop/UI proofs were inspected
+on the combined sheet. This is project clearance, not an in-app upload or
+official Instagram specification. The manifest, masks and proofs are in
+`builds\tef_canada_mock1_speaking_thumbnails_r1`. The frozen videos, source
+receipts and all post-description bytes are unchanged; nothing was published.
 
 ## TEF Canada speaking: short YouTube rehearsal
 

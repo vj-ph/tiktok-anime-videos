@@ -45,6 +45,7 @@ def compile_episode(path):
                    cta=["Livre disponible sur Amazon", config["visible_url"], "Expression orale et écrite"])
     episode["header"]["topic"] = "Sections A et B · Test blanc 1"
     episode["promotion"] = {key: config[key] for key in ("promotion", "visible_url", "purchase_url")}
+    episode["promotion"]["description_hint"] = "Lien dans la description"
     episode["source"].update(book=str(source_book), exercise=config["source_heading"],
                              authoring_config=str(path), authoring_config_sha256=sha256_file(path),
                              book_sha256=sha256_file(source_book),
@@ -52,7 +53,8 @@ def compile_episode(path):
                              purchase_url=config["purchase_url"],
                              scope="Complete Mock Test 1 model dialogues, in a guided landscape preview.",
                              adaptation="All 48 model turns retained verbatim; add spoken opening, "
-                                        "practice instructions, eight-second notice holds and book CTA. "
+                                        "two-section overview, practice instructions, eight-second "
+                                        "notice holds with silent countdown/progress and book CTA. "
                                         "No claim of official preparation or exact 5/10-minute section timing.")
     for section, value in episode["preview_notices"].items():
         episode["preview_notices"][section] = str((base_path.parent / value).resolve(strict=True))
@@ -81,9 +83,13 @@ def compile_episode(path):
         return value
 
     turns = [turn("opening", episode["title"], kind="opening", pause=1),
-             turn("setup", "Bienvenue ! Voici une simulation guidée des deux sections, avec les dialogues "
-                  "modèles complets. Vous pouvez faire une pause pour préparer vos réponses. "
-                  "La durée de cette démonstration est adaptée aux échanges du livre.",
+             turn("setup", "Bienvenue ! L'épreuve d'expression orale comporte deux sections. "
+                  "Dans la section A, vous demandez des renseignements. "
+                  "Dans la section B, vous présentez une activité et vous essayez de convaincre un ami. "
+                  "Voici les deux dialogues modèles complets. "
+                  "Vous pouvez faire une pause pour préparer vos réponses. "
+                  "La durée de cette démonstration est adaptée aux échanges du livre. "
+                  "Commençons par la section A.",
                   kind="setup", pause=1)]
     instructions = {
         "A": "Section A. Vous avez vu cette annonce pour une carte de bibliothèque. "
@@ -137,10 +143,16 @@ def caption_preflight(build, episode):
     timeline = json.loads((build / "timeline.json").read_text(encoding="utf-8"))
     check_timeline(episode, timeline)
     pages = caption_pages(episode, timeline)
-    native = Image.new("RGB", (640, 320), "#617065")
+    scale = 2 if episode.get("template") == "tef_speaking_full_production" else 1
+    native = Image.new("RGB", (640 * scale, 320 * scale), "#617065")
     for page in pages:
         frame = round((page["start"] + page["end"]) * timeline["fps"] / 2)
         compose(episode, timeline, pages, frame, native)
+    for turn in timeline["turns"]:
+        if turn.get("kind") == "notice":
+            for offset in (-1, 0, 1, turn["pause_after_frames"] // 2, turn["pause_after_frames"] - 1,
+                           turn["pause_after_frames"]):
+                compose(episode, timeline, pages, turn["end_frame"] + offset, native)
     folder = build / "preflight"
     folder.mkdir(exist_ok=True)
     atomic_json(folder / "landscape_captions.json", {

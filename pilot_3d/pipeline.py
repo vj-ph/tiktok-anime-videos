@@ -24,7 +24,7 @@ from generation_runtime import GenerationRun, generation_job, run_process, stage
 from prepare_audio import (DEFAULT_TTS_THREADS, atomic_json, atomic_text, content_hash, inspect_wav,
                            load_audio_cache, make_cache_payload, sha256_file)
 
-SOURCES = ("pipeline.py", "tef_speaking_preview.py", "tef_speaking_full.py", "long_speaking_scene.py", "listening_scene.py",
+SOURCES = ("pipeline.py", "tef_speaking_preview.py", "tef_speaking_full.py", "tef_speaking_production.py", "long_speaking_scene.py", "listening_scene.py",
            "listener_motion.py", "runtime_config.py", "generation_runtime.py", "build_paths.py", "episode_config.py", "episode_profiles.py", "picture_presentation.py", "prepare_audio.py", "align_words.py", "check_speech.py",
            "produce_v4.py", "render.py", "social_captions.py", "review_social.py",
            "check_v4_scene.py", "studio_characters.py", "polish_exchange.py",
@@ -69,7 +69,7 @@ def run_command(command, log):
 
 
 def caption_preflight(build, episode, with_promo):
-    if episode.get("template") == "tef_speaking_full_preview":
+    if episode.get("template") in ("tef_speaking_full_preview", "tef_speaking_full_production"):
         from tef_speaking_full import caption_preflight as full_caption_preflight
         return full_caption_preflight(build, episode)
     from produce_v4 import plan_promo
@@ -508,6 +508,31 @@ def main():
             else:
                 build_listening(args.episode, args.build, args.jobs, args.until, args.speech_cache_from,
                                 profile=args.profile, reuse_audio=args.reuse_audio)
+        elif isinstance(raw_episode, dict) and raw_episode.get("template") == "tef_speaking_social_five":
+            from derive_tef_speaking_social import build as build_tef_social
+            if (args.command != "build" or args.build is None or args.profile != "production"
+                    or args.render_device != "CPU" or args.speech_device != "cpu"
+                    or args.promo or args.reuse_audio or args.speech_cache_from):
+                raise ValueError("Use build --profile production with a separate --build; "
+                                 "the five TEF Reels reuse the configured production source.")
+            build_tef_social(args.episode, args.build, args.until)
+        elif isinstance(raw_episode, dict) and raw_episode.get("template") == "tef_speaking_full_production":
+            from tef_speaking_production import build_production, load_production, production_reuse_spec
+            if (args.profile != "production" or args.speech_device != "cpu" or args.promo
+                    or args.speech_cache_from or args.reuse_scene or args.reuse_preview_audio
+                    or args.reuse_preview_frames):
+                raise ValueError("TEF production requires --profile production and exact --reuse-audio; "
+                                 "new speech, scene reuse and preview frames are unavailable.")
+            if args.command == "validate":
+                episode = load_production(args.episode)
+                production_reuse_spec(episode, args.reuse_audio)
+                check_render_device(args.render_device)
+                print(f"Valid complete TEF production: {episode['id']}; exact approved audio, 1920x1080.")
+            elif args.command != "build" or args.build is None:
+                raise ValueError("Use build with a dedicated --build directory.")
+            else:
+                build_production(args.episode, args.build, reuse_audio=args.reuse_audio,
+                                 jobs=args.jobs, until=args.until, render_device=args.render_device)
         elif isinstance(raw_episode, dict) and raw_episode.get("template") == "tef_speaking_full_preview":
             from tef_speaking_full import build_full, compile_episode
             if (args.profile != "preview" or args.render_device != "CPU" or args.speech_device != "cpu"

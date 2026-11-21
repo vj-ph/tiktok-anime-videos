@@ -1,0 +1,17 @@
+{
+  "template": "tef_speaking_full_production",
+  "id": "tef_canada_mock1_full_production",
+  "approved_preview": "..\\builds\\tef_canada_mock1_full_preview_r2",
+  "approved_preview_manifest_sha256": "386cf7e6f76b5336bd58ca6089e099487edbd73493ab9be6eb09b2a17d10811d",
+  "approved_base_scene_sha256": "13702a2f1412677f6680f049005bb3467ab232ef844e7457b7ac91e497afda32",
+  "preview_approval": {
+    "approved_by": "user",
+    "approved_on": "2026-11-18"
+  },
+  "render": {
+    "motion_step": 2,
+    "native_scale": 1.0,
+    "samples": 8,
+    "native_source": "youtube"
+  }
+}

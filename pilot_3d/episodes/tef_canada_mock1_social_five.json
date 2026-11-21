@@ -1,0 +1,50 @@
+{
+  "template": "tef_speaking_social_five",
+  "id": "tef_canada_mock1_social_five",
+  "source": "..\\builds\\tef_canada_mock1_production_r1",
+  "source_manifest_sha256": "564639a8f90c6e088e4bd3b8e3908c2d0d860e87caa9e0c518337811489eb6a5",
+  "duration_limit_seconds": 180,
+  "duration_exception": "User requested five portrait speaking derivatives, each strictly under three minutes, on November 20, 2026.",
+  "clips": [
+    {
+      "id": "tef_canada_mock1_reel_1",
+      "section": "A",
+      "title": "TEF Canada : s'inscrire à la bibliothèque",
+      "context": "Section A : entraînez-vous à demander des renseignements.",
+      "first": "A_notice",
+      "last": "A_10"
+    },
+    {
+      "id": "tef_canada_mock1_reel_2",
+      "section": "A",
+      "title": "TEF Canada : utiliser les services de la bibliothèque",
+      "context": "La bibliothèque ouvre du mardi au samedi. Poursuivons les questions.",
+      "first": "A_11",
+      "last": "A_20"
+    },
+    {
+      "id": "tef_canada_mock1_reel_3",
+      "section": "B",
+      "title": "TEF Canada : convaincre un ami",
+      "context": "Section B : proposez un atelier de poterie pour débutants.",
+      "first": "B_notice",
+      "last": "B_09"
+    },
+    {
+      "id": "tef_canada_mock1_reel_4",
+      "section": "B",
+      "title": "TEF Canada : répondre aux objections",
+      "context": "Votre ami hésite à essayer la poterie. Répondez à ses inquiétudes.",
+      "first": "B_10",
+      "last": "B_19"
+    },
+    {
+      "id": "tef_canada_mock1_reel_5",
+      "section": "B",
+      "title": "TEF Canada : convaincre sans pression",
+      "context": "Votre ami veut connaître les frais et les conditions avant de décider.",
+      "first": "B_20",
+      "last": "B_28"
+    }
+  ]
+}

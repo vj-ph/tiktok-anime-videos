@@ -159,8 +159,12 @@ def caption_pages(episode, timeline):
             if "caption_hold_seconds" in turn:
                 end = min(end, turn["end"] + turn["caption_hold_seconds"])
             try:
-                options = ({"width": 640, "size": 22}
-                           if episode.get("template") == "tef_speaking_full_preview" else {})
+                if episode.get("template") == "tef_speaking_full_production":
+                    options = {"width": 1280, "size": 44}
+                elif episode.get("template") == "tef_speaking_full_preview":
+                    options = {"width": 640, "size": 22}
+                else:
+                    options = {}
                 groups = readable_pages(words, turn["start"], end, timeline.get("fps", 24), **options)
             except ValueError as error:
                 raise ValueError(f"Turn {turn.get('id', index)} ({turn['name']}): {error}") from error
