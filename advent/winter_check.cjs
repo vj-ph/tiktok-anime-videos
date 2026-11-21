@@ -5,7 +5,8 @@ const puppeteer = require("puppeteer-core");
 
 async function main() {
   const dir = process.argv[2] ? path.resolve(process.argv[2]) : path.join(__dirname, "build/winter-v7");
-  const { safe_rect: safe } = JSON.parse(fs.readFileSync(path.join(dir, "alignment.json"), "utf8"));
+  const { safe_rect: safe, stamp_cue_frames: stampFrames, fps } =
+    JSON.parse(fs.readFileSync(path.join(dir, "alignment.json"), "utf8"));
   const browser = await puppeteer.launch({
     executablePath: process.env.CHROME_PATH,
     args: ["--no-sandbox", "--allow-file-access-from-files"],
@@ -17,9 +18,9 @@ async function main() {
     await page.evaluate(() => document.fonts.ready);
     const errors = [];
     page.on("pageerror", error => errors.push(error.message));
-    const result = await page.evaluate(([left, top, right, bottom]) => {
+    const result = await page.evaluate(({ safe: [left, top, right, bottom], stampFrames, fps }) => {
       const failures = [];
-      const nodes = [...document.querySelectorAll(".tag,h1,.artwork,.artwork svg,.artwork img,.caption,.trail,.result-card,.grade")];
+      const nodes = [...document.querySelectorAll(".tag,.opening-flag,h1,.artwork,.artwork svg,.artwork img,.caption,.trail,.result-card,.grade,.hook-stamp")];
       const bounds = node => {
         const { x, y, right: r, bottom: b } = node.getBoundingClientRect();
         return x >= left && y >= top && r <= right && b <= bottom;
@@ -60,6 +61,39 @@ async function main() {
       }
       const opening = document.querySelector(".result-cards.opening");
       const reveal = document.querySelector(".result-cards.reveal");
+      for (const flag of document.querySelectorAll(".beat > .opening-flag")) {
+        const box = flag.getBoundingClientRect();
+        const tag = flag.parentElement.querySelector(".tag").getBoundingClientRect();
+        if (box.height < 72 || box.bottom >= tag.top || Math.abs(box.left + box.right - tag.left - tag.right) > 2) {
+          failures.push("Opening flag is not large and centered above the badge");
+        }
+      }
+      for (const node of document.querySelectorAll("[data-word-reveal]")) {
+        const art = node.closest(".artwork");
+        const caption = document.querySelector(art.id.replace("art-", "#phrase-"));
+        const when = +node.dataset.wordReveal;
+        const timeline = window.__timelines.root;
+        if (![...caption.querySelectorAll("[data-word-start]")].some(word => +word.dataset.wordStart === when)) {
+          failures.push(`${node.textContent}: graphic cue is not on a measured word onset`);
+        }
+        timeline.seek(when - .001, false);
+        if (Number(getComputedStyle(node).opacity) !== 0) failures.push(`${node.textContent}: early graphic reveal`);
+        timeline.seek(when + .001, false);
+        if (Number(getComputedStyle(node).opacity) !== 1 || !bounds(node)) failures.push(`${node.textContent}: missing or unsafe graphic reveal`);
+      }
+      const stampedArt = document.querySelector("[data-stamp-impact]");
+      if (stampedArt) {
+        const stamp = stampedArt.querySelector(".hook-stamp");
+        const impact = Number(stampedArt.dataset.stampImpact);
+        const timeline = window.__timelines.root;
+        if (!(stampFrames ?? []).includes(Math.round(impact * fps))) failures.push("Opening stamp sound is out of sync");
+        timeline.seek(impact - .20, false);
+        if (!stamp || Number(getComputedStyle(stamp).opacity) !== 0) failures.push("Opening grade appears before impact");
+        timeline.seek(impact, false);
+        if (!stamp || Number(getComputedStyle(stamp).opacity) < .99 || !bounds(stamp)) {
+          failures.push("Opening grade did not land inside the safe area at impact");
+        }
+      }
       if (Boolean(opening) !== Boolean(reveal)) failures.push("Missing result-card counterpart");
       if (opening && reveal) {
         const timeline = window.__timelines.root;
@@ -85,7 +119,7 @@ async function main() {
         }
       }
       return { bounds: nodes.length, words: words.length, pairs: pairs.length, failures };
-    }, safe);
+    }, { safe, stampFrames, fps });
     result.failures.push(...errors);
     console.log(JSON.stringify(result, null, 2));
     if (result.failures.length) process.exitCode = 1;

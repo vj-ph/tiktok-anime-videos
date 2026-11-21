@@ -1,0 +1,14 @@
+{
+  "two-four": "<div class=\"score\"><div class=\"score-option\" data-reveal-word=\"2 épreuves\"><b style=\"font-size:82px\">2</b></div><i data-reveal-word=\"ou\">ou</i><div class=\"score-option\" data-reveal-word=\"4\"><b style=\"font-size:82px\">4</b></div></div>",
+  "preview": "<div class=\"score\"><div class=\"score-option\"><div><svg><use href=\"#icon-listen\"/></svg><svg><use href=\"#icon-read\"/></svg><svg><use href=\"#icon-write\"/></svg><svg><use href=\"#icon-speak\"/></svg></div></div></div>",
+  "listen-count": "<div class=\"score-option\"><svg><use href=\"#icon-listen\"/></svg><b>40 questions</b></div>",
+  "listen-time": "<div class=\"score-option\"><svg viewBox=\"0 0 100 85\"><circle cx=\"50\" cy=\"43\" r=\"34\"/><path d=\"M50 20v23l16 7\"/></svg><b>40 min</b></div>",
+  "reading": "<div class=\"score-option\"><svg><use href=\"#icon-read\"/></svg><b>40 questions · 60 min</b></div>",
+  "writing": "<div class=\"score\"><div class=\"score-option\"><svg><use href=\"#icon-read\"/></svg><span>Article</span></div><div class=\"score-option\"><svg><use href=\"#icon-write\"/></svg><span>Point de vue</span></div></div>",
+  "ask": "<div class=\"score-option\"><svg><use href=\"#icon-speak\"/></svg><b>15 min au total</b><span>A · Se renseigner</span></div>",
+  "convince": "<div class=\"score-option\"><svg><use href=\"#icon-speak\"/></svg><b>B · Convaincre</b></div>",
+  "immigration": "<div class=\"score-option\"><div><svg><use href=\"#icon-listen\"/></svg><svg><use href=\"#icon-read\"/></svg><svg><use href=\"#icon-write\"/></svg><svg><use href=\"#icon-speak\"/></svg></div><b>Immigration · 4</b></div>",
+  "citizenship": "<div class=\"score-option\"><div><svg><use href=\"#icon-listen\"/></svg><svg><use href=\"#icon-speak\"/></svg></div><b>Citoyenneté · 2</b></div>",
+  "calendar": "<div class=\"score-option calendar-card\"><strong>DÉCEMBRE</strong><div>1–14</div></div>",
+  "follow": "<div class=\"follow-actions\"><div>＋ Suivre</div><div>▶ S’abonner</div><svg class=\"tap\" viewBox=\"0 0 50 50\"><path d=\"M10 4l29 28-14 2-6 13z\"/></svg></div>"
+}

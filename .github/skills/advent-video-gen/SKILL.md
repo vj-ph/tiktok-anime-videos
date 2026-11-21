@@ -27,15 +27,15 @@ documentation request does not authorize speech synthesis or video rendering.
   covered skill its own title, and resolve the opening question before the CTA.
   Animate images or icons that reinforce the spoken content. Use a relaxed
   pace suitable for the target learners. State what the Advent challenges
-  offer, the confirmed dates, and a follow/subscribe CTA. The DTZ reference uses
-  December 1–14, 2026; those dates are not a default for other videos.
+  offer, the confirmed dates, and a follow/subscribe CTA. The 2026 DTZ, ÖIF and
+  TEF series use December 1–14, 2026; confirm dates for future series.
 - The `script` JSON contains `[scene_id, title, [[spoken_text, english], ...]]`
   rows, starting with `hook` and ending with `advent`. `beats` maps each scene
   ID to `[tag, visual_id, ...]`, with one visual per phrase. `graphics` points
   to a JSON map of visual IDs to trusted, local HTML/SVG fragments. Author
   localized visuals; the reserved `question` / `result-a2` score-card pair is
   DTZ-only. `visual_assets` maps filenames (including the winter background
-  `market.jpg`) to path/SHA-256 pairs, with an optional HTTPS `download`
+  `market.jpg` or a local `market.svg`) to path/SHA-256 pairs, with an optional HTTPS `download`
   fallback. Input paths are relative to the episode. Link only local assets
   (by destination filename) from the artwork, and keep credits with the episode.
 - Pin the Qwen model ID, approved local reference WAV, its exact transcript,
@@ -44,9 +44,34 @@ documentation request does not authorize speech synthesis or video rendering.
   For TEF Canada verify the locale and a suitable French reference (e.g. Québec
   French if requested).
   Use `spelling` for spoken-to-written forms (`B eins` → `B1`, for example);
-  word highlighting must use measured intervals. An optional `stock_manifest`
-  follows `winter_sources.json`. Include licensed stock audio and asset credits
-  in the posting descriptions, not an end-credit slide.
+  word highlighting must use measured intervals. For a graphic timed to speech,
+  add `data-reveal-word` to the artwork element with the exact displayed token
+  for that phrase; the compositor uses its measured onset. Compare encoded
+  frames immediately before and at the reveal.
+
+## Reference episodes
+
+| Exam | Known export under `advent/build/` | Opening and reveal |
+| --- | --- | --- |
+| DTZ B1 | `winter-v7/dtz-b1-advent-v7.mp4` | Existing DTZ result-card example. |
+| ÖIF B1 | `oeif-b1-advent-r5/advent.mp4` | A2 writing stamp with stock impact; reveal the certificate icon on „B1-Zeugnis“. Keep the separate values-section pass in the example and payoff. |
+| TEF Canada | `tef-canada-advent-r3/advent.mp4` | Reveal the 2 and 4 cards on « deux » and « quatre ». Explain the distinction between immigration and citizenship at the end. |
+
+Use the pinned listening-book narrators in `oeif-b1.json` (Austrian German) and
+`tef-canada.json` (Québec French). Automated recognition of the ÖIF opening
+acronym was inconsistent; retain that review note when reusing the narration.
+For visual or mix-only revisions, copy only clips whose wording, voice binding
+and hashes match. Use a fresh build and verify unchanged word timings and frame
+count. For a visual-only change, require a byte-identical `mix.wav`.
+
+Keep the ÖIF and TEF winter backdrops and stock tracks distinct from DTZ and
+each other. Use `opening_flag: "at"` or `"ca"` for a large centered flag above
+the opening badge. `opening_stamp_frame` times the `.hook-stamp` graphic and
+the stock impact together; verify both on the same frame. The `stock_manifest`
+follows `winter_sources.json`. Keep the music below the narration: the verified
+ÖIF and TEF mixes use `music_gain` of `0.055` and `0.10`, respectively. Check
+the mix rather than assuming these gains fit every track. Credit the assets in
+the posting descriptions, not an end-credit slide.
 
 ## Generate and verify
 
@@ -74,7 +99,17 @@ rendering. Afterward fully decode `advent.mp4` with FFmpeg, check dimensions,
 24 fps and measured audio/video durations, and inspect encoded frames at
 scene boundaries. Browser safe-area tests do not certify in-app platform UI.
 
-When asked for publishing assets, write separate Instagram, TikTok and YouTube
-Shorts drafts with verified credits. Make the Advent practice series and dates,
-not the explainer's opening question, the cover headline. Check complete
-foreground bounds plus square, 4:5 and 3:4 crops. Do not upload automatically.
+When asked for publishing assets, prepare separate localized Instagram,
+TikTok, and YouTube Shorts drafts and 1080 × 1920 JPG covers. Feature the Advent
+practice series and dates, not the opening question. Center the country flag
+above the exam name (Germany for DTZ, Austria for ÖIF, Canada for TEF Canada).
+Check the entire foreground against the safe area and square, 4:5, 3:4, and
+zoomed-square crops; inspect proofs made from the exported JPEGs.
+
+Use `advent/publishing/make_covers.py` for DTZ. For ÖIF and TEF, see
+`posts/oeif_b1_advent_2026_r5/` and `posts/tef_canada_advent_2026_r3/`.
+In new bundles, bind the exact export and posting assets by SHA-256 and note a
+verified calendar frame for interfaces that require an in-video cover. Include
+verified exam sources, stock credits, and the relevant AI narration and
+book-promotion disclosures. A covers-only update must not change the video or
+copy. Do not upload automatically.

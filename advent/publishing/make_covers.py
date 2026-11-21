@@ -22,8 +22,12 @@ def make_cover(background, safe):
     foreground = Image.new("RGBA", SIZE)
     draw = ImageDraw.Draw(foreground)
     draw.rounded_rectangle((131, 529, 819, 1170), 43, fill="#291a24ee", outline="#eab87a", width=4)
-    draw.text((475, 625), "DTZ B1", font=font(90, serif=True), fill=CREAM, anchor="mm")
-    draw.text((475, 725), "Advent-Übungen", font=font(65, serif=True), fill=GOLD, anchor="mm")
+    draw.rectangle((429, 549, 520, 604), outline=CREAM)
+    for i, color in enumerate(("#000000", "#dd0000", "#ffce00")):
+        y = 550 + i * 18
+        draw.rectangle((430, y, 519, y + 17), fill=color)
+    draw.text((475, 657), "DTZ B1", font=font(90, serif=True), fill=CREAM, anchor="mm")
+    draw.text((475, 742), "Advent-Übungen", font=font(65, serif=True), fill=GOLD, anchor="mm")
     draw.text((475, 808), "2 Wochen Prüfungstraining", font=font(35), fill=CREAM, anchor="mm")
     for day in range(1, 15):
         row, column = divmod(day - 1, 7)

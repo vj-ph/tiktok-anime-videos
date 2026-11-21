@@ -21,6 +21,16 @@ SECTION_HOLD = 12
 END_HOLD = 34
 CARD_IMPACTS = (18, 32, 50)
 CARD_REVEAL = 20
+FLAGS = {
+    "fr": '<svg class="opening-flag" viewBox="0 0 90 60" role="img" aria-label="France">'
+          '<path fill="#002395" d="M0 0h30v60H0z"/><path fill="#fff" d="M30 0h30v60H30z"/>'
+          '<path fill="#ed2939" d="M60 0h30v60H60z"/></svg>',
+    "at": '<svg class="opening-flag" viewBox="0 0 90 60" role="img" aria-label="Österreich">'
+          '<path fill="#ed2939" d="M0 0h90v60H0z"/><path fill="#fff" d="M0 20h90v20H0z"/></svg>',
+    "ca": '<svg class="opening-flag" viewBox="0 0 120 60" role="img" aria-label="Canada">'
+          '<path fill="#fff" d="M0 0h120v60H0z"/><path fill="#d80621" d="M0 0h30v60H0zm90 0h30v60H90z"/>'
+          '<path fill="#d80621" d="m60 6 4 9 4-2-2 12 6-5 2 4 7-2-2 8 4 2-12 9 1 4-11-2 1 11h-4l1-11-11 2 1-4-12-9 4-2-2-8 7 2 2-4 6 5-2-12 4 2z"/></svg>',
+}
 
 
 def display_words(aligned, spelling, dtz_dates=False):
@@ -73,11 +83,11 @@ def stock_audio(assets):
         yield role, np.frombuffer(decoded, dtype="<f4")
 
 
-def mix_stock(audio, starts, stamp_cues, stock):
+def mix_stock(audio, starts, stamp_cues, stock, music_gain=.24):
     assets = dict(stock_audio(stock))
     if "music" in assets and len(assets["music"]) < len(audio):
         raise ValueError("Stock music is shorter than the video")
-    bed = assets["music"][:len(audio)] * .24 if "music" in assets else np.zeros_like(audio)
+    bed = assets["music"][:len(audio)] * music_gain if "music" in assets else np.zeros_like(audio)
     fade = min(2 * RATE, len(bed))
     bed[-fade:] *= np.linspace(1, 0, fade)
     effects = np.zeros_like(audio)
@@ -171,7 +181,7 @@ def prepare(build, episode):
                 raise ValueError(f"Missing measured words in phrase {index}: {result}")
             if result[-1]["end"] - result[0]["start"] < .14 * len(result) or len(audio) / 16000 - result[-1]["end"] > 1.4:
                 raise ValueError(f"Unreliable alignment for phrase {index}")
-            displayed = list(display_words(result, episode.get("spelling", {}), episode["exam"] == "dtz-b1"))
+            displayed = list(display_words(result, episode.get("spelling", {}), language == "de"))
             words = " ".join(
                 f'<span data-word-start="{sec(elapsed + round(begin*RATE))}" '
                 f'data-word-end="{sec(elapsed + round(end*RATE))}">{html.escape(w)}</span>'
@@ -190,9 +200,25 @@ def prepare(build, episode):
                 stamp_cues.append((art_start + CARD_REVEAL * FRAME, .11))
             else:
                 graphic = graphics[visual]
+            def reveal_at_word(match):
+                token = match[1]
+                times = [begin for word, begin, _ in displayed if word == token]
+                if len(times) != 1:
+                    raise ValueError(f"Graphic {visual} needs one measured occurrence of {token!r}")
+                return f'data-word-reveal="{sec(elapsed + round(times[0] * RATE))}"'
+
+            graphic = re.sub(r'data-reveal-word="([^"]+)"', reveal_at_word, graphic)
+            impact = ""
+            if index == 0 and (stamp_frame := episode.get("opening_stamp_frame")) is not None:
+                stamp_at = art_start + stamp_frame * FRAME
+                if stamp_at + 6 * FRAME >= art_end:
+                    raise ValueError("Opening stamp does not fit its artwork clip")
+                stamp_cues.append((stamp_at, .105))
+                impact = f' data-stamp-impact="{sec(stamp_at)}"'
+            opening_class = " opening-art" if j == 0 and episode.get("opening_flag") else ""
             overlays.append(
-                f'<div id="art-{index}" class="clip artwork {visual}" {clip(art_start,art_end,5)} '
-                f'aria-hidden="true">{graphic}</div>'
+                f'<div id="art-{index}" class="clip artwork {visual}{opening_class}" {clip(art_start,art_end,5)} '
+                f'aria-hidden="true"{impact}>{graphic}</div>'
             )
             overlays.append(
                 f'<div id="phrase-{index}" class="clip caption" {clip(elapsed,art_end,2)}>'
@@ -204,14 +230,15 @@ def prepare(build, episode):
             index += 1
         append(np.zeros(hold * FRAME))
         dots = "".join('<i class="seen"></i>' if k <= j else "<i></i>" for k in range(len(segments)))
+        flag = FLAGS.get(episode.get("opening_flag"), "") if j == 0 else ""
         markup.append(
             f'<section id="beat-{name}" class="clip beat {name}" {clip(start,elapsed,1)}>'
-            f'<div class="tag">{html.escape(tag)}</div><h1>{html.escape(title)}</h1></section>'
+            f'{flag}<div class="tag">{html.escape(tag)}</div><h1>{html.escape(title)}</h1></section>'
             f'<div id="trail-{name}" class="clip trail" {clip(start,elapsed,3)} aria-hidden="true">{dots}</div>'
         )
         markup.extend(overlays)
     audio = np.concatenate(pcm)
-    mixed = mix_stock(audio, starts, stamp_cues, episode.get("stock_audio", {}))
+    mixed = mix_stock(audio, starts, stamp_cues, episode.get("stock_audio", {}), episode.get("music_gain", .24))
     if max(abs(mixed)) > .99:
         raise ValueError("Mix clips")
     sf.write(build / "mix.wav", mixed, RATE, subtype="PCM_16")
@@ -226,6 +253,7 @@ def prepare(build, episode):
     shutil.copyfile(ROOT / "node_modules/gsap/dist/gsap.min.js", build / "gsap.min.js")
     (build / "index.html").write_text(
         source.replace("{{DURATION}}", sec(elapsed)).replace("{{LANG}}", language)
+        .replace("{{BACKGROUND}}", "market.svg" if "market.svg" in episode["visual_assets"] else "market.jpg")
         .replace("{{TITLE}}", html.escape(episode["title"])).replace("{{CONTENT}}", "\n".join(markup)), encoding="utf-8"
     )
     print(f"{elapsed / RATE:.2f} seconds, {index} bilingual phrases, all words aligned")

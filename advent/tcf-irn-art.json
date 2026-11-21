@@ -1,0 +1,13 @@
+{
+  "two-four": "<div class=\"score\"><div class=\"score-option\" data-reveal-word=\"B1\"><b style=\"font-size:76px\">B1</b></div><i data-reveal-word=\"ou\">ou</i><div class=\"score-option\" data-reveal-word=\"B2\"><b style=\"font-size:76px\">B2</b></div></div>",
+  "preview": "<div class=\"score\"><div class=\"score-option\"><div><svg><use href=\"#icon-listen\"/></svg><svg><use href=\"#icon-read\"/></svg><svg><use href=\"#icon-write\"/></svg><svg><use href=\"#icon-speak\"/></svg></div><b>1 h 35</b></div></div>",
+  "listening": "<div class=\"score-option\"><svg><use href=\"#icon-listen\"/></svg><b>25 questions · 20 min</b></div>",
+  "reading": "<div class=\"score-option\"><svg><use href=\"#icon-read\"/></svg><b>25 questions · 35 min</b></div>",
+  "writing": "<div class=\"score-option\"><svg><use href=\"#icon-write\"/></svg><b>3 tâches · 30 min</b></div>",
+  "speaking": "<div class=\"score-option\"><svg><use href=\"#icon-speak\"/></svg><b>3 tâches · 10 min</b></div>",
+  "same-test": "<div class=\"score-option\" style=\"background:#30545b\"><svg viewBox=\"0 0 100 85\"><rect x=\"12\" y=\"9\" width=\"76\" height=\"59\" rx=\"8\"/><path d=\"m32 38 12 12 24-24\"/></svg><b>Depuis le 1er janvier 2026</b></div>",
+  "goals": "<div class=\"score\"><div class=\"score-option\"><svg viewBox=\"0 0 100 85\"><rect x=\"10\" y=\"16\" width=\"80\" height=\"55\" rx=\"8\"/><circle cx=\"33\" cy=\"35\" r=\"8\"/><path d=\"M22 56q11-20 23 0m8-18h25m-25 12h25\"/></svg><b>B1</b><span>Carte de résident</span></div><div class=\"score-option\"><svg><use href=\"#icon-read\"/></svg><b>1 test</b><span>Plusieurs niveaux</span></div></div>",
+  "civic": "<div class=\"score\"><div class=\"score-option\"><svg><use href=\"#icon-speak\"/></svg><span>Test de français</span></div><i>≠</i><div class=\"score-option\"><svg viewBox=\"0 0 100 85\"><path d=\"M14 30 50 12l36 18zM20 68h60M30 33v32m20-32v32m20-32v32\"/></svg><span>Examen civique</span></div></div>",
+  "calendar": "<div class=\"score-option calendar-card\"><strong>DÉCEMBRE</strong><div>1–14</div></div>",
+  "follow": "<div class=\"follow-actions\"><div>＋ Suivre</div><div>▶ S’abonner</div><svg class=\"tap\" viewBox=\"0 0 50 50\"><path d=\"M10 4l29 28-14 2-6 13z\"/></svg></div>"
+}

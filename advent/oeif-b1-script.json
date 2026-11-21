@@ -1,0 +1,30 @@
+[
+  ["hook", "Schreiben A2. Trotzdem B1?", [
+    ["Ö I F B eins. Im Schreiben nur A zwei. Bekommst du trotzdem das B eins Zeugnis?", "ÖIF B1. Only A2 in writing. Can you still get the B1 certificate?"],
+    ["Du hast B eins im Sprechen und in Hören und Lesen. Den Werteteil hast du bestanden.", "You got B1 in speaking and in listening and reading combined. You passed the values section."],
+    ["Die Antwort kommt am Ende. Erst schauen wir uns die Deutschprüfung an.", "The answer comes at the end. First, let's look at the language test."]
+  ]],
+  ["listen", "1 · Hören", [
+    ["Beim Hören gibt es vier Teile mit insgesamt zwanzig Aufgaben.", "Listening has 4 parts and 20 questions in total."],
+    ["Du hörst zum Beispiel Durchsagen, Gespräche und verschiedene Meinungen.", "For example, you hear announcements, conversations, and different opinions."]
+  ]],
+  ["read", "2 · Lesen", [
+    ["Beim Lesen suchst du wichtige Informationen in Anzeigen und anderen Texten.", "In reading, you look for key information in ads and other texts."]
+  ]],
+  ["write", "3 · Schreiben", [
+    ["Beim Schreiben antwortest du auf eine Situation. Achte auf die Punkte in der Aufgabe.", "In writing, you respond to a situation. Cover the points in the task."]
+  ]],
+  ["speak", "4 · Sprechen", [
+    ["Beim Sprechen seid ihr meistens zu zweit. Zuerst stellst du dich vor.", "Speaking is usually in pairs. First, you introduce yourself."],
+    ["Dann sprichst du über ein Bild. Am Schluss plant ihr gemeinsam etwas.", "Then you talk about a picture. Finally, you plan something together."]
+  ]],
+  ["payoff", "Ja, das reicht!", [
+    ["Ja. Mit diesen Ergebnissen bekommst du das B eins Zeugnis, auch mit A zwei im Schreiben.", "Yes. With those results, you get the B1 certificate even with A2 in writing."],
+    ["Du brauchst B eins im Sprechen. Dazu B eins in Hören und Lesen zusammen oder im Schreiben.", "You need B1 in speaking, plus B1 in either listening and reading combined or writing."],
+    ["Du musst auch den Teil zum Werte- und Orientierungswissen bestehen.", "You also have to pass the values and orientation section."]
+  ]],
+  ["advent", "ÖIF B1 Advent", [
+    ["Vom ersten bis zum vierzehnten Dezember gibt es kurze Übungen für deine Prüfung.", "From December 1 to 14, get short exercises to prepare for your exam."],
+    ["Übe mit uns. Folge uns und abonniere unseren Kanal.", "Practise with us. Follow us and subscribe to our channel."]
+  ]]
+]

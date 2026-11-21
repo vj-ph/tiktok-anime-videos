@@ -62,13 +62,13 @@ def load_episode(path):
     if not data["official_sources"] or any(not url.startswith("https://") for url in data["official_sources"]):
         raise ValueError("Supply official exam references in official_sources")
     for name, asset in data["visual_assets"].items():
-        if (not re.fullmatch(r"[a-z0-9][a-z0-9.-]*\.(?:jpg|jpeg|png|webp)", name)
+        if (not re.fullmatch(r"[a-z0-9][a-z0-9.-]*\.(?:jpg|jpeg|png|webp|svg)", name)
                 or not SHA.fullmatch(asset["sha256"]) or not asset["path"].strip()):
             raise ValueError(f"Invalid visual asset: {name}")
         if "download" in asset and not asset["download"].startswith("https://"):
             raise ValueError(f"Visual download must use HTTPS: {name}")
-    if "market.jpg" not in data["visual_assets"]:
-        raise ValueError("Supply market.jpg for the winter backdrop")
+    if not ({"market.jpg", "market.svg"} & data["visual_assets"].keys()):
+        raise ValueError("Supply market.jpg or market.svg for the winter backdrop")
     if not data["title"].strip():
         raise ValueError("Missing episode title")
     stock_path = base / data["stock_manifest"] if data.get("stock_manifest") else None
@@ -78,6 +78,15 @@ def load_episode(path):
                 or not SHA.fullmatch(asset["sha256"]) or not asset["download"].startswith("https://")
                 or not asset["license"] or not asset["source"]):
             raise ValueError(f"Invalid stock audio: {role}")
+    gain = data.get("music_gain", .24)
+    if type(gain) not in (int, float) or not 0 <= gain <= 1:
+        raise ValueError("music_gain must be between 0 and 1")
+    if data.get("opening_flag") not in (None, "at", "ca", "fr"):
+        raise ValueError("opening_flag must be at, ca or fr")
+    stamp = data.get("opening_stamp_frame")
+    if stamp is not None and (type(stamp) is not int or stamp < 24 or "stamp" not in stock
+                              or 'class="hook-stamp"' not in graphics.get(beats["hook"][1], "")):
+        raise ValueError("Opening stamp requires a frame >= 24, stock stamp audio and hook-stamp artwork")
     data.update(base=base, language=language, qwen_language=qwen_language, scenes=scenes, artwork=graphics,
                 stock_audio=stock)
     digest = hashlib.sha256()

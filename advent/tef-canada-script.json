@@ -1,0 +1,28 @@
+[
+  ["hook", "Deux épreuves ou quatre ?", [
+    ["T E F Canada. Deux épreuves ou quatre ?", "TEF Canada. Two tests or four?"],
+    ["Je te donne la réponse à la fin. D’abord, voici les quatre épreuves.", "I'll give you the answer at the end. First, here are the four tests."]
+  ]],
+  ["listen", "1 · Compréhension orale", [
+    ["Tu écoutes des annonces ou des conversations. Tu réponds à quarante questions.", "You listen to announcements or conversations and answer 40 questions."],
+    ["Tu as quarante minutes pour cette partie.", "You have 40 minutes for this section."]
+  ]],
+  ["read", "2 · Compréhension écrite", [
+    ["Tu lis différents textes et tu réponds à quarante questions en une heure.", "You read different texts and answer 40 questions in 1 hour."]
+  ]],
+  ["write", "3 · Expression écrite", [
+    ["En une heure, tu écris la suite d’un article, puis tu expliques ton point de vue.", "In 1 hour, you continue an article, then explain your point of view."]
+  ]],
+  ["speak", "4 · Expression orale", [
+    ["À l’oral, tu as quinze minutes. D’abord, tu demandes des renseignements.", "In speaking, you have 15 minutes. First, you ask for information."],
+    ["Ensuite, tu donnes des arguments pour convaincre l’autre personne.", "Then you give reasons to persuade the other person."]
+  ]],
+  ["payoff", "Ton objectif change tout", [
+    ["Pour une demande d’immigration, tu passes les quatre épreuves le même jour.", "For an immigration application, you take all 4 tests on the same day."],
+    ["Pour la citoyenneté, le test porte seulement sur l’écoute et l’expression orale.", "For citizenship, the test covers only listening and speaking."]
+  ]],
+  ["advent", "Avent TEF Canada", [
+    ["Du premier au quatorze décembre, entraîne-toi avec nos exercices courts.", "From December 1 to 14, practise with our short exercises."],
+    ["Suis-nous et abonne-toi pour les prochains défis.", "Follow and subscribe for the next challenges."]
+  ]]
+]

@@ -1,0 +1,36 @@
+{
+  "exam": "oeif-b1",
+  "title": "ÖIF B1 · Advent",
+  "script": "oeif-b1-script.json",
+  "graphics": "oeif-b1-art.json",
+  "stock_manifest": "oeif-b1-stock.json",
+  "music_gain": 0.055,
+  "opening_flag": "at",
+  "opening_stamp_frame": 39,
+  "voice": {
+    "model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+    "tempo": 0.85,
+    "audio": {"path": "../../shared-voices/gemini_3.8_flash_tts/austrain/female_middle_adult_austrian.wav", "sha256": "d490403265ee7af780c783ab7394d971e77d6fa52cde26c3a057847b689a29cb"},
+    "transcript": {"path": "../../shared-voices/gemini_3.8_flash_tts/austrain/phrase.txt", "sha256": "0ced9f03117e6c45784be5fde29e34c15fbff454f6db8c109d509156a50bbc78"}
+  },
+  "official_sources": [
+    "https://www.integrationsfonds.at/angebote/integrationsmassnahmen/deutschkurse/pruefungen/",
+    "https://sprachportal.at/deutsch-lernen/b1/pruefungen/",
+    "https://sprachportal.at/fileadmin/user_upload/meinsprachportal-at/Materialen_zur_Pruefungsvorbereitung/B1/B1_DTOE_Modelltest.pdf",
+    "https://sprachportal.at/lernmaterial/fragen-zum-werte-und-orientierungswissen-b1/",
+    "https://www.integrationsfonds.at/fileadmin/content/AT/monitor/OEIF-IV-online-Handbuch.pdf"
+  ],
+  "visual_assets": {
+    "market.svg": {"path": "oeif-winter.svg", "sha256": "5fdbeeab7d155ee42d5f70b66d7ba09eaa707639abef1dec0c248b603f9b8b0e"}
+  },
+  "beats": {
+    "hook": ["ÖIF B1", "mystery-panel", "example-scores", "preview"],
+    "listen": ["SPRACHTEIL", "listen-count", "listening-types"],
+    "read": ["SPRACHTEIL", "reading"],
+    "write": ["SPRACHTEIL", "writing"],
+    "speak": ["SPRACHTEIL", "pair", "picture"],
+    "payoff": ["DIE AUFLÖSUNG", "answer", "language-rule", "values"],
+    "advent": ["1.–14. DEZEMBER 2026", "calendar", "follow"]
+  },
+  "spelling": {"ö i f b eins": "ÖIF B1", "a zwei": "A2", "b eins zeugnis": "B1-Zeugnis", "b eins": "B1", "vier": "4", "zwanzig": "20"}
+}
